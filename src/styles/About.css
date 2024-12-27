@@ -1,0 +1,81 @@
+/* Container */
+.about-container {
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  animation: gradientShift 8s infinite linear;
+}
+
+/* Gradient Animation */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Header */
+.about-header h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  animation: glow 2s infinite alternate;
+}
+
+.about-header p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #e3f2fd;
+  animation: fadeIn 1.5s ease-in;
+}
+
+/* Glow Effect */
+@keyframes glow {
+  from { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+  to { text-shadow: 0 0 15px rgba(0, 255, 255, 1); }
+}
+
+/* Sections */
+.about-section {
+  margin-bottom: 40px;
+  text-align: left;
+  max-width: 800px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-section:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.about-section h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #00bcd4;
+  text-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+}
+
+.about-section p, .about-section ul {
+  font-size: 1rem;
+  color: #e0f7fa;
+}
+
+.about-section ul li {
+  margin-bottom: 10px;
+}
+
+/* Footer */
+.about-footer {
+  margin-top: 30px;
+  font-size: 1.1rem;
+  color: #e0f7fa;
+}

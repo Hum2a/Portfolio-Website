@@ -1,0 +1,34 @@
+.homepage-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #1f4037, #99f2c8);
+    color: #fff;
+    font-family: "Arial, sans-serif";
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .homepage-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .homepage-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+  }
+  
+  .explore-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #1f4037;
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+  

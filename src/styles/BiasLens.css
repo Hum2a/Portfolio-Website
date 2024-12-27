@@ -1,0 +1,82 @@
+.biaslens-container {
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(150deg, #830202, #1d0000);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .biaslens-logo {
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .biaslens-title {
+    font-size: 2.5rem;
+    color: #ffb3b3;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .biaslens-images {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  
+  .image-container {
+    text-align: center;
+  }
+  
+  .biaslens-image {
+    width: 80%;
+    max-width: 600px;
+    border: 1px solid #ffb3b3;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  }
+  
+  .image-caption {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #ffb3b3;
+  }
+  
+  .example-text {
+    margin-top: 30px;
+  }
+  
+  .biaslens-textarea {
+    width: 80%;
+    height: 100px;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ffb3b3;
+    border-radius: 5px;
+    background: #400101;
+    color: #fff;
+    resize: none;
+    outline: none;
+  }
+  
+  .biaslens-button {
+    padding: 10px 20px;
+    background: #7a0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .biaslens-button:hover {
+    background: #e53935;
+  }
+  
