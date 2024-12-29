@@ -1,0 +1,79 @@
+.hamburger-menu {
+    position: relative;
+    background-color: #1f4037;
+    padding: 10px 20px;
+    color: #ffffff;
+    z-index: 1000;
+  }
+  
+  .hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    cursor: pointer;
+    z-index: 2000; /* Ensure this stays above the menu-dropdown */
+    position: relative; /* Ensure it remains a separate clickable layer */
+  }
+  
+  .line {
+    width: 100%;
+    height: 3px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+  }
+  
+  .line-open:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .line-open:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .line-open:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  
+  .menu-dropdown {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    background-color: #1f4037;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 1000; /* Lower than hamburger-icon */
+  }
+  
+  .menu-open {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .menu-link {
+    padding: 15px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-align: center;
+    width: 100%;
+    z-index: 500; /* Ensure links do not overlap icon */
+  }
+  
+  .menu-link:hover {
+    background-color: #99f2c8;
+    color: #1f4037;
+  }
+  
+  @media (min-width: 768px) {
+    .hamburger-menu {
+      display: none;
+    }
+  }
+  

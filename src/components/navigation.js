@@ -12,6 +12,8 @@ import Therabot from "../projects/Therabot";
 import CulinAIry from "../projects/Culinairy";
 import DadJokeGenerator from "../projects/DadJokeGenerator";
 import DoomScroll from "../projects/Doomscroll";
+import Contrarian from "../projects/Contrarian";
+import LiberalDemocrats from "../projects/LiberalDemocrats";
 
 const Navigation = () => {
   return (
@@ -28,6 +30,8 @@ const Navigation = () => {
       <Route path="/culinary" element={<CulinAIry />} />
       <Route path="/dadjokegenerator" element={<DadJokeGenerator />} />
       <Route path="/doomscroll" element={<DoomScroll />} />
+      <Route path="/contrarian" element={<Contrarian />} />
+      <Route path="/ldmf" element={<LiberalDemocrats />} />
     </Routes>
   );
 };

@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/Navbar";
 import "../styles/Projects.css";
 
 const projects = [
@@ -9,119 +11,173 @@ const projects = [
     description: "Tracks how much you drink, tells you how drunk you are",
     logo: "Breathapplyser.png",
     route: "/breathapplyser",
-    tags: ["JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech"],
+    tags: ["JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Android", "IOS"],
   },
   {
     name: "BiasLens",
     description: "Political alignment analyser for web articles",
     logo: "Biaslens.png",
     route: "/biaslens",
-    tags: ["Next.js", "JavaScript", "Node.js", "Python", "Django", "Vercel", "MediaTech"],
+    tags: ["JavaScript", "Next.js", "JavaScript", "Node.js", "Python", "Django", "Firebase", "Vercel", "MediaTech"],
   },
   {
     name: "LifeSmart",
     description: "Collection of tools to teach financial literacy to young people",
     logo: "Lifesmart.png",
     route: "/lifesmart",
-    tags: ["JavaScript", "Node.js", "Vue.js", "Firebase", "EdTech", "FinTech"],
+    tags: ["JavaScript", "Node.js", "Vue.js", "Firebase", "HostPresto", "EdTech", "FinTech"],
   },
   {
     name: "Mentage",
     description: "WhatsApp chatbot designed to help the user learn",
     logo: "Mentage.png",
     route: "/mentage",
-    tags: ["AI", "Chatbot", "Education"],
+    tags: ["JavaScript", "AI", "Chatbot", "EdTech", "React", "Python", "Flask", "Firebase", "OpenAi API"],
   },
   {
     name: "Therabot",
     description: "Whatsapp & Webchat Chabot designed to provide conversational support therapy.",
     logo: "Therabot.png",
     route: "/therabot",
-    tags: ["Mental Health", "Chatbot", "Support"],
+    tags: ["JavaScript", "HealthTec", "Chatbot", "Node.js", "React", "Firebase", "Render", "OpenAi API"],
   },
   {
     name: "CulinAIry",
     description: "An AI-powered recipe generator for personalized meals",
     logo: "Culinairy.png",
     route: "/culinary",
-    tags: ["JavaScript", "Node.js", "React", "Firebase", "TypeScript", "FoodTech", "AiTech"],
+    tags: ["JavaScript", "Node.js", "React", "Firebase", "TypeScript", "Render", "FoodTech", "AiTech"],
   },
   {
-    name: "DadJokeGenerator",
+    name: "Dad Joke Generator",
     description: "Press a button, get a dad joke",
     logo: "Dadjokegenerator.png",
     route: "/dadjokegenerator",
-    tags: ["Ember.js", "JavaScript", "Node.js", "Render"],
+    tags: ["JavaScript", "Ember.js", "JavaScript", "Node.js", "Render", "JokeTech"],
   },
   {
     name: "DoomScroll",
     description: "Infinitely doom scroll useless facts",
     logo: "Doomscroll.png",
     route: "/doomscroll",
-    tags: ["JavaScript", "Node.js", "React"],
+    tags: ["JavaScript", "Node.js", "React", "Render", "JokeTech"],
   },
   {
-    name: "Pitchdeck Classifier",
+    name: "Contrarian",
     description: "Pitchdeck classifier",
     logo: "Contrarian.png",
     route: "/contrarian",
-    tags: ["AI", "Business", "Classification"],
+    tags: ["JavaScript", "AI", "Python", "React", "Flask", "Render", "OpenAi API", "Firebase", "InvestTech", "FinTech"],
+  },
+  {
+    name: "Liberal Democrats",
+    description: "Informative Website for the LDMF",
+    logo: "LDMF.png",
+    route: "/ldmf",
+    tags: ["JavaScript", "Vue.js"]
   },
 ];
 
 const Projects = () => {
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.2 },
-    },
-  };
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState(projects);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  // Extract unique tags from projects
+  const allTags = [...new Set(projects.flatMap((project) => project.tags))];
+
+  // Handle screen size change
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Handle tag click
+  const handleTagClick = (tag) => {
+    const updatedTags = selectedTags.includes(tag)
+      ? selectedTags.filter((t) => t !== tag)
+      : [...selectedTags, tag];
+
+    setSelectedTags(updatedTags);
+
+    if (updatedTags.length > 0) {
+      const filtered = projects.filter((project) =>
+        updatedTags.every((selectedTag) => project.tags.includes(selectedTag))
+      );
+      setFilteredProjects(filtered);
+    } else {
+      setFilteredProjects(projects);
+    }
   };
 
   return (
-    <motion.div
-      className="projects-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.h1 className="projects-title">My Projects</motion.h1>
-      <div className="projects-grid">
-        {projects.map((project, index) => (
-          <motion.div
-            key={index}
-            className="project-card"
-            variants={cardVariants}
-            whileHover={{ scale: 1.05 }}
-          >
-            <Link to={project.route} className="project-link">
-              <img
-                src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
-                alt={`${project.name} Logo`}
-                className="project-logo"
-              />
-              <div className="project-hover-content">
-                <h2 className="project-name">{project.name}</h2>
-                <p className="project-description">{project.description}</p>
-                <div className="project-tags">
-                  {project.tags.map((tag, i) => (
-                    <span key={i} className="project-tag">
-                      {tag}
-                    </span>
-                  ))}
+    <div>
+      {/* Conditional rendering for HamburgerMenu or Navbar */}
+      {isMobile ? <HamburgerMenu /> : <Navbar />}
+
+      <motion.div
+        className="projects-container"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <motion.h1 className="projects-title">My Projects</motion.h1>
+
+        {/* Tag filter section */}
+        <div className="tag-filter">
+          {allTags.map((tag, index) => (
+            <button
+              key={index}
+              className={`tag-button ${
+                selectedTags.includes(tag) ? "tag-button-selected" : ""
+              }`}
+              onClick={() => handleTagClick(tag)}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+
+        {/* Projects grid */}
+        <div className="projects-grid">
+          {filteredProjects.map((project, index) => (
+            <motion.div
+              key={index}
+              className="project-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <Link to={project.route} className="project-link">
+                <img
+                  src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
+                  alt={`${project.name} Logo`}
+                  className="project-logo"
+                />
+                <div className="project-hover-content">
+                  <h2 className="project-name">{project.name}</h2>
+                  <p className="project-description">{project.description}</p>
+                  <div className="project-tags">
+                    {project.tags.map((tag, i) => (
+                      <span key={i} className="project-tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
   );
 };
 

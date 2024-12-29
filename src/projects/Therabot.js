@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Navbar from "../components/Navbar";
+import HamburgerMenu from "../components/HamburgerMenu";
 import "../styles/Therabot.css";
 
 const Therabot = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
@@ -16,168 +21,108 @@ const Therabot = () => {
     hover: { scale: 1.05, transition: { duration: 0.4 } },
   };
 
+  const images = [
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Dashboard.png`, caption: "Dashboard" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Settings.png`, caption: "Settings" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Role settings.png`, caption: "Role Settings" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Tone settings.png`, caption: "Tone Settings" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Profile.png`, caption: "Profile Settings" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Web chat empty.png`, caption: "Chat interface overview" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/ACtive webchat.png`, caption: "Live chat in action" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Conversation History.png`, caption: "Review past sessions" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Conveersation Hisotry expanded a bit.png`, caption: "Expanded Conversation History" },
+    { src: `${process.env.PUBLIC_URL}/images/Therabot/Whatsapp chat.png`, caption: "Whatsapp Chat" },
+  ];
+
+  // Handle screen size change for navbar and hamburger menu
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <motion.div
-      className="therabot-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Logo */}
-      <motion.img
-        src={`${process.env.PUBLIC_URL}/logos/therabot.png`}
-        alt="Therabot Logo"
-        className="therabot-logo"
-        whileHover={{ scale: 1.1 }}
-      />
+    <div>
+      {/* Conditional rendering for HamburgerMenu or Navbar */}
+      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
-      {/* Title */}
-      <motion.h1
-        className="therabot-title"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-      >
-        Therabot
-      </motion.h1>
-      <p className="therabot-subtitle">
-        A chatbot offering mental health support and resources.
-      </p>
-
-      {/* Features Section */}
-      <div className="therabot-features">
-        <h2>Features:</h2>
-        <ul>
-          <li>Guided meditations</li>
-          <li>Personalized mental health tips</li>
-          <li>Anonymous chat sessions</li>
-        </ul>
-      </div>
-
-      {/* images Section */}
-      <div className="therabot/Therabot">
       <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
+        className="therabot-container"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Logo */}
+        <motion.img
+          src={`${process.env.PUBLIC_URL}/logos/therabot.png`}
+          alt="Therabot Logo"
+          className="therabot-logo"
+          whileHover={{ scale: 1.1 }}
+        />
+
+        {/* Title */}
+        <motion.h1
+          className="therabot-title"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Dashboard.png`}
-            alt="Expanded Conversation History"
-            className="therabot-image"
-          />
-          <p className="image-caption">Dashboard</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Settings.png`}
-            alt="Expanded Conversation History"
-            className="therabot-image"
-          />
-          <p className="image-caption">Settings</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Role settings.png`}
-            alt="Expanded Conversation History"
-            className="therabot-image"
-          />
-          <p className="image-caption">Role Settings</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Tone settings.png`}
-            alt="Expanded Conversation History"
-            className="therabot-image"
-          />
-          <p className="image-caption">Tone Settings</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Profile.png`}
-            alt="Profile Settings"
-            className="therabot-image"
-          />
-          <p className="image-caption">Manage your profile information</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Web chat empty.png`}
-            alt="Web Chat Empty State"
-            className="therabot-image"
-          />
-          <p className="image-caption">Chat interface overview</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/ACtive webchat.png`}
-            alt="Active Web Chat"
-            className="therabot-image"
-          />
-          <p className="image-caption">Live chat in action</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Conversation History.png`}
-            alt="Expanded Conversation History"
-            className="therabot-image"
-          />
-          <p className="image-caption">Review past sessions</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Conveersation Hisotry expanded a bit.png`}
-            alt="Expanded Conversation History"
-            className="therabot-image"
-          />
-          <p className="image-caption">Review past sessions</p>
-        </motion.div>
-        <motion.div
-          className="image-container"
-          whileHover="hover"
-          variants={imageVariants}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/Therabot/Whatsapp chat.png`}
-            alt="Expanded Conversation History"
-            className="therabot-image"
-          />
-          <p className="image-caption">Whatsapp Chat</p>
-        </motion.div>
-      </div>
-    </motion.div>
+          Therabot
+        </motion.h1>
+        <p className="therabot-subtitle">
+          A chatbot offering mental health support and resources.
+        </p>
+
+        {/* Features Section */}
+        <div className="therabot-features">
+          <h2>Features:</h2>
+          <ul>
+            <li>Guided meditations</li>
+            <li>Personalized mental health tips</li>
+            <li>Anonymous chat sessions</li>
+          </ul>
+        </div>
+
+        {/* Images Section */}
+        <div className="therabot-images">
+          {images.map((image, index) => (
+            <motion.div
+              key={index}
+              className="image-container"
+              whileHover="hover"
+              variants={imageVariants}
+              onClick={() => setSelectedImage(image)}
+            >
+              <img
+                src={image.src}
+                alt={image.caption}
+                className="therabot-image"
+              />
+              <p className="image-caption">{image.caption}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Modal */}
+        {selectedImage && (
+          <div className="modal" onClick={() => setSelectedImage(null)}>
+            <div className="modal-content">
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.caption}
+                className="modal-image"
+              />
+              <p className="modal-caption">{selectedImage.caption}</p>
+            </div>
+          </div>
+        )}
+      </motion.div>
+    </div>
   );
 };
 
