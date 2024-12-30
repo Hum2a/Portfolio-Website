@@ -74,6 +74,18 @@ const BiasLens = () => {
           BiasLens News
         </motion.h1>
 
+        {/* Visit Website Button */}
+        <motion.a
+          href="https://biaslens.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bias-website-link"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+        >
+          Visit the Website
+        </motion.a>
+
         {/* Images Section */}
         <div className="biaslens-images">
           {images.map((image, index) => (

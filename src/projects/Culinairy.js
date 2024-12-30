@@ -43,8 +43,19 @@ const CulinAIry = () => {
           alt="CulinAIry Logo"
           className="culinairy-logo"
         />
-        <h1>CulinAIry</h1>
-        <p>An AI-powered recipe generator for personalized meals.</p>
+        <h1 className="culinairy-title">CulinAIry</h1>
+        <p className="culinairy-subtitle">An AI-powered recipe generator for personalized meals.</p>
+
+        {/* Visit Website Button */}
+        <a
+          href="https://culinairy-239n.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="culinairy-website-link"
+        >
+          Visit the Website
+        </a>
+
         <div className="culinary-images">
           {images.map((image, index) => (
             <div

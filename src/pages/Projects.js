@@ -53,7 +53,7 @@ const projects = [
     description: "Press a button, get a dad joke",
     logo: "Dadjokegenerator.png",
     route: "/dadjokegenerator",
-    tags: ["JavaScript", "Ember.js", "JavaScript", "Node.js", "Render", "JokeTech"],
+    tags: ["JavaScript", "Ember.js", "Node.js", "Render", "JokeTech"],
   },
   {
     name: "DoomScroll",

@@ -30,8 +30,20 @@ const DoomScroll = () => {
           alt="DoomScroll Logo"
           className="doomscroll-logo"
         />
-        <h1>DoomScroll</h1>
-        <p>A satirical app to mimic infinite scrolling behavior.</p>
+        <h1 className="doomscroll-title">DoomScroll</h1>
+        <p className="doomscroll-subtitle">
+          A satirical app to mimic infinite scrolling behavior.
+        </p>
+
+        {/* Visit Website Button */}
+        <a
+          href="https://infinite-useless-scroll.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="doomscroll-website-link"
+        >
+          Visit the Website
+        </a>
 
         <div className="doomscroll-video-container">
           <video
@@ -52,11 +64,7 @@ const DoomScroll = () => {
         {isModalOpen && (
           <div className="modal" onClick={() => setIsModalOpen(false)}>
             <div className="modal-content">
-              <video
-                controls
-                className="modal-video"
-                autoPlay
-              >
+              <video controls className="modal-video" autoPlay>
                 <source
                   src={`${process.env.PUBLIC_URL}/videos/DoomScroll/Doomscroll Demo.mp4`}
                   type="video/mp4"

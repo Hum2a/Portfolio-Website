@@ -71,6 +71,18 @@ const Mentage = () => {
         </motion.h1>
         <p className="mentage-subtitle">An AI chatbot designed to help students revise.</p>
 
+        {/* Visit Website Button */}
+        <motion.a
+          href="https://mentage.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mentage-website-link"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+        >
+          Visit the Website
+        </motion.a>
+
         {/* Images Section */}
         <div className="mentage-images">
           {images.map((image, index) => (
@@ -92,7 +104,7 @@ const Mentage = () => {
           <div className="modal" onClick={() => setSelectedImage(null)}>
             <div className="modal-content">
               <img src={selectedImage.src} alt={selectedImage.caption} className="modal-image" />
-              <p className="modal-caption">{selectedImage.caption}</p>
+              <p className="modal-caption">{images.caption}</p>
             </div>
           </div>
         )}

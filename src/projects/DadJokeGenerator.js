@@ -33,6 +33,16 @@ const DadJokeGenerator = () => {
         <h1 className="animated-title">DadJokeGenerator</h1>
         <p className="animated-subtitle">A web app for generating endless dad jokes.</p>
 
+        {/* Visit Website Button */}
+        <a
+          href="https://dad-joke-generator-68xz.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="dadjoke-website-link"
+        >
+          Visit the Website
+        </a>
+
         <div className="dadjoke-video-container">
           <video
             controls

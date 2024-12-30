@@ -78,6 +78,18 @@ const Therabot = () => {
           A chatbot offering mental health support and resources.
         </p>
 
+        {/* Visit Website Button */}
+        <motion.a
+          href="https://therabot-site.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="therabot-website-link"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+        >
+          Visit the Website
+        </motion.a>
+
         {/* Features Section */}
         <div className="therabot-features">
           <h2>Features:</h2>
@@ -117,7 +129,7 @@ const Therabot = () => {
                 alt={selectedImage.caption}
                 className="modal-image"
               />
-              <p className="modal-caption">{selectedImage.caption}</p>
+              <p className="modal-caption">{images.caption}</p>
             </div>
           </div>
         )}

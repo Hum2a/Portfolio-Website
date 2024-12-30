@@ -119,4 +119,20 @@
     cursor: pointer;
   }
   
+  .bias-website-link {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    color: #ffffff;
+    background-color: #830202;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .bias-website-link:hover {
+    background-color: #a31c1c;
+    transform: scale(1.1);
+  }
   
