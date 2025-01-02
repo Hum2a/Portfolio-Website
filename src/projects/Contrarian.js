@@ -5,15 +5,14 @@ import "../styles/Contrarian.css";
 
 const Contrarian = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  const images = [
-    { src: `${process.env.PUBLIC_URL}/images/Contrarian/Homepage.png`, caption: "Homepage" },
-    { src: `${process.env.PUBLIC_URL}/images/Contrarian/Upload.png`, caption: "Upload Your Pitch Deck" },
-    { src: `${process.env.PUBLIC_URL}/images/Contrarian/Results.png`, caption: "Analysis Results" },
-    { src: `${process.env.PUBLIC_URL}/images/Contrarian/Details.png`, caption: "Detailed Insights" },
-  ];
-
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  const media = [
+    { type: "image", src: `${process.env.PUBLIC_URL}/images/Contrarian/Homepage.png`, caption: "Homepage" },
+    { type: "image", src: `${process.env.PUBLIC_URL}/images/Contrarian/Round2.png`, caption: "Round 2" },
+    { type: "video", src: `${process.env.PUBLIC_URL}/videos/Contrarian/OmniWidget.mp4`, caption: "OmniWidget Demo" },
+  ];
 
   // Handle screen size change for navbar and hamburger menu
   useEffect(() => {
@@ -43,24 +42,30 @@ const Contrarian = () => {
           A pitch deck classifier for investors to analyze startup pitches.
         </p>
 
-        <div className="contrarian-images">
-          {images.map((image, index) => (
+        <div className="contrarian-media">
+          {media.map((item, index) => (
             <div
               key={index}
-              className="image-container"
-              onClick={() => setSelectedImage(image)}
+              className="media-container"
+              onClick={() =>
+                item.type === "image" ? setSelectedImage(item) : setSelectedVideo(item)
+              }
             >
-              <img
-                src={image.src}
-                alt={image.caption}
-                className="contrarian-image"
-              />
-              <p className="image-caption">{image.caption}</p>
+              {item.type === "image" ? (
+                <img
+                  src={item.src}
+                  alt={item.caption}
+                  className="contrarian-image"
+                />
+              ) : (
+                <video className="contrarian-video-preview" src={item.src} />
+              )}
+              <p className="media-caption">{item.caption}</p>
             </div>
           ))}
         </div>
 
-        {/* Modal */}
+        {/* Image Modal */}
         {selectedImage && (
           <div className="modal" onClick={() => setSelectedImage(null)}>
             <div className="modal-content">
@@ -70,6 +75,21 @@ const Contrarian = () => {
                 className="modal-image"
               />
               <p className="modal-caption">{selectedImage.caption}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Video Modal */}
+        {selectedVideo && (
+          <div className="modal" onClick={() => setSelectedVideo(null)}>
+            <div className="modal-content">
+              <video
+                controls
+                className="modal-video"
+                autoPlay
+                src={selectedVideo.src}
+              />
+              <p className="modal-caption">{selectedVideo.caption}</p>
             </div>
           </div>
         )}
