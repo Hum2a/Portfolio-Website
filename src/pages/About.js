@@ -58,6 +58,9 @@ const About = () => {
           <h2>Professional Journey</h2>
           <p>I have worked on various innovative projects, including:</p>
           <ul>
+          <li>
+              <strong>Breathapplyser:</strong> An Android and IOS app designed to track alcohol intake and calculate how drunk you are at any given moment.
+            </li>
             <li>
               <strong>TheraBot:</strong> A conversational AI mental health
               support chatbot deployed on WhatsApp and React websites.
@@ -81,19 +84,19 @@ const About = () => {
           <h2>Technical Expertise</h2>
           <ul>
             <li>
-              <strong>Frontend:</strong> React.js, Vue.js, Angular, Ember.js
+              <strong>Frontend:</strong> React.js, Vue.js, Angular, Ember.js, Next.js, Nuxt.js
             </li>
             <li>
-              <strong>Backend:</strong> Node.js, Python, .NET
+              <strong>Backend:</strong> Node.js, Python, .NET, C#
             </li>
             <li>
               <strong>Databases:</strong> Firebase, MongoDB, PostgreSQL
             </li>
             <li>
-              <strong>APIs:</strong> OpenAI API, Twilio, WhatsApp API
+              <strong>APIs:</strong> OpenAI API, Twilio, WhatsApp API, FinHub
             </li>
             <li>
-              <strong>Deployment:</strong> Render, Vercel, CI/CD pipelines
+              <strong>Deployment:</strong> Render, Vercel, CI/CD pipelines, HostPresto
             </li>
           </ul>
         </motion.div>
@@ -105,7 +108,17 @@ const About = () => {
             at the University of Portsmouth, I organized successful events and
             built engaging communities.
           </p>
+          <p>
+            I have competed in numerous badminton tournaments since I was 7, earning several trophies over the years.
+          </p>
+          <p>
+            I competed in Kickboxing for 2 years from september 2021 to 2023. Entering multiple interclubs and combatting other universities
+          </p>
+          <p>
+            I competed in Dodgeball for 2 years at university and won BUCS 22/23 with UoP Dodgeball.  
+          </p>
         </motion.div>
+
 
         <motion.div className="about-footer" variants={itemVariants}>
           <p>
