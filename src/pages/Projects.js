@@ -16,7 +16,7 @@ const projects = [
   {
     name: "BiasLens",
     description: "Political alignment analyser for web articles",
-    logo: "Biaslens.png",
+    logo: "BiasLens.png",
     route: "/biaslens",
     tags: ["JavaScript", "Next.js", "JavaScript", "Node.js", "Python", "Django", "Firebase", "Vercel", "MediaTech"],
   },
@@ -24,7 +24,7 @@ const projects = [
     name: "LifeSmart",
     description: "Collection of tools to teach financial literacy to young people",
     logo: "Lifesmart.png",
-    route: "/lifesmart",
+    route: "/lifeSmart",
     tags: ["JavaScript", "Node.js", "Vue.js", "Firebase", "HostPresto", "EdTech", "FinTech"],
   },
   {
@@ -44,14 +44,14 @@ const projects = [
   {
     name: "CulinAIry",
     description: "An AI-powered recipe generator for personalized meals",
-    logo: "Culinairy.png",
+    logo: "CulinAIry.png",
     route: "/culinary",
     tags: ["JavaScript", "Node.js", "React", "Firebase", "TypeScript", "Render", "FoodTech", "AiTech"],
   },
   {
     name: "Dad Joke Generator",
     description: "Press a button, get a dad joke",
-    logo: "Dadjokegenerator.png",
+    logo: "DadJokeGenerator.png",
     route: "/dadjokegenerator",
     tags: ["JavaScript", "Ember.js", "Node.js", "Render", "JokeTech"],
   },
