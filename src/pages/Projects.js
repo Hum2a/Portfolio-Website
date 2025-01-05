@@ -46,7 +46,7 @@ const projects = [
     description: "An AI-powered recipe generator for personalized meals",
     logo: "CulinAIry.png",
     route: "/culinary",
-    tags: ["JavaScript", "Node.js", "React", "Firebase", "TypeScript", "Render", "FoodTech", "AiTech"],
+    tags: ["JavaScript", "Node.js", "React", "Firebase", "TypeScript", "Render", "FoodTech", "AI"],
   },
   {
     name: "Dad Joke Generator",
@@ -74,8 +74,15 @@ const projects = [
     description: "Informative Website for the LDMF",
     logo: "LDMF.png",
     route: "/ldmf",
-    tags: ["JavaScript", "Vue.js"]
+    tags: ["JavaScript", "Vue.js", "Node.js"]
   },
+  // {
+  //   name: "PNG to SVG",
+  //   description: "Web tool to convert PNG's to SVG's",
+  //   logo: "PNGtoSVG.png",
+  //   route: "/pngtosvg",
+  //   tags: ["JavaScript", "Angular", "Node.js"]
+  // }
 ];
 
 const Projects = () => {
@@ -83,8 +90,9 @@ const Projects = () => {
   const [filteredProjects, setFilteredProjects] = useState(projects);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Extract unique tags from projects
-  const allTags = [...new Set(projects.flatMap((project) => project.tags))];
+  // Extract unique tags from projects and sort them alphabetically
+  const allTags = [...new Set(projects.flatMap((project) => project.tags))].sort();
+
 
   // Handle screen size change
   useEffect(() => {

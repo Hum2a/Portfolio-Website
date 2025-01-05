@@ -14,6 +14,7 @@ import DadJokeGenerator from "../projects/DadJokeGenerator";
 import DoomScroll from "../projects/Doomscroll";
 import Contrarian from "../projects/Contrarian";
 import LiberalDemocrats from "../projects/LiberalDemocrats";
+import PNGtoSVG from "../projects/PNGtoSVG";
 
 const Navigation = () => {
   return (
@@ -32,6 +33,7 @@ const Navigation = () => {
       <Route path="/doomscroll" element={<DoomScroll />} />
       <Route path="/contrarian" element={<Contrarian />} />
       <Route path="/ldmf" element={<LiberalDemocrats />} />
+      <Route path="/pngtosvg" element={<PNGtoSVG />} />
     </Routes>
   );
 };

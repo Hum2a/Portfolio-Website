@@ -1,0 +1,103 @@
+/* PNGtoSVG.css */
+
+.pngtosvg-container {
+    padding: 20px;
+    text-align: center;
+    background: linear-gradient(to right, #2c3e50, #3498db);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pngtosvg-logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  .pngtosvg-title {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .pngtosvg-subtitle {
+    font-size: 1.2rem;
+    color: #ecf0f1;
+    margin-bottom: 30px;
+  }
+  
+  .upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  input[type="file"] {
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+  }
+  
+  .convert-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .convert-button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+  }
+  
+  .convert-button:hover:not(:disabled) {
+    background-color: #c0392b;
+    transform: scale(1.05);
+  }
+  
+  .result-section {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .svg-preview {
+    margin: 10px auto;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ecf0f1;
+    border-radius: 10px;
+    background-color: #f4f4f4;
+  }
+  
+  .download-link {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #27ae60;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .download-link:hover {
+    background-color: #1e8449;
+    transform: scale(1.1);
+  }
+  
