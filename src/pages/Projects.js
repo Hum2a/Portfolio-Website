@@ -23,8 +23,8 @@ const projects = [
   {
     name: "LifeSmart",
     description: "Collection of tools to teach financial literacy to young people",
-    logo: "Lifesmart.png",
-    route: "/lifeSmart",
+    logo: "LifeSmart.png",
+    route: "/lifesmart",
     tags: ["JavaScript", "Node.js", "Vue.js", "Firebase", "HostPresto", "EdTech", "FinTech"],
   },
   {
