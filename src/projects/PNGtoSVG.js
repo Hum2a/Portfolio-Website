@@ -6,10 +6,17 @@ import HamburgerMenu from "../components/HamburgerMenu";
 import "../styles/PNGtoSVG.css";
 
 const PNGtoSVG = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [convertedSVG, setConvertedSVG] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const containerVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 1, ease: "easeInOut" },
+    },
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,69 +29,76 @@ const PNGtoSVG = () => {
     };
   }, []);
 
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
-  const handleConvert = async () => {
-    if (!selectedFile) return;
-    setLoading(true);
-    
-    // Mocking conversion logic for demo
-    setTimeout(() => {
-      setConvertedSVG(
-        `<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\">
-          <circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"#3498db\" />
-        </svg>`
-      );
-      setLoading(false);
-    }, 2000);
-  };
-
   return (
     <div>
+      {/* Conditional rendering for HamburgerMenu or Navbar */}
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
         className="pngtosvg-container"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
       >
+        {/* Logo */}
         <motion.img
           src={`${process.env.PUBLIC_URL}/logos/PNGtoSVG.png`}
-          alt="PNGtoSVG Logo"
+          alt="PNG to SVG Logo"
           className="pngtosvg-logo"
           whileHover={{ scale: 1.1 }}
         />
 
-        <h1 className="pngtosvg-title">PNG to SVG Converter</h1>
-        <p className="pngtosvg-subtitle">Easily convert PNG images into SVG format.</p>
+        {/* Title */}
+        <motion.h1
+          className="pngtosvg-title"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
+          PNG to SVG Converter
+        </motion.h1>
+        <p className="pngtosvg-subtitle">
+          Easily convert PNG images into SVG format.
+        </p>
 
-        <div className="upload-section">
-          <input type="file" accept="image/png" onChange={handleFileChange} />
-          <button
-            className="convert-button"
-            onClick={handleConvert}
-            disabled={!selectedFile || loading}
-          >
-            {loading ? "Converting..." : "Convert"}
-          </button>
+        {/* Features Section */}
+        <div className="pngtosvg-features">
+          <h2>Features:</h2>
+          <ul>
+            <li>Simple and intuitive upload process</li>
+            <li>High-quality SVG conversions</li>
+            <li>Downloadable results in one click</li>
+          </ul>
         </div>
 
-        {convertedSVG && (
-          <div className="result-section">
-            <h2>Converted SVG:</h2>
-            <div className="svg-preview" dangerouslySetInnerHTML={{ __html: convertedSVG }} />
-            <a
-              href={`data:image/svg+xml;base64,${btoa(convertedSVG)}`}
-              download="converted.svg"
-              className="download-link"
-            >
-              Download SVG
-            </a>
-          </div>
-        )}
+        {/* Visit Website Button */}
+        <motion.a
+          href="https://pngtosvg-ulmg.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pngtosvg-website-link"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+        >
+          Visit the Website
+        </motion.a>
+
+        {/* Images Section */}
+        <div className="pngtosvg-images">
+          <motion.div
+            className="image-container"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.4 }}
+          >
+            <img
+              src={`${process.env.PUBLIC_URL}/images/PNGtoSVG/sample.png`}
+              alt="Sample Conversion"
+              className="pngtosvg-image"
+            />
+            <p className="image-caption">Sample Conversion Result</p>
+          </motion.div>
+        </div>
+
       </motion.div>
     </div>
   );

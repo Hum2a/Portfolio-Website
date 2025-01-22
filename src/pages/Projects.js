@@ -76,13 +76,13 @@ const projects = [
     route: "/ldmf",
     tags: ["JavaScript", "Vue.js", "Node.js"]
   },
-  // {
-  //   name: "PNG to SVG",
-  //   description: "Web tool to convert PNG's to SVG's",
-  //   logo: "PNGtoSVG.png",
-  //   route: "/pngtosvg",
-  //   tags: ["JavaScript", "Angular", "Node.js"]
-  // }
+  {
+    name: "PNG to SVG",
+    description: "Web tool to convert PNG's to SVG's",
+    logo: "PNGtoSVG.png",
+    route: "/pngtosvg",
+    tags: ["JavaScript", "Angular", "Node.js"]
+  }
 ];
 
 const Projects = () => {
