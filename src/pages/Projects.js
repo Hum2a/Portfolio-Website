@@ -82,7 +82,14 @@ const projects = [
     logo: "PNGtoSVG.png",
     route: "/pngtosvg",
     tags: ["JavaScript", "Angular", "Node.js"]
-  }
+  },
+  {
+    name: "Doppelgan-Car",
+    description: "AI-powered car personality matcher",
+    logo: "DoppelganCar.png",
+    route: "/doppelgancar",
+    tags: ["AI", "Machine Learning", "Nuxt.js", "JavaScript", "Python", "Flask", "Render", "OpenAI"],
+  }  
 ];
 
 const Projects = () => {

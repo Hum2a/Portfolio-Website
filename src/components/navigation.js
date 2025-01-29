@@ -15,6 +15,7 @@ import DoomScroll from "../projects/Doomscroll";
 import Contrarian from "../projects/Contrarian";
 import LiberalDemocrats from "../projects/LiberalDemocrats";
 import PNGtoSVG from "../projects/PNGtoSVG";
+import DoppelganCar from "../projects/DoppelganCar";
 
 const Navigation = () => {
   return (
@@ -34,6 +35,7 @@ const Navigation = () => {
       <Route path="/contrarian" element={<Contrarian />} />
       <Route path="/ldmf" element={<LiberalDemocrats />} />
       <Route path="/pngtosvg" element={<PNGtoSVG />} />
+      <Route path="/doppelgancar" element={<DoppelganCar />} />
     </Routes>
   );
 };
