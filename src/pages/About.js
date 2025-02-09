@@ -107,15 +107,16 @@ const About = () => {
             As the Social Secretary for the Japanese and Self Defence Societies
             at the University of Portsmouth, I organised successful events and
             built engaging communities.
+            These efforts resulted in the Japanese Society receiving a nomination for “Most Improved Society of the Year”.
           </p>
           <p>
             I have competed in numerous badminton tournaments since I was 7, earning several trophies over the years.
           </p>
           <p>
-            I competed in Kickboxing for 2 years from september 2021 to 2023. Entering multiple interclubs and combatting other universities
+            I competed in Kickboxing for 2 years from September 2021 to 2023. Entering multiple interclubs and competing with other universities.
           </p>
           <p>
-            I competed in Dodgeball for 2 years at university and won BUCS 22/23 with UoP Dodgeball.  
+            I competed in Dodgeball for 2 years at university and won BUCS 22/23 with UoP Dodgeball.
           </p>
         </motion.div>
 
