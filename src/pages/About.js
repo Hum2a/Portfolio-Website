@@ -56,7 +56,7 @@ const About = () => {
 
         <motion.div className="about-section" variants={itemVariants}>
           <h2>Professional Journey</h2>
-          <p>I have worked on various innovative projects, including:</p>
+          <p>Here are a few of the innovative projects I've worked on...</p>
           <ul>
           <li>
               <strong>Breathapplyser:</strong> An Android and IOS app designed to track alcohol intake and calculate how drunk you are at any given moment.
@@ -67,14 +67,14 @@ const About = () => {
             </li>
             <li>
               <strong>CulinAIry:</strong> An AI-powered recipe generator for
-              personalized meal plans.
+              personalised meal plans.
             </li>
             <li>
-              <strong>BiasLens:</strong> A modern news aggregator analyzing
+              <strong>BiasLens:</strong> A modern news aggregator analysing
               sentiment and political bias using NLP techniques.
             </li>
             <li>
-              <strong>LifeSmart:</strong> Financial literacy tools like stock
+              <strong>LifeSmart:</strong> Financial literacy tools such as stock 
               market and asset simulators.
             </li>
           </ul>
@@ -105,7 +105,7 @@ const About = () => {
           <h2>Beyond Coding</h2>
           <p>
             As the Social Secretary for the Japanese and Self Defence Societies
-            at the University of Portsmouth, I organized successful events and
+            at the University of Portsmouth, I organised successful events and
             built engaging communities.
           </p>
           <p>
