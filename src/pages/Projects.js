@@ -14,6 +14,13 @@ const projects = [
     tags: ["JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Android", "IOS"],
   },
   {
+    name: "B8",
+    description: "Marketting Firm",
+    logo: "B8.png",
+    route: "/b8",
+    tags: ["JavaScript", "React.js", "Vite", "Stripe", "Google Pay API", "Google Maps API", "Render"]
+  },
+  {
     name: "BiasLens",
     description: "Political alignment analyser for web articles",
     logo: "BiasLens.png",
