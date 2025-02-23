@@ -42,7 +42,7 @@ const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     >
       {/* Logo */}
       <motion.img
-        src={`${process.env.PUBLIC_URL}/logos/doppelgancar.png`}
+        src={`${process.env.PUBLIC_URL}/logos/Doppelgancar.png`}
         alt="DoppelganCar Logo"
         className="doppelgancar-logo"
         whileHover={{ scale: 1.1 }}

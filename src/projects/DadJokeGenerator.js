@@ -26,7 +26,7 @@ const DadJokeGenerator = () => {
 
       <div className="dadjokegenerator-container">
         <img
-          src={`${process.env.PUBLIC_URL}/logos/dadjokegenerator.png`}
+          src={`${process.env.PUBLIC_URL}/logos/DadJokeGenerator.png`}
           alt="DadJokeGenerator Logo"
           className="dadjokegenerator-logo animated-logo"
         />

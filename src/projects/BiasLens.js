@@ -57,7 +57,7 @@ const BiasLens = () => {
       >
         {/* Logo */}
         <motion.img
-          src={`${process.env.PUBLIC_URL}/logos/biaslens.png`}
+          src={`${process.env.PUBLIC_URL}/logos/BiasLens.png`}
           alt="BiasLens Logo"
           className="biaslens-logo"
           variants={logoVariants}

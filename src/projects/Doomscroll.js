@@ -26,7 +26,7 @@ const DoomScroll = () => {
 
       <div className="doomscroll-container">
         <img
-          src={`${process.env.PUBLIC_URL}/logos/doomscroll.png`}
+          src={`${process.env.PUBLIC_URL}/logos/Doomscroll.png`}
           alt="DoomScroll Logo"
           className="doomscroll-logo"
         />

@@ -50,7 +50,7 @@ const Breathapplyser = () => {
         variants={pageVariants}
       >
         <motion.img
-          src={`${process.env.PUBLIC_URL}/logos/breathapplyser.png`}
+          src={`${process.env.PUBLIC_URL}/logos/Breathapplyser.png`}
           alt="Breathapplyser Logo"
           className="breathapplyser-logo"
           whileHover={{ scale: 1.1 }}

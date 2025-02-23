@@ -62,7 +62,7 @@ const LifeSmart = () => {
 
       <div className="lifesmart-container">
         <img
-          src={`${process.env.PUBLIC_URL}/logos/lifesmart.png`}
+          src={`${process.env.PUBLIC_URL}/logos/LifeSmart.png`}
           alt="LifeSmart Logo"
           className="lifesmart-logo"
         />

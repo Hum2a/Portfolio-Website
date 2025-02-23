@@ -59,7 +59,7 @@ const Therabot = () => {
       >
         {/* Logo */}
         <motion.img
-          src={`${process.env.PUBLIC_URL}/logos/therabot.png`}
+          src={`${process.env.PUBLIC_URL}/logos/Therabot.png`}
           alt="Therabot Logo"
           className="therabot-logo"
           whileHover={{ scale: 1.1 }}

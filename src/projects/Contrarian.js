@@ -33,7 +33,7 @@ const Contrarian = () => {
 
       <div className="contrarian-container">
         <img
-          src={`${process.env.PUBLIC_URL}/logos/contrarian.png`}
+          src={`${process.env.PUBLIC_URL}/logos/Contrarian.png`}
           alt="Contrarian Logo"
           className="contrarian-logo"
         />

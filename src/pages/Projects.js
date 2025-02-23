@@ -93,7 +93,7 @@ const projects = [
   {
     name: "Doppelgan-Car",
     description: "AI-powered car personality matcher",
-    logo: "DoppelganCar.png",
+    logo: "Doppelgancar.png",
     route: "/doppelgancar",
     tags: ["AI", "Machine Learning", "Nuxt.js", "JavaScript", "Python", "Flask", "Render", "OpenAI"],
   }  
