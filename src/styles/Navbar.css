@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+}
+
 .navbar {
   display: flex;
   justify-content: center;
@@ -15,6 +19,8 @@
   z-index: 1000;
   border-bottom: 1px solid rgba(0, 255, 255, 0.2);
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .navbar::before {
@@ -142,5 +148,12 @@
     font-size: 0.9rem;
     padding: 6px 12px;
   }
+}
+
+/* Add a wrapper for animations */
+.animation-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
 }
   
