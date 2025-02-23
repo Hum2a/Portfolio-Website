@@ -21,19 +21,29 @@ export default function B8() {
     <div className="page">
       <Navbar />
       <section className="hero">
-        <motion.h1 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>Welcome to B8</motion.h1>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }}>
-          Uniting innovative ventures across industries to empower communities and businesses.
+        <motion.h1 
+          initial={{ opacity: 0, y: -50 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        >
+          Welcome to B8
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          transition={{ delay: 0.5, duration: 1.5 }}
+        >
+          Unleashing potential through innovation and determination.
         </motion.p>
         <motion.a 
           href="https://b8network.com" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="network-button"
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          Visit B8 Network
+          Enter B8 Network
         </motion.a>
       </section>
 
@@ -42,14 +52,17 @@ export default function B8() {
           <motion.div
             key={index}
             className="business-card"
-            whileHover={{ scale: 1.05 }}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1, duration: 0.8 }}
+            whileHover={{ 
+              scale: 1.02,
+              boxShadow: "0 0 20px rgba(255, 0, 0, 0.3)"
+            }}
           >
             <h3>{business.name}</h3>
             <p>{business.description}</p>
-            <a href={business.link}>Learn More</a>
+            <a href={business.link}>Explore →</a>
           </motion.div>
         ))}
       </section>

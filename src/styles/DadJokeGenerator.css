@@ -1,20 +1,32 @@
 /* Container Styles */
 .dadjokegenerator-container {
-  padding: 20px;
-  text-align: center;
-  background: linear-gradient(135deg, #ff7eb3, #ff758c, #ff7a45);
+  background: #000;
   min-height: 100vh;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: backgroundShift 6s infinite linear;
+  font-family: 'Arial', sans-serif;
+  padding: 20px;
+  color: #fff;
 }
 
-/* Animated Background Shift */
-@keyframes backgroundShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.dadjokegenerator-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    #000,
+    #000 10px,
+    #1a0011 10px,
+    #1a0011 20px
+  );
+  opacity: 0.3;
+  z-index: 1;
 }
 
 /* Logo Animation */
@@ -22,60 +34,71 @@
   width: 200px;
   height: auto;
   margin-bottom: 20px;
-  animation: bounce 2s infinite;
-  cursor: pointer;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 10px #ff69b4);
 }
 
 /* Title and Subtitle Animations */
 .animated-title {
-  font-size: 2.5rem;
-  color: #ffffff;
-  text-shadow: 0 0 10px #ff758c, 0 0 20px #ff758c;
-  animation: fadeIn 2s ease-in-out;
+  font-size: 3.5rem;
+  color: #fff;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
+  position: relative;
+  z-index: 2;
 }
 
 .animated-subtitle {
-  font-size: 1.2rem;
-  color: #ffffff;
+  font-size: 1.5rem;
+  color: #ff8c42;
   margin-bottom: 30px;
-  animation: slideIn 2s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideIn {
-  from { transform: translateY(50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  text-shadow: 0 0 5px #ff8c42;
+  position: relative;
+  z-index: 2;
 }
 
 /* Video Styles */
 .dadjoke-video-container {
-  margin-top: 20px;
-  text-align: center;
+  background: #0a0a0a;
+  border: 1px solid #ff69b4;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
+  max-width: 800px;
+  width: 90%;
+  margin: 2rem auto;
+  z-index: 2;
+}
+
+.dadjoke-video-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #ff69b4;
+  animation: scanline 2s linear infinite;
 }
 
 .dadjoke-video {
-  width: 80%;
-  max-width: 800px;
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-  animation: popIn 1.5s ease-in-out;
+  width: 100%;
+  border: 1px solid rgba(255, 105, 180, 0.3);
+  filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.3));
 }
 
-.animated-caption {
-  margin-top: 10px;
-  font-size: 1rem;
-  color: #ffffff;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-  animation: fadeIn 2.5s ease-in;
+.video-caption {
+  color: #ff8c42;
+  margin-top: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  text-shadow: 0 0 5px #ff8c42;
 }
 
 /* Joke Button Animation */
@@ -94,8 +117,9 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
 
 .animated-button:hover {
@@ -118,9 +142,9 @@
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 0 10px #ff758c; }
-  50% { box-shadow: 0 0 20px #ff4b2b; }
-  100% { box-shadow: 0 0 10px #ff758c; }
+  0% { box-shadow: 0 0 5px #ff69b4; }
+  50% { box-shadow: 0 0 20px #ff69b4; }
+  100% { box-shadow: 0 0 5px #ff69b4; }
 }
 
 .modal {
@@ -129,58 +153,77 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  overflow: hidden; /* Prevents scrolling */
 }
 
 .modal-content {
+  background: #000;
+  border: 2px solid #ff69b4;
+  padding: 20px;
+  position: relative;
   max-width: 90%;
-  max-height: 95%;
-  margin: auto;
-  text-align: center;
+  max-height: 90vh;
+  box-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
 }
 
 .modal-video {
   max-width: 100%;
-  max-height: 80vh; /* Prevents the video from overflowing the viewport */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-}
-
-.modal:hover {
-  cursor: pointer;
-}
-
-.dadjoke-video {
-  cursor: pointer; /* Indicates video can be clicked */
-}
-
-.dadjokegenerator-container .dadjoke-video-container .animated-caption {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #ffffff;
+  max-height: 70vh;
+  border: 1px solid rgba(255, 105, 180, 0.3);
 }
 
 .dadjoke-website-link {
   display: inline-block;
-  margin: 20px 0;
-  padding: 12px 24px;
-  font-size: 1.2rem;
-  color: #ffffff;
-  background-color: #ff4b2b;
-  border-radius: 50px;
+  padding: 1rem 2rem;
+  background: #ff69b4;
+  color: #fff;
   text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 8px 16px rgba(255, 75, 43, 0.5);
+  font-weight: bold;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+  z-index: 3;
+  margin: 20px 0;
 }
 
-.dadjoke-website-link:hover {
-  background-color: #ff7a45;
-  transform: scale(1.1);
+.dadjoke-website-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shine 2s infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes shine {
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 

@@ -1,67 +1,201 @@
 .contact-container {
-  padding: 20px;
-  text-align: center;
-  background: linear-gradient(135deg, #1f4037, #99f2c8);
+  padding: 40px 20px;
+  background: #000;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+}
+
+.contact-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    #000,
+    #000 10px,
+    #001a0a 10px,
+    #001a0a 20px
+  );
+  opacity: 0.3;
+  z-index: 1;
+}
+
+/* Matrix-style code rain effect */
+.contact-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 255, 85, 0.1) 25%,
+    transparent
+  );
+  animation: matrix-rain 20s linear infinite;
+  z-index: 2;
 }
 
 .contact-title {
-  font-size: 2.5rem;
-  color: #ffffff;
-  margin-bottom: 10px;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  font-size: 3.5rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px #00ff55, 0 0 20px #00ff55;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 3;
 }
 
 .contact-subtitle {
   font-size: 1.2rem;
-  color: #e3f2fd;
-  margin-bottom: 30px;
+  color: #80ff80;
+  text-shadow: 0 0 5px #80ff80;
+  max-width: 800px;
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 3;
 }
 
 .contact-methods {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  z-index: 3;
+  padding: 20px;
 }
 
 .contact-card {
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  width: 250px;
+  background: rgba(0, 26, 10, 0.7);
+  border: 1px solid #00ff55;
+  padding: 30px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 255, 85, 0.2);
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #00ff55;
+  animation: scanline 2s linear infinite;
 }
 
 .contact-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 255, 85, 0.4);
 }
 
 .contact-icon {
-  font-size: 3rem;
-  color: #1f4037;
+  font-size: 2.5rem;
+  color: #00ff55;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px #00ff55;
+}
+
+.contact-card h2 {
+  font-size: 1.8rem;
+  color: #80ff80;
+  text-shadow: 0 0 5px #80ff80;
   margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.contact-card p {
+  color: #fff;
+  margin-bottom: 20px;
+  text-shadow: 0 0 2px #fff;
 }
 
 .contact-button {
-  background: #1f4037;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  background: transparent;
+  color: #00ff55;
+  border: 1px solid #00ff55;
   padding: 10px 20px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 15px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.contact-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 85, 0.2),
+    transparent
+  );
+  animation: shine 2s infinite;
 }
 
 .contact-button:hover {
-  background: #99f2c8;
-  color: #1f4037;
-  transform: scale(1.1);
+  background: #00ff55;
+  color: #000;
+  box-shadow: 0 0 20px rgba(0, 255, 85, 0.5);
+}
+
+@keyframes scanline {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes matrix-rain {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes shine {
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes glow {
+  0% { text-shadow: 0 0 5px #00ff55; }
+  50% { text-shadow: 0 0 20px #00ff55; }
+  100% { text-shadow: 0 0 5px #00ff55; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .contact-title {
+    font-size: 2.5rem;
+  }
+  
+  .contact-methods {
+    padding: 10px;
+  }
+  
+  .contact-card {
+    padding: 20px;
+  }
 }

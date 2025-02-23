@@ -58,13 +58,13 @@ const Contact = () => {
       link: "tel:+447450251281",
       buttonText: "Call Me",
     },
-    {
-      icon: <FaTwitter />,
-      title: "Twitter",
-      description: "Follow me on Twitter",
-      link: "https://x.com/HumzaUnoriginal",
-      buttonText: "Follow",
-    },
+    // {
+    //   icon: <FaTwitter />,
+    //   title: "Twitter",
+    //   description: "Follow me on Twitter",
+    //   link: "https://x.com/HumzaUnoriginal",
+    //   buttonText: "Follow",
+    // },
   ];
 
   return (

@@ -1,34 +1,170 @@
 .homepage-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(to right, #1f4037, #99f2c8);
-    color: #fff;
-    font-family: "Arial, sans-serif";
-    text-align: center;
-    padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.homepage-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    #000,
+    #000 10px,
+    #001a1a 10px,
+    #001a1a 20px
+  );
+  opacity: 0.3;
+  z-index: 1;
+}
+
+/* Matrix-style rain effect */
+.homepage-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 255, 170, 0.1) 25%,
+    transparent
+  );
+  animation: matrix-rain 20s linear infinite;
+  z-index: 2;
+}
+
+.homepage-title {
+  font-size: 4.5rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  color: #fff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+  position: relative;
+  z-index: 3;
+}
+
+.homepage-subtitle {
+  font-size: 1.8rem;
+  margin-bottom: 40px;
+  color: #00ffa9;
+  text-shadow: 0 0 5px #00ffa9;
+  letter-spacing: 3px;
+  position: relative;
+  z-index: 3;
+}
+
+.explore-button {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border: 2px solid #0ff;
+  background: transparent;
+  color: #0ff;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 3;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.explore-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 255, 0.2),
+    transparent
+  );
+  animation: shine 2s infinite;
+}
+
+.explore-button:hover {
+  background: #0ff;
+  color: #000;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+  text-shadow: none;
+}
+
+/* Scanline effect */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
   }
-  
-  .homepage-title {
-    font-size: 3rem;
-    margin-bottom: 20px;
+  100% {
+    transform: translateY(100%);
   }
-  
-  .homepage-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
+}
+
+/* Matrix rain effect */
+@keyframes matrix-rain {
+  0% {
+    background-position: 0 0;
   }
-  
-  .explore-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #1f4037;
-    color: #fff;
-    transition: all 0.3s ease;
+  100% {
+    background-position: 0 100%;
   }
-  
+}
+
+@keyframes shine {
+  to {
+    left: 100%;
+  }
+}
+
+/* Add scanline effect */
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 255, 0.1);
+  animation: scanline 6s linear infinite;
+  z-index: 4;
+}
+
+/* Add glitch effect on hover */
+.homepage-title:hover {
+  animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+  0% {
+    text-shadow: 0 0 10px #0ff, 2px 2px #f0f;
+  }
+  25% {
+    text-shadow: 2px 2px #0ff, -2px -2px #f0f;
+  }
+  50% {
+    text-shadow: -2px -2px #0ff, 2px 2px #f0f;
+  }
+  75% {
+    text-shadow: 2px -2px #0ff, -2px 2px #f0f;
+  }
+  100% {
+    text-shadow: -2px 2px #0ff, 2px -2px #f0f;
+  }
+}
