@@ -30,6 +30,10 @@ const BiasLens = () => {
       src: `${process.env.PUBLIC_URL}/images/BiasLens/Homepage 2.png`,
       caption: "News articles analyzed for bias",
     },
+    {
+      src: `${process.env.PUBLIC_URL}/images/BiasLens/Homepage 3.png`,
+      caption: "News articles analyzed for bias",
+    },
   ];
 
   // Handle screen size change for navbar and hamburger menu

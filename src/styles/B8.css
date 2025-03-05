@@ -188,5 +188,252 @@ footer {
 footer p {
     color: #fff; /* Ensure footer text is visible */
     margin: 0;
+}
+
+.media-showcase {
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.media-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.media-button {
+    padding: 1rem 2rem;
+    background: #0a0a0a;
+    border: 1px solid #ff0000;
+    color: #fff;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.media-button.active {
+    background: #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.media-item {
+    position: relative;
+    border: 1px solid #ff0000;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 16/9;
+    background: #0a0a0a;
+}
+
+.media-item img,
+.media-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.media-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.media-item:hover .media-overlay {
+    transform: translateY(0);
+}
+
+.media-overlay h4 {
+    color: #ff0000;
+    margin: 0;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.media-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 2rem;
+}
+
+.media-modal img {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+.close-button {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    color: #ff0000;
+    font-size: 2rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ff0000;
+}
+
+.close-button:hover {
+    background: #ff0000;
+    color: #fff;
+}
+
+.video-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .media-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .media-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.content-section {
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 2;
+    border: 1px solid #ff0000;
+    margin: 2rem;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.content-section h2 {
+    font-size: 2.5rem;
+    color: #ff0000;
+    text-align: center;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.content-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    color: #ccc;
+}
+
+.content-highlight {
+    background: #0a0a0a;
+    padding: 2rem;
+    border: 1px solid #ff0000;
+    position: relative;
+    overflow: hidden;
+}
+
+.content-highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #ff0000;
+    animation: scanline 2s linear infinite;
+}
+
+.content-highlight h3 {
+    color: #ff0000;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.tech-card {
+    background: #0a0a0a;
+    padding: 2rem;
+    border: 1px solid #ff0000;
+    transition: transform 0.3s ease;
+}
+
+.tech-card h3 {
+    color: #ff0000;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+}
+
+.tech-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.tech-card li {
+    color: #ccc;
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.tech-card li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #ff0000;
+}
+
+@media (max-width: 768px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .content-section {
+        padding: 2rem 1rem;
+        margin: 1rem;
+    }
+    
+    .content-section h2 {
+        font-size: 2rem;
+    }
 } 
   

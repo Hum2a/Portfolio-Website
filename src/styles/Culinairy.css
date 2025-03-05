@@ -1,4 +1,4 @@
-.culinary-container {
+.culinairy-container {
   background: #000;
   min-height: 100vh;
   position: relative;
@@ -10,7 +10,7 @@
   color: #fff;
 }
 
-.culinary-container::before {
+.culinairy-container::before {
   content: '';
   position: absolute;
   top: 0;
@@ -57,18 +57,19 @@
   z-index: 2;
 }
 
-.culinary-images {
+.culinairy-images-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 2rem;
   padding: 2rem;
   position: relative;
   z-index: 2;
   width: 100%;
   max-width: 1200px;
+  justify-items: center;
 }
 
-.image-container {
+.culinairy-image-container {
   background: #0a0a0a;
   border: 1px solid #ff6b35;
   padding: 1rem;
@@ -76,9 +77,13 @@
   overflow: hidden;
   transition: transform 0.3s ease;
   box-shadow: 0 0 15px rgba(255, 107, 53, 0.2);
+  width: 350px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
-.image-container::before {
+.culinairy-image-container::before {
   content: '';
   position: absolute;
   top: 0;
@@ -86,30 +91,34 @@
   width: 100%;
   height: 2px;
   background: #ff6b35;
-  animation: scanline 2s linear infinite;
+  animation: culinairy-scanline 2s linear infinite;
 }
 
-.image-container:hover {
+.culinairy-image-container:hover {
   transform: scale(1.02);
   box-shadow: 0 0 25px rgba(255, 107, 53, 0.4);
 }
 
-.culinary-image {
+.culinairy-image {
   width: 100%;
+  height: 230px;
+  object-fit: cover;
   border: 1px solid rgba(255, 107, 53, 0.3);
   filter: drop-shadow(0 0 5px rgba(255, 107, 53, 0.3));
 }
 
-.image-caption {
+.culinairy-image-caption {
   color: #ffd700;
-  margin-top: 15px;
+  margin-top: auto;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 0.9rem;
   text-shadow: 0 0 5px #ffd700;
+  padding: 10px 0;
+  text-align: center;
 }
 
-.modal {
+.culinairy-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -122,7 +131,7 @@
   z-index: 1000;
 }
 
-.modal-content {
+.culinairy-modal-content {
   background: #000;
   border: 2px solid #ff6b35;
   padding: 20px;
@@ -132,13 +141,13 @@
   box-shadow: 0 0 30px rgba(255, 107, 53, 0.4);
 }
 
-.modal-image {
+.culinairy-modal-image {
   max-width: 100%;
   max-height: 70vh;
   border: 1px solid rgba(255, 107, 53, 0.3);
 }
 
-.modal-caption {
+.culinairy-modal-caption {
   color: #ffd700;
   margin-top: 15px;
   text-transform: uppercase;
@@ -146,24 +155,24 @@
   text-shadow: 0 0 5px #ffd700;
 }
 
-@keyframes scanline {
+@keyframes culinairy-scanline {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 
-@keyframes shine {
+@keyframes culinairy-shine {
   to {
     left: 100%;
   }
 }
 
-@keyframes pulse {
+@keyframes culinairy-pulse {
   0% { opacity: 0.5; }
   50% { opacity: 1; }
   100% { opacity: 0.5; }
 }
 
-@keyframes glow {
+@keyframes culinairy-glow {
   0% { box-shadow: 0 0 5px #ff6b35; }
   50% { box-shadow: 0 0 20px #ff6b35; }
   100% { box-shadow: 0 0 5px #ff6b35; }
@@ -200,5 +209,17 @@
     rgba(255, 255, 255, 0.2),
     transparent
   );
-  animation: shine 2s infinite;
+  animation: culinairy-shine 2s infinite;
+}
+
+@media (max-width: 768px) {
+  .culinairy-images-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .culinairy-image-container {
+    width: 100%;
+    max-width: 350px;
+  }
 }

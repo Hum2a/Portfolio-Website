@@ -18,7 +18,7 @@ const projects = [
     description: "Marketting Firm",
     logo: "B8.png",
     route: "/b8",
-    tags: ["JavaScript", "React.js", "Vite", "Stripe", "Google Pay API", "Google Maps API", "Render"]
+    tags: ["JavaScript", "React.js", "Vite", "Stripe", "Google Pay API", "Google Maps API", "React-Globe.gl", "Custom CMS", "Firebase", "Render"]
   },
   {
     name: "BiasLens",
