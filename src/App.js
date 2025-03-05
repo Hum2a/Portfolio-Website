@@ -1,36 +1,38 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import './App.css';
 import Navigation from "./components/navigation";
-import { initGA, logPageView } from './utils/analytics';
+import AppRoutes from "./routes/AppRoutes";
+import firebaseAnalytics from './services/firebaseAnalytics';
+// Commented out for testing
+// import EnhancedCookieConsent from './components/EnhancedCookieConsent';
+import ScrollTracker from './components/ScrollTracker';
+import TimeTracker from './components/TimeTracker';
 
-const App = () => {
+// PageTracker component to track page views
+const PageTracker = () => {
   useEffect(() => {
-    // Initialize Google Analytics
-    initGA();
-    
-    // Log initial page view
-    logPageView();
-    
-    // Log page views on route changes
-    const handleRouteChange = () => {
-      logPageView();
-    };
+    // Track page view when component mounts
+    firebaseAnalytics.trackPageView();
+  }, []);
 
-    // Listen for route changes
-    window.addEventListener('popstate', handleRouteChange);
-    
-    return () => {
-      window.removeEventListener('popstate', handleRouteChange);
-    };
+  return null;
+};
+
+function App() {
+  useEffect(() => {
+    // Initialize analytics when app loads
+    firebaseAnalytics.initAnalytics();
   }, []);
 
   return (
     <Router>
-      <div style={{ fontFamily: "Arial, sans-serif" }}>
-        <Navigation />
+      <div className="App">
+        <PageTracker />
+        <AppRoutes />
       </div>
     </Router>
   );
-};
+}
 
 export default App;

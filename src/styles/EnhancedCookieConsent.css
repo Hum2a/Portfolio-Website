@@ -1,0 +1,108 @@
+.enhanced-cookie-consent {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 1rem;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.5s ease-out;
+}
+
+.consent-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+}
+
+.consent-content h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.consent-content p {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  max-width: 800px;
+}
+
+.consent-buttons {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.consent-buttons button {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.accept-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.accept-button:hover {
+  background-color: #45a049;
+}
+
+.decline-button {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+.decline-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.consent-footer {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.consent-footer a {
+  color: #9ecbff;
+  text-decoration: none;
+}
+
+.consent-footer a:hover {
+  text-decoration: underline;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .consent-content {
+    padding: 0.5rem;
+  }
+  
+  .consent-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .consent-buttons button {
+    width: 100%;
+  }
+} 

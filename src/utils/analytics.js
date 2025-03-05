@@ -2,54 +2,126 @@ import ReactGA from 'react-ga4';
 
 // Initialize Google Analytics
 export const initGA = () => {
-  ReactGA.initialize('G-4NQRQB6C7S');
+  ReactGA.initialize('G-4NQRQB6C7S'); // Your measurement ID
   console.log('Google Analytics initialized');
 };
 
-// Log page views
+// Basic page view tracking
 export const logPageView = () => {
   ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
-  console.log(`Logged pageview for: ${window.location.pathname}`);
 };
 
-// Log events (button clicks, downloads, etc.)
-export const logEvent = (category, action, label) => {
-  ReactGA.event({
-    category: category,
-    action: action,
-    label: label,
-  });
-  console.log(`Logged event - Category: ${category}, Action: ${action}, Label: ${label}`);
-};
-
-// Track specific user engagement metrics
-export const trackUserEngagement = {
-  // Track when users view a specific project
-  trackProjectView: (projectName) => {
-    logEvent('Portfolio', 'Project View', projectName);
+// Enhanced event tracking
+export const analytics = {
+  // Track any click event with element details
+  trackClick: (elementName, elementType, pageSection) => {
+    ReactGA.event({
+      category: 'User Interaction',
+      action: 'Click',
+      label: elementName,
+      non_interaction: false,
+      custom_parameters: {
+        element_type: elementType,
+        page_section: pageSection
+      }
+    });
   },
 
-  // Track when users click external links
-  trackExternalLink: (linkName, url) => {
-    logEvent('External Link', 'Click', `${linkName}: ${url}`);
+  // Track form interactions
+  trackForm: (formName, action, status) => {
+    ReactGA.event({
+      category: 'Form',
+      action: action, // 'Start', 'Submit', 'Error', 'Complete'
+      label: formName,
+      custom_parameters: {
+        form_status: status
+      }
+    });
   },
 
-  // Track when users download files
-  trackDownload: (fileName) => {
-    logEvent('Download', 'Click', fileName);
+  // Track content visibility
+  trackVisibility: (elementName, isVisible) => {
+    ReactGA.event({
+      category: 'Content',
+      action: isVisible ? 'Viewed' : 'Hidden',
+      label: elementName
+    });
   },
 
-  // Track contact form interactions
-  trackContactForm: (status) => {
-    logEvent('Contact Form', status, 'Form Interaction');
+  // Track scroll depth
+  trackScrollDepth: (depth, pageTitle) => {
+    ReactGA.event({
+      category: 'Scroll',
+      action: 'Depth',
+      label: `${depth}% - ${pageTitle}`
+    });
   },
 
   // Track time spent on page
-  trackTimeOnPage: () => {
-    let startTime = Date.now();
-    window.addEventListener('beforeunload', () => {
-      const timeSpent = Math.round((Date.now() - startTime) / 1000);
-      logEvent('User Engagement', 'Time on Page', `${timeSpent} seconds`);
+  trackEngagementTime: (timeInSeconds, pageName) => {
+    ReactGA.event({
+      category: 'Engagement',
+      action: 'Time Spent',
+      label: pageName,
+      value: timeInSeconds
+    });
+  },
+
+  // Track file downloads
+  trackDownload: (fileName, fileType) => {
+    ReactGA.event({
+      category: 'Download',
+      action: fileType,
+      label: fileName
+    });
+  },
+
+  // Track external link clicks
+  trackExternalLink: (linkUrl, linkText) => {
+    ReactGA.event({
+      category: 'External Link',
+      action: 'Click',
+      label: linkText,
+      custom_parameters: {
+        destination: linkUrl
+      }
+    });
+  },
+
+  // Track project interactions
+  trackProjectInteraction: (projectName, interactionType) => {
+    ReactGA.event({
+      category: 'Project',
+      action: interactionType, // 'View', 'Details', 'Demo', 'GitHub'
+      label: projectName
+    });
+  },
+
+  // Track user preferences
+  trackPreference: (preferenceType, preferenceValue) => {
+    ReactGA.event({
+      category: 'Preference',
+      action: preferenceType,
+      label: preferenceValue
+    });
+  },
+
+  // Track errors
+  trackError: (errorType, errorMessage, componentName) => {
+    ReactGA.event({
+      category: 'Error',
+      action: errorType,
+      label: `${componentName}: ${errorMessage}`
+    });
+  },
+
+  // Track search
+  trackSearch: (searchTerm, resultsCount) => {
+    ReactGA.event({
+      category: 'Search',
+      action: 'Query',
+      label: searchTerm,
+      value: resultsCount
     });
   }
 };
