@@ -1,43 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Character Set and Viewport Configuration -->
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Humza Butt - Full Stack Software Developer Portfolio</title>
+    <meta name="title" content="Humza Butt - Full Stack Software Developer Portfolio" />
+    <meta name="description" content="Portfolio of Humza Butt, a Full Stack Software Developer specializing in React, Firebase, and creating innovative applications with a cyberpunk aesthetic." />
+    <meta name="author" content="Humza Butt" />
+    <meta name="keywords" content="portfolio, developer, software engineer, full stack, react, javascript, firebase, web development, cyberpunk, UI design" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- Theme Color for Browser UI -->
     <meta name="theme-color" content="#1f4037" />
-    <meta
-      name="Humza Butts Portfolio"
-      content="Full Stack Software Developer"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    <meta name="msapplication-navbutton-color" content="#1f4037" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1f4037" />
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/logos/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/logos/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/logos/favicon-16x16.png" />
+    <link rel="mask-icon" href="%PUBLIC_URL%/logos/safari-pinned-tab.svg" color="#1f4037" />
+    <meta name="msapplication-TileColor" content="#1f4037" />
+    <meta name="msapplication-TileImage" content="%PUBLIC_URL%/logos/mstile-144x144.png" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://humzabutt.com/" />
+    <meta property="og:title" content="Humza Butt - Full Stack Software Developer Portfolio" />
+    <meta property="og:description" content="Portfolio of Humza Butt, a Full Stack Software Developer specializing in React, Firebase, and creating innovative applications with a cyberpunk aesthetic." />
+    <meta property="og:image" content="%PUBLIC_URL%/images/portfolio-preview.jpg" />
+    <meta property="og:image:alt" content="Humza Butt Portfolio Preview" />
+    <meta property="og:site_name" content="Humza Butt Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://humzabutt.com/" />
+    <meta property="twitter:title" content="Humza Butt - Full Stack Software Developer Portfolio" />
+    <meta property="twitter:description" content="Portfolio of Humza Butt, a Full Stack Software Developer specializing in React, Firebase, and creating innovative applications with a cyberpunk aesthetic." />
+    <meta property="twitter:image" content="%PUBLIC_URL%/images/portfolio-preview.jpg" />
+    <meta property="twitter:image:alt" content="Humza Butt Portfolio Preview" />
+    
+    <!-- Web App Manifest -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Humza Butt</title>
+    
+    <!-- Performance and Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/main-font.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="dns-prefetch" href="https://api.ipify.org" />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet" />
+    
+    <!-- Structured Data - Person -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Humza Butt",
+        "url": "https://humza-butt.onrender.com",
+        "jobTitle": "Full Stack Software Developer",
+        "knowsAbout": ["React", "JavaScript", "Firebase", "Web Development", "UI Design"],
+        "sameAs": [
+          "https://github.com/Hum2a,
+          "https://www.linkedin.com/in/humza-butt-201057208/"
+        ]
+      }
+    </script>
+    
+    <!-- Structured Data - WebSite -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://humza-butt.onrender.com",
+        "name": "Humza Butt - Portfolio",
+        "description": "Full Stack Software Developer Portfolio",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://humzabutt.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.ipify.org https://firestore.googleapis.com; frame-src 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(self), interest-cohort=()" />
+    
+    <!-- PWA Settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Humza Butt" />
+    <meta name="application-name" content="Humza Butt Portfolio" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://humzabutt.com/" />
+    
+    <!-- Disable automatic detection of phone numbers and addresses -->
+    <meta name="format-detection" content="telephone=no, address=no, email=no" />
   </head>
   <body>
-    <noscript>Humza Butt Portfolio</noscript>
+    <!-- Accessibility and NoScript -->
+    <noscript>
+      <div style="padding: 20px; text-align: center;">
+        <h1>JavaScript Required</h1>
+        <p>Humza Butt's Portfolio requires JavaScript to function properly. Please enable JavaScript in your browser settings to experience the full interactive portfolio.</p>
+      </div>
+    </noscript>
+    
+    <!-- Skip to main content for accessibility -->
+    <a class="skip-link" href="#main-content" style="position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; z-index: 999;">Skip to main content</a>
+    
+    <!-- Application Root -->
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <div id="portal-root"></div>
+    
+    <!-- Preloaded Content for SEO if JavaScript is disabled -->
+    <div style="display: none;" aria-hidden="true">
+      <h1>Humza Butt - Full Stack Software Developer</h1>
+      <p>Welcome to my portfolio showcasing my skills and projects in web development, React, Firebase, and more.</p>
+    </div>
+    
+    <!-- Inline Critical CSS for Above-the-fold Content -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      .skip-link:focus {
+        position: fixed;
+        left: 10px;
+        top: 10px;
+        width: auto;
+        height: auto;
+        padding: 10px 15px;
+        background: #1f4037;
+        color: white;
+        z-index: 999;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
   </body>
 </html>
