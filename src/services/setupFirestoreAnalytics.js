@@ -1,15 +1,6 @@
 import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-
-// Your Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyC2z-bw004i2Ns5bLReBv444RZO2mu0ZiY",
-  authDomain: "portfolio-110f1.firebaseapp.com",
-  projectId: "portfolio-110f1",
-  storageBucket: "portfolio-110f1.firebasestorage.app",
-  messagingSenderId: "236653178863",
-  appId: "1:236653178863:web:f14820795c55cfd785901a"
-};
+import { firebaseConfig } from '../utils/env';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

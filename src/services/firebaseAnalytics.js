@@ -12,16 +12,7 @@ import {
 } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
-
-// Your Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyC2z-bw004i2Ns5bLReBv444RZO2mu0ZiY",
-    authDomain: "portfolio-110f1.firebaseapp.com",
-    projectId: "portfolio-110f1",
-    storageBucket: "portfolio-110f1.firebasestorage.app",
-    messagingSenderId: "236653178863",
-    appId: "1:236653178863:web:f14820795c55cfd785901a"
-};
+import { firebaseConfig, featureFlags, apiKeys } from '../utils/env';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -205,8 +196,25 @@ const trackVisitor = async () => {
     };
     
     try {
-      // Use browser's geolocation API instead of IP-based geolocation
-      if (navigator.geolocation) {
+      // Try to get location from IPInfo if API token is available
+      if (apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN') {
+        const locationResponse = await fetch(`https://ipinfo.io/${ipAddress}/json?token=${apiKeys.ipinfoToken}`);
+        const locationData = await locationResponse.json();
+        
+        // Extract location details
+        if (locationData) {
+          userLocation = {
+            city: locationData.city || "Unknown",
+            region: locationData.region || "Unknown",
+            country: locationData.country || "Unknown",
+            coordinates: locationData.loc ? locationData.loc.split(",") : ["0", "0"],
+            timezone: locationData.timezone || deviceInfo.timezone,
+            isp: locationData.org || "Unknown"
+          };
+        }
+      } 
+      // Fallback to browser geolocation if IPInfo not available
+      else if (navigator.geolocation) {
         const position = await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             enableHighAccuracy: false,
