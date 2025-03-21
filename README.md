@@ -28,12 +28,9 @@ This is a modern, responsive personal portfolio website built with React. It sho
 ### Analytics & Backend
 - Firebase Firestore
 - Custom Analytics Implementation
-- IP Anonymization
-- Device Fingerprinting
 
 ### DevOps
 - GitHub Actions for CI/CD
-- Firebase Hosting
 
 ## 📁 Project Structure
 
