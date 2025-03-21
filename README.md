@@ -10,12 +10,6 @@ This is a modern, responsive personal portfolio website built with React. It sho
 - **Project Showcase**: Detailed project pages with descriptions, technologies used, and links
 - **Interactive UI**: Modern, cyberpunk-inspired UI with smooth animations and transitions
 - **Contact Form**: Direct communication channel for potential clients and collaborators
-- **Comprehensive Analytics**: Custom Firebase-based analytics solution that tracks:
-  - Visitor demographics and device information
-  - Page views and navigation patterns
-  - User engagement metrics (scroll depth, time on page)
-  - Event tracking (clicks, downloads, form submissions)
-- **Privacy-Focused**: IP anonymization and GDPR-compliant cookie consent implementation
 
 ## 🛠️ Technologies Used
 
