@@ -77,6 +77,19 @@ const projects = [
       { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/ExcelSpreadsheet.png`, caption: "Excel Export Example" },
     ],
   },
+  {
+    id: "investment-calculator",
+    title: "Investment Calculator",
+    description: "An interactive tool to help users calculate the future value of their investments.",
+    features: [
+      "Realistic market conditions",
+      "Portfolio management",
+      "Data-driven analytics and reports",
+    ],
+    media: [
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Investment Calculator/Investment Calculator.png`, caption: "Investment Calculator" },
+    ],
+  }
 ];
 
 const LifeSmart = () => {
