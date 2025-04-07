@@ -5,6 +5,23 @@ import "../styles/LifeSmart.css";
 
 const projects = [
   {
+    id: "misc",
+    title: "LifeSmart Platform Overview",
+    description: "A comprehensive look at the LifeSmart platform's main interfaces and features.",
+    features: [
+      "Modern and intuitive user interface",
+      "Secure user authentication",
+      "Admin dashboard for content management",
+      "Seamless navigation between tools",
+    ],
+    media: [
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Misc/HomeScreen.png`, caption: "Home Screen" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Misc/SelectScreen.png`, caption: "Tool Selection Screen" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Misc/Login.png`, caption: "Login Interface" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Misc/Admin Dashboard.png`, caption: "Admin Dashboard" },
+    ],
+  },
+  {
     id: "financial-quiz",
     title: "Financial Quiz",
     description: "A fun and interactive quiz to test and improve financial literacy.",
@@ -14,9 +31,10 @@ const projects = [
       "Real-time scoring and feedback",
     ],
     media: [
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Quiz/LandingPage.png`, caption: "Quiz Landing Page" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Quiz/Quizcreation.png`, caption: "Quiz Creation Page" },
       { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Quiz/Question 1.png`, caption: "Question 1 Example" },
       { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Quiz/Question 1 answered.png`, caption: "Answered Question" },
-      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Quiz/Quizcreation.png`, caption: "Quiz Creation Page" },
       { type: "video", src: `${process.env.PUBLIC_URL}/videos/LifeSmart/Quiz/Highlighted words.mp4`, caption: "Highlighted Words Feature" },
       { type: "video", src: `${process.env.PUBLIC_URL}/videos/LifeSmart/Quiz/Scoreboard video.mp4`, caption: "Scoreboard Feature Demo" },
     ],
@@ -34,6 +52,29 @@ const projects = [
       { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Asset Simulation/Homepage.png`, caption: "Homepage" },
       { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Asset Simulation/Results.png`, caption: "Simulation Results" },
       { type: "video", src: `${process.env.PUBLIC_URL}/videos/LifeSmart/Asset Simulation/Simulation.mp4`, caption: "Simulation in Action" },
+    ],
+  },
+  {
+    id: "budget-tool",
+    title: "Budget Planning Tool",
+    description: "An interactive tool to help users create and manage their personal budgets effectively.",
+    features: [
+      "Step-by-step budget creation process",
+      "Visual budget breakdown",
+      "Excel export functionality",
+      "Customizable expense categories",
+      "Interactive progress tracking",
+    ],
+    media: [
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step1.png`, caption: "Step 1: Income Input" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step2.png`, caption: "Step 2: Needs Expenses" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step3.png`, caption: "Step 3: Wants Expenses" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step4no.png`, caption: "Step 4: Savings Details" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step4yes.png`, caption: "Step 4: Savings Input" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step5.png`, caption: "Step 5: Budget Review" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step6.png`, caption: "Step 6: 6 Month Projection" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/Step7.png`, caption: "Step 7: Final Spreadsheet" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Budget Tool/ExcelSpreadsheet.png`, caption: "Excel Export Example" },
     ],
   },
 ];
@@ -72,7 +113,7 @@ const LifeSmart = () => {
         </p>
           {/* External Website Button */}
           <a
-            href="https://lifesmartinvestingtool.com"
+            href="https://lifesmart.onrender.com"
             target="_blank"
             rel="noopener noreferrer"
             className="external-link-button"
