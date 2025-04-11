@@ -1,0 +1,6 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Overlapping base card -->
+  <rect x="30" y="50" rx="12" ry="12" width="140" height="90" fill="#ffffff" stroke="#cccccc" stroke-width="2"/>
+  <!-- Top card -->
+  <rect x="50" y="30" rx="12" ry="12" width="140" height="90" fill="#ffcc00" stroke="#e6b800" stroke-width="2"/>
+</svg>
