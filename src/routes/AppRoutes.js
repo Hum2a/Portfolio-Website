@@ -17,6 +17,9 @@ import LiberalDemocrats from "../projects/LiberalDemocrats";
 import PNGtoSVG from "../projects/PNGtoSVG";
 import DoppelganCar from "../projects/DoppelganCar";
 import B8 from "../projects/B8";
+import MinistryOfJustice from "../projects/MinistryOfJustice";
+import Flashcards from "../projects/Flashcards";
+import BakesByOlayide from "../pages/BakesByOlayide";
 
 const AppRoutes = () => {
   return (
@@ -38,6 +41,9 @@ const AppRoutes = () => {
       <Route path="/pngtosvg" element={<PNGtoSVG />} />
       <Route path="/doppelgancar" element={<DoppelganCar />} />
       <Route path="/b8" element={<B8 />} />
+      <Route path="/ministryofjustice" element={<MinistryOfJustice />} />
+      <Route path="/flashcards" element={<Flashcards />} />
+      <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
     </Routes>
   );
 };

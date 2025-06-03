@@ -222,3 +222,12 @@
   border-radius: 4px;
 }
 
+.bakesbyolayide-logo {
+  object-fit: contain;
+  width: 90%;
+  height: 100%;
+  margin: auto;
+  display: block;
+  background: transparent;
+}
+

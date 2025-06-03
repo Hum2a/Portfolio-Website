@@ -12,13 +12,31 @@ const projects = [
     logo: "Breathapplyser.png",
     route: "/breathapplyser",
     tags: ["JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Android", "IOS"],
+    visible: true
+  },
+  {
+    name: "LifeSmart",
+    description: "Collection of tools to teach financial literacy to young people",
+    logo: "LifeSmart.png",
+    route: "/lifesmart",
+    tags: ["JavaScript", "Node.js", "React.js", "Vue.js", "Firebase", "HostPresto", "Render", "Chart.js", "EdTech", "FinTech"],
+    visible: true
   },
   {
     name: "B8",
     description: "Marketting Firm",
     logo: "B8.png",
     route: "/b8",
-    tags: ["JavaScript", "React.js", "Vite", "Stripe", "Google Pay API", "Google Maps API", "React-Globe.gl", "Custom CMS", "Firebase", "Render"]
+    tags: ["JavaScript", "React.js", "Vite", "Stripe", "Google Pay API", "Google Maps API", "React-Globe.gl", "Custom CMS", "Firebase", "Render"],
+    visible: true
+  },
+  {
+    name: "BakesByOlayide",
+    description: "E-commerce platform for custom baked goods and desserts",
+    logo: "BakesByOlayide.png",
+    route: "/bakesbyolayide",
+    tags: ["JavaScript", "React.js", "Node.js", "Firebase", "Stripe", "FoodTech", "E-commerce"],
+    visible: true
   },
   {
     name: "BiasLens",
@@ -26,34 +44,47 @@ const projects = [
     logo: "BiasLens.png",
     route: "/biaslens",
     tags: ["JavaScript", "Next.js", "JavaScript", "Node.js", "Python", "Django", "Firebase", "Vercel", "MediaTech"],
+    visible: true
   },
   {
-    name: "LifeSmart",
-    description: "Collection of tools to teach financial literacy to young people",
-    logo: "LifeSmart.png",
-    route: "/lifesmart",
-    tags: ["JavaScript", "Node.js", "Vue.js", "Firebase", "HostPresto", "EdTech", "FinTech"],
+    name: "Ministry of Justice",
+    description: "Task Management System for the Ministry of Justice",
+    logo: "MinistryofJustice.png",
+    route: "/ministryofjustice",
+    tags: ["JavaScript", "React.js", "Node.js", "Firebase", "Render"],
+    visible: false
   },
   {
     name: "Mentage",
     description: "WhatsApp chatbot designed to help the user learn",
     logo: "Mentage.png",
     route: "/mentage",
-    tags: ["JavaScript", "AI", "Chatbot", "EdTech", "React", "Python", "Flask", "Firebase", "OpenAi API"],
+    tags: ["JavaScript", "AI", "Chatbot", "EdTech", "React.js", "Python", "Flask", "Firebase", "OpenAi API", "WebApp"],
+    visible: true
   },
   {
     name: "Therabot",
     description: "Whatsapp & Webchat Chabot designed to provide conversational support therapy.",
     logo: "Therabot.png",
     route: "/therabot",
-    tags: ["JavaScript", "HealthTec", "Chatbot", "Node.js", "React", "Firebase", "Render", "OpenAi API"],
+    tags: ["JavaScript", "HealthTec", "Chatbot", "Node.js", "React.js", "Firebase", "Render", "OpenAi API", "WebApp"],
+    visible: true
+  },
+  {
+    name: "Flashcards",
+    description: "Interactive flashcard application for learning React concepts",
+    logo: "Flashcards.svg",
+    route: "/flashcards",
+    tags: ["JavaScript", "React", "CSS3", "HTML5", "Education"],
+    visible: true
   },
   {
     name: "CulinAIry",
     description: "An AI-powered recipe generator for personalized meals",
     logo: "CulinAIry.png",
     route: "/culinary",
-    tags: ["JavaScript", "Node.js", "React", "Firebase", "TypeScript", "Render", "FoodTech", "AI"],
+    tags: ["JavaScript", "Node.js", "React.js", "Firebase", "TypeScript", "Render", "FoodTech", "AI"],
+    visible: true
   },
   {
     name: "Dad Joke Generator",
@@ -61,34 +92,39 @@ const projects = [
     logo: "DadJokeGenerator.png",
     route: "/dadjokegenerator",
     tags: ["JavaScript", "Ember.js", "Node.js", "Render", "JokeTech"],
+    visible: true
   },
   {
     name: "DoomScroll",
     description: "Infinitely doom scroll useless facts",
     logo: "Doomscroll.png",
     route: "/doomscroll",
-    tags: ["JavaScript", "Node.js", "React", "Render", "JokeTech"],
+    tags: ["JavaScript", "Node.js", "React.js", "Render", "JokeTech"],
+    visible: true
   },
   {
     name: "Contrarian",
     description: "Pitchdeck classifier",
     logo: "Contrarian.png",
     route: "/contrarian",
-    tags: ["JavaScript", "AI", "Python", "React", "Flask", "Render", "OpenAi API", "Firebase", "InvestTech", "FinTech"],
+    tags: ["JavaScript", "AI", "Python", "React.js", "Flask", "Render", "OpenAi API", "Firebase", "InvestTech", "FinTech"],
+    visible: true
   },
   {
     name: "Liberal Democrats",
     description: "Informative Website for the LDMF",
     logo: "LDMF.png",
     route: "/ldmf",
-    tags: ["JavaScript", "Vue.js", "Node.js"]
+    tags: ["JavaScript", "Vue.js", "Node.js"],
+    visible: true
   },
   {
     name: "PNG to SVG",
     description: "Web tool to convert PNG's to SVG's",
     logo: "PNGtoSVG.png",
     route: "/pngtosvg",
-    tags: ["JavaScript", "Angular", "Node.js"]
+    tags: ["JavaScript", "Angular", "Node.js"],
+    visible: true
   },
   {
     name: "Doppelgan-Car",
@@ -96,17 +132,27 @@ const projects = [
     logo: "Doppelgancar.png",
     route: "/doppelgancar",
     tags: ["AI", "Machine Learning", "Nuxt.js", "JavaScript", "Python", "Flask", "Render", "OpenAI"],
-  }  
+    visible: false
+  },
+  {
+    name: "Tindev",
+    description: "Developer-focused networking platform for tech professionals",
+    logo: "Tindev.png",
+    route: "/tindev",
+    tags: ["JavaScript", "React.js", "Node.js", "Firebase", "WebRTC", "SocialTech", "WebApp"],
+    visible: false
+  }
 ];
 
 const Projects = () => {
   const [selectedTags, setSelectedTags] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState(projects);
+  const [filteredProjects, setFilteredProjects] = useState(projects.filter(project => project.visible));
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Extract unique tags from projects and sort them alphabetically
-  const allTags = [...new Set(projects.flatMap((project) => project.tags))].sort();
-
+  // Extract unique tags from visible projects and sort them alphabetically
+  const allTags = [...new Set(projects
+    .filter(project => project.visible)
+    .flatMap((project) => project.tags))].sort();
 
   // Handle screen size change
   useEffect(() => {
@@ -129,12 +175,14 @@ const Projects = () => {
     setSelectedTags(updatedTags);
 
     if (updatedTags.length > 0) {
-      const filtered = projects.filter((project) =>
-        updatedTags.every((selectedTag) => project.tags.includes(selectedTag))
-      );
+      const filtered = projects
+        .filter(project => project.visible)
+        .filter((project) =>
+          updatedTags.every((selectedTag) => project.tags.includes(selectedTag))
+        );
       setFilteredProjects(filtered);
     } else {
-      setFilteredProjects(projects);
+      setFilteredProjects(projects.filter(project => project.visible));
     }
   };
 
@@ -181,7 +229,7 @@ const Projects = () => {
                 <img
                   src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
                   alt={`${project.name} Logo`}
-                  className="project-logo"
+                  className={`project-logo${project.name === "BakesByOlayide" ? " bakesbyolayide-logo" : ""}`}
                 />
                 <div className="project-hover-content">
                   <h2 className="project-name">{project.name}</h2>
