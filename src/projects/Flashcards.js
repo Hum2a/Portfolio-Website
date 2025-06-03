@@ -117,6 +117,14 @@ const Flashcards = () => {
             Next
           </button>
         </div>
+        <a
+          href="https://flashcards-pj01.onrender.com"
+          className="flashcard-website-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit the Live Flashcards Website
+        </a>
       </div>
     </div>
   );
