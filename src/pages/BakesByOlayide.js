@@ -1,10 +1,33 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
+import Terminal from "../components/animations/Terminal";
+import CodeBlock from "../components/animations/CodeBlock";
+import "../styles/project-shared.css";
 import "../styles/BakesByOlayide.css";
 
 const BakesByOlayide = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const projectInfo = `const bakesByOlayide = {
+  name: "BakesByOlayide",
+  type: "E-commerce Platform",
+  description: "E-commerce platform for custom baked goods and desserts",
+  technologies: [
+    "React.js",
+    "Node.js",
+    "Firebase",
+    "Stripe"
+  ],
+  features: [
+    "Custom cake ordering",
+    "Product catalog",
+    "Secure payment processing",
+    "Order management",
+    "User accounts"
+  ]
+};`;
 
   useEffect(() => {
     const handleResize = () => {
@@ -15,81 +38,160 @@ const BakesByOlayide = () => {
   }, []);
 
   return (
-    <div className="bakesbyolayide-main">
-      {/* Conditional rendering for HamburgerMenu or Navbar */}
+    <div className="project-page">
       {isMobile ? <HamburgerMenu /> : <Navbar />}
-      <header className="bakesbyolayide-header">
-        <div className="bakesbyolayide-logo-area">
-          <img
+
+      <motion.div
+        className="project-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="project-header">
+          <motion.img
             src={`${process.env.PUBLIC_URL}/logos/BakesByOlayide.png`}
             alt="BakesByOlayide Logo"
-            className="bakesbyolayide-header-logo"
+            className="project-logo"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
           />
-          <span className="bakesbyolayide-header-title">Bakes by Olayide</span>
+          <h1 className="project-title">
+            <span className="code-comment">//</span> BakesByOlayide
+          </h1>
+          <Terminal
+            lines={[
+              "const bakesByOlayide = {",
+              "  name: 'BakesByOlayide',",
+              "  type: 'E-commerce Platform',",
+              "  description: 'E-commerce platform for custom baked goods',",
+              "  url: 'https://bakesbyolayide.co.uk'",
+              "};"
+            ]}
+            prompt=">"
+            typingSpeed={80}
+            autoStart={true}
+            className="project-terminal"
+            title="project.js"
+          />
         </div>
-        <nav className="bakesbyolayide-nav">
-          <a href="#" className="bakesbyolayide-nav-link">Our Range</a>
-          <a href="#" className="bakesbyolayide-nav-link">Guides</a>
-          <a href="#" className="bakesbyolayide-nav-link">Our Story</a>
-          <a href="#" className="bakesbyolayide-nav-link">Contact Us</a>
-        </nav>
-      </header>
-      <section className="bakesbyolayide-hero-section">
-        <div
-          className="bakesbyolayide-hero-bg"
-          style={{
-            background: `url(${process.env.PUBLIC_URL}/logos/BakesByOlayide.png) center/contain no-repeat`
-          }}
-        ></div>
-        <div className="bakesbyolayide-hero-content">
-          <h1 className="bakesbyolayide-hero-title">Cakes and Bakes for Every Occasion</h1>
-          <p className="bakesbyolayide-hero-desc">
-            BakesByOlayide is a modern e-commerce platform for custom cakes and desserts. Order online, browse our range, and enjoy sweet moments delivered to your door.
-          </p>
-          <a
-            href="https://bakesbyolayide.co.uk"
-            className="bakesbyolayide-browse-btn"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className="project-content">
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
           >
-            Browse
-          </a>
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Project Information
+            </h2>
+            <CodeBlock
+              code={projectInfo}
+              language="javascript"
+              showLineNumbers={true}
+              copyable={false}
+            />
+            <a
+              href="https://bakesbyolayide.co.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link-button"
+            >
+              Visit the Website →
+            </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> About
+            </h2>
+            <p className="section-description">
+              BakesByOlayide offers a seamless online experience for ordering bespoke cakes and baked goods. Whether you're celebrating a birthday, wedding, or any special event, our platform makes it easy to customize, order, and enjoy delicious treats with just a few clicks.
+            </p>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Engineering Excellence
+            </h2>
+            <div className="engineering-grid">
+              <div className="engineering-card">
+                <span className="engineering-icon">🎠</span>
+                <strong>Sophisticated Carousel</strong>
+                <p>Custom-built, touch-friendly, hardware-accelerated, and responsive.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">🎨</span>
+                <strong>Advanced CSS Architecture</strong>
+                <p>Responsive, animated, and themable with CSS Grid & Flexbox.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">⚡</span>
+                <strong>Performance Optimizations</strong>
+                <p>Hardware-accelerated, efficient image loading, and smooth transitions.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">♿</span>
+                <strong>Accessibility Features</strong>
+                <p>ARIA labels, semantic HTML, keyboard navigation, and high contrast.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">🛡️</span>
+                <strong>Robust Error Handling</strong>
+                <p>Graceful fallbacks, loading states, and error boundaries.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">🔄</span>
+                <strong>State Management</strong>
+                <p>Efficient, predictable, and clean separation of UI and logic.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">📦</span>
+                <strong>Code Organization</strong>
+                <p>Modular, reusable, and well-documented components.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">✨</span>
+                <strong>User Experience</strong>
+                <p>Smooth transitions, intuitive navigation, and responsive feedback.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">📱</span>
+                <strong>Mobile-First Approach</strong>
+                <p>Touch-friendly, responsive, and optimized for all devices.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">🛠️</span>
+                <strong>Maintainability</strong>
+                <p>DRY principles, consistent styling, and easy to extend.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">🔒</span>
+                <strong>Security</strong>
+                <p>Safe input handling, secure image loading, and protected routes.</p>
+              </div>
+              <div className="engineering-card">
+                <span className="engineering-icon">🧪</span>
+                <strong>Testing</strong>
+                <p>Testable, isolated, and predictable component logic.</p>
+              </div>
+            </div>
+          </motion.section>
         </div>
-      </section>
-      <section className="bakesbyolayide-description-section">
-        <h2>About BakesByOlayide</h2>
-        <p>
-          BakesByOlayide offers a seamless online experience for ordering bespoke cakes and baked goods. Whether you're celebrating a birthday, wedding, or any special event, our platform makes it easy to customize, order, and enjoy delicious treats with just a few clicks.
-        </p>
-      </section>
-      <section className="bakesbyolayide-engineering-section">
-        <h2>Engineering Excellence</h2>
-        <p className="bakesbyolayide-engineering-intro">
-          Our platform is built with industry-leading engineering practices and modern web technologies. Here's what sets us apart:
-        </p>
-        <div className="bakesbyolayide-brag-grid">
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">🎠</span><strong>Sophisticated Carousel</strong><br/>Custom-built, touch-friendly, hardware-accelerated, and responsive.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">🎨</span><strong>Advanced CSS Architecture</strong><br/>Responsive, animated, and themable with CSS Grid & Flexbox.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">⚡</span><strong>Performance Optimizations</strong><br/>Hardware-accelerated, efficient image loading, and smooth transitions.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">♿</span><strong>Accessibility Features</strong><br/>ARIA labels, semantic HTML, keyboard navigation, and high contrast.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">🛡️</span><strong>Robust Error Handling</strong><br/>Graceful fallbacks, loading states, and error boundaries.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">🔄</span><strong>State Management</strong><br/>Efficient, predictable, and clean separation of UI and logic.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">📦</span><strong>Code Organization</strong><br/>Modular, reusable, and well-documented components.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">✨</span><strong>User Experience</strong><br/>Smooth transitions, intuitive navigation, and responsive feedback.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">📱</span><strong>Mobile-First Approach</strong><br/>Touch-friendly, responsive, and optimized for all devices.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">🛠️</span><strong>Maintainability</strong><br/>DRY principles, consistent styling, and easy to extend.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">🔒</span><strong>Security</strong><br/>Safe input handling, secure image loading, and protected routes.</div>
-          <div className="bakesbyolayide-brag-card"><span className="brag-icon">🧪</span><strong>Testing</strong><br/>Testable, isolated, and predictable component logic.</div>
-        </div>
-      </section>
-      <footer className="bakesbyolayide-footer">
-        <div className="bakesbyolayide-footer-content">
-          <span className="bakesbyolayide-footer-logo">Bakes by Olayide</span>
-          <span className="bakesbyolayide-footer-copy">&copy; {new Date().getFullYear()} BakesByOlayide. All rights reserved.</span>
-        </div>
-      </footer>
+      </motion.div>
     </div>
   );
 };
 
-export default BakesByOlayide; 
+export default BakesByOlayide;
