@@ -1,0 +1,191 @@
+{
+  "projects": [
+    {
+      "id": "breathapplyser",
+      "name": "Breathapplyser",
+      "description": "Tracks how much you drink, tells you how drunk you are",
+      "logo": "Breathapplyser.png",
+      "route": "/breathapplyser",
+      "tags": ["JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Android", "IOS"],
+      "visible": true,
+      "featured": false,
+      "priority": 1
+    },
+    {
+      "id": "lifesmart",
+      "name": "LifeSmart",
+      "description": "Collection of tools to teach financial literacy to young people",
+      "logo": "LifeSmart.png",
+      "route": "/lifesmart",
+      "tags": ["JavaScript", "Node.js", "React.js", "Vue.js", "Firebase", "HostPresto", "Render", "Chart.js", "EdTech", "FinTech"],
+      "visible": true,
+      "featured": true,
+      "priority": 1
+    },
+    {
+      "id": "b8",
+      "name": "B8",
+      "description": "Marketing Firm",
+      "logo": "B8.png",
+      "route": "/b8",
+      "tags": ["JavaScript", "React.js", "Vite", "Stripe", "Google Pay API", "Google Maps API", "React-Globe.gl", "Custom CMS", "Firebase", "Render"],
+      "visible": true,
+      "featured": true,
+      "priority": 1
+    },
+    {
+      "id": "bakesbyolayide",
+      "name": "BakesByOlayide",
+      "description": "E-commerce platform for custom baked goods and desserts",
+      "logo": "BakesByOlayide.png",
+      "route": "/bakesbyolayide",
+      "tags": ["JavaScript", "React.js", "Node.js", "Firebase", "Stripe", "FoodTech", "E-commerce"],
+      "visible": true,
+      "featured": false,
+      "priority": 2
+    },
+    {
+      "id": "biaslens",
+      "name": "BiasLens",
+      "description": "Political alignment analyser for web articles",
+      "logo": "BiasLens.png",
+      "route": "/biaslens",
+      "tags": ["JavaScript", "Next.js", "Node.js", "Python", "Django", "Firebase", "Vercel", "MediaTech"],
+      "visible": true,
+      "featured": true,
+      "priority": 1
+    },
+    {
+      "id": "ministryofjustice",
+      "name": "Ministry of Justice",
+      "description": "Task Management System for the Ministry of Justice",
+      "logo": "MinistryofJustice.png",
+      "route": "/ministryofjustice",
+      "tags": ["JavaScript", "React.js", "Node.js", "Firebase", "Render"],
+      "visible": false,
+      "featured": false,
+      "priority": 3
+    },
+    {
+      "id": "mentage",
+      "name": "Mentage",
+      "description": "WhatsApp chatbot designed to help the user learn",
+      "logo": "Mentage.png",
+      "route": "/mentage",
+      "tags": ["JavaScript", "AI", "Chatbot", "EdTech", "React.js", "Python", "Flask", "Firebase", "OpenAi API", "WebApp"],
+      "visible": true,
+      "featured": false,
+      "priority": 2
+    },
+    {
+      "id": "therabot",
+      "name": "Therabot",
+      "description": "Whatsapp & Webchat Chatbot designed to provide conversational support therapy.",
+      "logo": "Therabot.png",
+      "route": "/therabot",
+      "tags": ["JavaScript", "HealthTec", "Chatbot", "Node.js", "React.js", "Firebase", "Render", "OpenAi API", "WebApp"],
+      "visible": true,
+      "featured": false,
+      "priority": 2
+    },
+    {
+      "id": "flashcards",
+      "name": "Flashcards",
+      "description": "Interactive flashcard application for learning React concepts",
+      "logo": "Flashcards.svg",
+      "route": "/flashcards",
+      "tags": ["JavaScript", "React", "CSS3", "HTML5", "Education"],
+      "visible": true,
+      "featured": false,
+      "priority": 3
+    },
+    {
+      "id": "culinary",
+      "name": "CulinAIry",
+      "description": "An AI-powered recipe generator for personalized meals",
+      "logo": "CulinAIry.png",
+      "route": "/culinary",
+      "tags": ["JavaScript", "Node.js", "React.js", "Firebase", "TypeScript", "Render", "FoodTech", "AI"],
+      "visible": true,
+      "featured": false,
+      "priority": 2
+    },
+    {
+      "id": "dadjokegenerator",
+      "name": "Dad Joke Generator",
+      "description": "Press a button, get a dad joke",
+      "logo": "DadJokeGenerator.png",
+      "route": "/dadjokegenerator",
+      "tags": ["JavaScript", "Ember.js", "Node.js", "Render", "JokeTech"],
+      "visible": true,
+      "featured": false,
+      "priority": 3
+    },
+    {
+      "id": "doomscroll",
+      "name": "DoomScroll",
+      "description": "Infinitely doom scroll useless facts",
+      "logo": "Doomscroll.png",
+      "route": "/doomscroll",
+      "tags": ["JavaScript", "Node.js", "React.js", "Render", "JokeTech"],
+      "visible": true,
+      "featured": false,
+      "priority": 3
+    },
+    {
+      "id": "contrarian",
+      "name": "Contrarian",
+      "description": "Pitchdeck classifier",
+      "logo": "Contrarian.png",
+      "route": "/contrarian",
+      "tags": ["JavaScript", "AI", "Python", "React.js", "Flask", "Render", "OpenAi API", "Firebase", "InvestTech", "FinTech"],
+      "visible": true,
+      "featured": false,
+      "priority": 2
+    },
+    {
+      "id": "ldmf",
+      "name": "Liberal Democrats",
+      "description": "Informative Website for the LDMF",
+      "logo": "LDMF.png",
+      "route": "/ldmf",
+      "tags": ["JavaScript", "Vue.js", "Node.js"],
+      "visible": true,
+      "featured": false,
+      "priority": 3
+    },
+    {
+      "id": "pngtosvg",
+      "name": "PNG to SVG",
+      "description": "Web tool to convert PNG's to SVG's",
+      "logo": "PNGtoSVG.png",
+      "route": "/pngtosvg",
+      "tags": ["JavaScript", "Angular", "Node.js"],
+      "visible": true,
+      "featured": false,
+      "priority": 3
+    },
+    {
+      "id": "doppelgancar",
+      "name": "Doppelgan-Car",
+      "description": "AI-powered car personality matcher",
+      "logo": "Doppelgancar.png",
+      "route": "/doppelgancar",
+      "tags": ["AI", "Machine Learning", "Nuxt.js", "JavaScript", "Python", "Flask", "Render", "OpenAI"],
+      "visible": false,
+      "featured": false,
+      "priority": 3
+    },
+    {
+      "id": "tindev",
+      "name": "Tindev",
+      "description": "Developer-focused networking platform for tech professionals",
+      "logo": "Tindev.png",
+      "route": "/tindev",
+      "tags": ["JavaScript", "React.js", "Node.js", "Firebase", "WebRTC", "SocialTech", "WebApp"],
+      "visible": false,
+      "featured": false,
+      "priority": 3
+    }
+  ]
+}
