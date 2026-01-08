@@ -1,26 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Navbar from "../components/Navbar";
+import Terminal from "../components/animations/Terminal";
+import CodeBlock from "../components/animations/CodeBlock";
+import "../styles/project-shared.css";
 import "../styles/DoppelganCar.css";
 
 const DoppelganCar = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  
-
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 1, ease: "easeInOut" },
-    },
-  };
-
-  const imageVariants = {
-    hover: { scale: 1.05, transition: { duration: 0.4 } },
-  };
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const images = [
     { src: `${process.env.PUBLIC_URL}/images/DoppelganCar/Homepage.png`, caption: "Homepage" },
@@ -29,97 +18,158 @@ const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     { src: `${process.env.PUBLIC_URL}/images/DoppelganCar/MobileView.png`, caption: "Mobile-Friendly UI" },
   ];
 
-  const websiteUrl = "https://doppelgang-car.vercel.app"
+  const projectInfo = `const doppelganCar = {
+  name: "Doppelgan-Car",
+  type: "Web Application",
+  description: "AI-powered car personality matcher",
+  technologies: [
+    "Nuxt.js",
+    "JavaScript",
+    "Python",
+    "Flask",
+    "OpenAI",
+    "Render"
+  ],
+  features: [
+    "AI-powered car matching",
+    "Personality analysis",
+    "Image upload and processing",
+    "Mobile-friendly interface"
+  ]
+};`;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <div>
-        {isMobile ? <HamburgerMenu /> : <Navbar />}
-    <motion.div
-      className="doppelgancar-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Logo */}
-      <motion.img
-        src={`${process.env.PUBLIC_URL}/logos/Doppelgancar.png`}
-        alt="DoppelganCar Logo"
-        className="doppelgancar-logo"
-        whileHover={{ scale: 1.1 }}
-      />
+    <div className="project-page">
+      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
-      {/* Title */}
-      <motion.h1
-        className="doppelgancar-title"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+      <motion.div
+        className="project-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
       >
-        Doppelgan-Car
-      </motion.h1>
-      <p className="doppelgancar-subtitle">
-        An AI-powered app that matches your facial features to a car model.
-      </p>
-
-    {/* Visit Website Button */}
-    <motion.a
-        href={websiteUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="doppelgancar-website-button"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        Visit Website 🚗
-    </motion.a>
-
-      {/* Features Section */}
-      <div className="doppelgancar-features">
-        <h2>Features:</h2>
-        <ul>
-          <li>Advanced AI-based facial recognition</li>
-          <li>Instant car recommendations based on your face</li>
-          <li>Seamless image upload & processing</li>
-          <li>Live API-powered car data and images</li>
-        </ul>
-      </div>
-
-      {/* Images Section */}
-      <div className="doppelgancar-images">
-        {images.map((image, index) => (
-          <motion.div
-            key={index}
-            className="image-container"
-            whileHover="hover"
-            variants={imageVariants}
-            onClick={() => setSelectedImage(image)}
-          >
-            <img
-              src={image.src}
-              alt={image.caption}
-              className="doppelgancar-image"
-            />
-            <p className="image-caption">{image.caption}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Modal */}
-      {selectedImage && (
-        <div className="modal" onClick={() => setSelectedImage(null)}>
-          <div className="modal-content">
-            <img
-              src={selectedImage.src}
-              alt={selectedImage.caption}
-              className="modal-image"
-            />
-            <p className="modal-caption">{selectedImage.caption}</p>
-          </div>
+        <div className="project-header">
+          <motion.img
+            src={`${process.env.PUBLIC_URL}/logos/Doppelgancar.png`}
+            alt="DoppelganCar Logo"
+            className="project-logo"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          />
+          <h1 className="project-title">
+            <span className="code-comment">//</span> Doppelgan-Car
+          </h1>
+          <Terminal
+            lines={[
+              "const doppelganCar = {",
+              "  name: 'Doppelgan-Car',",
+              "  type: 'Web Application',",
+              "  description: 'AI-powered car personality matcher',",
+              "  url: 'https://doppelgang-car.vercel.app'",
+              "};"
+            ]}
+            prompt=">"
+            typingSpeed={80}
+            autoStart={true}
+            className="project-terminal"
+            title="project.js"
+          />
         </div>
-      )}
-    </motion.div>
-</div>
 
+        <div className="project-content">
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Project Information
+            </h2>
+            <CodeBlock
+              code={projectInfo}
+              language="javascript"
+              showLineNumbers={true}
+              copyable={false}
+            />
+            <a
+              href="https://doppelgang-car.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link-button"
+            >
+              Visit the Website →
+            </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Screenshots
+            </h2>
+            <div className="image-gallery">
+              {images.map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="image-container"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  onClick={() => setSelectedImage(image)}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.caption}
+                    className="gallery-image"
+                  />
+                  <p className="image-caption">{image.caption}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        </div>
+
+        {selectedImage && (
+          <div className="modal" onClick={() => setSelectedImage(null)}>
+            <motion.div
+              className="modal-content"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close" onClick={() => setSelectedImage(null)}>
+                ×
+              </button>
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.caption}
+                className="modal-image"
+              />
+              <p className="modal-caption">{selectedImage.caption}</p>
+            </motion.div>
+          </div>
+        )}
+      </motion.div>
+    </div>
   );
 };
 

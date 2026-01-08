@@ -2,24 +2,14 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
+import Terminal from "../components/animations/Terminal";
+import CodeBlock from "../components/animations/CodeBlock";
+import "../styles/project-shared.css";
 import "../styles/Therabot.css";
 
 const Therabot = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 1, ease: "easeInOut" },
-    },
-  };
-
-  const imageVariants = {
-    hover: { scale: 1.05, transition: { duration: 0.4 } },
-  };
 
   const images = [
     { src: `${process.env.PUBLIC_URL}/images/Therabot/Dashboard.png`, caption: "Dashboard" },
@@ -34,7 +24,27 @@ const Therabot = () => {
     { src: `${process.env.PUBLIC_URL}/images/Therabot/Whatsapp chat.png`, caption: "Whatsapp Chat" },
   ];
 
-  // Handle screen size change for navbar and hamburger menu
+  const projectInfo = `const therabot = {
+  name: "Therabot",
+  type: "Web Application & WhatsApp Bot",
+  description: "Chatbot offering mental health support and resources",
+  platforms: ["Web", "WhatsApp"],
+  technologies: [
+    "React.js",
+    "Node.js",
+    "Firebase",
+    "Render",
+    "OpenAI API"
+  ],
+  features: [
+    "Guided meditations",
+    "Personalized mental health tips",
+    "Anonymous chat sessions",
+    "WhatsApp integration",
+    "Conversation history"
+  ]
+};`;
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -47,90 +57,147 @@ const Therabot = () => {
   }, []);
 
   return (
-    <div>
-      {/* Conditional rendering for HamburgerMenu or Navbar */}
+    <div className="project-page">
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
-        className="therabot-container"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+        className="project-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
       >
-        {/* Logo */}
-        <motion.img
-          src={`${process.env.PUBLIC_URL}/logos/Therabot.png`}
-          alt="Therabot Logo"
-          className="therabot-logo"
-          whileHover={{ scale: 1.1 }}
-        />
-
-        {/* Title */}
-        <motion.h1
-          className="therabot-title"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
-          Therabot
-        </motion.h1>
-        <p className="therabot-subtitle">
-          A chatbot offering mental health support and resources.
-        </p>
-
-        {/* Visit Website Button */}
-        <motion.a
-          href="https://therabot-site.onrender.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="therabot-website-link"
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.3 }}
-        >
-          Visit the Website
-        </motion.a>
-
-        {/* Features Section */}
-        <div className="therabot-features">
-          <h2>Features:</h2>
-          <ul>
-            <li>Guided meditations</li>
-            <li>Personalized mental health tips</li>
-            <li>Anonymous chat sessions</li>
-          </ul>
+        <div className="project-header">
+          <motion.img
+            src={`${process.env.PUBLIC_URL}/logos/Therabot.png`}
+            alt="Therabot Logo"
+            className="project-logo"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          />
+          <h1 className="project-title">
+            <span className="code-comment">//</span> Therabot
+          </h1>
+          <Terminal
+            lines={[
+              "const therabot = {",
+              "  name: 'Therabot',",
+              "  type: 'Web Application & WhatsApp Bot',",
+              "  description: 'Chatbot offering mental health support',",
+              "  url: 'https://therabot-site.onrender.com'",
+              "};"
+            ]}
+            prompt=">"
+            typingSpeed={80}
+            autoStart={true}
+            className="project-terminal"
+            title="project.js"
+          />
         </div>
 
-        {/* Images Section */}
-        <div className="therabot-images">
-          {images.map((image, index) => (
-            <motion.div
-              key={index}
-              className="image-container"
-              whileHover="hover"
-              variants={imageVariants}
-              onClick={() => setSelectedImage(image)}
+        <div className="project-content">
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Project Information
+            </h2>
+            <CodeBlock
+              code={projectInfo}
+              language="javascript"
+              showLineNumbers={true}
+              copyable={false}
+            />
+            <a
+              href="https://therabot-site.onrender.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link-button"
             >
-              <img
-                src={image.src}
-                alt={image.caption}
-                className="therabot-image"
-              />
-              <p className="image-caption">{image.caption}</p>
-            </motion.div>
-          ))}
+              Visit the Website →
+            </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Features
+            </h2>
+            <div className="features-list">
+              <div className="feature-item">
+                <span className="feature-keyword">✓</span>
+                <span className="feature-text">Guided meditations</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-keyword">✓</span>
+                <span className="feature-text">Personalized mental health tips</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-keyword">✓</span>
+                <span className="feature-text">Anonymous chat sessions</span>
+              </div>
+            </div>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Screenshots
+            </h2>
+            <div className="image-gallery">
+              {images.map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="image-container"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  onClick={() => setSelectedImage(image)}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.caption}
+                    className="gallery-image"
+                  />
+                  <p className="image-caption">{image.caption}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
         </div>
 
-        {/* Modal */}
         {selectedImage && (
           <div className="modal" onClick={() => setSelectedImage(null)}>
-            <div className="modal-content">
+            <motion.div
+              className="modal-content"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close" onClick={() => setSelectedImage(null)}>
+                ×
+              </button>
               <img
                 src={selectedImage.src}
                 alt={selectedImage.caption}
                 className="modal-image"
               />
-              <p className="modal-caption">{images.caption}</p>
-            </div>
+              <p className="modal-caption">{selectedImage.caption}</p>
+            </motion.div>
           </div>
         )}
       </motion.div>

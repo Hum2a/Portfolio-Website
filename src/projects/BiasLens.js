@@ -2,24 +2,14 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
+import Terminal from "../components/animations/Terminal";
+import CodeBlock from "../components/animations/CodeBlock";
+import "../styles/project-shared.css";
 import "../styles/BiasLens.css";
 
 const BiasLens = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 1, ease: "easeInOut" },
-    },
-  };
-
-  const logoVariants = {
-    hover: { scale: 1.1, rotate: 5, transition: { duration: 0.4 } },
-  };
 
   const images = [
     {
@@ -36,7 +26,27 @@ const BiasLens = () => {
     },
   ];
 
-  // Handle screen size change for navbar and hamburger menu
+  const projectInfo = `const biaslens = {
+  name: "BiasLens",
+  type: "Web Application",
+  description: "Political alignment analyser for web articles",
+  technologies: [
+    "Next.js",
+    "JavaScript",
+    "Node.js",
+    "Python",
+    "Django",
+    "Firebase",
+    "Vercel"
+  ],
+  features: [
+    "News article analysis",
+    "Political bias detection",
+    "Sentiment analysis",
+    "NLP techniques"
+  ]
+};`;
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -49,78 +59,122 @@ const BiasLens = () => {
   }, []);
 
   return (
-    <div>
-      {/* Conditional rendering for HamburgerMenu or Navbar */}
+    <div className="project-page">
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
-        className="biaslens-container"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+        className="project-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
       >
-        {/* Logo */}
-        <motion.img
-          src={`${process.env.PUBLIC_URL}/logos/BiasLens.png`}
-          alt="BiasLens Logo"
-          className="biaslens-logo"
-          variants={logoVariants}
-          whileHover="hover"
-        />
-
-        {/* Title */}
-        <motion.h1
-          className="biaslens-title"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
-          BiasLens News
-        </motion.h1>
-
-        {/* Visit Website Button */}
-        <motion.a
-          href="https://biaslens.vercel.app"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bias-website-link"
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.3 }}
-        >
-          Visit the Website
-        </motion.a>
-
-        {/* Images Section */}
-        <div className="biaslens-images">
-          {images.map((image, index) => (
-            <motion.div
-              key={index}
-              className="image-container"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.4 }}
-              onClick={() => setSelectedImage(image)}
-            >
-              <img
-                src={image.src}
-                alt={image.caption}
-                className="biaslens-image"
-              />
-              <p className="image-caption">{image.caption}</p>
-            </motion.div>
-          ))}
+        <div className="project-header">
+          <motion.img
+            src={`${process.env.PUBLIC_URL}/logos/BiasLens.png`}
+            alt="BiasLens Logo"
+            className="project-logo"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          />
+          <h1 className="project-title">
+            <span className="code-comment">//</span> BiasLens
+          </h1>
+          <Terminal
+            lines={[
+              "const biaslens = {",
+              "  name: 'BiasLens',",
+              "  type: 'Web Application',",
+              "  description: 'Political alignment analyser for web articles',",
+              "  url: 'https://biaslens.vercel.app'",
+              "};"
+            ]}
+            prompt=">"
+            typingSpeed={80}
+            autoStart={true}
+            className="project-terminal"
+            title="project.js"
+          />
         </div>
 
-        {/* Modal */}
+        <div className="project-content">
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Project Information
+            </h2>
+            <CodeBlock
+              code={projectInfo}
+              language="javascript"
+              showLineNumbers={true}
+              copyable={false}
+            />
+            <a
+              href="https://biaslens.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link-button"
+            >
+              Visit the Website →
+            </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Screenshots
+            </h2>
+            <div className="image-gallery">
+              {images.map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="image-container"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  onClick={() => setSelectedImage(image)}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.caption}
+                    className="gallery-image"
+                  />
+                  <p className="image-caption">{image.caption}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        </div>
+
         {selectedImage && (
           <div className="modal" onClick={() => setSelectedImage(null)}>
-            <div className="modal-content">
+            <motion.div
+              className="modal-content"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close" onClick={() => setSelectedImage(null)}>
+                ×
+              </button>
               <img
                 src={selectedImage.src}
                 alt={selectedImage.caption}
                 className="modal-image"
               />
               <p className="modal-caption">{selectedImage.caption}</p>
-            </div>
+            </motion.div>
           </div>
         )}
       </motion.div>

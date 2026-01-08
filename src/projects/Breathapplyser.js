@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
+import Terminal from "../components/animations/Terminal";
+import CodeBlock from "../components/animations/CodeBlock";
 import "../styles/Breathapplyser.css";
 
 const Breathapplyser = () => {
@@ -17,16 +19,25 @@ const Breathapplyser = () => {
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/SettingsJumping.mp4`, caption: "Settings Jumping" },
   ];
 
-  const pageVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.8, ease: "easeInOut" },
-    },
-  };
+  const projectInfo = `const breathapplyser = {
+  name: "Breathapplyser",
+  type: "Mobile Application",
+  platforms: ["Android", "iOS"],
+  description: "A modern breathalyzer app with smart insights",
+  features: [
+    "Accurate BAC estimations",
+    "Integration with smart devices",
+    "Health insights and tips"
+  ],
+  technologies: [
+    "React Native",
+    "JavaScript",
+    "TypeScript",
+    "Firebase",
+    "Node.js"
+  ]
+};`;
 
-  // Handle screen size change for navbar and hamburger menu
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -39,73 +50,118 @@ const Breathapplyser = () => {
   }, []);
 
   return (
-    <div>
-      {/* Conditional rendering for HamburgerMenu or Navbar */}
+    <div className="project-page">
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
-        className="breathapplyser-container"
-        initial="hidden"
-        animate="visible"
-        variants={pageVariants}
+        className="project-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
       >
-        <motion.img
-          src={`${process.env.PUBLIC_URL}/logos/Breathapplyser.png`}
-          alt="Breathapplyser Logo"
-          className="breathapplyser-logo"
-          whileHover={{ scale: 1.1 }}
-        />
-        <motion.h1
-          className="breathapplyser-title"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          Breathapplyser
-        </motion.h1>
-        <motion.p
-          className="breathapplyser-subtitle"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
-        >
-          A modern breathalyzer app with smart insights.
-        </motion.p>
-
-        <motion.div
-          className="feature-list"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
-        >
-          <h2>Features:</h2>
-          <ul>
-            <li>Accurate BAC estimations</li>
-            <li>Integration with smart devices</li>
-            <li>Health insights and tips</li>
-          </ul>
-        </motion.div>
-
-        {/* Videos Section */}
-        <div className="video-gallery">
-          {videos.map((video, index) => (
-            <motion.div
-              key={index}
-              className="video-container"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => setSelectedVideo(video)}
-            >
-              <video className="gallery-video" controls>
-                <source src={video.src} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <p className="video-caption">{video.caption}</p>
-            </motion.div>
-          ))}
+        <div className="project-header">
+          <motion.img
+            src={`${process.env.PUBLIC_URL}/logos/Breathapplyser.png`}
+            alt="Breathapplyser Logo"
+            className="project-logo"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          />
+          <h1 className="project-title">
+            <span className="code-comment">//</span> Breathapplyser
+          </h1>
+          <Terminal
+            lines={[
+              "const breathapplyser = {",
+              "  name: 'Breathapplyser',",
+              "  type: 'Mobile Application',",
+              "  platforms: ['Android', 'iOS'],",
+              "  description: 'A modern breathalyzer app with smart insights'",
+              "};"
+            ]}
+            prompt=">"
+            typingSpeed={80}
+            autoStart={true}
+            className="project-terminal"
+            title="project.js"
+          />
         </div>
 
-        {/* Modal */}
+        <div className="project-content">
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Project Information
+            </h2>
+            <CodeBlock
+              code={projectInfo}
+              language="javascript"
+              showLineNumbers={true}
+              copyable={false}
+            />
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Features
+            </h2>
+            <div className="features-list">
+              <div className="feature-item">
+                <span className="feature-keyword">✓</span>
+                <span className="feature-text">Accurate BAC estimations</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-keyword">✓</span>
+                <span className="feature-text">Integration with smart devices</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-keyword">✓</span>
+                <span className="feature-text">Health insights and tips</span>
+              </div>
+            </div>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Demo Videos
+            </h2>
+            <div className="video-gallery">
+              {videos.map((video, index) => (
+                <motion.div
+                  key={index}
+                  className="video-container"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  onClick={() => setSelectedVideo(video)}
+                >
+                  <video className="gallery-video" controls>
+                    <source src={video.src} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <p className="video-caption">{video.caption}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        </div>
+
         {selectedVideo && (
           <div className="modal" onClick={() => setSelectedVideo(null)}>
             <motion.div
@@ -113,8 +169,12 @@ const Breathapplyser = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
             >
+              <button className="modal-close" onClick={() => setSelectedVideo(null)}>
+                ×
+              </button>
               <video className="modal-video" controls autoPlay>
                 <source src={selectedVideo.src} type="video/mp4" />
                 Your browser does not support the video tag.
