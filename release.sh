@@ -39,12 +39,20 @@ show_help() {
 }
 
 # Function to update CHANGELOG.md using Python script
+# Returns 0 if changelog was updated, 1 if skipped, 2 if failed
 update_changelog() {
   local new_tag="$1"
   
   echo "🚀 Updating CHANGELOG.md with smart categorization..."
   echo "This will analyze commits and create a beautiful, categorized changelog entry."
   echo ""
+  
+  # Check if the Python script exists
+  if [[ ! -f "scripts/update_changelog.py" ]]; then
+    echo "⚠️  Warning: update_changelog.py script not found in scripts/ directory."
+    echo "Skipping changelog update. You can create the script later or use --no-changelog flag."
+    return 1
+  fi
   
   # Check if Python is available
   # Try multiple methods to find Python (handles Windows Git Bash issues)
@@ -98,14 +106,7 @@ update_changelog() {
     echo "  1. Install Python from https://www.python.org/downloads/"
     echo "  2. Make sure to check 'Add Python to PATH' during installation"
     echo "  3. Or use the --no-changelog flag to skip changelog updates"
-    exit 1
-  fi
-  
-  # Check if the Python script exists
-  if [[ ! -f "scripts/update_changelog.py" ]]; then
-    echo "⚠️  Warning: update_changelog.py script not found in scripts/ directory."
-    echo "Skipping changelog update. You can create the script later or use --no-changelog flag."
-    return 0
+    return 2
   fi
   
   # Run the Python changelog updater
@@ -119,9 +120,10 @@ update_changelog() {
     echo "   - New release section added: [$new_tag]"
     echo "   - Unreleased section reset for future changes"
     echo "   - Commits automatically categorized into meaningful sections"
+    return 0
   else
     echo "❌ Failed to update CHANGELOG.md"
-    exit 1
+    return 2
   fi
 }
 
@@ -366,12 +368,23 @@ update_package_json() {
 }
 
 # Update CHANGELOG.md if enabled
+CHANGELOG_UPDATED=false
 if [[ "$UPDATE_CHANGELOG" == true ]]; then
   update_changelog "$NEW_TAG"
+  CHANGELOG_RESULT=$?
   
-  # Stage the updated CHANGELOG.md
-  git add CHANGELOG.md
-  echo "✅ CHANGELOG.md staged for commit"
+  if [[ $CHANGELOG_RESULT -eq 0 ]]; then
+    CHANGELOG_UPDATED=true
+    # Stage the updated CHANGELOG.md only if it exists
+    if [[ -f "CHANGELOG.md" ]]; then
+      git add CHANGELOG.md
+      echo "✅ CHANGELOG.md staged for commit"
+    fi
+  elif [[ $CHANGELOG_RESULT -eq 2 ]]; then
+    # Failed to update changelog
+    exit 1
+  fi
+  # If result is 1, it was skipped (script not found), so we continue
 fi
 
 # Update package.json version
@@ -384,7 +397,7 @@ if [[ -n "$STAGED_FILES" ]]; then
   
   # Build commit message
   COMMIT_MSG="chore: bump version to $NEW_TAG"
-  if [[ "$UPDATE_CHANGELOG" == true ]]; then
+  if [[ "$CHANGELOG_UPDATED" == true ]]; then
     COMMIT_MSG="$COMMIT_MSG and update changelog"
   fi
   
@@ -423,7 +436,7 @@ if [[ $? -eq 0 ]]; then
   fi
   echo "📝 Tag URL: https://github.com/${REPO_PATH}/releases/tag/$NEW_TAG"
   
-  if [[ "$UPDATE_CHANGELOG" == true ]]; then
+  if [[ "$CHANGELOG_UPDATED" == true ]]; then
     echo ""
     echo "📋 Smart Changelog System:"
     echo "   ✅ CHANGELOG.md has been updated with smart categorization"
@@ -434,7 +447,7 @@ if [[ $? -eq 0 ]]; then
   echo ""
   echo "✅ Release $NEW_TAG created successfully!"
   echo "   - Version bumped in package.json"
-  if [[ "$UPDATE_CHANGELOG" == true ]]; then
+  if [[ "$CHANGELOG_UPDATED" == true ]]; then
     echo "   - CHANGELOG.md updated"
   fi
   echo "   - Changes committed and pushed"
