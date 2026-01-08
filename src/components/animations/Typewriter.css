@@ -1,0 +1,26 @@
+.typewriter {
+  display: inline-block;
+  font-family: var(--font-code);
+}
+
+.typewriter.code-style {
+  color: var(--code-cyan);
+  font-size: var(--text-lg);
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  animation: blink 1s infinite;
+  color: var(--code-green);
+  font-weight: var(--font-normal);
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}

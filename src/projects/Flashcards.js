@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import HamburgerMenu from '../components/HamburgerMenu';
+import Terminal from '../components/animations/Terminal';
+import CodeBlock from '../components/animations/CodeBlock';
+import '../styles/project-shared.css';
 import '../styles/Flashcards.css';
 
 const Flashcards = () => {
@@ -36,6 +40,23 @@ const Flashcards = () => {
       answer: "Properties passed from parent to child components to allow data flow between components."
     }
   ];
+
+  const projectInfo = `const flashcards = {
+  name: "Flashcards",
+  type: "Web Application",
+  description: "Interactive flashcard application for learning React concepts",
+  technologies: [
+    "React",
+    "CSS3",
+    "HTML5"
+  ],
+  features: [
+    "Interactive flashcard flipping",
+    "Multiple card sets",
+    "Progress tracking",
+    "Mobile-friendly interface"
+  ]
+};`;
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,83 +94,117 @@ const Flashcards = () => {
   };
 
   return (
-    <div className="flashcards-container">
+    <div className="project-page">
       {isMobile ? <HamburgerMenu /> : <Navbar />}
-      
-      <section className="flashcards-description-section">
-        <h1 className="flashcards-main-title">Flashcards</h1>
-        <p className="flashcards-description">
-          Flashcards is a modern web app designed to help you revise faster and more efficiently. With interactive, beautifully animated flashcards, you can test your knowledge, reinforce key concepts, and track your progress—all in a sleek, distraction-free environment. Whether you're preparing for exams, learning a new subject, or just want to boost your memory, Flashcards makes studying engaging and effective. Enjoy features like spaced repetition, real-time progress tracking, and a mobile-friendly interface—so you can learn anytime, anywhere.
-        </p>
-      </section>
 
-      <div className="flashcards-content">
-        <h1 className="flashcards-title">React Flashcards</h1>
-        <p className="flashcards-subtitle">Test your knowledge with these interactive flashcards</p>
+      <motion.div
+        className="project-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="project-header">
+          <h1 className="project-title">
+            <span className="code-comment">//</span> Flashcards
+          </h1>
+          <Terminal
+            lines={[
+              "const flashcards = {",
+              "  name: 'Flashcards',",
+              "  type: 'Web Application',",
+              "  description: 'Interactive flashcard application for learning',",
+              "  url: 'https://flashcards-pj01.onrender.com'",
+              "};"
+            ]}
+            prompt=">"
+            typingSpeed={80}
+            autoStart={true}
+            className="project-terminal"
+            title="project.js"
+          />
+        </div>
 
-        <div className="flashcard-wrapper">
-          <div 
-            className={`flashcard ${isFlipped ? 'flipped' : ''} ${isAnimating ? 'animating' : ''}`}
-            onClick={handleFlip}
+        <div className="project-content">
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
           >
-            <div className="flashcard-face flashcard-front">
-              <div className="flashcard-content">
-                <h2>Question</h2>
-                <p>{cards[currentCard].question}</p>
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Project Information
+            </h2>
+            <CodeBlock
+              code={projectInfo}
+              language="javascript"
+              showLineNumbers={true}
+              copyable={false}
+            />
+            <a
+              href="https://flashcards-pj01.onrender.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link-button"
+            >
+              Visit the Website →
+            </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h2 className="section-title">
+              <span className="code-comment">//</span> Interactive Demo
+            </h2>
+            <p className="section-description">
+              Test your knowledge with these interactive React flashcards:
+            </p>
+            <div className="flashcard-wrapper">
+              <div 
+                className={`flashcard ${isFlipped ? 'flipped' : ''} ${isAnimating ? 'animating' : ''}`}
+                onClick={handleFlip}
+              >
+                <div className="flashcard-face flashcard-front">
+                  <div className="flashcard-content">
+                    <h3>Question</h3>
+                    <p>{cards[currentCard].question}</p>
+                  </div>
+                  <div className="flashcard-hint">Click to flip</div>
+                </div>
+                <div className="flashcard-face flashcard-back">
+                  <div className="flashcard-content">
+                    <h3>Answer</h3>
+                    <p>{cards[currentCard].answer}</p>
+                  </div>
+                  <div className="flashcard-hint">Click to flip back</div>
+                </div>
               </div>
-              <div className="flashcard-hint">Click to flip</div>
             </div>
-            <div className="flashcard-face flashcard-back">
-              <div className="flashcard-content">
-                <h2>Answer</h2>
-                <p>{cards[currentCard].answer}</p>
-              </div>
-              <div className="flashcard-hint">Click to flip back</div>
+            <div className="flashcard-controls">
+              <button 
+                className="flashcard-button prev"
+                onClick={prevCard}
+                disabled={isAnimating}
+              >
+                Previous
+              </button>
+              <span className="flashcard-counter">
+                {currentCard + 1} / {cards.length}
+              </span>
+              <button 
+                className="flashcard-button next"
+                onClick={nextCard}
+                disabled={isAnimating}
+              >
+                Next
+              </button>
             </div>
-          </div>
+          </motion.section>
         </div>
-
-        <div className="flashcard-controls">
-          <button 
-            className="flashcard-button prev"
-            onClick={prevCard}
-            disabled={isAnimating}
-          >
-            Previous
-          </button>
-          <span className="flashcard-counter">
-            {currentCard + 1} / {cards.length}
-          </span>
-          <button 
-            className="flashcard-button next"
-            onClick={nextCard}
-            disabled={isAnimating}
-          >
-            Next
-          </button>
-        </div>
-        <a
-          href="https://flashcards-pj01.onrender.com"
-          className="flashcard-website-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Visit the Live Flashcards Website
-        </a>
-      </div>
-      <section className="flashcards-brag-section">
-        <h2 className="flashcards-brag-title">Engineering Features</h2>
-        <div className="flashcards-brag-grid">
-          <div className="flashcards-brag-card"><span className="brag-icon">⚛️</span><strong>Modern Tech Stack</strong><br/>React, TypeScript, Material-UI, Firebase, and PWA support.</div>
-          <div className="flashcards-brag-card"><span className="brag-icon">🎨</span><strong>Advanced UI/UX</strong><br/>Beautiful gradients, glassmorphism, dark mode, and smooth animations.</div>
-          <div className="flashcards-brag-card"><span className="brag-icon">⚡</span><strong>Performance</strong><br/>GZIP, code splitting, caching, and optimized image loading.</div>
-          <div className="flashcards-brag-card"><span className="brag-icon">🔒</span><strong>Security</strong><br/>Secure auth, HTTPS, CSP, XSS protection, and more.</div>
-          <div className="flashcards-brag-card"><span className="brag-icon">🛠️</span><strong>Dev Experience</strong><br/>Great docs, clear structure, CI/CD, and automated deployment.</div>
-          <div className="flashcards-brag-card"><span className="brag-icon">🚀</span><strong>Advanced Features</strong><br/>Real-time sync, spaced repetition, progress tracking, and notifications.</div>
-          <div className="flashcards-brag-card"><span className="brag-icon">♿</span><strong>Accessibility</strong><br/>Semantic HTML, ARIA, keyboard nav, and color contrast compliance.</div>
-          <div className="flashcards-brag-card"><span className="brag-icon">📱</span><strong>Mobile Optimization</strong><br/>Touch-friendly, responsive, PWA install, and offline support.</div>
-        </div>
-      </section>
+      </motion.div>
     </div>
   );
 };
