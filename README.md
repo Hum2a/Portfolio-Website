@@ -2,22 +2,26 @@
 
 ## 🚀 Overview
 
-This is a modern, responsive personal portfolio website built with React. It showcases my projects, skills, and professional experience with a cyberpunk-inspired design aesthetic. The site includes detailed analytics tracking to monitor visitor engagement while respecting privacy.
+This is a modern, responsive personal portfolio website built with React. It showcases my projects, skills, and professional experience with a **subtle, professional design** featuring coding-inspired aesthetics, typewriter animations, and terminal-style effects. The site includes detailed analytics tracking to monitor visitor engagement while respecting privacy.
 
 ## ✨ Features
 
 - **Responsive Design**: Fully responsive layout that works across desktop, tablet, and mobile devices
 - **Project Showcase**: Detailed project pages with descriptions, technologies used, and links
-- **Interactive UI**: Modern, cyberpunk-inspired UI with smooth animations and transitions
+- **Professional UI**: Subtle, professional design with coding-inspired aesthetics
+- **Typewriter Animations**: Terminal-style text animations and typewriter effects
+- **Project Management**: Centralized project data system using JSON configuration
 - **Contact Form**: Direct communication channel for potential clients and collaborators
 
 ## 🛠️ Technologies Used
 
 ### Frontend
-- React 18
-- React Router 6
-- CSS Modules
+- React 19
+- React Router 7
+- Framer Motion (animations)
+- CSS Variables (theme system)
 - Responsive Design
+- Typewriter & Terminal animations
 
 ### Analytics & Backend
 - Firebase Firestore
@@ -31,11 +35,20 @@ This is a modern, responsive personal portfolio website built with React. It sho
 ```
 src/
 ├── components/        # Reusable UI components
+│   ├── animations/   # Animation components (Typewriter, Terminal, CodeBlock)
+│   ├── layout/        # Layout components (Navbar, Footer, etc.)
+│   └── ui/            # UI components (Buttons, Cards, etc.)
+├── config/            # Configuration files
+│   └── projects.json  # Centralized project data
+├── data/              # Data management
+│   └── projects.js    # Project data utilities
 ├── pages/             # Main page components
-├── projects/          # Individual project pages
+├── projects/          # Individual project detail pages
 ├── routes/            # Routing configuration
 ├── services/          # Firebase and analytics services
 ├── styles/            # Global styles and themes
+│   ├── themes/        # Theme files (colors, typography)
+│   └── components/    # Component-specific styles
 └── utils/             # Helper functions and utilities
 ```
 
