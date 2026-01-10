@@ -8,7 +8,7 @@ import {
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { FaMapMarkerAlt, FaChevronDown, FaChevronUp, FaGlobe } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaChevronDown, FaChevronUp, FaGlobe, FaFlag } from 'react-icons/fa';
 import '../styles/Traffic.css';
 
 const COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#43e97b', '#fa709a'];
@@ -27,6 +27,8 @@ const Traffic = () => {
   const [environmentFilter, setEnvironmentFilter] = useState('all'); // 'all', 'localhost', 'production'
   const [dateRange, setDateRange] = useState({ start: null, end: null }); // Date range filter
   const [timeRange, setTimeRange] = useState('all'); // Quick time filter: 'all', 'today', '7d', '30d', '90d', 'custom'
+  const [expandedCountries, setExpandedCountries] = useState(false); // Track if countries card is expanded
+  const [selectedCountry, setSelectedCountry] = useState(null); // Filter by specific country
 
   useEffect(() => {
     if (role === 'humza') {
@@ -205,13 +207,18 @@ const Traffic = () => {
     return true;
   }, [toDate]);
 
-  // Filter data by environment and date range
+  // Filter data by environment, date range, and country
   const filteredVisitors = useMemo(() => {
     let filtered = visitors;
     
     // Filter by environment
     if (environmentFilter !== 'all') {
       filtered = filtered.filter(v => v.environment === environmentFilter);
+    }
+    
+    // Filter by country
+    if (selectedCountry && selectedCountry !== 'all') {
+      filtered = filtered.filter(v => v.location?.country === selectedCountry);
     }
     
     // Filter by date range (using lastVisit)
@@ -260,7 +267,7 @@ const Traffic = () => {
     }
     
     return filtered;
-  }, [visitors, environmentFilter, timeRange, dateRange, isDateInRange]);
+  }, [visitors, environmentFilter, selectedCountry, timeRange, dateRange, isDateInRange]);
 
   const filteredPageViews = useMemo(() => {
     let filtered = pageViews;
@@ -362,15 +369,65 @@ const Traffic = () => {
     return filtered;
   }, [events, environmentFilter, timeRange, dateRange, isDateInRange]);
 
-  // Process data for charts using filtered data
+  // Get visitors filtered by environment and date (but not country) for country breakdown
+  const visitorsForCountryBreakdown = useMemo(() => {
+    let filtered = visitors;
+    
+    // Filter by environment
+    if (environmentFilter !== 'all') {
+      filtered = filtered.filter(v => v.environment === environmentFilter);
+    }
+    
+    // Filter by date range (using lastVisit)
+    let dateFilter = null;
+    if (timeRange === 'custom') {
+      if (dateRange.start || dateRange.end) {
+        dateFilter = {
+          start: dateRange.start ? new Date(dateRange.start + 'T00:00:00') : null,
+          end: dateRange.end ? new Date(dateRange.end + 'T23:59:59') : null
+        };
+        if (dateFilter.start && dateFilter.end && dateFilter.start > dateFilter.end) {
+          dateFilter = null;
+        }
+      }
+    } else if (timeRange !== 'all') {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      switch (timeRange) {
+        case 'today':
+          dateFilter = { start: today, end: now };
+          break;
+        case '7d':
+          dateFilter = { start: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        case '30d':
+          dateFilter = { start: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        case '90d':
+          dateFilter = { start: new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        default:
+          dateFilter = null;
+      }
+    }
+    
+    if (dateFilter) {
+      filtered = filtered.filter(v => isDateInRange(v.lastVisit, dateFilter.start, dateFilter.end));
+    }
+    
+    return filtered;
+  }, [visitors, environmentFilter, timeRange, dateRange, isDateInRange]);
+
+  // Process data for charts using filtered data (including country filter)
   const visitorsByCountry = useMemo(() => {
     const countryMap = {};
-    filteredVisitors.forEach(v => {
+    visitorsForCountryBreakdown.forEach(v => {
       const country = v.location?.country || "Unknown";
       countryMap[country] = (countryMap[country] || 0) + 1;
     });
     return Object.entries(countryMap).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
-  }, [filteredVisitors]);
+  }, [visitorsForCountryBreakdown]);
 
   const visitorsByDevice = useMemo(() => {
     const deviceMap = {};
@@ -739,9 +796,86 @@ const Traffic = () => {
               </div>
             )}
           </div>
-          <div className="stat-card">
-            <h3>Unique Countries</h3>
-            <p className="stat-value">{visitorsByCountry.length}</p>
+          <div 
+            className={`stat-card countries-card ${expandedCountries ? 'expanded' : ''}`}
+          >
+            <div className="stat-card-header" onClick={() => setExpandedCountries(!expandedCountries)}>
+              <div className="stat-title-group">
+                <FaFlag className="stat-icon" />
+                <h3>Unique Countries</h3>
+              </div>
+              <button 
+                className="expand-countries-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpandedCountries(!expandedCountries);
+                }}
+              >
+                {expandedCountries ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+            </div>
+            <p className="stat-value" onClick={() => setExpandedCountries(!expandedCountries)} style={{ cursor: 'pointer' }}>
+              {visitorsByCountry.length}
+            </p>
+            
+            {expandedCountries && (
+              <div className="countries-tags-container">
+                {visitorsByCountry.length > 0 ? (
+                  <>
+                    <div className="countries-header">
+                      <div className="countries-title-row">
+                        <h4>Countries Breakdown</h4>
+                        {selectedCountry && (
+                          <button
+                            className="clear-country-filter-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedCountry(null);
+                            }}
+                            title="Clear country filter"
+                          >
+                            Clear Filter
+                          </button>
+                        )}
+                      </div>
+                      <span className="countries-subtitle">
+                        {selectedCountry 
+                          ? `Filtered: ${selectedCountry} (${visitorsByCountry.find(c => c.name === selectedCountry)?.value || 0} visitors)`
+                          : `${visitorsForCountryBreakdown.length} total visitors across ${visitorsByCountry.length} countries`
+                        }
+                      </span>
+                    </div>
+                    <div className="countries-tags">
+                      {visitorsByCountry.map((country, index) => {
+                        const percentage = visitorsForCountryBreakdown.length > 0 
+                          ? ((country.value / visitorsForCountryBreakdown.length) * 100).toFixed(1)
+                          : 0;
+                        const isSelected = selectedCountry === country.name;
+                        return (
+                          <span 
+                            key={index} 
+                            className={`country-tag ${isSelected ? 'selected' : ''}`}
+                            title={`${country.value} visitor${country.value !== 1 ? 's' : ''} (${percentage}%) - Click to filter by this country`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedCountry(isSelected ? null : country.name);
+                            }}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <span className="country-flag">🌍</span>
+                            <span className="country-name">{country.name}</span>
+                            <span className="country-count">{country.value}</span>
+                            {isSelected && <span className="country-filter-indicator">✓</span>}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : (
+                  <p className="no-countries">No country data available</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -751,7 +885,12 @@ const Traffic = () => {
           className={`traffic-tab ${activeTab === 'visitors' ? 'active' : ''}`}
           onClick={() => setActiveTab('visitors')}
         >
-          Visitors ({filteredVisitors.length})
+          <span>Visitors ({filteredVisitors.length})</span>
+          {selectedCountry && (
+            <span className="filter-badge country-badge" title={`Filtered by: ${selectedCountry}`}>
+              {selectedCountry}
+            </span>
+          )}
         </button>
         <button
           className={`traffic-tab ${activeTab === 'pageviews' ? 'active' : ''}`}
