@@ -5,7 +5,7 @@ import "../styles/Navbar.css";
 
 const Navbar = () => {
   const location = useLocation();
-  const { role } = useAuth();
+  const { user, role } = useAuth();
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -19,37 +19,47 @@ const Navbar = () => {
           <span className="navbar-logo-text">HB</span>
           <span className="navbar-logo-code">/&gt;</span>
         </Link>
-        <div className="navbar-links">
-          <Link 
-            to="/" 
-            className={`navbar-link ${isActive('/') ? 'active' : ''}`}
-          >
-            Home
-          </Link>
-          <Link 
-            to="/about" 
-            className={`navbar-link ${isActive('/about') ? 'active' : ''}`}
-          >
-            About
-          </Link>
-          <Link 
-            to="/projects" 
-            className={`navbar-link ${isActive('/projects') ? 'active' : ''}`}
-          >
-            Projects
-          </Link>
-          <Link 
-            to="/contact" 
-            className={`navbar-link ${isActive('/contact') ? 'active' : ''}`}
-          >
-            Contact
-          </Link>
-          {role === 'humza' && (
+        <div className="navbar-links-container">
+          <div className="navbar-links">
             <Link 
-              to="/traffic" 
-              className={`navbar-link ${isActive('/traffic') ? 'active' : ''}`}
+              to="/" 
+              className={`navbar-link ${isActive('/') ? 'active' : ''}`}
             >
-              Traffic
+              Home
+            </Link>
+            <Link 
+              to="/about" 
+              className={`navbar-link ${isActive('/about') ? 'active' : ''}`}
+            >
+              About
+            </Link>
+            <Link 
+              to="/projects" 
+              className={`navbar-link ${isActive('/projects') ? 'active' : ''}`}
+            >
+              Projects
+            </Link>
+            <Link 
+              to="/contact" 
+              className={`navbar-link ${isActive('/contact') ? 'active' : ''}`}
+            >
+              Contact
+            </Link>
+            {role === 'humza' && (
+              <Link 
+                to="/traffic" 
+                className={`navbar-link ${isActive('/traffic') ? 'active' : ''}`}
+              >
+                Traffic
+              </Link>
+            )}
+          </div>
+          {!user && (
+            <Link 
+              to="/humza-login" 
+              className="navbar-login-button"
+            >
+              Login
             </Link>
           )}
         </div>

@@ -42,6 +42,12 @@
   color: var(--accent-primary);
 }
 
+.navbar-links-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .navbar-links {
   display: flex;
   gap: 2rem;
@@ -86,10 +92,66 @@
   width: 100%;
 }
 
+/* Login Button - Distinct styling */
+.navbar-login-button {
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  border: 1px solid var(--accent-primary);
+  border-radius: 6px;
+  padding: 0.6rem 1.5rem;
+  text-decoration: none;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.navbar-login-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.navbar-login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(74, 158, 255, 0.5);
+  border-color: var(--accent-hover);
+  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent-primary) 100%);
+}
+
+.navbar-login-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.navbar-login-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(74, 158, 255, 0.4);
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .navbar-container {
     padding: 0 1rem;
+  }
+
+  .navbar-links-container {
+    gap: 1rem;
   }
 
   .navbar-links {
@@ -98,6 +160,11 @@
 
   .navbar-link {
     font-size: var(--text-sm);
+  }
+
+  .navbar-login-button {
+    font-size: var(--text-sm);
+    padding: 0.5rem 1rem;
   }
 
   .navbar-logo {
