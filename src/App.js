@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import './App.css';
-import Navigation from "./components/navigation";
 import AppRoutes from "./routes/AppRoutes";
 import firebaseAnalytics from './services/firebaseAnalytics';
+import { AuthProvider } from './contexts/AuthContext';
 // Commented out for testing
 // import EnhancedCookieConsent from './components/EnhancedCookieConsent';
 import ScrollTracker from './components/ScrollTracker';
@@ -27,10 +27,12 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <PageTracker />
-        <AppRoutes />
-      </div>
+      <AuthProvider>
+        <div className="App">
+          <PageTracker />
+          <AppRoutes />
+        </div>
+      </AuthProvider>
     </Router>
   );
 }
