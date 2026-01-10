@@ -16,7 +16,7 @@ import Contrarian from "../projects/Contrarian";
 import LiberalDemocrats from "../projects/LiberalDemocrats";
 import PNGtoSVG from "../projects/PNGtoSVG";
 import DoppelganCar from "../projects/DoppelganCar";
-import B8 from "../projects/B8";
+import Bgr8 from "../projects/Bgr8";
 
 const Navigation = () => {
   return (
@@ -37,7 +37,8 @@ const Navigation = () => {
       <Route path="/ldmf" element={<LiberalDemocrats />} />
       <Route path="/pngtosvg" element={<PNGtoSVG />} />
       <Route path="/doppelgancar" element={<DoppelganCar />} />
-      <Route path="/b8" element={<B8 />} />
+      <Route path="/bgr8" element={<Bgr8 />} />
+      <Route path="/b8" element={<Bgr8 />} />
     </Routes>
   );
 };

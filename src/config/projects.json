@@ -23,12 +23,12 @@
       "priority": 1
     },
     {
-      "id": "b8",
-      "name": "B8",
-      "description": "Marketing Firm",
-      "logo": "B8.png",
-      "route": "/b8",
-      "tags": ["JavaScript", "React.js", "Vite", "Stripe", "Google Pay API", "Google Maps API", "React-Globe.gl", "Custom CMS", "Firebase", "Render"],
+      "id": "bgr8",
+      "name": "Bgr8",
+      "description": "Comprehensive mentoring and community platform with intelligent mentor-mentee matching",
+      "logo": "Bgr8.png",
+      "route": "/bgr8",
+      "tags": ["TypeScript", "React.js", "Firebase", "Vite", "Cal.com API", "MentorAlgorithm", "EdTech", "Community"],
       "visible": true,
       "featured": true,
       "priority": 1
