@@ -1427,3 +1427,135 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Time Badge */
+.time-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Media Type Badge */
+.media-type-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.media-type-badge.image-type {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.media-type-badge.video-type {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: white;
+}
+
+/* Media Source Cell */
+.media-src-cell {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Visitor ID Cell */
+.visitor-id-cell {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #666;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Top Media Section */
+.top-media-section {
+  margin-top: 40px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-media-section h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.top-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.top-media-item {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.top-media-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.top-media-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.top-media-rank {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #667eea;
+  min-width: 30px;
+}
+
+.top-media-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.top-media-caption {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-media-project {
+  font-size: 0.85rem;
+  color: #666;
+  font-family: 'Courier New', monospace;
+}
+
+.top-media-count {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #667eea;
+  font-weight: 600;
+}

@@ -18,6 +18,8 @@ const Traffic = () => {
   const [visitors, setVisitors] = useState([]);
   const [pageViews, setPageViews] = useState([]);
   const [events, setEvents] = useState([]);
+  const [pageTimes, setPageTimes] = useState([]);
+  const [mediaClicks, setMediaClicks] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('visitors');
@@ -70,6 +72,26 @@ const Traffic = () => {
         ...doc.data()
       }));
       setEvents(eventsData);
+
+      // Load all page times
+      const pageTimesSnapshot = await getDocs(
+        query(collection(db, 'analytics_page_times'), orderBy('timestamp', 'desc'))
+      );
+      const pageTimesData = pageTimesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPageTimes(pageTimesData);
+
+      // Load all media clicks
+      const mediaClicksSnapshot = await getDocs(
+        query(collection(db, 'analytics_media_clicks'), orderBy('timestamp', 'desc'))
+      );
+      const mediaClicksData = mediaClicksSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setMediaClicks(mediaClicksData);
 
       // Load stats
       const statsDoc = await getDocs(collection(db, 'analytics_stats'));
@@ -369,6 +391,114 @@ const Traffic = () => {
     return filtered;
   }, [events, environmentFilter, timeRange, dateRange, isDateInRange]);
 
+  // Filter page times by environment and date range
+  const filteredPageTimes = useMemo(() => {
+    let filtered = pageTimes;
+    
+    // Filter by environment
+    if (environmentFilter !== 'all') {
+      filtered = filtered.filter(pt => pt.environment === environmentFilter);
+    }
+    
+    // Filter by date range (using timestamp or startTime)
+    let dateFilter = null;
+    if (timeRange === 'custom') {
+      if (dateRange.start || dateRange.end) {
+        dateFilter = {
+          start: dateRange.start ? new Date(dateRange.start + 'T00:00:00') : null,
+          end: dateRange.end ? new Date(dateRange.end + 'T23:59:59') : null
+        };
+        if (dateFilter.start && dateFilter.end && dateFilter.start > dateFilter.end) {
+          dateFilter = null;
+        }
+      }
+    } else if (timeRange !== 'all') {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      switch (timeRange) {
+        case 'today':
+          dateFilter = { start: today, end: now };
+          break;
+        case '7d':
+          dateFilter = { start: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        case '30d':
+          dateFilter = { start: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        case '90d':
+          dateFilter = { start: new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        default:
+          dateFilter = null;
+      }
+    }
+    
+    if (dateFilter) {
+      filtered = filtered.filter(pt => {
+        const checkDate = pt.startTime ? toDate(pt.startTime) : (pt.timestamp ? toDate(pt.timestamp) : null);
+        if (!checkDate || isNaN(checkDate.getTime())) return false;
+        return isDateInRange(checkDate, dateFilter.start, dateFilter.end);
+      });
+    }
+    
+    return filtered;
+  }, [pageTimes, environmentFilter, timeRange, dateRange, isDateInRange, toDate]);
+
+  // Filter media clicks by environment and date range
+  const filteredMediaClicks = useMemo(() => {
+    let filtered = mediaClicks;
+    
+    // Filter by environment
+    if (environmentFilter !== 'all') {
+      filtered = filtered.filter(mc => mc.environment === environmentFilter);
+    }
+    
+    // Filter by date range (using timestamp)
+    let dateFilter = null;
+    if (timeRange === 'custom') {
+      if (dateRange.start || dateRange.end) {
+        dateFilter = {
+          start: dateRange.start ? new Date(dateRange.start + 'T00:00:00') : null,
+          end: dateRange.end ? new Date(dateRange.end + 'T23:59:59') : null
+        };
+        if (dateFilter.start && dateFilter.end && dateFilter.start > dateFilter.end) {
+          dateFilter = null;
+        }
+      }
+    } else if (timeRange !== 'all') {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      switch (timeRange) {
+        case 'today':
+          dateFilter = { start: today, end: now };
+          break;
+        case '7d':
+          dateFilter = { start: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        case '30d':
+          dateFilter = { start: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        case '90d':
+          dateFilter = { start: new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000), end: now };
+          break;
+        default:
+          dateFilter = null;
+      }
+    }
+    
+    if (dateFilter) {
+      filtered = filtered.filter(mc => {
+        const checkDate = mc.timestamp ? toDate(mc.timestamp) : null;
+        if (!checkDate || isNaN(checkDate.getTime())) return false;
+        return isDateInRange(checkDate, dateFilter.start, dateFilter.end);
+      });
+    }
+    
+    return filtered;
+  }, [mediaClicks, environmentFilter, timeRange, dateRange, isDateInRange, toDate]);
+
   // Get visitors filtered by environment and date (but not country) for country breakdown
   const visitorsForCountryBreakdown = useMemo(() => {
     let filtered = visitors;
@@ -496,6 +626,114 @@ const Traffic = () => {
       .slice(-30);
   }, [filteredVisitors, environmentFilter]);
 
+  // Chart data for page times
+  const averageTimeByPath = useMemo(() => {
+    const pathMap = {};
+    filteredPageTimes.forEach(pt => {
+      const path = pt.path || "Unknown";
+      if (!pathMap[path]) {
+        pathMap[path] = { total: 0, count: 0, values: [] };
+      }
+      const timeSpent = pt.timeSpent || 0;
+      pathMap[path].total += timeSpent;
+      pathMap[path].count += 1;
+      pathMap[path].values.push(timeSpent);
+    });
+    return Object.entries(pathMap)
+      .map(([name, data]) => ({
+        name,
+        average: parseFloat(data.count > 0 ? (data.total / data.count).toFixed(1) : 0),
+        total: data.total,
+        count: data.count,
+        max: data.values.length > 0 ? Math.max(...data.values) : 0,
+        min: data.values.length > 0 ? Math.min(...data.values) : 0
+      }))
+      .sort((a, b) => b.average - a.average)
+      .slice(0, 10); // Top 10 pages by average time
+  }, [filteredPageTimes]);
+
+  const timeSpentOverTime = useMemo(() => {
+    const dateMap = {};
+    filteredPageTimes.forEach(pt => {
+      const timeField = pt.startTime || pt.timestamp;
+      if (!timeField) return;
+      const date = formatDate(timeField);
+      if (date === 'N/A') return;
+      const dateKey = date.split(',')[0];
+      if (!dateMap[dateKey]) {
+        dateMap[dateKey] = { total: 0, count: 0 };
+      }
+      dateMap[dateKey].total += (pt.timeSpent || 0);
+      dateMap[dateKey].count += 1;
+    });
+    return Object.entries(dateMap)
+      .map(([name, data]) => ({
+        name,
+        average: parseFloat(data.count > 0 ? (data.total / data.count).toFixed(1) : 0),
+        total: data.total,
+        count: data.count
+      }))
+      .sort((a, b) => new Date(a.name) - new Date(b.name))
+      .slice(-30); // Last 30 days
+  }, [filteredPageTimes]);
+
+  // Chart data for media clicks
+  const mediaClicksByProject = useMemo(() => {
+    const projectMap = {};
+    filteredMediaClicks.forEach(mc => {
+      const project = mc.projectPath || "Unknown";
+      projectMap[project] = (projectMap[project] || 0) + 1;
+    });
+    return Object.entries(projectMap)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 10); // Top 10 projects
+  }, [filteredMediaClicks]);
+
+  const mediaClicksByType = useMemo(() => {
+    const typeMap = {};
+    filteredMediaClicks.forEach(mc => {
+      const type = mc.mediaType || "Unknown";
+      typeMap[type] = (typeMap[type] || 0) + 1;
+    });
+    return Object.entries(typeMap)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+  }, [filteredMediaClicks]);
+
+  const mediaClicksOverTime = useMemo(() => {
+    const dateMap = {};
+    filteredMediaClicks.forEach(mc => {
+      const date = formatDate(mc.timestamp);
+      const dateKey = date.split(',')[0];
+      dateMap[dateKey] = (dateMap[dateKey] || 0) + 1;
+    });
+    return Object.entries(dateMap)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => new Date(a.name) - new Date(b.name))
+      .slice(-30); // Last 30 days
+  }, [filteredMediaClicks]);
+
+  const topMediaClicks = useMemo(() => {
+    const mediaMap = {};
+    filteredMediaClicks.forEach(mc => {
+      const key = `${mc.mediaCaption || mc.mediaSrc || 'Unknown'}`;
+      if (!mediaMap[key]) {
+        mediaMap[key] = {
+          caption: mc.mediaCaption || 'Unknown',
+          src: mc.mediaSrc || 'Unknown',
+          type: mc.mediaType || 'Unknown',
+          projectPath: mc.projectPath || 'Unknown',
+          count: 0
+        };
+      }
+      mediaMap[key].count += 1;
+    });
+    return Object.values(mediaMap)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10); // Top 10 media items
+  }, [filteredMediaClicks]);
+
   // Calculate filtered stats
   const filteredStats = useMemo(() => {
     if (!stats) return null;
@@ -506,6 +744,14 @@ const Traffic = () => {
     const productionPageViews = pageViews.filter(pv => pv.environment === 'production').length;
     const localhostEvents = events.filter(e => e.environment === 'localhost').length;
     const productionEvents = events.filter(e => e.environment === 'production').length;
+    const localhostPageTimes = pageTimes.filter(pt => pt.environment === 'localhost').length;
+    const productionPageTimes = pageTimes.filter(pt => pt.environment === 'production').length;
+    const localhostMediaClicks = mediaClicks.filter(mc => mc.environment === 'localhost').length;
+    const productionMediaClicks = mediaClicks.filter(mc => mc.environment === 'production').length;
+
+    // Calculate average time spent
+    const totalTimeSpent = filteredPageTimes.reduce((sum, pt) => sum + (pt.timeSpent || 0), 0);
+    const avgTimeSpent = filteredPageTimes.length > 0 ? (totalTimeSpent / filteredPageTimes.length).toFixed(1) : 0;
 
     return {
       localhostVisitors,
@@ -514,11 +760,19 @@ const Traffic = () => {
       productionPageViews,
       localhostEvents,
       productionEvents,
+      localhostPageTimes,
+      productionPageTimes,
+      localhostMediaClicks,
+      productionMediaClicks,
       totalVisitors: visitors.length,
       totalPageViews: pageViews.length,
-      totalEvents: events.length
+      totalEvents: events.length,
+      totalPageTimes: pageTimes.length,
+      totalMediaClicks: mediaClicks.length,
+      avgTimeSpent: parseFloat(avgTimeSpent),
+      totalTimeSpent
     };
-  }, [stats, visitors, pageViews, events]);
+  }, [stats, visitors, pageViews, events, pageTimes, mediaClicks, filteredPageTimes]);
 
   // Format date for input field (YYYY-MM-DD)
   const formatDateForInput = (date) => {
@@ -877,6 +1131,46 @@ const Traffic = () => {
               </div>
             )}
           </div>
+
+          <div className="stat-card">
+            <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Page Times</h3>
+            <p className="stat-value">{filteredStats.totalPageTimes || 0}</p>
+            {environmentFilter === 'all' && (
+              <div className="stat-breakdown">
+                <span className="breakdown-item production">Prod: {filteredStats.productionPageTimes || 0}</span>
+                <span className="breakdown-item localhost">Local: {filteredStats.localhostPageTimes || 0}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="stat-card">
+            <h3>Average Time Spent</h3>
+            <p className="stat-value">{filteredStats.avgTimeSpent || 0}s</p>
+            {filteredStats.totalTimeSpent > 0 && (
+              <div className="stat-breakdown">
+                <span className="breakdown-item production">
+                  Total: {filteredStats.totalTimeSpent || 0}s
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="stat-card">
+            <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Media Clicks</h3>
+            <p className="stat-value">
+              {environmentFilter === 'all' 
+                ? filteredStats.totalMediaClicks || 0
+                : environmentFilter === 'production' 
+                  ? filteredStats.productionMediaClicks || 0
+                  : filteredStats.localhostMediaClicks || 0}
+            </p>
+            {environmentFilter === 'all' && (
+              <div className="stat-breakdown">
+                <span className="breakdown-item production">Prod: {filteredStats.productionMediaClicks || 0}</span>
+                <span className="breakdown-item localhost">Local: {filteredStats.localhostMediaClicks || 0}</span>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -903,6 +1197,18 @@ const Traffic = () => {
           onClick={() => setActiveTab('events')}
         >
           Events ({filteredEvents.length})
+        </button>
+        <button
+          className={`traffic-tab ${activeTab === 'pagetimes' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pagetimes')}
+        >
+          Page Times ({filteredPageTimes.length})
+        </button>
+        <button
+          className={`traffic-tab ${activeTab === 'mediaclicks' ? 'active' : ''}`}
+          onClick={() => setActiveTab('mediaclicks')}
+        >
+          Media Clicks ({filteredMediaClicks.length})
         </button>
       </div>
 
@@ -1520,6 +1826,209 @@ const Traffic = () => {
                     </tbody>
                   </table>
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'pagetimes' && (
+              <div className="traffic-tab-content">
+                {/* Charts for Page Times */}
+                <div className="charts-grid">
+                  <div className="chart-card full-width">
+                    <h3>Average Time Spent by Page</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={averageTimeByPath} layout="vertical">
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis type="number" label={{ value: 'Average Time (seconds)', position: 'insideBottom', offset: -5 }} />
+                        <YAxis dataKey="name" type="category" width={200} />
+                        <Tooltip formatter={(value) => [`${value}s`, 'Average Time']} />
+                        <Legend />
+                        <Bar dataKey="average" fill="#43e97b">
+                          {averageTimeByPath.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="chart-card full-width">
+                    <h3>Time Spent Over Time</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <AreaChart data={timeSpentOverTime}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                        <YAxis label={{ value: 'Time (seconds)', angle: -90, position: 'insideLeft' }} />
+                        <Tooltip formatter={(value, name) => {
+                          if (name === 'average') return `${value}s (avg)`;
+                          if (name === 'total') return `${value}s (total)`;
+                          return value;
+                        }} />
+                        <Legend />
+                        <Area type="monotone" dataKey="average" stroke="#43e97b" fill="#43e97b" fillOpacity={0.6} name="Average Time" />
+                        <Area type="monotone" dataKey="total" stroke="#38f9d7" fill="#38f9d7" fillOpacity={0.4} name="Total Time" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Page Times Table */}
+                <div className="traffic-table-container">
+                  <table className="traffic-table">
+                    <thead>
+                      <tr>
+                        <th>Path</th>
+                        <th>Time Spent (seconds)</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Visitor ID</th>
+                        <th>Environment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredPageTimes.map(pageTime => (
+                        <tr key={pageTime.id}>
+                          <td>{pageTime.path || 'N/A'}</td>
+                          <td>
+                            <span className="time-badge">{pageTime.timeSpent || 0}s</span>
+                          </td>
+                          <td>{formatDate(pageTime.startTime)}</td>
+                          <td>{formatDate(pageTime.endTime)}</td>
+                          <td className="visitor-id-cell">{pageTime.visitorId || 'N/A'}</td>
+                          <td>
+                            <span className={`env-badge ${pageTime.environment === 'localhost' ? 'localhost' : 'production'}`}>
+                              {pageTime.environment || 'unknown'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'mediaclicks' && (
+              <div className="traffic-tab-content">
+                {/* Charts for Media Clicks */}
+                <div className="charts-grid">
+                  <div className="chart-card">
+                    <h3>Media Clicks by Type</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={mediaClicksByType}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                        >
+                          {mediaClicksByType.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="chart-card">
+                    <h3>Media Clicks by Project</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={mediaClicksByProject}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="value" fill="#fa709a">
+                          {mediaClicksByProject.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="chart-card full-width">
+                    <h3>Media Clicks Over Time</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={mediaClicksOverTime}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="value" stroke="#fa709a" strokeWidth={2} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Media Clicks Table */}
+                <div className="traffic-table-container">
+                  <table className="traffic-table">
+                    <thead>
+                      <tr>
+                        <th>Media Type</th>
+                        <th>Caption/Title</th>
+                        <th>Project Path</th>
+                        <th>Media Source</th>
+                        <th>Timestamp</th>
+                        <th>Environment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredMediaClicks.map(mediaClick => (
+                        <tr key={mediaClick.id}>
+                          <td>
+                            <span className={`media-type-badge ${mediaClick.mediaType === 'image' ? 'image-type' : 'video-type'}`}>
+                              {mediaClick.mediaType || 'Unknown'}
+                            </span>
+                          </td>
+                          <td>{mediaClick.mediaCaption || 'N/A'}</td>
+                          <td>{mediaClick.projectPath || 'N/A'}</td>
+                          <td className="media-src-cell" title={mediaClick.mediaSrc || 'N/A'}>
+                            {mediaClick.mediaSrc ? (mediaClick.mediaSrc.length > 50 ? mediaClick.mediaSrc.substring(0, 50) + '...' : mediaClick.mediaSrc) : 'N/A'}
+                          </td>
+                          <td>{formatDate(mediaClick.timestamp)}</td>
+                          <td>
+                            <span className={`env-badge ${mediaClick.environment === 'localhost' ? 'localhost' : 'production'}`}>
+                              {mediaClick.environment || 'unknown'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Top Media Clicks Summary */}
+                {topMediaClicks.length > 0 && (
+                  <div className="top-media-section">
+                    <h3>Top 10 Most Clicked Media</h3>
+                    <div className="top-media-grid">
+                      {topMediaClicks.map((media, index) => (
+                        <div key={index} className="top-media-item">
+                          <div className="top-media-header">
+                            <span className="top-media-rank">#{index + 1}</span>
+                            <span className={`media-type-badge ${media.type === 'image' ? 'image-type' : 'video-type'}`}>
+                              {media.type}
+                            </span>
+                          </div>
+                          <div className="top-media-info">
+                            <div className="top-media-caption">{media.caption}</div>
+                            <div className="top-media-project">{media.projectPath}</div>
+                            <div className="top-media-count">{media.count} click{media.count !== 1 ? 's' : ''}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </>
