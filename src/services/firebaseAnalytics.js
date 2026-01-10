@@ -229,9 +229,33 @@ const trackVisitor = async () => {
       // Fallback to free IP geolocation API if IPInfo not available or failed
       if (userLocation.city === "Unknown" && userLocation.country === "Unknown") {
         try {
-          // Try ip-api.com (free, no key required)
+          // Try bigdatacloud.net first (more reliable, no rate limits for basic use)
+          const bigDataResponse = await fetch(`https://api.bigdatacloud.net/data/ip-geolocation?ip=${ipAddress}`);
+          if (bigDataResponse.ok) {
+            const bigDataData = await bigDataResponse.json();
+            if (bigDataData && !bigDataData.error) {
+              userLocation = {
+                city: bigDataData.location?.city || bigDataData.location?.locality || "Unknown",
+                region: bigDataData.location?.principalSubdivision || "Unknown",
+                country: bigDataData.location?.country?.name || bigDataData.country?.name || "Unknown",
+                coordinates: bigDataData.location?.latitude && bigDataData.location?.longitude
+                  ? [bigDataData.location.latitude.toString(), bigDataData.location.longitude.toString()]
+                  : ["0", "0"],
+                timezone: bigDataData.location?.timeZone?.name || deviceInfo.timezone,
+                isp: bigDataData.network?.organization || "Unknown"
+              };
+            }
+          }
+        } catch (bigDataError) {
+          console.log('BigDataCloud IP geolocation failed, trying ip-api.com...');
+        }
+      }
+      
+      // Try ip-api.com as another fallback (may have rate limits/403 errors)
+      if (userLocation.city === "Unknown" && userLocation.country === "Unknown") {
+        try {
           const freeApiResponse = await fetch(`https://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`);
-          if (freeApiResponse.ok) {
+          if (freeApiResponse.ok && freeApiResponse.status === 200) {
             const freeApiData = await freeApiResponse.json();
             if (freeApiData && freeApiData.status === 'success') {
               userLocation = {
@@ -245,9 +269,11 @@ const trackVisitor = async () => {
                 isp: freeApiData.isp || "Unknown"
               };
             }
+          } else if (freeApiResponse.status === 403) {
+            console.log('ip-api.com returned 403 (rate limited or forbidden), using browser geolocation fallback...');
           }
         } catch (freeApiError) {
-          console.log('Free IP geolocation API failed, trying browser geolocation...');
+          console.log('ip-api.com failed, trying browser geolocation...');
         }
       }
       
