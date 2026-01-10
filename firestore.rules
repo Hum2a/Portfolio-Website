@@ -16,7 +16,10 @@ service cloud.firestore {
       return collection != 'analytics_visitors' &&
              collection != 'analytics_pageviews' &&
              collection != 'analytics_events' &&
-             collection != 'analytics_stats';
+             collection != 'analytics_stats' &&
+             collection != 'analytics_page_times' &&
+             collection != 'analytics_media_clicks' &&
+             collection != 'analytics_sessions';
     }
     
     // Users collection - must be defined BEFORE analytics collections to allow role checks
@@ -58,6 +61,24 @@ service cloud.firestore {
     match /analytics_stats/{document=**} {
       allow read: if isHumzaUser();
       allow write: if true; // Anyone can write (for tracking updates)
+      allow delete: if false; // Prevent deletion for security
+    }
+    
+    match /analytics_page_times/{document=**} {
+      allow read: if isHumzaUser();
+      allow write: if true; // Anyone can write (for tracking page time spent)
+      allow delete: if false; // Prevent deletion for security
+    }
+    
+    match /analytics_media_clicks/{document=**} {
+      allow read: if isHumzaUser();
+      allow write: if true; // Anyone can write (for tracking media clicks)
+      allow delete: if false; // Prevent deletion for security
+    }
+    
+    match /analytics_sessions/{document=**} {
+      allow read: if isHumzaUser();
+      allow write: if true; // Anyone can write (for tracking sessions)
       allow delete: if false; // Prevent deletion for security
     }
     
