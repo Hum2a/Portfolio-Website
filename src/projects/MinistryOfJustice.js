@@ -66,6 +66,7 @@ const MinistryOfJustice = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [selectedProject, setSelectedProject] = useState(projects[0]);
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const { trackMediaClick } = useMediaTracking();
 
   const projectInfo = `const ministryOfJustice = {
   name: "Ministry of Justice Projects",
