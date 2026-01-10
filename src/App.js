@@ -8,16 +8,7 @@ import { AuthProvider } from './contexts/AuthContext';
 // import EnhancedCookieConsent from './components/EnhancedCookieConsent';
 import ScrollTracker from './components/ScrollTracker';
 import TimeTracker from './components/TimeTracker';
-
-// PageTracker component to track page views
-const PageTracker = () => {
-  useEffect(() => {
-    // Track page view when component mounts
-    firebaseAnalytics.trackPageView();
-  }, []);
-
-  return null;
-};
+import PageTimeTracker from './components/PageTimeTracker';
 
 function App() {
   useEffect(() => {
@@ -29,7 +20,7 @@ function App() {
     <Router>
       <AuthProvider>
         <div className="App">
-          <PageTracker />
+          <PageTimeTracker />
           <AppRoutes />
         </div>
       </AuthProvider>
