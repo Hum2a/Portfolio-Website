@@ -7,13 +7,13 @@ This document provides guidelines for maintaining Firestore security rules when 
 
 The following collections contain sensitive analytics data and are **protected** - only users with role "humza" can read them, but anyone can write to them (for anonymous tracking):
 
-1. **analytics_visitors** - Visitor tracking data
-2. **analytics_pageviews** - Page view tracking data
+1. **analytics_visitors** - Visitor tracking data (location, device info, visit history)
+2. **analytics_pageviews** - Page view tracking data (path, title, referrer, timestamp)
 3. **analytics_events** - Event tracking data (clicks, form submissions, etc.)
-4. **analytics_stats** - Aggregated statistics
-5. **analytics_page_times** - Time spent on each page tracking
-6. **analytics_media_clicks** - Media (images/videos) click tracking in project pages
-7. **analytics_sessions** - Session duration tracking
+4. **analytics_stats** - Aggregated statistics (visitor counts, page view counts, event counts)
+5. **analytics_page_times** - Time spent on each page tracking (startTime, endTime, timeSpent in seconds, path)
+6. **analytics_media_clicks** - Media (images/videos) click tracking in project pages (mediaType, mediaSrc, mediaCaption, projectPath)
+7. **analytics_sessions** - Session duration tracking (session start/end times, duration)
 
 ## Rules for Adding New Analytics Collections
 
