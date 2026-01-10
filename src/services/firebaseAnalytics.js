@@ -361,12 +361,21 @@ const trackVisitor = async () => {
 // Track page view
 const trackPageView = async (path, title) => {
   try {
-    const sessionId = sessionStorage.getItem('sessionId');
-    const visitorId = localStorage.getItem('visitorId');
-    const anonymizedIP = localStorage.getItem('anonymizedIP');
+    const sessionId = getSessionId();
+    const visitorId = getVisitorId();
+    // Get anonymizedIP from localStorage (set by trackVisitor during init)
+    let anonymizedIP = localStorage.getItem('anonymizedIP');
+    
+    // If not available, try to get it (fallback)
+    if (!anonymizedIP) {
+      anonymizedIP = await anonymizeIP();
+      if (anonymizedIP) {
+        localStorage.setItem('anonymizedIP', anonymizedIP);
+      }
+    }
     
     if (!sessionId || !visitorId || !anonymizedIP) {
-      return;
+      return null;
     }
     
     // Ensure path and title are defined
@@ -381,12 +390,16 @@ const trackPageView = async (path, title) => {
     // Create a clean path ID (remove slashes and special characters)
     const pathId = currentPath.replace(/[^a-zA-Z0-9]/g, '_');
     
-    // Create a document ID that combines path and timestamp
-    const pageViewId = `${pathId}_${Date.now()}`;
+    // Create a unique document ID for this page view
+    const pageViewId = `${pathId}_${Date.now()}_${sessionId}`;
+    
+    // Store page view start time for time tracking
+    sessionStorage.setItem(`pageView_${currentPath}_start`, timestamp.getTime().toString());
+    sessionStorage.setItem(`pageView_${currentPath}_id`, pageViewId);
     
     // Add page view to analytics_pageviews collection
     const pageViewsRef = collection(db, 'analytics_pageviews');
-    await setDoc(doc(pageViewsRef), {
+    await setDoc(doc(pageViewsRef, pageViewId), {
       visitorId,
       anonymizedIP,
       sessionId,
@@ -394,7 +407,9 @@ const trackPageView = async (path, title) => {
       title: currentTitle,
       referrer: currentReferrer,
       timestamp,
-      environment // Add environment field
+      environment,
+      timeSpent: 0, // Will be updated when page is left
+      pageViewId // Store for updating time spent later
     });
     
     // Update page view count in analytics_stats
@@ -410,8 +425,85 @@ const trackPageView = async (path, title) => {
     await setDoc(visitorPageViewRef, {
       path: currentPath,
       title: currentTitle,
-      timestamp
+      timestamp,
+      pageViewId
     });
+    
+    return pageViewId;
+  } catch (error) {
+    // Silent fail
+    return null;
+  }
+};
+
+// Track time spent on a page
+const trackPageTime = async (path, pageViewId = null) => {
+  try {
+    const currentPath = path || window.location.pathname;
+    const startTimeKey = `pageView_${currentPath}_start`;
+    const pageViewIdKey = `pageView_${currentPath}_id`;
+    
+    const startTimeStr = sessionStorage.getItem(startTimeKey);
+    const storedPageViewId = pageViewId || sessionStorage.getItem(pageViewIdKey);
+    
+    if (!startTimeStr || !storedPageViewId) {
+      return;
+    }
+    
+    const startTime = parseInt(startTimeStr, 10);
+    const endTime = Date.now();
+    const timeSpent = Math.floor((endTime - startTime) / 1000); // Time in seconds
+    
+    // Only track if time spent is meaningful (at least 1 second)
+    if (timeSpent < 1) {
+      return;
+    }
+    
+    const sessionId = getSessionId();
+    const visitorId = getVisitorId();
+    const anonymizedIP = localStorage.getItem('anonymizedIP');
+    const environment = getEnvironment();
+    
+    if (!sessionId || !visitorId || !anonymizedIP) {
+      return;
+    }
+    
+    // Update the page view document with time spent
+    const pageViewRef = doc(db, 'analytics_pageviews', storedPageViewId);
+    await updateDoc(pageViewRef, {
+      timeSpent,
+      endTime: new Date(endTime),
+      updatedAt: serverTimestamp()
+    });
+    
+    // Also create/update a dedicated page time document for easier querying
+    const timeDocId = `${storedPageViewId}_time`;
+    const pageTimeRef = doc(db, 'analytics_page_times', timeDocId);
+    await setDoc(pageTimeRef, {
+      pageViewId: storedPageViewId,
+      visitorId,
+      anonymizedIP,
+      sessionId,
+      path: currentPath,
+      timeSpent,
+      startTime: new Date(startTime),
+      endTime: new Date(endTime),
+      timestamp: serverTimestamp(),
+      environment
+    }, { merge: true });
+    
+    // Update page time stats
+    const pageTimeStatsRef = doc(db, 'analytics_stats', 'page_times');
+    await setDoc(pageTimeStatsRef, {
+      [currentPath]: arrayUnion(timeSpent), // Track all time spent values for averaging
+      total: increment(timeSpent),
+      count: increment(1),
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+    
+    // Clean up session storage
+    sessionStorage.removeItem(startTimeKey);
+    sessionStorage.removeItem(pageViewIdKey);
     
   } catch (error) {
     // Silent fail
@@ -421,7 +513,7 @@ const trackPageView = async (path, title) => {
 // Track events (clicks, form submissions, etc.)
 const trackEvent = async (category, action, label = null, value = null) => {
   try {
-    const sessionId = sessionStorage.getItem('sessionId');
+    const sessionId = getSessionId();
     if (!sessionId) {
       return;
     }
@@ -437,6 +529,9 @@ const trackEvent = async (category, action, label = null, value = null) => {
     // Detect environment
     const environment = getEnvironment();
     
+    const visitorId = getVisitorId();
+    const anonymizedIP = localStorage.getItem('anonymizedIP');
+    
     const eventData = {
       category,
       action,
@@ -445,12 +540,15 @@ const trackEvent = async (category, action, label = null, value = null) => {
       path: currentPath,
       timestamp,
       sessionId,
-      environment // Add environment field
+      visitorId,
+      anonymizedIP,
+      environment
     };
     
     // Add event to analytics_events collection
+    const eventId = `${category}_${action}_${Date.now()}_${sessionId}`;
     const eventsRef = collection(db, 'analytics_events');
-    await setDoc(doc(eventsRef), eventData);
+    await setDoc(doc(eventsRef, eventId), eventData);
     
     // Update event count in analytics_stats
     const eventKey = `${category}_${action}`;
@@ -465,13 +563,70 @@ const trackEvent = async (category, action, label = null, value = null) => {
   }
 };
 
+// Track media clicks (images, videos) in project pages
+const trackMediaClick = async (mediaType, mediaSrc, mediaCaption, projectPath) => {
+  try {
+    const sessionId = getSessionId();
+    const visitorId = getVisitorId();
+    const anonymizedIP = localStorage.getItem('anonymizedIP');
+    
+    if (!sessionId || !visitorId || !anonymizedIP) {
+      return;
+    }
+    
+    if (!mediaType || !mediaSrc) {
+      return;
+    }
+    
+    const timestamp = new Date();
+    const currentPath = projectPath || window.location.pathname;
+    const environment = getEnvironment();
+    
+    // Create a media click document
+    const mediaClickId = `media_${Date.now()}_${sessionId}`;
+    const mediaClicksRef = collection(db, 'analytics_media_clicks');
+    
+    await setDoc(doc(mediaClicksRef, mediaClickId), {
+      visitorId,
+      anonymizedIP,
+      sessionId,
+      mediaType, // 'image' or 'video'
+      mediaSrc,
+      mediaCaption: mediaCaption || null,
+      projectPath: currentPath,
+      timestamp,
+      environment
+    });
+    
+    // Update media click stats
+    const mediaStatsRef = doc(db, 'analytics_stats', 'media_clicks');
+    const statsKey = `${currentPath}_${mediaType}`;
+    await setDoc(mediaStatsRef, {
+      [statsKey]: increment(1),
+      [`${currentPath}_total`]: increment(1),
+      [`${mediaType}_total`]: increment(1),
+      total: increment(1),
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+    
+    // Also track as a regular event for consistency
+    await trackEvent('media', 'click', `${mediaType}: ${mediaCaption || mediaSrc}`, null);
+    
+  } catch (error) {
+    // Silent fail
+  }
+};
+
 // Track session duration when user leaves
 const trackSessionEnd = async () => {
   try {
-    const sessionId = sessionStorage.getItem('sessionId');
+    const sessionId = getSessionId();
     if (!sessionId) {
       return;
     }
+    
+    // Track time spent on current page before ending session
+    await trackPageTime();
     
     const sessionStartTime = sessionStorage.getItem('sessionStartTime');
     if (!sessionStartTime) {
@@ -487,14 +642,21 @@ const trackSessionEnd = async () => {
       return;
     }
     
+    const visitorId = getVisitorId();
+    const anonymizedIP = localStorage.getItem('anonymizedIP');
+    const environment = getEnvironment();
+    
     // Update session data in analytics_sessions collection
     const sessionRef = doc(db, 'analytics_sessions', sessionId);
     await setDoc(sessionRef, {
       sessionId,
+      visitorId,
+      anonymizedIP,
       startTime,
       endTime,
       duration,
-      path: window.location.pathname
+      path: window.location.pathname,
+      environment
     }, { merge: true });
   } catch (error) {
     // Silent fail
@@ -528,11 +690,13 @@ const initAnalytics = async () => {
 const firebaseAnalytics = {
   trackVisitor,
   trackPageView,
+  trackPageTime,
   trackEvent,
+  trackMediaClick,
   trackSessionEnd,
   initAnalytics
 };
 
 export default firebaseAnalytics;
 
-export { trackVisitor, trackPageView, trackEvent, trackSessionEnd, initAnalytics }; 
+export { trackVisitor, trackPageView, trackPageTime, trackEvent, trackMediaClick, trackSessionEnd, initAnalytics }; 
