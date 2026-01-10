@@ -1,6 +1,4 @@
-import { initializeApp } from 'firebase/app';
 import { 
-  getFirestore, 
   collection, 
   doc, 
   setDoc, 
@@ -12,11 +10,8 @@ import {
 } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
-import { firebaseConfig, featureFlags, apiKeys } from '../utils/env';
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import { featureFlags, apiKeys } from '../utils/env';
+import { db } from './firebase';
 
 // Generate or retrieve session ID
 const getSessionId = () => {
@@ -55,6 +50,21 @@ const anonymizeIP = async () => {
   } catch (error) {
     return null;
   }
+};
+
+// Detect environment (localhost vs production)
+const getEnvironment = () => {
+  const hostname = window.location.hostname;
+  const isLocalhost = hostname === 'localhost' || 
+                      hostname === '127.0.0.1' || 
+                      hostname === '0.0.0.0' ||
+                      hostname === '[::1]' ||
+                      hostname.startsWith('192.168.') ||
+                      hostname.startsWith('10.') ||
+                      hostname.startsWith('172.') ||
+                      window.location.protocol === 'file:';
+  
+  return isLocalhost ? 'localhost' : 'production';
 };
 
 // Enhanced device info detection
@@ -197,45 +207,100 @@ const trackVisitor = async () => {
     
     try {
       // Try to get location from IPInfo if API token is available
-      if (apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN') {
+      if (apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN' && apiKeys.ipinfoToken !== '') {
         const locationResponse = await fetch(`https://ipinfo.io/${ipAddress}/json?token=${apiKeys.ipinfoToken}`);
-        const locationData = await locationResponse.json();
-        
-        // Extract location details
-        if (locationData) {
-          userLocation = {
-            city: locationData.city || "Unknown",
-            region: locationData.region || "Unknown",
-            country: locationData.country || "Unknown",
-            coordinates: locationData.loc ? locationData.loc.split(",") : ["0", "0"],
-            timezone: locationData.timezone || deviceInfo.timezone,
-            isp: locationData.org || "Unknown"
-          };
+        if (locationResponse.ok) {
+          const locationData = await locationResponse.json();
+          
+          // Extract location details
+          if (locationData && !locationData.error) {
+            userLocation = {
+              city: locationData.city || "Unknown",
+              region: locationData.region || "Unknown",
+              country: locationData.country || "Unknown",
+              coordinates: locationData.loc ? locationData.loc.split(",") : ["0", "0"],
+              timezone: locationData.timezone || deviceInfo.timezone,
+              isp: locationData.org || "Unknown"
+            };
+          }
         }
-      } 
-      // Fallback to browser geolocation if IPInfo not available
-      else if (navigator.geolocation) {
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, {
-            enableHighAccuracy: false,
-            timeout: 5000,
-            maximumAge: 0
-          });
-        });
-        
-        userLocation = {
-          ...userLocation,
-          coordinates: [position.coords.latitude.toString(), position.coords.longitude.toString()]
-        };
       }
-    } catch (geoError) {
-      // Silently fail and use default location data
+      
+      // Fallback to free IP geolocation API if IPInfo not available or failed
+      if (userLocation.city === "Unknown" && userLocation.country === "Unknown") {
+        try {
+          // Try ip-api.com (free, no key required)
+          const freeApiResponse = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`);
+          if (freeApiResponse.ok) {
+            const freeApiData = await freeApiResponse.json();
+            if (freeApiData && freeApiData.status === 'success') {
+              userLocation = {
+                city: freeApiData.city || "Unknown",
+                region: freeApiData.regionName || "Unknown",
+                country: freeApiData.country || "Unknown",
+                coordinates: freeApiData.lat && freeApiData.lon 
+                  ? [freeApiData.lat.toString(), freeApiData.lon.toString()] 
+                  : ["0", "0"],
+                timezone: freeApiData.timezone || deviceInfo.timezone,
+                isp: freeApiData.isp || "Unknown"
+              };
+            }
+          }
+        } catch (freeApiError) {
+          console.log('Free IP geolocation API failed, trying browser geolocation...');
+        }
+      }
+      
+      // Final fallback to browser geolocation if all IP-based methods failed
+      if (userLocation.coordinates[0] === "0" && userLocation.coordinates[1] === "0" && navigator.geolocation) {
+        try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: false,
+              timeout: 5000,
+              maximumAge: 60000 // Cache for 1 minute
+            });
+          });
+          
+          userLocation = {
+            ...userLocation,
+            coordinates: [position.coords.latitude.toString(), position.coords.longitude.toString()]
+          };
+          
+          // Try to reverse geocode if we have coordinates but no city/country
+          if (userLocation.city === "Unknown" && position.coords.latitude && position.coords.longitude) {
+            try {
+              const reverseGeoResponse = await fetch(
+                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`
+              );
+              if (reverseGeoResponse.ok) {
+                const reverseGeoData = await reverseGeoResponse.json();
+                if (reverseGeoData) {
+                  userLocation.city = reverseGeoData.city || userLocation.city;
+                  userLocation.region = reverseGeoData.principalSubdivision || userLocation.region;
+                  userLocation.country = reverseGeoData.countryName || userLocation.country;
+                }
+              }
+            } catch (reverseGeoError) {
+              // Silently fail - we have coordinates at least
+            }
+          }
+        } catch (geoError) {
+          // Silently fail - use IP-based data or defaults
+        }
+      }
+    } catch (error) {
+      console.error('Error getting location data:', error);
+      // Keep default location data
     }
     
     // Current timestamp
     const timestamp = new Date();
     
-    // Use anonymizedIP as the document ID
+    // Detect environment
+    const environment = getEnvironment();
+    
+    // Use anonymizedIP as the document ID, but include environment in data
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
     
     // Get the current document to check if it exists
@@ -251,10 +316,12 @@ const trackVisitor = async () => {
         visits: increment(1),
         deviceInfo,
         location: userLocation,
+        environment, // Add environment field
         sessions: arrayUnion({
           sessionId,
           startTime: timestamp,
           referrer: document.referrer || 'direct',
+          environment, // Include environment in session
         })
       });
     } else {
@@ -268,10 +335,12 @@ const trackVisitor = async () => {
         visits: 1,
         deviceInfo,
         location: userLocation,
+        environment, // Add environment field
         sessions: [{
           sessionId,
           startTime: timestamp,
           referrer: document.referrer || 'direct',
+          environment, // Include environment in session
         }]
       });
     }
@@ -306,6 +375,9 @@ const trackPageView = async (path, title) => {
     const currentReferrer = document.referrer || null;
     const timestamp = new Date();
     
+    // Detect environment
+    const environment = getEnvironment();
+    
     // Create a clean path ID (remove slashes and special characters)
     const pathId = currentPath.replace(/[^a-zA-Z0-9]/g, '_');
     
@@ -321,7 +393,8 @@ const trackPageView = async (path, title) => {
       path: currentPath,
       title: currentTitle,
       referrer: currentReferrer,
-      timestamp
+      timestamp,
+      environment // Add environment field
     });
     
     // Update page view count in analytics_stats
@@ -361,6 +434,9 @@ const trackEvent = async (category, action, label = null, value = null) => {
     const timestamp = new Date();
     const currentPath = window.location.pathname;
     
+    // Detect environment
+    const environment = getEnvironment();
+    
     const eventData = {
       category,
       action,
@@ -368,7 +444,8 @@ const trackEvent = async (category, action, label = null, value = null) => {
       value,
       path: currentPath,
       timestamp,
-      sessionId
+      sessionId,
+      environment // Add environment field
     };
     
     // Add event to analytics_events collection

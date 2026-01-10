@@ -1,10 +1,5 @@
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../utils/env';
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from './firebase';
 
 // Setup Firestore collections for analytics
 const setupFirestoreAnalytics = async () => {
