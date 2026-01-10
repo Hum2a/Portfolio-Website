@@ -1,9 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/Navbar.css";
 
 const Navbar = () => {
   const location = useLocation();
+  const { role } = useAuth();
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -42,6 +44,14 @@ const Navbar = () => {
           >
             Contact
           </Link>
+          {role === 'humza' && (
+            <Link 
+              to="/traffic" 
+              className={`navbar-link ${isActive('/traffic') ? 'active' : ''}`}
+            >
+              Traffic
+            </Link>
+          )}
         </div>
       </div>
     </nav>
