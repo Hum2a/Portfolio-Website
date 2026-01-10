@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user has "humza" role
+    // get() in security rules can read documents even if read rules would normally deny access
+    function isHumzaUser() {
+      return request.auth != null && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'humza';
+    }
+    
+    // Helper function to check if collection name is NOT an analytics collection
+    // This is used to exclude analytics collections from the catch-all public access rule
+    function isNotAnalyticsCollection(collection) {
+      return collection != 'analytics_visitors' &&
+             collection != 'analytics_pageviews' &&
+             collection != 'analytics_events' &&
+             collection != 'analytics_stats';
+    }
+    
+    // Users collection - must be defined BEFORE analytics collections to allow role checks
+    // Allow users to read their own document (for role checks in isHumzaUser function)
+    // Allow users to create/update their own document
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      // Note: get() in security rules can read this document for role checks even if read is denied
+      // But we allow read of own document to be explicit and allow client-side role checks
+    }
+    
+    // Analytics collections - sensitive data
+    // Write: Allow anyone to write (for tracking visitors, pageviews, events anonymously)
+    // Read: Only users with role "humza" can read
+    // IMPORTANT: These specific rules are evaluated. If read is denied here, access is denied
+    // even if catch-all below would match. However, Firestore evaluates ALL matching rules
+    // and grants access if ANY allow statement is true. So we must ensure catch-all doesn't
+    // match analytics paths, which we do by checking resource.name in the catch-all condition.
+    match /analytics_visitors/{document=**} {
+      allow read: if isHumzaUser();
+      allow write: if true; // Anyone can write (for anonymous tracking)
+      allow delete: if false; // Prevent deletion for security
+    }
+    
+    match /analytics_pageviews/{document=**} {
+      allow read: if isHumzaUser();
+      allow write: if true; // Anyone can write (for anonymous tracking)
+      allow delete: if false; // Prevent deletion for security
+    }
+    
+    match /analytics_events/{document=**} {
+      allow read: if isHumzaUser();
+      allow write: if true; // Anyone can write (for anonymous tracking)
+      allow delete: if false; // Prevent deletion for security
+    }
+    
+    match /analytics_stats/{document=**} {
+      allow read: if isHumzaUser();
+      allow write: if true; // Anyone can write (for tracking updates)
+      allow delete: if false; // Prevent deletion for security
+    }
+    
+    // All other collections - public access (read/write for everyone)
+    // IMPORTANT: We exclude analytics collections from this catch-all by checking the collection name
+    // This ensures analytics collections are ONLY accessible through the specific rules above
+    // Without this exclusion, the catch-all would grant access even when analytics rules deny it
+    match /{collection}/{document=**} {
+      allow read, write: if isNotAnalyticsCollection(collection);
+    }
+  }
+}

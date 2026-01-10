@@ -78,14 +78,39 @@ The portfolio includes a custom analytics solution built with Firebase Firestore
 3. **Configure Firebase**
    - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
    - Enable Firestore
-   - Add your Firebase configuration to `src/services/firebaseAnalytics.js`
+   - Add your Firebase configuration to `src/utils/env.js` (via environment variables)
+   - Deploy Firestore security rules (see below)
 
-4. **Start the development server**
+4. **Deploy Firestore Security Rules**
+   
+   The project includes Firestore security rules to protect sensitive analytics data. To deploy:
+   
+   ```bash
+   # Install Firebase CLI (if not already installed)
+   npm install -g firebase-tools
+   
+   # Login to Firebase
+   firebase login
+   
+   # Initialize Firebase (if not already done)
+   firebase init firestore
+   
+   # Deploy the rules
+   firebase deploy --only firestore:rules
+   ```
+   
+   **Security Rules Overview:**
+   - Analytics collections (`analytics_visitors`, `analytics_pageviews`, `analytics_events`, `analytics_stats`) are only readable by users with the "humza" role
+   - Analytics collections allow write access to anyone (for anonymous visitor tracking)
+   - Users collection allows users to read/update their own document
+   - All other collections are publicly accessible (read/write)
+
+5. **Start the development server**
    ```
    npm start
    ```
 
-5. **Build for production**
+6. **Build for production**
    ```
    npm run build
    ```
