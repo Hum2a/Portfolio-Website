@@ -3,6 +3,14 @@
 ## Overview
 This document provides guidelines for maintaining Firestore security rules when adding new analytics collections or features that interact with Firestore.
 
+## Important Notes About Access Control
+- **The `/humza-login` route is PUBLIC** - anyone can access it (not protected by route guards)
+- **Anyone can sign in with Google** - Firebase Auth handles authentication, no Firestore rules required for sign-in
+- **After Google sign-in**, authenticated users can create/update their own user document in Firestore
+- **Only the `/traffic` page is protected** - requires authentication AND "humza" role
+- **All other pages and features are public** - no authentication required
+- **Analytics collections**: Anyone can write (for tracking), but only "humza" role can read
+
 ## Current Analytics Collections
 
 The following collections contain sensitive analytics data and are **protected** - only users with role "humza" can read them, but anyone can write to them (for anonymous tracking):
@@ -54,9 +62,15 @@ The following collections contain sensitive analytics data and are **protected**
 
 ## Security Principles
 
+### Access Control Philosophy
+- **Public Routes**: The `/humza-login` route is **public** (not protected) - anyone can access it
+- **Google Sign-In**: Anyone can sign in with Google. After Firebase Auth authenticates them, they can create their own user document in Firestore
+- **Traffic Page**: Only protected route - requires authentication AND "humza" role
+- **No Other Authentication Required**: All other pages and features are public and don't require authentication
+
 ### Read Access
-- **Analytics collections**: Only users with role "humza" can read
-- **Users collection**: Users can only read their own document
+- **Analytics collections**: Only users with role "humza" can read (protected data)
+- **Users collection**: Authenticated users can only read their own document (for role checks)
 - **All other collections**: Public read access (anyone can read)
 
 ### Write Access

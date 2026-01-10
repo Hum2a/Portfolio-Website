@@ -230,7 +230,7 @@ const trackVisitor = async () => {
       if (userLocation.city === "Unknown" && userLocation.country === "Unknown") {
         try {
           // Try ip-api.com (free, no key required)
-          const freeApiResponse = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`);
+          const freeApiResponse = await fetch(`https://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`);
           if (freeApiResponse.ok) {
             const freeApiData = await freeApiResponse.json();
             if (freeApiData && freeApiData.status === 'success') {

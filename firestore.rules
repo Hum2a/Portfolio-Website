@@ -2,8 +2,17 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // ACCESS CONTROL PHILOSOPHY:
+    // - /humza-login route is PUBLIC (not protected) - anyone can access it
+    // - Anyone can sign in with Google (Firebase Auth handles this)
+    // - After Google sign-in, authenticated users can create their own user document
+    // - Only the /traffic page is protected and requires "humza" role
+    // - All other pages and features are public and don't require authentication
+    // - Analytics collections are writeable by anyone (for tracking), but readable only by "humza" role
+    
     // Helper function to check if user has "humza" role
-    // get() in security rules can read documents even if read rules would normally deny access
+    // Uses get() which can read documents for security rule evaluation even if read rules deny access
+    // Returns false if user is not authenticated, document doesn't exist, or role is not 'humza'
     function isHumzaUser() {
       return request.auth != null && 
              exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
@@ -22,15 +31,23 @@ service cloud.firestore {
              collection != 'analytics_sessions';
     }
     
-    // Users collection - must be defined BEFORE analytics collections to allow role checks
-    // Allow users to read their own document (for role checks in isHumzaUser function)
-    // Allow users to create/update their own document
+    // Users collection - Allow authenticated users to create/read/update their own document
+    // This is necessary for Google Sign-In to work: after Firebase Auth authenticates the user,
+    // the client needs to create/update their user document in Firestore
+    // IMPORTANT: The /humza-login route is public (no route protection), allowing anyone to access it.
+    // Once they sign in with Google, Firebase Auth authenticates them, and then they can create
+    // their own user document in Firestore. The traffic page is protected and requires "humza" role.
     match /users/{userId} {
+      // Allow authenticated users to read their own document (for role checks and client-side access)
+      // This allows the client to check if the document exists and read the role
       allow read: if request.auth != null && request.auth.uid == userId;
+      // Allow authenticated users to create their own document (during Google Sign-In)
+      // This is called by ensureUserDocument() after Firebase Auth authenticates the user
       allow create: if request.auth != null && request.auth.uid == userId;
+      // Allow authenticated users to update their own document (to update metadata on subsequent sign-ins)
       allow update: if request.auth != null && request.auth.uid == userId;
-      // Note: get() in security rules can read this document for role checks even if read is denied
-      // But we allow read of own document to be explicit and allow client-side role checks
+      // Note: get() in isHumzaUser() can read this document for security rule evaluation
+      // even if read rules would normally deny access, but we allow read for client-side checks
     }
     
     // Analytics collections - sensitive data
