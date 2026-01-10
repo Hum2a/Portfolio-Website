@@ -4,12 +4,14 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/Culinairy.css";
 
 const CulinAIry = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { trackMediaClick } = useMediaTracking();
 
   const images = [
     { src: `${process.env.PUBLIC_URL}/images/Culinairy/Homepage.png`, caption: "Homepage" },
@@ -136,7 +138,10 @@ const CulinAIry = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                   whileHover={{ y: -5 }}
-                  onClick={() => setSelectedImage(image)}
+                  onClick={() => {
+                    trackMediaClick('image', image.src, image.caption);
+                    setSelectedImage(image);
+                  }}
                 >
                   <img src={image.src} alt={image.caption} className="gallery-image" />
                   <p className="image-caption">{image.caption}</p>

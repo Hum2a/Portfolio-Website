@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Terminal from '../components/animations/Terminal';
 import CodeBlock from '../components/animations/CodeBlock';
+import useMediaTracking from '../hooks/useMediaTracking';
 import '../styles/project-shared.css';
 import '../styles/B8.css';
 
@@ -45,6 +46,7 @@ export default function B8() {
   const [activeMediaType, setActiveMediaType] = useState('images');
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { trackMediaClick } = useMediaTracking();
 
   const projectInfo = `const b8 = {
   name: "B8 Network",
@@ -225,7 +227,10 @@ export default function B8() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 + index * 0.05 }}
                     whileHover={{ y: -5 }}
-                    onClick={() => setSelectedMedia(image)}
+                    onClick={() => {
+                      trackMediaClick('image', image.src, image.title);
+                      setSelectedMedia(image);
+                    }}
                   >
                     <img src={image.src} alt={image.title} className="project-image" />
                     <p className="media-caption">{image.title}</p>
@@ -240,6 +245,9 @@ export default function B8() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 + index * 0.1 }}
                     whileHover={{ y: -5 }}
+                    onClick={() => {
+                      trackMediaClick('video', video.src, video.title);
+                    }}
                   >
                     <video controls className="project-video-preview">
                       <source src={video.src} type="video/mp4" />

@@ -4,12 +4,14 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/LiberalDemocrats.css";
 
 const LiberalDemocrats = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [selectedImage, setSelectedImage] = useState(null);
+  const { trackMediaClick } = useMediaTracking();
 
   const images = [
     { src: `${process.env.PUBLIC_URL}/images/Liberal Democrats/Homepage.png`, caption: "Homepage" },
@@ -137,7 +139,10 @@ const LiberalDemocrats = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 + index * 0.05 }}
                   whileHover={{ y: -5 }}
-                  onClick={() => setSelectedImage(image)}
+                  onClick={() => {
+                    trackMediaClick('image', image.src, image.caption);
+                    setSelectedImage(image);
+                  }}
                 >
                   <img src={image.src} alt={image.caption} className="gallery-image" />
                   <p className="image-caption">{image.caption}</p>

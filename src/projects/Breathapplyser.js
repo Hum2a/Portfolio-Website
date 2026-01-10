@@ -4,11 +4,13 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/Breathapplyser.css";
 
 const Breathapplyser = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { trackMediaClick } = useMediaTracking();
 
   const videos = [
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/Homepage.mp4`, caption: "Homepage" },
@@ -149,7 +151,10 @@ const Breathapplyser = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 + index * 0.1 }}
                   whileHover={{ y: -5 }}
-                  onClick={() => setSelectedVideo(video)}
+                  onClick={() => {
+                    trackMediaClick('video', video.src, video.caption);
+                    setSelectedVideo(video);
+                  }}
                 >
                   <video className="gallery-video" controls>
                     <source src={video.src} type="video/mp4" />

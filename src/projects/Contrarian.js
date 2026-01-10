@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/Contrarian.css";
 
@@ -11,6 +12,7 @@ const Contrarian = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const { trackMediaClick } = useMediaTracking();
 
   const media = [
     { type: "image", src: `${process.env.PUBLIC_URL}/images/Contrarian/Homepage.png`, caption: "Homepage" },
@@ -123,9 +125,10 @@ const Contrarian = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                   whileHover={{ y: -5 }}
-                  onClick={() =>
-                    item.type === "image" ? setSelectedImage(item) : setSelectedVideo(item)
-                  }
+                  onClick={() => {
+                    trackMediaClick(item.type, item.src, item.caption);
+                    item.type === "image" ? setSelectedImage(item) : setSelectedVideo(item);
+                  }}
                 >
                   {item.type === "image" ? (
                     <img

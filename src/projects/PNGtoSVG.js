@@ -4,11 +4,13 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/PNGtoSVG.css";
 
 const PNGtoSVG = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { trackMediaClick } = useMediaTracking();
 
   const projectInfo = `const pngToSvg = {
   name: "PNG to SVG Converter",
@@ -117,6 +119,10 @@ const PNGtoSVG = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
                 whileHover={{ y: -5 }}
+                onClick={() => {
+                  trackMediaClick('image', `${process.env.PUBLIC_URL}/images/PNGtoSVG/sample.png`, 'Sample Conversion Result');
+                }}
+                style={{ cursor: 'pointer' }}
               >
                 <img
                   src={`${process.env.PUBLIC_URL}/images/PNGtoSVG/sample.png`}

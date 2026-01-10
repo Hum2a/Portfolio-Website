@@ -4,12 +4,14 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/Doomscroll.css";
 
 const DoomScroll = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { trackMediaClick } = useMediaTracking();
 
   const projectInfo = `const doomscroll = {
   name: "DoomScroll",
@@ -113,7 +115,10 @@ const DoomScroll = () => {
             <h2 className="section-title">
               <span className="code-comment">//</span> Demo Video
             </h2>
-            <div className="video-container" onClick={() => setIsModalOpen(true)}>
+            <div className="video-container" onClick={() => {
+              trackMediaClick('video', `${process.env.PUBLIC_URL}/videos/DoomScroll/Doomscroll Demo.mp4`, 'DoomScroll App Demo');
+              setIsModalOpen(true);
+            }}>
               <video
                 controls
                 className="gallery-video"

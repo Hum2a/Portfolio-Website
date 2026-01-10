@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/MinistryOfJustice.css";
 
@@ -222,7 +223,10 @@ const MinistryOfJustice = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 + index * 0.05 }}
                   whileHover={{ y: -5 }}
-                  onClick={() => setSelectedMedia(media)}
+                  onClick={() => {
+                    trackMediaClick(media.type, media.src, media.caption);
+                    setSelectedMedia(media);
+                  }}
                 >
                   {media.type === "image" ? (
                     <img
