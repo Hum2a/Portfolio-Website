@@ -11,15 +11,68 @@ import '../styles/Bgr8.css';
 
 const mediaSection = {
   images: [
-    { src: `${process.env.PUBLIC_URL}/images/B8/Bgr8.png`, title: 'Bgr8 Platform Homepage' },
-    { src: `${process.env.PUBLIC_URL}/images/B8/AdminPortalAnalytics.png`, title: 'Admin Portal Analytics' },
-    { src: `${process.env.PUBLIC_URL}/images/B8/AdminPortalUsers.png`, title: 'Admin Portal Users' },
-    { src: `${process.env.PUBLIC_URL}/images/B8/AdminPortalEnquiries.png`, title: 'Admin Portal Enquiries' },
-    { src: `${process.env.PUBLIC_URL}/images/B8/AdminPortalSettings.png`, title: 'Admin Portal Settings' },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Homepage CTA.png`,
+      title: 'Homepage CTA',
+      description: 'Optimized homepage with conversion-focused call-to-action design. Built with React 18.2 and TypeScript, featuring responsive layouts, smooth animations using Framer Motion, and A/B testing capabilities for maximizing user engagement and mentor sign-ups.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Matching Algorithm.png`,
+      title: 'Matching Algorithm',
+      description: 'Visual representation of the proprietary MentorAlgorithm matching system. Implements weighted scoring across 70+ criteria including skills, experience, availability, location, and compatibility factors. Built with complex TypeScript algorithms, real-time data processing, and machine learning-inspired matching logic for optimal mentor-mentee pairings.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Mentee Dashboard.png`,
+      title: 'Mentee Dashboard',
+      description: 'Personalized dashboard with mentor recommendations and progress tracking. Features real-time data synchronization via Firebase Firestore, dynamic content rendering, personalized mentor suggestions based on the matching algorithm, and comprehensive progress tracking with visual analytics using Chart.js integration.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Live Messaging between mentor and mentee.png`,
+      title: 'Live Messaging System',
+      description: 'Real-time messaging system with WebSocket/Firebase Realtime Database integration. Implements instant message delivery, read receipts, typing indicators, file attachments, and end-to-end encryption. Built with React hooks for real-time state management and optimized for low latency communication between mentors and mentees.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Admin Panel Analytics.png`,
+      title: 'Admin Panel Analytics',
+      description: 'Comprehensive real-time analytics dashboard with advanced data visualization. Features custom Chart.js and Recharts implementations, real-time Firestore listeners for live data updates, complex data aggregation queries, exportable reports (CSV/PDF), and interactive filtering with date range selection. Includes metrics for user engagement, matching success rates, and platform growth.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Admin Panel DB Query Terminal.png`,
+      title: 'Database Query Terminal',
+      description: 'Advanced database query interface with real-time Firestore operations. Implements secure query builder with syntax validation, real-time query execution, result pagination and filtering, query history management, and role-based access control. Built with TypeScript for type-safe queries and includes comprehensive error handling and query optimization features.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Admin Panel User Management.png`,
+      title: 'User Management System',
+      description: 'Comprehensive user management interface with bulk operations and advanced filtering. Features real-time user data synchronization, bulk user operations (activate, deactivate, delete), advanced search and filtering with multiple criteria, user role assignment, activity tracking, and export capabilities. Built with React table components and optimized for handling large datasets efficiently.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Admin Panel Role Cards.png`,
+      title: 'Role-Based Access Control',
+      description: 'Advanced RBAC (Role-Based Access Control) management interface. Implements granular permission system with role hierarchy, permission inheritance, dynamic role assignment, audit logging for permission changes, and visual permission matrix. Built with TypeScript for type-safe permissions and includes comprehensive security validation to prevent privilege escalation.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Admin Verification Panel.png`,
+      title: 'Mentor Verification Workflow',
+      description: 'Multi-stage mentor verification workflow with automated and manual review processes. Features automated document verification, multi-stage approval workflow (pending → under_review → approved/rejected), real-time status updates, comprehensive verification data collection including background checks, and automated email notifications. Built with state machine pattern for reliable workflow management.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Admin Enquiries Management.png`,
+      title: 'Enquiries Management System',
+      description: 'Comprehensive enquiry management system with intelligent routing and status tracking. Implements real-time enquiry processing, automated categorization using natural language processing, priority-based sorting, assignment to appropriate admins, status tracking with workflow management, and automated response templates. Features advanced filtering and search capabilities for efficient enquiry handling.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Admin Email Drafter.png`,
+      title: 'Email Template System',
+      description: 'Automated email template system with dynamic content generation. Features WYSIWYG email editor, template library with reusable components, dynamic variable insertion, A/B testing capabilities, email scheduling, and comprehensive tracking (open rates, click rates). Built with React Email and integrated with Firebase Cloud Functions for reliable email delivery and tracking.'
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/Bgr8/Announcement Banner Manager.png`,
+      title: 'Content Management System',
+      description: 'Dynamic content management system for platform announcements. Implements real-time banner updates without page refresh, scheduling system for time-based announcements, targeting rules for user-specific announcements, A/B testing for banner effectiveness, and analytics tracking. Built with Firebase Firestore for real-time updates and includes comprehensive admin controls for content management.'
+    }
   ],
-  videos: [
-    { src: `${process.env.PUBLIC_URL}/videos/B8/Profile.mp4`, title: 'Bgr8 Profile' },
-  ]
+  videos: []
 };
 
 export default function Bgr8() {
@@ -137,7 +190,7 @@ export default function Bgr8() {
             transition={{ delay: 0.4 }}
           >
             <h2 className="section-title">
-              <span className="code-comment">//</span> About Bgr8 Platform
+              <span className="code-comment">{'//'}</span> About Bgr8 Platform
             </h2>
             <p className="section-description">
               I architect and develop the Bgr8 Platform - a comprehensive mentoring and community platform that empowers individuals through intelligent mentor-mentee matching. Built with React 18.2, TypeScript 5.7, and Firebase 11.3, the platform features a proprietary MentorAlgorithm with weighted scoring across 70+ criteria, real-time Cal.com calendar integration, comprehensive admin analytics, and multi-layered security implementation including CSP headers, XSS protection, and rate limiting.
@@ -227,62 +280,29 @@ export default function Bgr8() {
             transition={{ delay: 0.6 }}
           >
             <h2 className="section-title">
-              <span className="code-comment">{'//'}</span> Media Showcase
+              <span className="code-comment">{'//'}</span> Platform Showcase
             </h2>
-            <div className="media-controls">
-              <button
-                className={`media-button ${activeMediaType === 'images' ? 'active' : ''}`}
-                onClick={() => setActiveMediaType('images')}
-              >
-                Images
-              </button>
-              <button
-                className={`media-button ${activeMediaType === 'videos' ? 'active' : ''}`}
-                onClick={() => setActiveMediaType('videos')}
-              >
-                Videos
-              </button>
-            </div>
             <div className="project-media">
-              {activeMediaType === 'images' &&
-                mediaSection.images.map((image, index) => (
-                  <motion.div
-                    key={index}
-                    className="media-container"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 + index * 0.05 }}
-                    whileHover={{ y: -5 }}
-                    onClick={() => {
-                      trackMediaClick('image', image.src, image.title);
-                      setSelectedMedia(image);
-                    }}
-                  >
-                    <img src={image.src} alt={image.title} className="project-image" />
+              {mediaSection.images.map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="media-container"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 + index * 0.05 }}
+                  whileHover={{ y: -5 }}
+                  onClick={() => {
+                    trackMediaClick('image', image.src, image.title);
+                    setSelectedMedia(image);
+                  }}
+                >
+                  <img src={image.src} alt={image.title} className="project-image" />
+                  <div className="media-info">
                     <p className="media-caption">{image.title}</p>
-                  </motion.div>
-                ))}
-              {activeMediaType === 'videos' &&
-                mediaSection.videos.map((video, index) => (
-                  <motion.div
-                    key={index}
-                    className="media-container"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 + index * 0.1 }}
-                    whileHover={{ y: -5 }}
-                    onClick={() => {
-                      trackMediaClick('video', video.src, video.title);
-                      setSelectedMedia(video);
-                    }}
-                  >
-                    <video controls className="project-video-preview">
-                      <source src={video.src} type="video/mp4" />
-                      Your browser does not support video playback.
-                    </video>
-                    <p className="media-caption">{video.title}</p>
-                  </motion.div>
-                ))}
+                    <p className="media-description">{image.description}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.section>
         </div>
@@ -312,7 +332,12 @@ export default function Bgr8() {
                   className="modal-image"
                 />
               )}
-              <p className="modal-caption">{selectedMedia.title}</p>
+              <div className="modal-info">
+                <p className="modal-caption">{selectedMedia.title}</p>
+                {selectedMedia.description && (
+                  <p className="modal-description">{selectedMedia.description}</p>
+                )}
+              </div>
             </motion.div>
           </div>
         )}

@@ -67,9 +67,60 @@
   box-shadow: var(--shadow-glow);
 }
 
+.media-info {
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-primary);
+}
+
+.media-caption {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  font-family: var(--font-primary);
+}
+
+.media-description {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  font-family: var(--font-primary);
+}
+
+.modal-info {
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+}
+
+.modal-caption {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-family: var(--font-primary);
+}
+
+.modal-description {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  font-family: var(--font-primary);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .business-grid {
     grid-template-columns: 1fr;
+  }
+
+  .media-description {
+    font-size: var(--text-xs);
+  }
+
+  .modal-description {
+    font-size: var(--text-sm);
   }
 }
