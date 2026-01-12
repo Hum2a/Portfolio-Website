@@ -90,7 +90,10 @@ const Projects = () => {
               whileHover={{ y: -5 }}
             >
               <Link to={project.route} className="project-link">
-                <div className="project-image-container">
+                <div 
+                  className="project-image-container"
+                  style={{ background: project.gradient || 'var(--bg-tertiary)' }}
+                >
                   <img
                     src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
                     alt={`${project.name} Logo`}
