@@ -44,7 +44,6 @@ const AppRoutes = () => {
       <Route path="/pngtosvg" element={<PNGtoSVG />} />
       <Route path="/doppelgancar" element={<DoppelganCar />} />
       <Route path="/bgr8" element={<Bgr8 />} />
-      <Route path="/b8" element={<Bgr8 />} />
       <Route path="/ministryofjustice" element={<MinistryOfJustice />} />
       <Route path="/flashcards" element={<Flashcards />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
