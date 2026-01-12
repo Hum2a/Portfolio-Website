@@ -3,13 +3,13 @@
     {
       "id": "breathapplyser",
       "name": "Breathapplyser",
-      "description": "Tracks how much you drink, tells you how drunk you are",
+      "description": "Modern breathalyzer app with advanced tracking, caffeine monitoring, social features, and comprehensive analytics (2026). Includes legacy version (2024).",
       "logo": "Breathapplyser.png",
       "gradient": "linear-gradient(135deg, #4A90E2 0%, #7BB3F0 50%, #A8D5F0 100%)",
       "route": "/breathapplyser",
       "tags": ["JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Android", "IOS"],
       "visible": true,
-      "featured": false,
+      "featured": true,
       "priority": 1
     },
     {

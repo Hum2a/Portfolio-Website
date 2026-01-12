@@ -71,6 +71,14 @@
   font-family: var(--font-primary);
 }
 
+.section-description {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 1rem;
+  font-family: var(--font-primary);
+}
+
 .features-list {
   display: flex;
   flex-direction: column;

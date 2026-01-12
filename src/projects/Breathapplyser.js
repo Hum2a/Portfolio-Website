@@ -8,11 +8,13 @@ import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/Breathapplyser.css";
 
 const Breathapplyser = () => {
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [version, setVersion] = useState('v2'); // Default to V2 (2026)
+  const [selectedMedia, setSelectedMedia] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const { trackMediaClick } = useMediaTracking();
 
-  const videos = [
+  // Legacy (2024) videos
+  const legacyVideos = [
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/Homepage.mp4`, caption: "Homepage" },
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/TapToStartDrinking.mp4`, caption: "Tap to Start Drinking" },
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/History.mp4`, caption: "History" },
@@ -21,11 +23,58 @@ const Breathapplyser = () => {
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/SettingsJumping.mp4`, caption: "Settings Jumping" },
   ];
 
-  const projectInfo = `const breathapplyser = {
+  // V2 (2026) images
+  const v2Images = [
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Home.png`, title: 'Home Screen' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Drink Modal.png`, title: 'Drink Modal' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Drink Presets.png`, title: 'Drink Presets' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Recent Drinks.png`, title: 'Recent Drinks' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/History Screen Recent Drinks.png`, title: 'History Screen' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Drinks History.png`, title: 'Drinks History' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Drinks per day.png`, title: 'Drinks per Day' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/BAC Over time Graph.png`, title: 'BAC Over Time Graph' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Caffeine.png`, title: 'Caffeine Tracking' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Caffeine History.png`, title: 'Caffeine History' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Caffeine Level History page graph.png`, title: 'Caffeine Level History Graph' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Caffeine Over time Graph.png`, title: 'Caffeine Over Time Graph' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Profile Editing.png`, title: 'Profile Editing' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Friend Code.png`, title: 'Friend Code' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Leaderboard.png`, title: 'Leaderboard' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Settings 1.png`, title: 'Settings Page 1' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Settings 2.png`, title: 'Settings Page 2' },
+    { src: `${process.env.PUBLIC_URL}/images/BreathapplyserV2/Report Generation pdf.png`, title: 'Report Generation PDF' },
+  ];
+
+  const v2ProjectInfo = `const breathapplyser = {
   name: "Breathapplyser",
   type: "Mobile Application",
   platforms: ["Android", "iOS"],
-  description: "A modern breathalyzer app with smart insights",
+  year: 2026,
+  description: "Modern breathalyzer app with advanced tracking and social features",
+  features: [
+    "Advanced BAC tracking with time-based graphs",
+    "Caffeine level monitoring and history",
+    "Drink presets and quick entry",
+    "Social features: friend codes and leaderboards",
+    "Comprehensive history and analytics",
+    "PDF report generation",
+    "Profile customization"
+  ],
+  technologies: [
+    "React Native",
+    "JavaScript",
+    "TypeScript",
+    "Firebase",
+    "Node.js"
+  ]
+};`;
+
+  const legacyProjectInfo = `const breathapplyser = {
+  name: "Breathapplyser (Legacy)",
+  type: "Mobile Application",
+  platforms: ["Android", "iOS"],
+  year: 2024,
+  description: "Original breathalyzer app with smart insights",
   features: [
     "Accurate BAC estimations",
     "Integration with smart devices",
@@ -37,7 +86,8 @@ const Breathapplyser = () => {
     "TypeScript",
     "Firebase",
     "Node.js"
-  ]
+  ],
+  note: "This is the legacy version from 2024. The modern version (V2) includes advanced features."
 };`;
 
   useEffect(() => {
@@ -50,6 +100,10 @@ const Breathapplyser = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const currentProjectInfo = version === 'v2' ? v2ProjectInfo : legacyProjectInfo;
+  const currentTitle = version === 'v2' ? 'Breathapplyser' : 'Breathapplyser (Legacy)';
+  const currentYear = version === 'v2' ? 2026 : 2024;
 
   return (
     <div className="project-page">
@@ -71,15 +125,17 @@ const Breathapplyser = () => {
             transition={{ duration: 0.6 }}
           />
           <h1 className="project-title">
-            <span className="code-comment">//</span> Breathapplyser
+            <span className="code-comment">{'//'}</span> {currentTitle}
           </h1>
           <Terminal
             lines={[
               "const breathapplyser = {",
-              "  name: 'Breathapplyser',",
+              `  name: '${currentTitle}',`,
               "  type: 'Mobile Application',",
-              "  platforms: ['Android', 'iOS'],",
-              "  description: 'A modern breathalyzer app with smart insights'",
+              `  year: ${currentYear},`,
+              version === 'v2' 
+                ? "  description: 'Modern breathalyzer app with advanced features'"
+                : "  description: 'Original breathalyzer app - Legacy Version'",
               "};"
             ]}
             prompt=">"
@@ -90,85 +146,223 @@ const Breathapplyser = () => {
           />
         </div>
 
+        {/* Version Switcher */}
+        <div className="version-switcher">
+          <button
+            className={`version-button ${version === 'v2' ? 'active' : ''}`}
+            onClick={() => setVersion('v2')}
+          >
+            Modern (2026)
+          </button>
+          <button
+            className={`version-button ${version === 'legacy' ? 'active' : ''}`}
+            onClick={() => setVersion('legacy')}
+          >
+            Legacy (2024)
+          </button>
+        </div>
+
         <div className="project-content">
           <motion.section
             className="project-section"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
+            key={`info-${version}`}
           >
             <h2 className="section-title">
-              <span className="code-comment">//</span> Project Information
+              <span className="code-comment">{'//'}</span> Project Information
             </h2>
             <CodeBlock
-              code={projectInfo}
+              code={currentProjectInfo}
               language="javascript"
               showLineNumbers={true}
               copyable={false}
             />
           </motion.section>
 
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Features
-            </h2>
-            <div className="features-list">
-              <div className="feature-item">
-                <span className="feature-keyword">✓</span>
-                <span className="feature-text">Accurate BAC estimations</span>
-              </div>
-              <div className="feature-item">
-                <span className="feature-keyword">✓</span>
-                <span className="feature-text">Integration with smart devices</span>
-              </div>
-              <div className="feature-item">
-                <span className="feature-keyword">✓</span>
-                <span className="feature-text">Health insights and tips</span>
-              </div>
-            </div>
-          </motion.section>
+          {version === 'v2' ? (
+            <>
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                key="about-v2"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> About Breathapplyser (2026)
+                </h2>
+                <p className="section-description">
+                  Breathapplyser V2 is a complete redesign and modernization of the original Breathapplyser app, released in 2026. This version introduces advanced tracking capabilities, comprehensive analytics, social features, and an improved user experience.
+                </p>
+                <p className="section-description">
+                  Key improvements include dual tracking for both alcohol (BAC) and caffeine levels, interactive time-based graphs, drink presets for quick entry, social features with friend codes and leaderboards, and comprehensive PDF report generation for personal tracking and health insights.
+                </p>
+              </motion.section>
 
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Demo Videos
-            </h2>
-            <div className="video-gallery">
-              {videos.map((video, index) => (
-                <motion.div
-                  key={index}
-                  className="video-container"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  onClick={() => {
-                    trackMediaClick('video', video.src, video.caption);
-                    setSelectedVideo(video);
-                  }}
-                >
-                  <video className="gallery-video" controls>
-                    <source src={video.src} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  <p className="video-caption">{video.caption}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                key="features-v2"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> Key Features
+                </h2>
+                <div className="features-list">
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Advanced BAC tracking with time-based visualization</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Caffeine level monitoring and history tracking</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Drink presets for quick and easy entry</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Social features: friend codes and competitive leaderboards</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Comprehensive history and analytics dashboard</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">PDF report generation for health tracking</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Profile customization and settings</span>
+                  </div>
+                </div>
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                key="screenshots-v2"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> Screenshots
+                </h2>
+                <div className="image-gallery">
+                  {v2Images.map((image, index) => (
+                    <motion.div
+                      key={index}
+                      className="image-container"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.7 + index * 0.05 }}
+                      whileHover={{ y: -5 }}
+                      onClick={() => {
+                        trackMediaClick('image', image.src, image.title);
+                        setSelectedMedia(image);
+                      }}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.title}
+                        className="gallery-image"
+                      />
+                      <p className="image-caption">{image.title}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.section>
+            </>
+          ) : (
+            <>
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                key="about-legacy"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> About Breathapplyser (Legacy - 2024)
+                </h2>
+                <p className="section-description">
+                  This is the original version of Breathapplyser, released in 2024. While this version is now considered legacy, it established the foundation for the modern Breathapplyser V2 (2026), which includes advanced features like caffeine tracking, social features, and comprehensive analytics.
+                </p>
+                <p className="section-description">
+                  Switch to the <strong>Modern (2026)</strong> version to see the latest features and improvements.
+                </p>
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                key="features-legacy"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> Features
+                </h2>
+                <div className="features-list">
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Accurate BAC estimations</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Integration with smart devices</span>
+                  </div>
+                  <div className="feature-item">
+                    <span className="feature-keyword">✓</span>
+                    <span className="feature-text">Health insights and tips</span>
+                  </div>
+                </div>
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                key="videos-legacy"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> Demo Videos
+                </h2>
+                <div className="video-gallery">
+                  {legacyVideos.map((video, index) => (
+                    <motion.div
+                      key={index}
+                      className="video-container"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.7 + index * 0.1 }}
+                      whileHover={{ y: -5 }}
+                      onClick={() => {
+                        trackMediaClick('video', video.src, video.caption);
+                        setSelectedMedia(video);
+                      }}
+                    >
+                      <video className="gallery-video" controls>
+                        <source src={video.src} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      <p className="video-caption">{video.caption}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.section>
+            </>
+          )}
         </div>
 
-        {selectedVideo && (
-          <div className="modal" onClick={() => setSelectedVideo(null)}>
+        {selectedMedia && (
+          <div className="modal" onClick={() => setSelectedMedia(null)}>
             <motion.div
               className="modal-content"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -177,14 +371,22 @@ const Breathapplyser = () => {
               transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="modal-close" onClick={() => setSelectedVideo(null)}>
+              <button className="modal-close" onClick={() => setSelectedMedia(null)}>
                 ×
               </button>
-              <video className="modal-video" controls autoPlay>
-                <source src={selectedVideo.src} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <p className="modal-caption">{selectedVideo.caption}</p>
+              {selectedMedia.src && selectedMedia.src.includes('.mp4') ? (
+                <video className="modal-video" controls autoPlay>
+                  <source src={selectedMedia.src} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <img
+                  src={selectedMedia.src}
+                  alt={selectedMedia.title || selectedMedia.caption}
+                  className="modal-image"
+                />
+              )}
+              <p className="modal-caption">{selectedMedia.title || selectedMedia.caption}</p>
             </motion.div>
           </div>
         )}

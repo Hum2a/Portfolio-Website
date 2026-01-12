@@ -26,6 +26,7 @@ const Navigation = () => {
       <Route path="/Contact" element={<Contact />} />
       <Route path="/About" element={<About />} />
       <Route path="/breathapplyser" element={<Breathapplyser />} />
+      <Route path="/breathapplyser-v2" element={<Breathapplyser />} />
       <Route path="/biaslens" element={<BiasLens />} />
       <Route path="/lifesmart" element={<LifeSmart />} />
       <Route path="/mentage" element={<Mentage />} />
