@@ -61,14 +61,14 @@ const Contact = () => {
       buttonText: "View GitHub",
       code: "github.com/Hum2a",
     },
-    {
-      icon: <FaPhone />,
-      title: "Phone",
-      description: "Give me a call",
-      link: "tel:+447450251281",
-      buttonText: "Call Me",
-      code: "+44 7450 251281",
-    },
+    // {
+    //   icon: <FaPhone />,
+    //   title: "Phone",
+    //   description: "Give me a call",
+    //   link: "tel:+447450251281",
+    //   buttonText: "Call Me",
+    //   code: "+44 7450 251281",
+    // },
   ];
 
   return (
