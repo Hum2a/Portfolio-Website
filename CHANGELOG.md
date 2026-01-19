@@ -9,10 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Nothing yet
 
+## [v0.3.2] - 2026-01-19
+
+### 📝 Other Changes
+
+- Enhance changelog functionality to include existing releases (60b8539)
+
+
+## Added
+- Nothing yet
+
 ## [v0.3.1] - 2026-01-19
 
 ### ✨ Features
 
 - Add SpZero Calculator Widget with detailed features and media asset (64f0456)
 - Add SpZero project with comprehensive features and media assets (adb9404)
-
