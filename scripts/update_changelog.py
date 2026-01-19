@@ -177,17 +177,23 @@ def parse_existing_changelog():
         # Get everything before the Unreleased section
         if unreleased_match:
             before_unreleased = content[:unreleased_match.start()]
+            # Get everything after the Unreleased section (existing releases)
+            after_unreleased_start = unreleased_match.end()
+            existing_releases = content[after_unreleased_start:].strip()
         else:
             before_unreleased = content
+            existing_releases = ''
         
         return {
             'header': before_unreleased,
-            'unreleased': unreleased_content
+            'unreleased': unreleased_content,
+            'existing_releases': existing_releases
         }
     except FileNotFoundError:
         return {
             'header': '',
-            'unreleased': ''
+            'unreleased': '',
+            'existing_releases': ''
         }
 
 
@@ -254,7 +260,11 @@ def write_changelog(new_tag, new_entry):
     
     # Add the new release entry
     lines.append(new_entry)
-    lines.append("")
+    
+    # Add existing releases if any
+    if existing['existing_releases'].strip():
+        lines.append("")
+        lines.append(existing['existing_releases'])
     
     # Write to file
     with open('CHANGELOG.md', 'w', encoding='utf-8') as f:
