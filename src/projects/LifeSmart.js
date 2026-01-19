@@ -10,6 +10,46 @@ import "../styles/LifeSmart.css";
 
 const projects = [
   {
+    id: "spzero",
+    title: "SpZero – Financial Education Platform",
+    description: "A comprehensive, modern financial education platform developed for SPZeroFinance. Built with React, TypeScript, and Cloudflare Workers, featuring interactive learning modules, video content, quizzes, and a powerful admin dashboard with real-time analytics.",
+    features: [
+      "Interactive module-based learning with 4 comprehensive financial education modules",
+      "Video and slide content management with Cloudflare R2 storage",
+      "Progress tracking with automatic save functionality",
+      "Interactive quizzes with scoring and feedback",
+      "Real-time analytics dashboard tracking user engagement and content performance",
+      "Admin dashboard with user management, content management, and comprehensive reporting",
+      "SSO integration with SPZeroFinance for seamless authentication",
+      "Database-backed with PostgreSQL and Drizzle ORM",
+      "Export functionality for users, modules, analytics, and system reports",
+      "Responsive design optimized for all devices",
+    ],
+    techStack: [
+      "React.js + Vite + TypeScript",
+      "Tailwind CSS",
+      "Hono (Backend API)",
+      "Cloudflare Workers",
+      "PostgreSQL + Drizzle ORM",
+      "Better-auth (Authentication)",
+      "Cloudflare R2 (Media Storage)",
+      "Zustand (State Management)",
+      "Recharts (Analytics Visualization)",
+    ],
+    media: [
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Home Page - Overview (Full).png`, caption: "SpZero Homepage - Complete platform overview showcasing the modern, gradient-based design" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Home Page - Overview.png`, caption: "Homepage Hero Section - Clean and inviting entry point to financial education" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Module Road Layout.png`, caption: "Interactive Learning Path - Visual module progression with 4 main areas: Foundations of Money, Personal Finance, Credit & Debt, and Investing" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Video Modal.png`, caption: "Video Content Player - Full-screen video player with progress tracking and seamless navigation" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Slides Modal.png`, caption: "Presentation Viewer - Interactive slide viewer for educational content with navigation controls" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Video and Slide Progress Saving.png`, caption: "Progress Tracking System - Automatic save functionality preserving user progress across sessions" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Admin Analytics General Stats.png`, caption: "Admin Analytics Dashboard - Comprehensive overview of user engagement, content performance, and system metrics" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Admin Analytics Content Drilldown.png`, caption: "Content Analytics Drilldown - Detailed analytics for modules, sections, and topics with engagement heatmaps" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Admin User Focused Analytics.png`, caption: "User-Centric Analytics - Individual user tracking, activity logs, and learning progress monitoring" },
+      { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/SpZero/Admin Module Management.png`, caption: "Content Management Interface - Full CRUD operations with drag-and-drop module reordering and content organization" },
+    ],
+  },
+  {
     id: "misc",
     title: "LifeSmart Platform Overview",
     description: "A comprehensive look at the LifeSmart platform's main interfaces and features.",
@@ -106,22 +146,32 @@ const LifeSmart = () => {
   const projectInfo = `const lifesmart = {
   name: "LifeSmart",
   type: "Web Application Suite",
-  description: "Collection of tools to teach financial literacy to young people",
-  technologies: [
-    "React.js",
-    "Vue.js",
-    "Node.js",
-    "Firebase",
-    "Chart.js",
-    "HostPresto",
-    "Render"
-  ],
-  features: [
+  client: "SPZeroFinance",
+  description: "Enterprise financial education platform with interactive learning",
+  mainProject: {
+    name: "SpZero Platform",
+    stack: [
+      "React + Vite + TypeScript",
+      "Tailwind CSS",
+      "Hono + Cloudflare Workers",
+      "PostgreSQL + Drizzle ORM",
+      "Better-auth",
+      "Cloudflare R2 Storage"
+    ],
+    features: [
+      "Module-based learning system",
+      "Video & slide content",
+      "Progress tracking",
+      "Real-time analytics",
+      "Admin dashboard",
+      "SSO integration"
+    ]
+  },
+  otherTools: [
     "Financial Quiz",
     "Asset Market Simulation",
     "Budget Planning Tool",
-    "Investment Calculator",
-    "Admin Dashboard"
+    "Investment Calculator"
   ]
 };`;
 
@@ -162,8 +212,10 @@ const LifeSmart = () => {
             lines={[
               "const lifesmart = {",
               "  name: 'LifeSmart',",
-              "  type: 'Web Application Suite',",
-              "  description: 'Collection of tools to teach financial literacy',",
+              "  type: 'Financial Education Platform',",
+              "  client: 'SPZeroFinance',",
+              "  mainProject: 'SpZero Learning Platform',",
+              "  stack: 'React + TypeScript + Cloudflare',",
               "  url: 'https://lifesmart.onrender.com'",
               "};"
             ]}
@@ -252,6 +304,21 @@ const LifeSmart = () => {
                 </div>
               ))}
             </div>
+            {selectedProject.techStack && (
+              <div className="tech-stack-section">
+                <h3 className="tech-stack-title">
+                  <span className="code-comment">//</span> Tech Stack
+                </h3>
+                <div className="tech-stack-grid">
+                  {selectedProject.techStack.map((tech, index) => (
+                    <div key={index} className="tech-badge">
+                      <span className="tech-icon">⚡</span>
+                      <span className="tech-name">{tech}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.section>
 
           <motion.section

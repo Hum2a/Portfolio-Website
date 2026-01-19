@@ -7,7 +7,7 @@
       "logo": "Breathapplyser.png",
       "gradient": "linear-gradient(135deg, #4A90E2 0%, #7BB3F0 50%, #A8D5F0 100%)",
       "route": "/breathapplyser",
-      "tags": ["JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Android", "IOS"],
+      "tags": ["Android", "IOS", "Flutter", "NativeApp", "Kotlin", "Java", "Swift", "Objective-C", "NeonDB", "PostgreSQL", "JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Google Play", "App Store"],
       "visible": true,
       "featured": true,
       "priority": 1
@@ -15,11 +15,11 @@
     {
       "id": "lifesmart",
       "name": "LifeSmart",
-      "description": "Collection of tools to teach financial literacy to young people",
+      "description": "Enterprise financial education platform (SpZero) built for SPZeroFinance with interactive learning modules, video content, quizzes, and comprehensive analytics",
       "logo": "LifeSmart.png",
       "gradient": "linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #60A5FA 100%)",
       "route": "/lifesmart",
-      "tags": ["JavaScript", "Node.js", "React.js", "Vue.js", "Firebase", "HostPresto", "Render", "Chart.js", "EdTech", "FinTech"],
+      "tags": ["TypeScript", "React.js", "Vite", "Tailwind CSS", "Hono", "Cloudflare Pages", "Cloudflare Workers", "PostgreSQL", "Drizzle ORM", "Better-auth", "Cloudflare R2", "Bunny", "Cloudflare AI", "Zustand", "Recharts", "Node.js", "Vue.js", "Firebase", "Chart.js", "EdTech", "FinTech", "NeonDB", "PostgreSQL"],
       "visible": true,
       "featured": true,
       "priority": 1
@@ -31,7 +31,7 @@
       "logo": "Bgr8.png",
       "gradient": "linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #00D9FF 100%)",
       "route": "/bgr8",
-      "tags": ["TypeScript", "React.js", "Firebase", "Vite", "Cal.com API", "MentorAlgorithm", "EdTech", "Community"],
+      "tags": ["TypeScript", "React.js", "Firebase", "Vite", "Cal.com API", "MentorAlgorithm", "EdTech", "WebApp", "React", "Node.js", "Firebase", "Vite", "Cal.com API", "MentorAlgorithm", "EdTech"],
       "visible": true,
       "featured": true,
       "priority": 1
