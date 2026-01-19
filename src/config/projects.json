@@ -15,11 +15,11 @@
     {
       "id": "lifesmart",
       "name": "LifeSmart",
-      "description": "Enterprise financial education platform (SpZero) built for SPZeroFinance with interactive learning modules, video content, quizzes, and comprehensive analytics",
+      "description": "Enterprise financial education platform (SpZero) built for SPZeroFinance with interactive learning modules, video content, quizzes, calculator widgets, and comprehensive analytics",
       "logo": "LifeSmart.png",
       "gradient": "linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #60A5FA 100%)",
       "route": "/lifesmart",
-      "tags": ["TypeScript", "React.js", "Vite", "Tailwind CSS", "Hono", "Cloudflare Pages", "Cloudflare Workers", "PostgreSQL", "Drizzle ORM", "Better-auth", "Cloudflare R2", "Bunny", "Cloudflare AI", "Zustand", "Recharts", "Node.js", "Vue.js", "Firebase", "Chart.js", "EdTech", "FinTech", "NeonDB", "PostgreSQL"],
+      "tags": ["TypeScript", "React.js", "Vite", "Tailwind CSS", "Hono", "Cloudflare Pages", "Cloudflare Workers", "PostgreSQL", "Drizzle ORM", "Better-auth", "Cloudflare R2", "Bunny", "Cloudflare AI", "Zustand", "Recharts", "Chart.js", "Wrangler", "Vitest", "Playwright", "Prettier", "React Icons", "Node.js", "Vue.js", "Firebase", "EdTech", "FinTech", "NeonDB"],
       "visible": true,
       "featured": true,
       "priority": 1
