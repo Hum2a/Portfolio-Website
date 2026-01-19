@@ -99,12 +99,19 @@ service cloud.firestore {
       allow delete: if false; // Prevent deletion for security
     }
     
+    // Enquiries collection - anyone can submit enquiries, only humza can read
+    match /enquiries/{document=**} {
+      allow read: if isHumzaUser();
+      allow create: if true; // Anyone can create enquiries (including guests)
+      allow update, delete: if false; // Prevent modification/deletion for security
+    }
+    
     // All other collections - public access (read/write for everyone)
     // IMPORTANT: We exclude analytics collections from this catch-all by checking the collection name
     // This ensures analytics collections are ONLY accessible through the specific rules above
     // Without this exclusion, the catch-all would grant access even when analytics rules deny it
     match /{collection}/{document=**} {
-      allow read, write: if isNotAnalyticsCollection(collection);
+      allow read, write: if isNotAnalyticsCollection(collection) && collection != 'enquiries';
     }
   }
 }

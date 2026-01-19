@@ -20,6 +20,7 @@ const Traffic = () => {
   const [events, setEvents] = useState([]);
   const [pageTimes, setPageTimes] = useState([]);
   const [mediaClicks, setMediaClicks] = useState([]);
+  const [enquiries, setEnquiries] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('visitors');
@@ -31,6 +32,19 @@ const Traffic = () => {
   const [timeRange, setTimeRange] = useState('all'); // Quick time filter: 'all', 'today', '7d', '30d', '90d', 'custom'
   const [expandedCountries, setExpandedCountries] = useState(false); // Track if countries card is expanded
   const [selectedCountry, setSelectedCountry] = useState(null); // Filter by specific country
+  
+  // URL Generator states
+  const [showUrlGenerator, setShowUrlGenerator] = useState(false);
+  const [urlGeneratorData, setUrlGeneratorData] = useState({
+    baseUrl: window.location.origin,
+    source: '',
+    medium: '',
+    campaign: '',
+    term: '',
+    content: ''
+  });
+  const [generatedUrl, setGeneratedUrl] = useState('');
+  const [copiedUrl, setCopiedUrl] = useState(false);
 
   useEffect(() => {
     if (role === 'humza') {
@@ -93,6 +107,16 @@ const Traffic = () => {
       }));
       setMediaClicks(mediaClicksData);
 
+      // Load all enquiries
+      const enquiriesSnapshot = await getDocs(
+        query(collection(db, 'enquiries'), orderBy('timestamp', 'desc'))
+      );
+      const enquiriesData = enquiriesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setEnquiries(enquiriesData);
+
       // Load stats
       const statsDoc = await getDocs(collection(db, 'analytics_stats'));
       const statsData = {};
@@ -115,6 +139,84 @@ const Traffic = () => {
       console.error('Error signing out:', error);
     }
   };
+
+  // URL Generator Functions
+  const generateUrl = () => {
+    const { baseUrl, source, medium, campaign, term, content } = urlGeneratorData;
+    
+    if (!source) {
+      setGeneratedUrl('');
+      return;
+    }
+    
+    const params = new URLSearchParams();
+    if (source) params.append('utm_source', source);
+    if (medium) params.append('utm_medium', medium);
+    if (campaign) params.append('utm_campaign', campaign);
+    if (term) params.append('utm_term', term);
+    if (content) params.append('utm_content', content);
+    
+    const url = `${baseUrl}?${params.toString()}`;
+    setGeneratedUrl(url);
+  };
+
+  const handleUrlGeneratorChange = (field, value) => {
+    setUrlGeneratorData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const applyPreset = (preset) => {
+    const presets = {
+      linkedin: { source: 'linkedin', medium: 'social', campaign: 'profile' },
+      discord: { source: 'discord', medium: 'chat', campaign: 'networking' },
+      whatsapp: { source: 'whatsapp', medium: 'message', campaign: 'sharing' },
+      cv: { source: 'cv', medium: 'pdf', campaign: 'applications' },
+      github: { source: 'github', medium: 'profile', campaign: 'portfolio' },
+      twitter: { source: 'twitter', medium: 'social', campaign: 'profile' },
+      email: { source: 'email-signature', medium: 'email', campaign: 'outreach' },
+      instagram: { source: 'instagram', medium: 'social', campaign: 'bio' },
+    };
+    
+    const presetData = presets[preset];
+    if (presetData) {
+      setUrlGeneratorData(prev => ({
+        ...prev,
+        ...presetData
+      }));
+    }
+  };
+
+  const copyToClipboard = async () => {
+    if (generatedUrl) {
+      try {
+        await navigator.clipboard.writeText(generatedUrl);
+        setCopiedUrl(true);
+        setTimeout(() => setCopiedUrl(false), 2000);
+      } catch (error) {
+        console.error('Failed to copy:', error);
+      }
+    }
+  };
+
+  const resetUrlGenerator = () => {
+    setUrlGeneratorData({
+      baseUrl: window.location.origin,
+      source: '',
+      medium: '',
+      campaign: '',
+      term: '',
+      content: ''
+    });
+    setGeneratedUrl('');
+  };
+
+  // Trigger URL generation whenever data changes
+  useEffect(() => {
+    generateUrl();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlGeneratorData]);
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
@@ -849,6 +951,157 @@ const Traffic = () => {
         </div>
       </div>
 
+      {/* URL Generator Section */}
+      <div className="url-generator-section">
+        <div className="url-generator-header" onClick={() => setShowUrlGenerator(!showUrlGenerator)}>
+          <h2>🔗 Campaign URL Generator</h2>
+          <span className="toggle-icon">{showUrlGenerator ? '▼' : '▶'}</span>
+        </div>
+        
+        {showUrlGenerator && (
+          <div className="url-generator-content">
+            <p className="url-generator-description">
+              Generate tracked URLs to identify traffic sources from different platforms.
+            </p>
+            
+            {/* Quick Presets */}
+            <div className="url-presets">
+              <h3>Quick Presets:</h3>
+              <div className="preset-buttons">
+                <button className="preset-btn linkedin" onClick={() => applyPreset('linkedin')}>
+                  LinkedIn
+                </button>
+                <button className="preset-btn discord" onClick={() => applyPreset('discord')}>
+                  Discord
+                </button>
+                <button className="preset-btn whatsapp" onClick={() => applyPreset('whatsapp')}>
+                  WhatsApp
+                </button>
+                <button className="preset-btn cv" onClick={() => applyPreset('cv')}>
+                  CV/Resume
+                </button>
+                <button className="preset-btn github" onClick={() => applyPreset('github')}>
+                  GitHub
+                </button>
+                <button className="preset-btn twitter" onClick={() => applyPreset('twitter')}>
+                  Twitter/X
+                </button>
+                <button className="preset-btn email" onClick={() => applyPreset('email')}>
+                  Email
+                </button>
+                <button className="preset-btn instagram" onClick={() => applyPreset('instagram')}>
+                  Instagram
+                </button>
+              </div>
+            </div>
+
+            {/* URL Form */}
+            <div className="url-generator-form">
+              <div className="form-grid">
+                <div className="form-field">
+                  <label>Base URL</label>
+                  <input
+                    type="text"
+                    value={urlGeneratorData.baseUrl}
+                    onChange={(e) => handleUrlGeneratorChange('baseUrl', e.target.value)}
+                    placeholder="https://yoursite.com"
+                  />
+                </div>
+                
+                <div className="form-field required-field">
+                  <label>Source <span className="required-star">*</span></label>
+                  <input
+                    type="text"
+                    value={urlGeneratorData.source}
+                    onChange={(e) => handleUrlGeneratorChange('source', e.target.value)}
+                    placeholder="e.g., linkedin, discord, cv"
+                  />
+                  <span className="field-hint">Required - Where the traffic comes from</span>
+                </div>
+                
+                <div className="form-field">
+                  <label>Medium</label>
+                  <input
+                    type="text"
+                    value={urlGeneratorData.medium}
+                    onChange={(e) => handleUrlGeneratorChange('medium', e.target.value)}
+                    placeholder="e.g., social, email, pdf"
+                  />
+                  <span className="field-hint">The type of link/medium</span>
+                </div>
+                
+                <div className="form-field">
+                  <label>Campaign</label>
+                  <input
+                    type="text"
+                    value={urlGeneratorData.campaign}
+                    onChange={(e) => handleUrlGeneratorChange('campaign', e.target.value)}
+                    placeholder="e.g., job-search-2026"
+                  />
+                  <span className="field-hint">Campaign name or identifier</span>
+                </div>
+                
+                <div className="form-field">
+                  <label>Term</label>
+                  <input
+                    type="text"
+                    value={urlGeneratorData.term}
+                    onChange={(e) => handleUrlGeneratorChange('term', e.target.value)}
+                    placeholder="Optional"
+                  />
+                  <span className="field-hint">Keywords (optional)</span>
+                </div>
+                
+                <div className="form-field">
+                  <label>Content</label>
+                  <input
+                    type="text"
+                    value={urlGeneratorData.content}
+                    onChange={(e) => handleUrlGeneratorChange('content', e.target.value)}
+                    placeholder="Optional"
+                  />
+                  <span className="field-hint">Content identifier (optional)</span>
+                </div>
+              </div>
+
+              {/* Generated URL Display */}
+              {generatedUrl && (
+                <div className="generated-url-section">
+                  <h3>Generated URL:</h3>
+                  <div className="generated-url-display">
+                    <input
+                      type="text"
+                      value={generatedUrl}
+                      readOnly
+                      className="generated-url-input"
+                    />
+                    <button 
+                      className="copy-btn"
+                      onClick={copyToClipboard}
+                    >
+                      {copiedUrl ? '✓ Copied!' : '📋 Copy'}
+                    </button>
+                  </div>
+                  <div className="url-actions">
+                    <button className="reset-btn" onClick={resetUrlGenerator}>
+                      🔄 Reset
+                    </button>
+                    <a 
+                      href={generatedUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="test-btn"
+                    >
+                      🔗 Test URL
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Filters Section */}
       <div className="filters-section">
         {/* Environment Filter */}
@@ -1210,6 +1463,12 @@ const Traffic = () => {
         >
           Media Clicks ({filteredMediaClicks.length})
         </button>
+        <button
+          className={`traffic-tab ${activeTab === 'enquiries' ? 'active' : ''}`}
+          onClick={() => setActiveTab('enquiries')}
+        >
+          Enquiries ({enquiries.length})
+        </button>
       </div>
 
       <div className="traffic-content">
@@ -1436,6 +1695,34 @@ const Traffic = () => {
                                                 <span className="detail-label">Referrer:</span>
                                                 <span className="detail-value">{session.referrer || 'Direct'}</span>
                                               </div>
+                                              {session.campaign && (
+                                                <>
+                                                  <div className="detail-row campaign-row">
+                                                    <span className="detail-label">Campaign Source:</span>
+                                                    <span className="detail-value campaign-badge source-badge">
+                                                      {session.campaign.source}
+                                                    </span>
+                                                  </div>
+                                                  {session.campaign.medium && (
+                                                    <div className="detail-row">
+                                                      <span className="detail-label">Medium:</span>
+                                                      <span className="detail-value">{session.campaign.medium}</span>
+                                                    </div>
+                                                  )}
+                                                  {session.campaign.campaign && (
+                                                    <div className="detail-row">
+                                                      <span className="detail-label">Campaign:</span>
+                                                      <span className="detail-value">{session.campaign.campaign}</span>
+                                                    </div>
+                                                  )}
+                                                  {session.campaign.landingPage && (
+                                                    <div className="detail-row">
+                                                      <span className="detail-label">Landing Page:</span>
+                                                      <span className="detail-value landing-page">{session.campaign.landingPage}</span>
+                                                    </div>
+                                                  )}
+                                                </>
+                                              )}
                                               {(session.environment || visitor.environment) && (
                                                 <div className="detail-row">
                                                   <span className="detail-label">Environment:</span>
@@ -2029,6 +2316,67 @@ const Traffic = () => {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeTab === 'enquiries' && (
+              <div className="traffic-tab-content">
+                <div className="enquiries-section">
+                  <h3>Contact Enquiries</h3>
+                  
+                  {enquiries.length === 0 ? (
+                    <div className="no-data-message">
+                      <p>No enquiries yet.</p>
+                    </div>
+                  ) : (
+                    <div className="enquiries-grid">
+                      {enquiries.map(enquiry => (
+                        <div key={enquiry.id} className="enquiry-card">
+                          <div className="enquiry-header">
+                            <div className="enquiry-meta">
+                              <span className={`enquiry-status ${enquiry.status || 'new'}`}>
+                                {enquiry.status || 'new'}
+                              </span>
+                              <span className="enquiry-date">
+                                {formatDate(enquiry.timestamp)}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="enquiry-body">
+                            <div className="enquiry-field">
+                              <label>Name:</label>
+                              <span className="enquiry-value">{enquiry.name || 'N/A'}</span>
+                            </div>
+                            
+                            {enquiry.email && (
+                              <div className="enquiry-field">
+                                <label>Email:</label>
+                                <a href={`mailto:${enquiry.email}`} className="enquiry-value enquiry-link">
+                                  {enquiry.email}
+                                </a>
+                              </div>
+                            )}
+                            
+                            {enquiry.phone && (
+                              <div className="enquiry-field">
+                                <label>Phone:</label>
+                                <a href={`tel:${enquiry.phone}`} className="enquiry-value enquiry-link">
+                                  {enquiry.phone}
+                                </a>
+                              </div>
+                            )}
+                            
+                            <div className="enquiry-field">
+                              <label>Enquiry:</label>
+                              <p className="enquiry-message">{enquiry.enquiry || 'N/A'}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </>

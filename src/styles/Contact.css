@@ -190,6 +190,199 @@
   transform: translateX(4px);
 }
 
+/* Enquiry Section */
+.enquiry-section {
+  margin-top: 4rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 2.5rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.enquiry-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  font-family: var(--font-primary);
+}
+
+.enquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+}
+
+.required {
+  color: var(--accent-primary);
+  margin-left: 0.25rem;
+}
+
+.form-input {
+  padding: 0.875rem 1rem;
+  font-size: var(--text-base);
+  font-family: var(--font-primary);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+}
+
+.form-input.error {
+  border-color: #ff4444;
+}
+
+.form-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+}
+
+.form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: var(--font-primary);
+  line-height: var(--leading-relaxed);
+}
+
+.error-message {
+  font-size: var(--text-xs);
+  color: #ff4444;
+  font-family: var(--font-primary);
+  margin-top: 0.25rem;
+}
+
+.contact-error {
+  text-align: center;
+  padding: 0.75rem;
+  background: rgba(255, 68, 68, 0.1);
+  border-radius: 6px;
+  margin-top: -0.5rem;
+}
+
+.submit-message {
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  font-family: var(--font-primary);
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+.submit-message.success {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #4caf50;
+}
+
+.submit-message.error {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  color: #ff4444;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submit-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  font-family: var(--font-primary);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.submit-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.submit-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submit-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.submit-button:hover .button-arrow {
+  transform: translateX(4px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .contact-container {
@@ -215,5 +408,15 @@
     font-size: 1.5rem;
     width: 40px;
     height: 40px;
+  }
+
+  .enquiry-section {
+    padding: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }

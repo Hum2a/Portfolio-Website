@@ -67,6 +67,38 @@ const getEnvironment = () => {
   return isLocalhost ? 'localhost' : 'production';
 };
 
+// Extract campaign parameters from URL
+const getCampaignData = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Check for UTM parameters (standard)
+  const utmSource = urlParams.get('utm_source');
+  const utmMedium = urlParams.get('utm_medium');
+  const utmCampaign = urlParams.get('utm_campaign');
+  const utmTerm = urlParams.get('utm_term');
+  const utmContent = urlParams.get('utm_content');
+  
+  // Check for custom source parameter (fallback)
+  const customSource = urlParams.get('source') || urlParams.get('ref');
+  
+  // Determine the source
+  const source = utmSource || customSource || null;
+  
+  // Only return campaign data if we have at least a source
+  if (source) {
+    return {
+      source,
+      medium: utmMedium || null,
+      campaign: utmCampaign || null,
+      term: utmTerm || null,
+      content: utmContent || null,
+      landingPage: window.location.pathname + window.location.search
+    };
+  }
+  
+  return null;
+};
+
 // Enhanced device info detection
 const getDeviceInfo = () => {
   const userAgent = navigator.userAgent;
@@ -326,6 +358,24 @@ const trackVisitor = async () => {
     // Detect environment
     const environment = getEnvironment();
     
+    // Get campaign data from URL parameters
+    const campaignData = getCampaignData();
+    
+    // Build session object
+    const sessionData = {
+      sessionId,
+      startTime: timestamp,
+      referrer: document.referrer || 'direct',
+      environment, // Include environment in session
+    };
+    
+    // Add campaign data if available
+    if (campaignData) {
+      sessionData.campaign = campaignData;
+      // Store campaign source in sessionStorage for later use
+      sessionStorage.setItem('campaignSource', campaignData.source);
+    }
+    
     // Use anonymizedIP as the document ID, but include environment in data
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
     
@@ -343,12 +393,7 @@ const trackVisitor = async () => {
         deviceInfo,
         location: userLocation,
         environment, // Add environment field
-        sessions: arrayUnion({
-          sessionId,
-          startTime: timestamp,
-          referrer: document.referrer || 'direct',
-          environment, // Include environment in session
-        })
+        sessions: arrayUnion(sessionData)
       });
     } else {
       // Create new visitor document with initial visit count of 1
@@ -362,12 +407,7 @@ const trackVisitor = async () => {
         deviceInfo,
         location: userLocation,
         environment, // Add environment field
-        sessions: [{
-          sessionId,
-          startTime: timestamp,
-          referrer: document.referrer || 'direct',
-          environment, // Include environment in session
-        }]
+        sessions: [sessionData]
       });
     }
     
