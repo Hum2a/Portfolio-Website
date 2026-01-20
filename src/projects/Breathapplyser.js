@@ -205,6 +205,38 @@ const Breathapplyser = () => {
                 className="project-section"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 }}
+                key="links-v2"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> Links
+                </h2>
+                <div className="project-links">
+                  <a 
+                    href="https://download-breathapplyser.onrender.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="project-link"
+                  >
+                    <span className="link-icon">🌐</span>
+                    <span className="link-text">Official Website (App Store & Google Play Links)</span>
+                  </a>
+                  <a 
+                    href="https://github.com/Breathapplyser" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="project-link"
+                  >
+                    <span className="link-icon">💻</span>
+                    <span className="link-text">GitHub Organization</span>
+                  </a>
+                </div>
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
                 key="features-v2"
               >
@@ -296,6 +328,38 @@ const Breathapplyser = () => {
                 <p className="section-description">
                   Switch to the <strong>Modern (2026)</strong> version to see the latest features and improvements.
                 </p>
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 }}
+                key="links-legacy"
+              >
+                <h2 className="section-title">
+                  <span className="code-comment">{'//'}</span> Links
+                </h2>
+                <div className="project-links">
+                  <a 
+                    href="https://download-breathapplyser.onrender.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="project-link"
+                  >
+                    <span className="link-icon">🌐</span>
+                    <span className="link-text">Official Website (App Store & Google Play Links)</span>
+                  </a>
+                  <a 
+                    href="https://github.com/Breathapplyser" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="project-link"
+                  >
+                    <span className="link-icon">💻</span>
+                    <span className="link-text">GitHub Organization</span>
+                  </a>
+                </div>
               </motion.section>
 
               <motion.section
