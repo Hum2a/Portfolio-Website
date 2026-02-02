@@ -46,8 +46,7 @@ const Traffic = () => {
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copiedUrl, setCopiedUrl] = useState(false);
 
-  // Visitor activity (watch specific visitor by ID)
-  const [selectedVisitorId, setSelectedVisitorId] = useState(null);
+  // Visitor activity (watch by anonymized IP so all historical data matches)
   const [selectedVisitorAnonymizedIP, setSelectedVisitorAnonymizedIP] = useState(null);
 
   useEffect(() => {
@@ -236,6 +235,20 @@ const Traffic = () => {
     }
   };
 
+  // Human-readable duration (e.g. "45s", "2m 30s", "1h 5m")
+  const formatDuration = (totalSeconds) => {
+    if (totalSeconds == null || totalSeconds < 0) return '0s';
+    const s = Math.floor(totalSeconds);
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    const secs = s % 60;
+    if (m < 60) return secs > 0 ? `${m}m ${secs}s` : `${m}m`;
+    const h = Math.floor(m / 60);
+    const mins = m % 60;
+    if (mins > 0) return `${h}h ${mins}m`;
+    return `${h}h`;
+  };
+
   const toggleVisitorExpansion = (visitorId) => {
     const newExpanded = new Set(expandedVisitors);
     if (newExpanded.has(visitorId)) {
@@ -334,6 +347,22 @@ const Traffic = () => {
     // If no dates provided, include all
     return true;
   }, [toDate]);
+
+  // Visitors for the Watch-visitor dropdown: no date filter so we can pick any visitor (including old ones)
+  const visitorsForActivitySelector = useMemo(() => {
+    let filtered = visitors;
+    if (environmentFilter !== 'all') {
+      filtered = filtered.filter(v => v.environment === environmentFilter);
+    }
+    if (selectedCountry && selectedCountry !== 'all') {
+      filtered = filtered.filter(v => v.location?.country === selectedCountry);
+    }
+    return filtered.sort((a, b) => {
+      const aTime = toDate(a.lastVisit)?.getTime() || 0;
+      const bTime = toDate(b.lastVisit)?.getTime() || 0;
+      return bTime - aTime;
+    });
+  }, [visitors, environmentFilter, selectedCountry, toDate]);
 
   // Filter data by environment, date range, and country
   const filteredVisitors = useMemo(() => {
@@ -674,41 +703,40 @@ const Traffic = () => {
     return Object.entries(deviceMap).map(([name, value]) => ({ name, value }));
   }, [filteredVisitors]);
 
-  // Match visitor to analytics records (by visitorId or fallback anonymizedIP for legacy)
-  const matchVisitor = useCallback((item) => {
-    if (selectedVisitorId && item.visitorId === selectedVisitorId) return true;
-    if (selectedVisitorAnonymizedIP && item.anonymizedIP === selectedVisitorAnonymizedIP) return true;
-    return false;
-  }, [selectedVisitorId, selectedVisitorAnonymizedIP]);
+  // Match visitor to analytics records by anonymizedIP (visitor.id = Firestore doc id = anonymizedIP).
+  // This works for all historical data because every analytics record stores anonymizedIP;
+  // visitorId can be missing or inconsistent for older visitors.
+  const matchVisitorByIP = useCallback((item) => {
+    return Boolean(selectedVisitorAnonymizedIP && item.anonymizedIP === selectedVisitorAnonymizedIP);
+  }, [selectedVisitorAnonymizedIP]);
 
-  // Build chronological activity timeline for the selected visitor (by visitorId or anonymizedIP)
+  // Build chronological activity timeline for the selected visitor (by anonymizedIP for full history)
   const visitorActivityTimeline = useMemo(() => {
-    if (!selectedVisitorId && !selectedVisitorAnonymizedIP) return [];
+    if (!selectedVisitorAnonymizedIP) return [];
     const getTs = (item) => {
       const t = item.timestamp || item.startTime || item.endTime;
       return t ? toDate(t) : null;
     };
     const items = [];
-    pageViews.filter(matchVisitor).forEach(pv => {
+    pageViews.filter(matchVisitorByIP).forEach(pv => {
       items.push({ type: 'pageview', timestamp: getTs(pv), raw: pv });
     });
-    events.filter(matchVisitor).forEach(e => {
+    events.filter(matchVisitorByIP).forEach(e => {
       items.push({ type: 'event', timestamp: getTs(e), raw: e });
     });
-    pageTimes.filter(matchVisitor).forEach(pt => {
+    pageTimes.filter(matchVisitorByIP).forEach(pt => {
       items.push({ type: 'pagetime', timestamp: getTs(pt), raw: pt });
     });
-    mediaClicks.filter(matchVisitor).forEach(mc => {
+    mediaClicks.filter(matchVisitorByIP).forEach(mc => {
       items.push({ type: 'mediaclick', timestamp: getTs(mc), raw: mc });
     });
     return items
       .filter(i => i.timestamp && !isNaN(i.timestamp.getTime()))
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-  }, [selectedVisitorId, selectedVisitorAnonymizedIP, matchVisitor, pageViews, events, pageTimes, mediaClicks, toDate]);
+  }, [selectedVisitorAnonymizedIP, matchVisitorByIP, pageViews, events, pageTimes, mediaClicks, toDate]);
 
   const openVisitorActivity = useCallback((visitor) => {
-    setSelectedVisitorId(visitor.visitorId || null);
-    setSelectedVisitorAnonymizedIP(visitor.visitorId ? null : (visitor.id || null));
+    setSelectedVisitorAnonymizedIP(visitor.id || null);
     setActiveTab('visitor-activity');
   }, []);
 
@@ -770,7 +798,7 @@ const Traffic = () => {
       .slice(-30);
   }, [filteredVisitors, environmentFilter]);
 
-  // Chart data for page times
+  // Chart data for page times (and time-by-page summary)
   const averageTimeByPath = useMemo(() => {
     const pathMap = {};
     filteredPageTimes.forEach(pt => {
@@ -792,8 +820,15 @@ const Traffic = () => {
         max: data.values.length > 0 ? Math.max(...data.values) : 0,
         min: data.values.length > 0 ? Math.min(...data.values) : 0
       }))
-      .sort((a, b) => b.average - a.average)
-      .slice(0, 10); // Top 10 pages by average time
+      .sort((a, b) => b.total - a.total); // All pages, sorted by total time (for summary table)
+  }, [filteredPageTimes]);
+
+  // Page time summary stats (for summary cards)
+  const pageTimeSummary = useMemo(() => {
+    const totalSeconds = filteredPageTimes.reduce((sum, pt) => sum + (pt.timeSpent || 0), 0);
+    const sessions = filteredPageTimes.length;
+    const avgPerSession = sessions > 0 ? totalSeconds / sessions : 0;
+    return { totalSeconds, sessions, avgPerSession };
   }, [filteredPageTimes]);
 
   const timeSpentOverTime = useMemo(() => {
@@ -2174,20 +2209,72 @@ const Traffic = () => {
             )}
 
             {activeTab === 'pagetimes' && (
-              <div className="traffic-tab-content">
+              <div className="traffic-tab-content time-on-page-tab">
+                <p className="time-on-page-intro">
+                  Time users spent on each page (recorded when they leave or navigate away). Each row is one visit to a page.
+                </p>
+
+                {/* Summary cards */}
+                <div className="time-summary-cards">
+                  <div className="time-summary-card">
+                    <span className="time-summary-label">Total time on site</span>
+                    <span className="time-summary-value time-total">{formatDuration(pageTimeSummary.totalSeconds)}</span>
+                  </div>
+                  <div className="time-summary-card">
+                    <span className="time-summary-label">Page visits (sessions)</span>
+                    <span className="time-summary-value">{pageTimeSummary.sessions.toLocaleString()}</span>
+                  </div>
+                  <div className="time-summary-card">
+                    <span className="time-summary-label">Avg per visit</span>
+                    <span className="time-summary-value">{formatDuration(pageTimeSummary.avgPerSession)}</span>
+                  </div>
+                </div>
+
+                {/* Time by page summary table */}
+                <div className="time-by-page-section">
+                  <h3>Time by page</h3>
+                  {averageTimeByPath.length === 0 ? (
+                    <p className="no-data-inline">No page time data yet.</p>
+                  ) : (
+                    <div className="time-by-page-table-wrapper">
+                      <table className="traffic-table time-by-page-table">
+                        <thead>
+                          <tr>
+                            <th>Page</th>
+                            <th className="num">Total time</th>
+                            <th className="num">Avg per visit</th>
+                            <th className="num">Visits</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {averageTimeByPath.map((row, idx) => (
+                            <tr key={idx}>
+                              <td className="path-cell">
+                                <code>{row.name}</code>
+                              </td>
+                              <td className="num duration-cell">{formatDuration(row.total)}</td>
+                              <td className="num duration-cell">{formatDuration(row.average)}</td>
+                              <td className="num">{row.count}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
                 {/* Charts for Page Times */}
                 <div className="charts-grid">
                   <div className="chart-card full-width">
-                    <h3>Average Time Spent by Page</h3>
+                    <h3>Total time spent by page (top 15)</h3>
                     <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={averageTimeByPath} layout="vertical">
+                      <BarChart data={averageTimeByPath.slice(0, 15)} layout="vertical" margin={{ left: 20, right: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" label={{ value: 'Average Time (seconds)', position: 'insideBottom', offset: -5 }} />
-                        <YAxis dataKey="name" type="category" width={200} />
-                        <Tooltip formatter={(value) => [`${value}s`, 'Average Time']} />
-                        <Legend />
-                        <Bar dataKey="average" fill="#43e97b">
-                          {averageTimeByPath.map((entry, index) => (
+                        <XAxis type="number" tickFormatter={(v) => formatDuration(v)} />
+                        <YAxis dataKey="name" type="category" width={180} tick={{ fontSize: 12 }} />
+                        <Tooltip formatter={(value) => [formatDuration(value), 'Total time']} />
+                        <Bar dataKey="total" name="Total time" fill="#43e97b">
+                          {averageTimeByPath.slice(0, 15).map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Bar>
@@ -2196,51 +2283,69 @@ const Traffic = () => {
                   </div>
 
                   <div className="chart-card full-width">
-                    <h3>Time Spent Over Time</h3>
+                    <h3>Average time per visit by page (top 15)</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={averageTimeByPath.slice(0, 15)} layout="vertical" margin={{ left: 20, right: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis type="number" tickFormatter={(v) => formatDuration(v)} />
+                        <YAxis dataKey="name" type="category" width={180} tick={{ fontSize: 12 }} />
+                        <Tooltip formatter={(value) => [formatDuration(value), 'Average']} />
+                        <Bar dataKey="average" name="Average per visit" fill="#38f9d7">
+                          {averageTimeByPath.slice(0, 15).map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="chart-card full-width">
+                    <h3>Time spent over time (last 30 days)</h3>
                     <ResponsiveContainer width="100%" height={300}>
                       <AreaChart data={timeSpentOverTime}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-                        <YAxis label={{ value: 'Time (seconds)', angle: -90, position: 'insideLeft' }} />
+                        <YAxis tickFormatter={(v) => formatDuration(v)} />
                         <Tooltip formatter={(value, name) => {
-                          if (name === 'average') return `${value}s (avg)`;
-                          if (name === 'total') return `${value}s (total)`;
-                          return value;
+                          if (name === 'average') return [formatDuration(value), 'Avg per day'];
+                          if (name === 'total') return [formatDuration(value), 'Total that day'];
+                          return [value, name];
                         }} />
                         <Legend />
-                        <Area type="monotone" dataKey="average" stroke="#43e97b" fill="#43e97b" fillOpacity={0.6} name="Average Time" />
-                        <Area type="monotone" dataKey="total" stroke="#38f9d7" fill="#38f9d7" fillOpacity={0.4} name="Total Time" />
+                        <Area type="monotone" dataKey="average" stroke="#43e97b" fill="#43e97b" fillOpacity={0.6} name="Avg per day" />
+                        <Area type="monotone" dataKey="total" stroke="#38f9d7" fill="#38f9d7" fillOpacity={0.4} name="Total per day" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
-                {/* Page Times Table */}
+                {/* Raw page times table (individual visits) */}
                 <div className="traffic-table-container">
+                  <h3>Individual page visits (raw data)</h3>
                   <table className="traffic-table">
                     <thead>
                       <tr>
                         <th>Path</th>
-                        <th>Time Spent (seconds)</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Visitor ID</th>
-                        <th>Environment</th>
+                        <th>Duration</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Visitor (IP)</th>
+                        <th>Env</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredPageTimes.map(pageTime => (
                         <tr key={pageTime.id}>
-                          <td>{pageTime.path || 'N/A'}</td>
+                          <td><code className="path-inline">{pageTime.path || 'N/A'}</code></td>
                           <td>
-                            <span className="time-badge">{pageTime.timeSpent || 0}s</span>
+                            <span className="time-badge duration-badge">{formatDuration(pageTime.timeSpent || 0)}</span>
                           </td>
-                          <td>{formatDate(pageTime.startTime)}</td>
-                          <td>{formatDate(pageTime.endTime)}</td>
-                          <td className="visitor-id-cell">{pageTime.visitorId || 'N/A'}</td>
+                          <td className="date-cell">{formatDate(pageTime.startTime)}</td>
+                          <td className="date-cell">{formatDate(pageTime.endTime)}</td>
+                          <td className="visitor-id-cell">{(pageTime.anonymizedIP || pageTime.visitorId || 'N/A').slice(0, 12)}…</td>
                           <td>
                             <span className={`env-badge ${pageTime.environment === 'localhost' ? 'localhost' : 'production'}`}>
-                              {pageTime.environment || 'unknown'}
+                              {pageTime.environment || '—'}
                             </span>
                           </td>
                         </tr>
@@ -2252,7 +2357,10 @@ const Traffic = () => {
             )}
 
             {activeTab === 'mediaclicks' && (
-              <div className="traffic-tab-content">
+              <div className="traffic-tab-content media-clicks-tab">
+                <p className="media-clicks-intro">
+                  Engagement when users open or click media (images and videos) on project pages. This is click/open count only; view duration is not tracked.
+                </p>
                 {/* Charts for Media Clicks */}
                 <div className="charts-grid">
                   <div className="chart-card">
@@ -2442,40 +2550,37 @@ const Traffic = () => {
                 <h3>Watch visitor activity</h3>
                 <p className="visitor-activity-intro">
                   Select a visitor to see a chronological timeline of their page views, events, time on page, and media clicks.
+                  Activity is matched by anonymized IP so all previously collected data is included, including visitors from before today.
                 </p>
                 <div className="visitor-activity-selector">
-                  <label htmlFor="visitor-activity-select">Visitor:</label>
+                  <label htmlFor="visitor-activity-select">Visitor (matched by IP for all historical data):</label>
                   <select
                     id="visitor-activity-select"
-                    value={selectedVisitorId || selectedVisitorAnonymizedIP || ''}
+                    value={selectedVisitorAnonymizedIP || ''}
                     onChange={(e) => {
                       const val = e.target.value;
                       if (!val) {
-                        setSelectedVisitorId(null);
                         setSelectedVisitorAnonymizedIP(null);
                         return;
                       }
-                      const visitor = filteredVisitors.find(v =>
-                        (v.visitorId && v.visitorId === val) || (v.id === val)
-                      );
+                      const visitor = visitorsForActivitySelector.find(v => v.id === val);
                       if (visitor) {
-                        setSelectedVisitorId(visitor.visitorId || null);
-                        setSelectedVisitorAnonymizedIP(visitor.visitorId ? null : visitor.id);
+                        setSelectedVisitorAnonymizedIP(visitor.id);
                       }
                     }}
                   >
                     <option value="">— Select a visitor —</option>
-                    {filteredVisitors.map(visitor => (
+                    {visitorsForActivitySelector.map(visitor => (
                       <option
                         key={visitor.id}
-                        value={visitor.visitorId || visitor.id}
+                        value={visitor.id}
                       >
-                        {(visitor.visitorId ? visitor.visitorId.slice(0, 8) + '…' : visitor.id) + ' • ' + formatDate(visitor.lastVisit) + ' • ' + getLocationString(visitor.location)}
+                        {visitor.id + ' • ' + formatDate(visitor.lastVisit) + ' • ' + getLocationString(visitor.location)}
                       </option>
                     ))}
                   </select>
                 </div>
-                {(selectedVisitorId || selectedVisitorAnonymizedIP) && (
+                {selectedVisitorAnonymizedIP && (
                   <div className="visitor-activity-timeline-section">
                     <h4>Activity timeline ({visitorActivityTimeline.length} items)</h4>
                     {visitorActivityTimeline.length === 0 ? (
