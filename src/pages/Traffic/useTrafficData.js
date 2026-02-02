@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { loadTrafficData as fetchTrafficData } from './loadTrafficData';
-import { formatDate, formatDuration } from './utils';
+import { formatDate, formatDuration, getLocationString } from './utils';
 
 function getDateFilter(timeRange, dateRange) {
   if (timeRange === 'custom' && (dateRange.start || dateRange.end)) {
@@ -56,6 +56,18 @@ export function useTrafficData(role) {
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [selectedVisitorAnonymizedIP, setSelectedVisitorAnonymizedIP] = useState(null);
+  const [visitorSortBy, setVisitorSortBy] = useState('lastVisit');
+  const [visitorSortDirection, setVisitorSortDirection] = useState('desc');
+  const [pageViewSortBy, setPageViewSortBy] = useState('timestamp');
+  const [pageViewSortDirection, setPageViewSortDirection] = useState('desc');
+  const [eventSortBy, setEventSortBy] = useState('timestamp');
+  const [eventSortDirection, setEventSortDirection] = useState('desc');
+  const [pageTimeSortBy, setPageTimeSortBy] = useState('startTime');
+  const [pageTimeSortDirection, setPageTimeSortDirection] = useState('desc');
+  const [mediaClickSortBy, setMediaClickSortBy] = useState('timestamp');
+  const [mediaClickSortDirection, setMediaClickSortDirection] = useState('desc');
+  const [enquirySortBy, setEnquirySortBy] = useState('timestamp');
+  const [enquirySortDirection, setEnquirySortDirection] = useState('desc');
 
   const loadData = useCallback(async () => {
     try {
@@ -137,6 +149,51 @@ export function useTrafficData(role) {
     return filtered;
   }, [visitors, environmentFilter, selectedCountry, dateFilter, isDateInRange]);
 
+  const sortedVisitors = useMemo(() => {
+    const list = [...filteredVisitors];
+    const dir = visitorSortDirection === 'asc' ? 1 : -1;
+    const cmp = (a, b) => {
+      switch (visitorSortBy) {
+        case 'ip':
+          return (a.anonymizedIP || a.id || '').localeCompare(b.anonymizedIP || b.id || '');
+        case 'visits':
+          return (a.visits || 0) - (b.visits || 0);
+        case 'deviceType':
+          return (a.deviceInfo?.deviceType || 'N/A').localeCompare(b.deviceInfo?.deviceType || 'N/A');
+        case 'browser':
+          return (a.deviceInfo?.browser || 'N/A').localeCompare(b.deviceInfo?.browser || 'N/A');
+        case 'os':
+          return (a.deviceInfo?.os || 'N/A').localeCompare(b.deviceInfo?.os || 'N/A');
+        case 'location':
+          return getLocationString(a.location).localeCompare(getLocationString(b.location));
+        case 'firstVisit': {
+          const at = toDate(a.firstVisit)?.getTime() ?? 0;
+          const bt = toDate(b.firstVisit)?.getTime() ?? 0;
+          return at - bt;
+        }
+        case 'lastVisit':
+        default: {
+          const at = toDate(a.lastVisit)?.getTime() ?? 0;
+          const bt = toDate(b.lastVisit)?.getTime() ?? 0;
+          return at - bt;
+        }
+      }
+    };
+    list.sort((a, b) => dir * cmp(a, b));
+    return list;
+  }, [filteredVisitors, visitorSortBy, visitorSortDirection, toDate]);
+
+  const setVisitorSort = useCallback((field) => {
+    setVisitorSortBy((prev) => {
+      if (prev === field) {
+        setVisitorSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return prev;
+      }
+      setVisitorSortDirection(['lastVisit', 'firstVisit', 'visits'].includes(field) ? 'desc' : 'asc');
+      return field;
+    });
+  }, []);
+
   const filteredPageViews = useMemo(() => {
     let filtered = pageViews;
     if (environmentFilter !== 'all') filtered = filtered.filter((pv) => pv.environment === environmentFilter);
@@ -144,12 +201,93 @@ export function useTrafficData(role) {
     return filtered;
   }, [pageViews, environmentFilter, dateFilter, isDateInRange]);
 
+  const sortedPageViews = useMemo(() => {
+    const list = [...filteredPageViews];
+    const dir = pageViewSortDirection === 'asc' ? 1 : -1;
+    list.sort((a, b) => {
+      let cmp = 0;
+      switch (pageViewSortBy) {
+        case 'path':
+          cmp = (a.path || '').localeCompare(b.path || '');
+          break;
+        case 'title':
+          cmp = (a.title || '').localeCompare(b.title || '');
+          break;
+        case 'referrer':
+          cmp = (a.referrer || '').localeCompare(b.referrer || '');
+          break;
+        case 'timestamp':
+        default: {
+          const at = toDate(a.timestamp)?.getTime() ?? 0;
+          const bt = toDate(b.timestamp)?.getTime() ?? 0;
+          cmp = at - bt;
+          break;
+        }
+      }
+      return dir * cmp;
+    });
+    return list;
+  }, [filteredPageViews, pageViewSortBy, pageViewSortDirection, toDate]);
+
+  const setPageViewSort = useCallback((field) => {
+    setPageViewSortBy((prev) => {
+      if (prev === field) {
+        setPageViewSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return prev;
+      }
+      setPageViewSortDirection(field === 'timestamp' ? 'desc' : 'asc');
+      return field;
+    });
+  }, []);
+
   const filteredEvents = useMemo(() => {
     let filtered = events;
     if (environmentFilter !== 'all') filtered = filtered.filter((e) => e.environment === environmentFilter);
     if (dateFilter) filtered = filtered.filter((e) => isDateInRange(e.timestamp, dateFilter.start, dateFilter.end));
     return filtered;
   }, [events, environmentFilter, dateFilter, isDateInRange]);
+
+  const sortedEvents = useMemo(() => {
+    const list = [...filteredEvents];
+    const dir = eventSortDirection === 'asc' ? 1 : -1;
+    list.sort((a, b) => {
+      let cmp = 0;
+      switch (eventSortBy) {
+        case 'category':
+          cmp = (a.category || '').localeCompare(b.category || '');
+          break;
+        case 'action':
+          cmp = (a.action || '').localeCompare(b.action || '');
+          break;
+        case 'label':
+          cmp = (a.label || '').localeCompare(b.label || '');
+          break;
+        case 'path':
+          cmp = (a.path || '').localeCompare(b.path || '');
+          break;
+        case 'timestamp':
+        default: {
+          const at = toDate(a.timestamp)?.getTime() ?? 0;
+          const bt = toDate(b.timestamp)?.getTime() ?? 0;
+          cmp = at - bt;
+          break;
+        }
+      }
+      return dir * cmp;
+    });
+    return list;
+  }, [filteredEvents, eventSortBy, eventSortDirection, toDate]);
+
+  const setEventSort = useCallback((field) => {
+    setEventSortBy((prev) => {
+      if (prev === field) {
+        setEventSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return prev;
+      }
+      setEventSortDirection(field === 'timestamp' ? 'desc' : 'asc');
+      return field;
+    });
+  }, []);
 
   const filteredPageTimes = useMemo(() => {
     let filtered = pageTimes;
@@ -164,6 +302,56 @@ export function useTrafficData(role) {
     return filtered;
   }, [pageTimes, environmentFilter, dateFilter, isDateInRange, toDate]);
 
+  const sortedPageTimes = useMemo(() => {
+    const list = [...filteredPageTimes];
+    const dir = pageTimeSortDirection === 'asc' ? 1 : -1;
+    list.sort((a, b) => {
+      let cmp = 0;
+      switch (pageTimeSortBy) {
+        case 'path':
+          cmp = (a.path || '').localeCompare(b.path || '');
+          break;
+        case 'duration':
+          cmp = (a.timeSpent || 0) - (b.timeSpent || 0);
+          break;
+        case 'startTime': {
+          const at = toDate(a.startTime)?.getTime() ?? 0;
+          const bt = toDate(b.startTime)?.getTime() ?? 0;
+          cmp = at - bt;
+          break;
+        }
+        case 'endTime': {
+          const at = toDate(a.endTime)?.getTime() ?? 0;
+          const bt = toDate(b.endTime)?.getTime() ?? 0;
+          cmp = at - bt;
+          break;
+        }
+        case 'visitor':
+          cmp = (a.anonymizedIP || a.visitorId || '').localeCompare(b.anonymizedIP || b.visitorId || '');
+          break;
+        case 'environment':
+          cmp = (a.environment || '').localeCompare(b.environment || '');
+          break;
+        default:
+          cmp = (toDate(a.startTime)?.getTime() ?? 0) - (toDate(b.startTime)?.getTime() ?? 0);
+          break;
+      }
+      return dir * cmp;
+    });
+    return list;
+  }, [filteredPageTimes, pageTimeSortBy, pageTimeSortDirection, toDate]);
+
+  const setPageTimeSort = useCallback((field) => {
+    setPageTimeSortBy((prev) => {
+      if (prev === field) {
+        setPageTimeSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return prev;
+      }
+      setPageTimeSortDirection(['startTime', 'endTime', 'duration'].includes(field) ? 'desc' : 'asc');
+      return field;
+    });
+  }, []);
+
   const filteredMediaClicks = useMemo(() => {
     let filtered = mediaClicks;
     if (environmentFilter !== 'all') filtered = filtered.filter((mc) => mc.environment === environmentFilter);
@@ -176,6 +364,87 @@ export function useTrafficData(role) {
     }
     return filtered;
   }, [mediaClicks, environmentFilter, dateFilter, isDateInRange, toDate]);
+
+  const sortedMediaClicks = useMemo(() => {
+    const list = [...filteredMediaClicks];
+    const dir = mediaClickSortDirection === 'asc' ? 1 : -1;
+    list.sort((a, b) => {
+      let cmp = 0;
+      switch (mediaClickSortBy) {
+        case 'mediaType':
+          cmp = (a.mediaType || '').localeCompare(b.mediaType || '');
+          break;
+        case 'caption':
+          cmp = (a.mediaCaption || '').localeCompare(b.mediaCaption || '');
+          break;
+        case 'projectPath':
+          cmp = (a.projectPath || '').localeCompare(b.projectPath || '');
+          break;
+        case 'mediaSrc':
+          cmp = (a.mediaSrc || '').localeCompare(b.mediaSrc || '');
+          break;
+        case 'environment':
+          cmp = (a.environment || '').localeCompare(b.environment || '');
+          break;
+        case 'timestamp':
+        default: {
+          const at = toDate(a.timestamp)?.getTime() ?? 0;
+          const bt = toDate(b.timestamp)?.getTime() ?? 0;
+          cmp = at - bt;
+          break;
+        }
+      }
+      return dir * cmp;
+    });
+    return list;
+  }, [filteredMediaClicks, mediaClickSortBy, mediaClickSortDirection, toDate]);
+
+  const setMediaClickSort = useCallback((field) => {
+    setMediaClickSortBy((prev) => {
+      if (prev === field) {
+        setMediaClickSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return prev;
+      }
+      setMediaClickSortDirection(field === 'timestamp' ? 'desc' : 'asc');
+      return field;
+    });
+  }, []);
+
+  const sortedEnquiries = useMemo(() => {
+    const list = [...enquiries];
+    const dir = enquirySortDirection === 'asc' ? 1 : -1;
+    list.sort((a, b) => {
+      let cmp = 0;
+      switch (enquirySortBy) {
+        case 'name':
+          cmp = (a.name || '').localeCompare(b.name || '');
+          break;
+        case 'status':
+          cmp = (a.status || '').localeCompare(b.status || '');
+          break;
+        case 'timestamp':
+        default: {
+          const at = toDate(a.timestamp)?.getTime() ?? 0;
+          const bt = toDate(b.timestamp)?.getTime() ?? 0;
+          cmp = at - bt;
+          break;
+        }
+      }
+      return dir * cmp;
+    });
+    return list;
+  }, [enquiries, enquirySortBy, enquirySortDirection, toDate]);
+
+  const setEnquirySort = useCallback((field) => {
+    setEnquirySortBy((prev) => {
+      if (prev === field) {
+        setEnquirySortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return prev;
+      }
+      setEnquirySortDirection(field === 'timestamp' ? 'desc' : 'asc');
+      return field;
+    });
+  }, []);
 
   const visitorsForCountryBreakdown = useMemo(() => {
     let filtered = visitors;
@@ -574,10 +843,34 @@ export function useTrafficData(role) {
     setSelectedVisitorAnonymizedIP,
     // Filtered & computed
     filteredVisitors,
+    sortedVisitors,
+    visitorSortBy,
+    visitorSortDirection,
+    setVisitorSort,
     filteredPageViews,
+    sortedPageViews,
+    pageViewSortBy,
+    pageViewSortDirection,
+    setPageViewSort,
     filteredEvents,
+    sortedEvents,
+    eventSortBy,
+    eventSortDirection,
+    setEventSort,
     filteredPageTimes,
+    sortedPageTimes,
+    pageTimeSortBy,
+    pageTimeSortDirection,
+    setPageTimeSort,
     filteredMediaClicks,
+    sortedMediaClicks,
+    mediaClickSortBy,
+    mediaClickSortDirection,
+    setMediaClickSort,
+    sortedEnquiries,
+    enquirySortBy,
+    enquirySortDirection,
+    setEnquirySort,
     visitorsForActivitySelector,
     visitorsForCountryBreakdown,
     visitorsByCountry,

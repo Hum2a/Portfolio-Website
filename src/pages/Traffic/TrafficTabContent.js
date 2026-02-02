@@ -24,12 +24,35 @@ import { getLocationString, hasValidCoordinates, getGoogleMapsUrl } from './util
 export function TrafficTabContent() {
   const {
     activeTab,
-    filteredVisitors,
+    sortedVisitors,
+    visitorSortBy,
+    visitorSortDirection,
+    setVisitorSort,
     filteredPageViews,
+    sortedPageViews,
+    pageViewSortBy,
+    pageViewSortDirection,
+    setPageViewSort,
     filteredEvents,
+    sortedEvents,
+    eventSortBy,
+    eventSortDirection,
+    setEventSort,
     filteredPageTimes,
+    sortedPageTimes,
+    pageTimeSortBy,
+    pageTimeSortDirection,
+    setPageTimeSort,
     filteredMediaClicks,
+    sortedMediaClicks,
+    mediaClickSortBy,
+    mediaClickSortDirection,
+    setMediaClickSort,
     enquiries,
+    sortedEnquiries,
+    enquirySortBy,
+    enquirySortDirection,
+    setEnquirySort,
     visitorsByCountry,
     visitorsByDevice,
     visitsOverTime,
@@ -163,19 +186,67 @@ export function TrafficTabContent() {
               <thead>
                 <tr>
                   <th></th>
-                  <th>IP Address</th>
-                  <th>Visits</th>
-                  <th>Device Type</th>
-                  <th>Browser</th>
-                  <th>OS</th>
-                  <th>Location</th>
-                  <th>First Visit</th>
-                  <th>Last Visit</th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'ip' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('ip')}
+                    title="Sort by IP"
+                  >
+                    IP Address {visitorSortBy === 'ip' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'visits' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('visits')}
+                    title="Sort by visit count"
+                  >
+                    Visits {visitorSortBy === 'visits' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'deviceType' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('deviceType')}
+                    title="Sort by device type"
+                  >
+                    Device Type {visitorSortBy === 'deviceType' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'browser' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('browser')}
+                    title="Sort by browser"
+                  >
+                    Browser {visitorSortBy === 'browser' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'os' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('os')}
+                    title="Sort by OS"
+                  >
+                    OS {visitorSortBy === 'os' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'location' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('location')}
+                    title="Sort by location"
+                  >
+                    Location {visitorSortBy === 'location' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'firstVisit' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('firstVisit')}
+                    title="Sort by first visit"
+                  >
+                    First Visit {visitorSortBy === 'firstVisit' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${visitorSortBy === 'lastVisit' ? 'active ' + visitorSortDirection : ''}`}
+                    onClick={() => setVisitorSort('lastVisit')}
+                    title="Sort by last visit"
+                  >
+                    Last Visit {visitorSortBy === 'lastVisit' && (visitorSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredVisitors.map((visitor) => (
+                {sortedVisitors.map((visitor) => (
                   <React.Fragment key={visitor.id}>
                     <tr>
                       <td>
@@ -599,14 +670,38 @@ export function TrafficTabContent() {
             <table className="traffic-table">
               <thead>
                 <tr>
-                  <th>Path</th>
-                  <th>Title</th>
-                  <th>Referrer</th>
-                  <th>Timestamp</th>
+                  <th
+                    className={`sortable ${pageViewSortBy === 'path' ? 'active ' + pageViewSortDirection : ''}`}
+                    onClick={() => setPageViewSort('path')}
+                    title="Sort by path"
+                  >
+                    Path {pageViewSortBy === 'path' && (pageViewSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageViewSortBy === 'title' ? 'active ' + pageViewSortDirection : ''}`}
+                    onClick={() => setPageViewSort('title')}
+                    title="Sort by title"
+                  >
+                    Title {pageViewSortBy === 'title' && (pageViewSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageViewSortBy === 'referrer' ? 'active ' + pageViewSortDirection : ''}`}
+                    onClick={() => setPageViewSort('referrer')}
+                    title="Sort by referrer"
+                  >
+                    Referrer {pageViewSortBy === 'referrer' && (pageViewSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageViewSortBy === 'timestamp' ? 'active ' + pageViewSortDirection : ''}`}
+                    onClick={() => setPageViewSort('timestamp')}
+                    title="Sort by timestamp"
+                  >
+                    Timestamp {pageViewSortBy === 'timestamp' && (pageViewSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {filteredPageViews.map((pageView) => (
+                {sortedPageViews.map((pageView) => (
                   <tr key={pageView.id}>
                     <td>
                       <div className="path-cell">
@@ -648,15 +743,45 @@ export function TrafficTabContent() {
             <table className="traffic-table">
               <thead>
                 <tr>
-                  <th>Category</th>
-                  <th>Action</th>
-                  <th>Label</th>
-                  <th>Path</th>
-                  <th>Timestamp</th>
+                  <th
+                    className={`sortable ${eventSortBy === 'category' ? 'active ' + eventSortDirection : ''}`}
+                    onClick={() => setEventSort('category')}
+                    title="Sort by category"
+                  >
+                    Category {eventSortBy === 'category' && (eventSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${eventSortBy === 'action' ? 'active ' + eventSortDirection : ''}`}
+                    onClick={() => setEventSort('action')}
+                    title="Sort by action"
+                  >
+                    Action {eventSortBy === 'action' && (eventSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${eventSortBy === 'label' ? 'active ' + eventSortDirection : ''}`}
+                    onClick={() => setEventSort('label')}
+                    title="Sort by label"
+                  >
+                    Label {eventSortBy === 'label' && (eventSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${eventSortBy === 'path' ? 'active ' + eventSortDirection : ''}`}
+                    onClick={() => setEventSort('path')}
+                    title="Sort by path"
+                  >
+                    Path {eventSortBy === 'path' && (eventSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${eventSortBy === 'timestamp' ? 'active ' + eventSortDirection : ''}`}
+                    onClick={() => setEventSort('timestamp')}
+                    title="Sort by timestamp"
+                  >
+                    Timestamp {eventSortBy === 'timestamp' && (eventSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {filteredEvents.map((event) => (
+                {sortedEvents.map((event) => (
                   <tr key={event.id}>
                     <td>
                       <div className="category-cell">
@@ -787,16 +912,52 @@ export function TrafficTabContent() {
             <table className="traffic-table">
               <thead>
                 <tr>
-                  <th>Path</th>
-                  <th>Duration</th>
-                  <th>Start</th>
-                  <th>End</th>
-                  <th>Visitor (IP)</th>
-                  <th>Env</th>
+                  <th
+                    className={`sortable ${pageTimeSortBy === 'path' ? 'active ' + pageTimeSortDirection : ''}`}
+                    onClick={() => setPageTimeSort('path')}
+                    title="Sort by path"
+                  >
+                    Path {pageTimeSortBy === 'path' && (pageTimeSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageTimeSortBy === 'duration' ? 'active ' + pageTimeSortDirection : ''}`}
+                    onClick={() => setPageTimeSort('duration')}
+                    title="Sort by duration"
+                  >
+                    Duration {pageTimeSortBy === 'duration' && (pageTimeSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageTimeSortBy === 'startTime' ? 'active ' + pageTimeSortDirection : ''}`}
+                    onClick={() => setPageTimeSort('startTime')}
+                    title="Sort by start time"
+                  >
+                    Start {pageTimeSortBy === 'startTime' && (pageTimeSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageTimeSortBy === 'endTime' ? 'active ' + pageTimeSortDirection : ''}`}
+                    onClick={() => setPageTimeSort('endTime')}
+                    title="Sort by end time"
+                  >
+                    End {pageTimeSortBy === 'endTime' && (pageTimeSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageTimeSortBy === 'visitor' ? 'active ' + pageTimeSortDirection : ''}`}
+                    onClick={() => setPageTimeSort('visitor')}
+                    title="Sort by visitor"
+                  >
+                    Visitor (IP) {pageTimeSortBy === 'visitor' && (pageTimeSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${pageTimeSortBy === 'environment' ? 'active ' + pageTimeSortDirection : ''}`}
+                    onClick={() => setPageTimeSort('environment')}
+                    title="Sort by environment"
+                  >
+                    Env {pageTimeSortBy === 'environment' && (pageTimeSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {filteredPageTimes.map((pageTime) => (
+                {sortedPageTimes.map((pageTime) => (
                   <tr key={pageTime.id}>
                     <td><code className="path-inline">{pageTime.path || 'N/A'}</code></td>
                     <td>
@@ -882,16 +1043,52 @@ export function TrafficTabContent() {
             <table className="traffic-table">
               <thead>
                 <tr>
-                  <th>Media Type</th>
-                  <th>Caption/Title</th>
-                  <th>Project Path</th>
-                  <th>Media Source</th>
-                  <th>Timestamp</th>
-                  <th>Environment</th>
+                  <th
+                    className={`sortable ${mediaClickSortBy === 'mediaType' ? 'active ' + mediaClickSortDirection : ''}`}
+                    onClick={() => setMediaClickSort('mediaType')}
+                    title="Sort by media type"
+                  >
+                    Media Type {mediaClickSortBy === 'mediaType' && (mediaClickSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${mediaClickSortBy === 'caption' ? 'active ' + mediaClickSortDirection : ''}`}
+                    onClick={() => setMediaClickSort('caption')}
+                    title="Sort by caption"
+                  >
+                    Caption/Title {mediaClickSortBy === 'caption' && (mediaClickSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${mediaClickSortBy === 'projectPath' ? 'active ' + mediaClickSortDirection : ''}`}
+                    onClick={() => setMediaClickSort('projectPath')}
+                    title="Sort by project path"
+                  >
+                    Project Path {mediaClickSortBy === 'projectPath' && (mediaClickSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${mediaClickSortBy === 'mediaSrc' ? 'active ' + mediaClickSortDirection : ''}`}
+                    onClick={() => setMediaClickSort('mediaSrc')}
+                    title="Sort by media source"
+                  >
+                    Media Source {mediaClickSortBy === 'mediaSrc' && (mediaClickSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${mediaClickSortBy === 'timestamp' ? 'active ' + mediaClickSortDirection : ''}`}
+                    onClick={() => setMediaClickSort('timestamp')}
+                    title="Sort by timestamp"
+                  >
+                    Timestamp {mediaClickSortBy === 'timestamp' && (mediaClickSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    className={`sortable ${mediaClickSortBy === 'environment' ? 'active ' + mediaClickSortDirection : ''}`}
+                    onClick={() => setMediaClickSort('environment')}
+                    title="Sort by environment"
+                  >
+                    Environment {mediaClickSortBy === 'environment' && (mediaClickSortDirection === 'asc' ? '↑' : '↓')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {filteredMediaClicks.map((mediaClick) => (
+                {sortedMediaClicks.map((mediaClick) => (
                   <tr key={mediaClick.id}>
                     <td>
                       <span className={`media-type-badge ${mediaClick.mediaType === 'image' ? 'image-type' : 'video-type'}`}>
@@ -943,13 +1140,41 @@ export function TrafficTabContent() {
         <div className="traffic-tab-content">
           <div className="enquiries-section">
             <h3>Contact Enquiries</h3>
-            {enquiries.length === 0 ? (
+            {sortedEnquiries.length === 0 ? (
               <div className="no-data-message">
                 <p>No enquiries yet.</p>
               </div>
             ) : (
-              <div className="enquiries-grid">
-                {enquiries.map((enquiry) => (
+              <>
+                <div className="enquiries-sort-bar">
+                  <span className="enquiries-sort-label">Sort by:</span>
+                  <button
+                    type="button"
+                    className={`enquiries-sort-btn ${enquirySortBy === 'timestamp' ? 'active' : ''}`}
+                    onClick={() => setEnquirySort('timestamp')}
+                    title={enquirySortBy === 'timestamp' ? (enquirySortDirection === 'asc' ? 'Newest first (click to toggle)' : 'Oldest first (click to toggle)') : 'Sort by date'}
+                  >
+                    Date {enquirySortBy === 'timestamp' && (enquirySortDirection === 'asc' ? '↑' : '↓')}
+                  </button>
+                  <button
+                    type="button"
+                    className={`enquiries-sort-btn ${enquirySortBy === 'name' ? 'active' : ''}`}
+                    onClick={() => setEnquirySort('name')}
+                    title="Sort by name"
+                  >
+                    Name {enquirySortBy === 'name' && (enquirySortDirection === 'asc' ? '↑' : '↓')}
+                  </button>
+                  <button
+                    type="button"
+                    className={`enquiries-sort-btn ${enquirySortBy === 'status' ? 'active' : ''}`}
+                    onClick={() => setEnquirySort('status')}
+                    title="Sort by status"
+                  >
+                    Status {enquirySortBy === 'status' && (enquirySortDirection === 'asc' ? '↑' : '↓')}
+                  </button>
+                </div>
+                <div className="enquiries-grid">
+                  {sortedEnquiries.map((enquiry) => (
                   <div key={enquiry.id} className="enquiry-card">
                     <div className="enquiry-header">
                       <div className="enquiry-meta">
@@ -985,7 +1210,8 @@ export function TrafficTabContent() {
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
+              </>
             )}
           </div>
         </div>
