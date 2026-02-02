@@ -1294,6 +1294,205 @@
   color: #5568d3;
 }
 
+.visitor-actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.watch-btn:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+}
+
+/* Visitor Activity (Watch visitor) tab */
+.visitor-activity-tab h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.visitor-activity-intro {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.visitor-activity-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.visitor-activity-selector label {
+  font-weight: 500;
+  color: #333;
+}
+
+.visitor-activity-selector select {
+  min-width: 280px;
+  max-width: 100%;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  cursor: pointer;
+}
+
+.visitor-activity-selector select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.visitor-activity-timeline-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.visitor-activity-timeline-section h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.no-activity-message {
+  color: #888;
+  font-style: italic;
+  padding: 1.5rem;
+}
+
+.visitor-activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 12px 16px;
+  align-items: start;
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease;
+}
+
+.activity-item:hover {
+  border-color: #ddd;
+}
+
+.activity-time {
+  font-size: 0.85rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.activity-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.activity-pageview .activity-badge {
+  background: rgba(102, 126, 234, 0.15);
+  color: #667eea;
+}
+
+.activity-event .activity-badge {
+  background: rgba(79, 172, 254, 0.15);
+  color: #4facfe;
+}
+
+.activity-pagetime .activity-badge {
+  background: rgba(67, 233, 123, 0.15);
+  color: #28a745;
+}
+
+.activity-mediaclick .activity-badge {
+  background: rgba(240, 147, 251, 0.15);
+  color: #c44dbb;
+}
+
+.activity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.activity-path {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.activity-title {
+  color: #333;
+}
+
+.activity-referrer,
+.activity-label,
+.activity-caption {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.activity-category,
+.activity-action {
+  font-weight: 500;
+}
+
+.activity-duration {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.activity-media-type {
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .activity-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .visitor-activity-selector select {
+    min-width: 100%;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .traffic-container {

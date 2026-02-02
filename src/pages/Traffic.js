@@ -8,7 +8,7 @@ import {
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { FaMapMarkerAlt, FaChevronDown, FaChevronUp, FaGlobe, FaFlag } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaChevronDown, FaChevronUp, FaGlobe, FaFlag, FaEye } from 'react-icons/fa';
 import '../styles/Traffic.css';
 
 const COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#43e97b', '#fa709a'];
@@ -45,6 +45,10 @@ const Traffic = () => {
   });
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copiedUrl, setCopiedUrl] = useState(false);
+
+  // Visitor activity (watch specific visitor by ID)
+  const [selectedVisitorId, setSelectedVisitorId] = useState(null);
+  const [selectedVisitorAnonymizedIP, setSelectedVisitorAnonymizedIP] = useState(null);
 
   useEffect(() => {
     if (role === 'humza') {
@@ -669,6 +673,44 @@ const Traffic = () => {
     });
     return Object.entries(deviceMap).map(([name, value]) => ({ name, value }));
   }, [filteredVisitors]);
+
+  // Match visitor to analytics records (by visitorId or fallback anonymizedIP for legacy)
+  const matchVisitor = useCallback((item) => {
+    if (selectedVisitorId && item.visitorId === selectedVisitorId) return true;
+    if (selectedVisitorAnonymizedIP && item.anonymizedIP === selectedVisitorAnonymizedIP) return true;
+    return false;
+  }, [selectedVisitorId, selectedVisitorAnonymizedIP]);
+
+  // Build chronological activity timeline for the selected visitor (by visitorId or anonymizedIP)
+  const visitorActivityTimeline = useMemo(() => {
+    if (!selectedVisitorId && !selectedVisitorAnonymizedIP) return [];
+    const getTs = (item) => {
+      const t = item.timestamp || item.startTime || item.endTime;
+      return t ? toDate(t) : null;
+    };
+    const items = [];
+    pageViews.filter(matchVisitor).forEach(pv => {
+      items.push({ type: 'pageview', timestamp: getTs(pv), raw: pv });
+    });
+    events.filter(matchVisitor).forEach(e => {
+      items.push({ type: 'event', timestamp: getTs(e), raw: e });
+    });
+    pageTimes.filter(matchVisitor).forEach(pt => {
+      items.push({ type: 'pagetime', timestamp: getTs(pt), raw: pt });
+    });
+    mediaClicks.filter(matchVisitor).forEach(mc => {
+      items.push({ type: 'mediaclick', timestamp: getTs(mc), raw: mc });
+    });
+    return items
+      .filter(i => i.timestamp && !isNaN(i.timestamp.getTime()))
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }, [selectedVisitorId, selectedVisitorAnonymizedIP, matchVisitor, pageViews, events, pageTimes, mediaClicks, toDate]);
+
+  const openVisitorActivity = useCallback((visitor) => {
+    setSelectedVisitorId(visitor.visitorId || null);
+    setSelectedVisitorAnonymizedIP(visitor.visitorId ? null : (visitor.id || null));
+    setActiveTab('visitor-activity');
+  }, []);
 
   const pageViewsOverTime = useMemo(() => {
     const dateMap = {};
@@ -1469,6 +1511,12 @@ const Traffic = () => {
         >
           Enquiries ({enquiries.length})
         </button>
+        <button
+          className={`traffic-tab ${activeTab === 'visitor-activity' ? 'active' : ''}`}
+          onClick={() => setActiveTab('visitor-activity')}
+        >
+          <FaEye /> Watch visitor
+        </button>
       </div>
 
       <div className="traffic-content">
@@ -1621,15 +1669,24 @@ const Traffic = () => {
                             <td>{formatDate(visitor.firstVisit)}</td>
                             <td>{formatDate(visitor.lastVisit)}</td>
                             <td>
-                              {hasValidCoordinates(visitor.location) && (
+                              <div className="visitor-actions-cell">
                                 <button
-                                  className="map-btn"
-                                  onClick={() => setSelectedLocation(visitor.location)}
-                                  title="View on map"
+                                  className="watch-btn"
+                                  onClick={() => openVisitorActivity(visitor)}
+                                  title="Watch this visitor's activity"
                                 >
-                                  <FaMapMarkerAlt />
+                                  <FaEye /> Watch
                                 </button>
-                              )}
+                                {hasValidCoordinates(visitor.location) && (
+                                  <button
+                                    className="map-btn"
+                                    onClick={() => setSelectedLocation(visitor.location)}
+                                    title="View on map"
+                                  >
+                                    <FaMapMarkerAlt />
+                                  </button>
+                                )}
+                              </div>
                             </td>
                           </tr>
                           {expandedVisitors.has(visitor.id) && (
@@ -2377,6 +2434,99 @@ const Traffic = () => {
                     </div>
                   )}
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'visitor-activity' && (
+              <div className="traffic-tab-content visitor-activity-tab">
+                <h3>Watch visitor activity</h3>
+                <p className="visitor-activity-intro">
+                  Select a visitor to see a chronological timeline of their page views, events, time on page, and media clicks.
+                </p>
+                <div className="visitor-activity-selector">
+                  <label htmlFor="visitor-activity-select">Visitor:</label>
+                  <select
+                    id="visitor-activity-select"
+                    value={selectedVisitorId || selectedVisitorAnonymizedIP || ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (!val) {
+                        setSelectedVisitorId(null);
+                        setSelectedVisitorAnonymizedIP(null);
+                        return;
+                      }
+                      const visitor = filteredVisitors.find(v =>
+                        (v.visitorId && v.visitorId === val) || (v.id === val)
+                      );
+                      if (visitor) {
+                        setSelectedVisitorId(visitor.visitorId || null);
+                        setSelectedVisitorAnonymizedIP(visitor.visitorId ? null : visitor.id);
+                      }
+                    }}
+                  >
+                    <option value="">— Select a visitor —</option>
+                    {filteredVisitors.map(visitor => (
+                      <option
+                        key={visitor.id}
+                        value={visitor.visitorId || visitor.id}
+                      >
+                        {(visitor.visitorId ? visitor.visitorId.slice(0, 8) + '…' : visitor.id) + ' • ' + formatDate(visitor.lastVisit) + ' • ' + getLocationString(visitor.location)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {(selectedVisitorId || selectedVisitorAnonymizedIP) && (
+                  <div className="visitor-activity-timeline-section">
+                    <h4>Activity timeline ({visitorActivityTimeline.length} items)</h4>
+                    {visitorActivityTimeline.length === 0 ? (
+                      <p className="no-activity-message">No recorded activity for this visitor.</p>
+                    ) : (
+                      <div className="visitor-activity-timeline">
+                        {visitorActivityTimeline.map((item, idx) => (
+                          <div key={idx} className={`activity-item activity-${item.type}`}>
+                            <div className="activity-time">{formatDate(item.timestamp)}</div>
+                            <div className="activity-badge">
+                              {item.type === 'pageview' && 'Page view'}
+                              {item.type === 'event' && 'Event'}
+                              {item.type === 'pagetime' && 'Time on page'}
+                              {item.type === 'mediaclick' && 'Media click'}
+                            </div>
+                            <div className="activity-details">
+                              {item.type === 'pageview' && (
+                                <>
+                                  <span className="activity-path">{item.raw.path || 'N/A'}</span>
+                                  <span className="activity-title">{item.raw.title || ''}</span>
+                                  {item.raw.referrer && <span className="activity-referrer">From: {item.raw.referrer}</span>}
+                                </>
+                              )}
+                              {item.type === 'event' && (
+                                <>
+                                  <span className="activity-category">{item.raw.category}</span>
+                                  <span className="activity-action">{item.raw.action}</span>
+                                  {item.raw.label && <span className="activity-label">{item.raw.label}</span>}
+                                  <span className="activity-path">{item.raw.path || ''}</span>
+                                </>
+                              )}
+                              {item.type === 'pagetime' && (
+                                <>
+                                  <span className="activity-path">{item.raw.path || 'N/A'}</span>
+                                  <span className="activity-duration">{item.raw.timeSpent || 0}s</span>
+                                </>
+                              )}
+                              {item.type === 'mediaclick' && (
+                                <>
+                                  <span className="activity-media-type">{item.raw.mediaType}</span>
+                                  <span className="activity-caption">{item.raw.mediaCaption || item.raw.mediaSrc || '—'}</span>
+                                  <span className="activity-path">{item.raw.projectPath || item.raw.path || ''}</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </>
