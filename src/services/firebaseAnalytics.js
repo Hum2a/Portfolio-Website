@@ -309,44 +309,8 @@ const trackVisitor = async () => {
         }
       }
       
-      // Final fallback to browser geolocation if all IP-based methods failed
-      if (userLocation.coordinates[0] === "0" && userLocation.coordinates[1] === "0" && navigator.geolocation) {
-        try {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-              enableHighAccuracy: false,
-              timeout: 5000,
-              maximumAge: 60000 // Cache for 1 minute
-            });
-          });
-          
-          userLocation = {
-            ...userLocation,
-            coordinates: [position.coords.latitude.toString(), position.coords.longitude.toString()]
-          };
-          
-          // Try to reverse geocode if we have coordinates but no city/country
-          if (userLocation.city === "Unknown" && position.coords.latitude && position.coords.longitude) {
-            try {
-              const reverseGeoResponse = await fetch(
-                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`
-              );
-              if (reverseGeoResponse.ok) {
-                const reverseGeoData = await reverseGeoResponse.json();
-                if (reverseGeoData) {
-                  userLocation.city = reverseGeoData.city || userLocation.city;
-                  userLocation.region = reverseGeoData.principalSubdivision || userLocation.region;
-                  userLocation.country = reverseGeoData.countryName || userLocation.country;
-                }
-              }
-            } catch (reverseGeoError) {
-              // Silently fail - we have coordinates at least
-            }
-          }
-        } catch (geoError) {
-          // Silently fail - use IP-based data or defaults
-        }
-      }
+      // Browser geolocation fallback removed - it triggers a location permission prompt.
+      // Location is determined via IP-based APIs only (ipinfo, bigdatacloud, ip-api).
     } catch (error) {
       console.error('Error getting location data:', error);
       // Keep default location data
