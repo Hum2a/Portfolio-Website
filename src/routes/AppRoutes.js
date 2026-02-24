@@ -23,6 +23,7 @@ import Flashcards from "../projects/Flashcards";
 import BakesByOlayide from "../pages/BakesByOlayide";
 import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
+import GitHub from "../pages/GitHub";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 const pageVariants = {
@@ -69,6 +70,7 @@ const AppRoutes = () => {
       <Route path="/flashcards" element={<Flashcards />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
       <Route path="/humza-login" element={<HumzaLogin />} />
+      <Route path="/github" element={<GitHub />} />
       <Route 
         path="/traffic" 
         element={

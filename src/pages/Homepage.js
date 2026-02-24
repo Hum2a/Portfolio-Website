@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Typewriter from "../components/animations/Typewriter";
 import Terminal from "../components/animations/Terminal";
 import { HomepageFeaturedProjects } from "../components/HomepageFeaturedProjects";
+import { GitHubSection } from "../components/GitHubSection";
 import "../styles/Homepage.css";
 
 const Homepage = () => {
@@ -107,6 +108,7 @@ const Homepage = () => {
       </motion.div>
 
       <HomepageFeaturedProjects />
+      <GitHubSection />
     </div>
   );
 };
