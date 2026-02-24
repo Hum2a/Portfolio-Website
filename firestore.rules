@@ -1,117 +1,12 @@
 rules_version = '2';
+// Firestore rules for analytics_tracking_tokens
+// Merge this block into your existing firestore.rules if you have one
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // ACCESS CONTROL PHILOSOPHY:
-    // - /humza-login route is PUBLIC (not protected) - anyone can access it
-    // - Anyone can sign in with Google (Firebase Auth handles this)
-    // - After Google sign-in, authenticated users can create their own user document
-    // - Only the /traffic page is protected and requires "humza" role
-    // - All other pages and features are public and don't require authentication
-    // - Analytics collections are writeable by anyone (for tracking), but readable only by "humza" role
-    
-    // Helper function to check if user has "humza" role
-    // Uses get() which can read documents for security rule evaluation even if read rules deny access
-    // Returns false if user is not authenticated, document doesn't exist, or role is not 'humza'
-    function isHumzaUser() {
-      return request.auth != null && 
-             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'humza';
-    }
-    
-    // Helper function to check if collection name is NOT an analytics collection
-    // This is used to exclude analytics collections from the catch-all public access rule
-    function isNotAnalyticsCollection(collection) {
-      return collection != 'analytics_visitors' &&
-             collection != 'analytics_pageviews' &&
-             collection != 'analytics_events' &&
-             collection != 'analytics_stats' &&
-             collection != 'analytics_page_times' &&
-             collection != 'analytics_media_clicks' &&
-             collection != 'analytics_sessions';
-    }
-    
-    // Users collection - Allow authenticated users to create/read/update their own document
-    // This is necessary for Google Sign-In to work: after Firebase Auth authenticates the user,
-    // the client needs to create/update their user document in Firestore
-    // IMPORTANT: The /humza-login route is public (no route protection), allowing anyone to access it.
-    // Once they sign in with Google, Firebase Auth authenticates them, and then they can create
-    // their own user document in Firestore. The traffic page is protected and requires "humza" role.
-    match /users/{userId} {
-      // Allow authenticated users to read their own document (for role checks and client-side access)
-      // This allows the client to check if the document exists and read the role
-      allow read: if request.auth != null && request.auth.uid == userId;
-      // Allow authenticated users to create their own document (during Google Sign-In)
-      // This is called by ensureUserDocument() after Firebase Auth authenticates the user
-      allow create: if request.auth != null && request.auth.uid == userId;
-      // Allow authenticated users to update their own document (to update metadata on subsequent sign-ins)
-      allow update: if request.auth != null && request.auth.uid == userId;
-      // Note: get() in isHumzaUser() can read this document for security rule evaluation
-      // even if read rules would normally deny access, but we allow read for client-side checks
-    }
-    
-    // Analytics collections - sensitive data
-    // Write: Allow anyone to write (for tracking visitors, pageviews, events anonymously)
-    // Read: Only users with role "humza" can read
-    // IMPORTANT: These specific rules are evaluated. If read is denied here, access is denied
-    // even if catch-all below would match. However, Firestore evaluates ALL matching rules
-    // and grants access if ANY allow statement is true. So we must ensure catch-all doesn't
-    // match analytics paths, which we do by checking resource.name in the catch-all condition.
-    match /analytics_visitors/{document=**} {
-      allow read: if isHumzaUser();
-      allow write: if true; // Anyone can write (for anonymous tracking)
-      allow delete: if false; // Prevent deletion for security
-    }
-    
-    match /analytics_pageviews/{document=**} {
-      allow read: if isHumzaUser();
-      allow write: if true; // Anyone can write (for anonymous tracking)
-      allow delete: if false; // Prevent deletion for security
-    }
-    
-    match /analytics_events/{document=**} {
-      allow read: if isHumzaUser();
-      allow write: if true; // Anyone can write (for anonymous tracking)
-      allow delete: if false; // Prevent deletion for security
-    }
-    
-    match /analytics_stats/{document=**} {
-      allow read: if isHumzaUser();
-      allow write: if true; // Anyone can write (for tracking updates)
-      allow delete: if false; // Prevent deletion for security
-    }
-    
-    match /analytics_page_times/{document=**} {
-      allow read: if isHumzaUser();
-      allow write: if true; // Anyone can write (for tracking page time spent)
-      allow delete: if false; // Prevent deletion for security
-    }
-    
-    match /analytics_media_clicks/{document=**} {
-      allow read: if isHumzaUser();
-      allow write: if true; // Anyone can write (for tracking media clicks)
-      allow delete: if false; // Prevent deletion for security
-    }
-    
-    match /analytics_sessions/{document=**} {
-      allow read: if isHumzaUser();
-      allow write: if true; // Anyone can write (for tracking sessions)
-      allow delete: if false; // Prevent deletion for security
-    }
-    
-    // Enquiries collection - anyone can submit enquiries, only humza can read
-    match /enquiries/{document=**} {
-      allow read: if isHumzaUser();
-      allow create: if true; // Anyone can create enquiries (including guests)
-      allow update, delete: if false; // Prevent modification/deletion for security
-    }
-    
-    // All other collections - public access (read/write for everyone)
-    // IMPORTANT: We exclude analytics collections from this catch-all by checking the collection name
-    // This ensures analytics collections are ONLY accessible through the specific rules above
-    // Without this exclusion, the catch-all would grant access even when analytics rules deny it
-    match /{collection}/{document=**} {
-      allow read, write: if isNotAnalyticsCollection(collection) && collection != 'enquiries';
+    match /analytics_tracking_tokens/{tokenId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null;
     }
   }
 }
