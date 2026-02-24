@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Typewriter from "../components/animations/Typewriter";
 import Terminal from "../components/animations/Terminal";
+import { HomepageFeaturedProjects } from "../components/HomepageFeaturedProjects";
 import "../styles/Homepage.css";
 
 const Homepage = () => {
@@ -87,7 +88,25 @@ const Homepage = () => {
             <span className="button-arrow">→</span>
           </motion.button>
         </motion.div>
+
+        <motion.div
+          className="homepage-scroll-hint"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.8, duration: 0.6 }}
+        >
+          <span className="scroll-hint-text">Scroll to see featured projects</span>
+          <motion.span
+            className="scroll-hint-chevron"
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            ↓
+          </motion.span>
+        </motion.div>
       </motion.div>
+
+      <HomepageFeaturedProjects />
     </div>
   );
 };

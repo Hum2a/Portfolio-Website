@@ -45,7 +45,7 @@
       "route": "/bakesbyolayide",
       "tags": ["JavaScript", "React.js", "Node.js", "Firebase", "Stripe", "FoodTech", "E-commerce"],
       "visible": true,
-      "featured": false,
+      "featured": true,
       "priority": 2
     },
     {

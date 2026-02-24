@@ -11,7 +11,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem 4rem;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -128,10 +128,30 @@
   transform: translateX(4px);
 }
 
+.homepage-scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+}
+
+.scroll-hint-text {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-code);
+}
+
+.scroll-hint-chevron {
+  font-size: 1.25rem;
+  color: var(--accent-primary);
+  opacity: 0.8;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .homepage-container {
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 1rem 3rem;
   }
 
   .homepage-title {
@@ -149,6 +169,10 @@
   .homepage-button {
     padding: 0.875rem 1.5rem;
     font-size: var(--text-base);
+  }
+
+  .homepage-scroll-hint {
+    display: none;
   }
 }
 
