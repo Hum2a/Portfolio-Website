@@ -55,6 +55,10 @@ export function useTrafficData(role) {
   });
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copiedUrl, setCopiedUrl] = useState(false);
+  const [urlGeneratorMode, setUrlGeneratorMode] = useState('ref'); // 'ref' | 'utm' - ref works with PDFs
+  const [generatedRefUrl, setGeneratedRefUrl] = useState('');
+  const [refUrlLoading, setRefUrlLoading] = useState(false);
+  const [refUrlError, setRefUrlError] = useState('');
   const [selectedVisitorAnonymizedIP, setSelectedVisitorAnonymizedIP] = useState(null);
   const [visitorSortBy, setVisitorSortBy] = useState('lastVisit');
   const [visitorSortDirection, setVisitorSortDirection] = useState('desc');
@@ -783,17 +787,45 @@ export function useTrafficData(role) {
     if (presetData) setUrlGeneratorData((prev) => ({ ...prev, ...presetData }));
   }, []);
 
+  const createRefLink = useCallback(async () => {
+    const { source, medium, campaign } = urlGeneratorData;
+    if (!source?.trim()) {
+      setRefUrlError('Source is required');
+      setGeneratedRefUrl('');
+      return;
+    }
+    setRefUrlError('');
+    setRefUrlLoading(true);
+    try {
+      const { createTrackingToken } = await import('../../services/trackingTokenService');
+      const { token } = await createTrackingToken({
+        source: source.trim(),
+        medium: medium?.trim() || null,
+        campaign: campaign?.trim() || null,
+      });
+      const baseUrl = urlGeneratorData.baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
+      const url = `${baseUrl.replace(/\/$/, '')}/?ref=${token}`;
+      setGeneratedRefUrl(url);
+    } catch (err) {
+      setRefUrlError(err?.message || 'Failed to create link');
+      setGeneratedRefUrl('');
+    } finally {
+      setRefUrlLoading(false);
+    }
+  }, [urlGeneratorData]);
+
   const copyToClipboard = useCallback(async () => {
-    if (generatedUrl) {
+    const toCopy = urlGeneratorMode === 'ref' ? generatedRefUrl : generatedUrl;
+    if (toCopy) {
       try {
-        await navigator.clipboard.writeText(generatedUrl);
+        await navigator.clipboard.writeText(toCopy);
         setCopiedUrl(true);
         setTimeout(() => setCopiedUrl(false), 2000);
       } catch (error) {
         console.error('Failed to copy:', error);
       }
     }
-  }, [generatedUrl]);
+  }, [urlGeneratorMode, generatedRefUrl, generatedUrl]);
 
   const resetUrlGenerator = useCallback(() => {
     setUrlGeneratorData({
@@ -805,6 +837,8 @@ export function useTrafficData(role) {
       content: '',
     });
     setGeneratedUrl('');
+    setGeneratedRefUrl('');
+    setRefUrlError('');
   }, []);
 
   return {
@@ -837,7 +871,13 @@ export function useTrafficData(role) {
     showUrlGenerator,
     setShowUrlGenerator,
     urlGeneratorData,
+    urlGeneratorMode,
+    setUrlGeneratorMode,
     generatedUrl,
+    generatedRefUrl,
+    refUrlLoading,
+    refUrlError,
+    createRefLink,
     copiedUrl,
     selectedVisitorAnonymizedIP,
     setSelectedVisitorAnonymizedIP,

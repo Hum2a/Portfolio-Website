@@ -6,13 +6,22 @@ export function UrlGeneratorSection() {
     showUrlGenerator,
     setShowUrlGenerator,
     urlGeneratorData,
+    urlGeneratorMode,
+    setUrlGeneratorMode,
     handleUrlGeneratorChange,
     applyPreset,
     generatedUrl,
+    generatedRefUrl,
+    refUrlLoading,
+    refUrlError,
+    createRefLink,
     copyToClipboard,
     copiedUrl,
     resetUrlGenerator,
   } = useTraffic();
+
+  const isRefMode = urlGeneratorMode === 'ref';
+  const displayUrl = isRefMode ? generatedRefUrl : generatedUrl;
 
   return (
     <div className="url-generator-section">
@@ -23,8 +32,27 @@ export function UrlGeneratorSection() {
 
       {showUrlGenerator && (
         <div className="url-generator-content">
+          <div className="url-mode-toggle">
+            <button
+              className={`mode-btn ${isRefMode ? 'active' : ''}`}
+              onClick={() => setUrlGeneratorMode('ref')}
+              title="Works with PDFs, emails - short URL with token"
+            >
+              📄 Ref Link (PDF-friendly)
+            </button>
+            <button
+              className={`mode-btn ${!isRefMode ? 'active' : ''}`}
+              onClick={() => setUrlGeneratorMode('utm')}
+              title="Standard UTM parameters"
+            >
+              🔗 UTM Link
+            </button>
+          </div>
+
           <p className="url-generator-description">
-            Generate tracked URLs to identify traffic sources from different platforms.
+            {isRefMode
+              ? 'Ref links use a short token stored in the database. Works reliably from PDFs and persists attribution via cookies for returning visitors.'
+              : 'UTM links embed parameters in the URL. Best for direct links (social, email).'}
           </p>
 
           <div className="url-presets">
@@ -82,40 +110,57 @@ export function UrlGeneratorSection() {
                 />
                 <span className="field-hint">Campaign name or identifier</span>
               </div>
-              <div className="form-field">
-                <label>Term</label>
-                <input
-                  type="text"
-                  value={urlGeneratorData.term}
-                  onChange={(e) => handleUrlGeneratorChange('term', e.target.value)}
-                  placeholder="Optional"
-                />
-                <span className="field-hint">Keywords (optional)</span>
-              </div>
-              <div className="form-field">
-                <label>Content</label>
-                <input
-                  type="text"
-                  value={urlGeneratorData.content}
-                  onChange={(e) => handleUrlGeneratorChange('content', e.target.value)}
-                  placeholder="Optional"
-                />
-                <span className="field-hint">Content identifier (optional)</span>
-              </div>
+              {!isRefMode && (
+                <>
+                  <div className="form-field">
+                    <label>Term</label>
+                    <input
+                      type="text"
+                      value={urlGeneratorData.term}
+                      onChange={(e) => handleUrlGeneratorChange('term', e.target.value)}
+                      placeholder="Optional"
+                    />
+                    <span className="field-hint">Keywords (optional)</span>
+                  </div>
+                  <div className="form-field">
+                    <label>Content</label>
+                    <input
+                      type="text"
+                      value={urlGeneratorData.content}
+                      onChange={(e) => handleUrlGeneratorChange('content', e.target.value)}
+                      placeholder="Optional"
+                    />
+                    <span className="field-hint">Content identifier (optional)</span>
+                  </div>
+                </>
+              )}
             </div>
 
-            {generatedUrl && (
+            {isRefMode ? (
+              <div className="ref-link-actions">
+                <button
+                  className="create-ref-btn"
+                  onClick={createRefLink}
+                  disabled={refUrlLoading || !urlGeneratorData.source?.trim()}
+                >
+                  {refUrlLoading ? 'Creating...' : 'Create Ref Link'}
+                </button>
+                {refUrlError && <span className="ref-url-error">{refUrlError}</span>}
+              </div>
+            ) : null}
+
+            {displayUrl && (
               <div className="generated-url-section">
                 <h3>Generated URL:</h3>
                 <div className="generated-url-display">
-                  <input type="text" value={generatedUrl} readOnly className="generated-url-input" />
+                  <input type="text" value={displayUrl} readOnly className="generated-url-input" />
                   <button className="copy-btn" onClick={copyToClipboard}>
                     {copiedUrl ? '✓ Copied!' : '📋 Copy'}
                   </button>
                 </div>
                 <div className="url-actions">
                   <button className="reset-btn" onClick={resetUrlGenerator}>🔄 Reset</button>
-                  <a href={generatedUrl} target="_blank" rel="noopener noreferrer" className="test-btn">🔗 Test URL</a>
+                  <a href={displayUrl} target="_blank" rel="noopener noreferrer" className="test-btn">🔗 Test URL</a>
                 </div>
               </div>
             )}

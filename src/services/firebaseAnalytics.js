@@ -67,24 +67,16 @@ const getEnvironment = () => {
   return isLocalhost ? 'localhost' : 'production';
 };
 
-// Extract campaign parameters from URL
-const getCampaignData = () => {
+// Campaign attribution: ref token (DB) > UTM params > cookie (from previous ref visit) > direct source param
+const getCampaignDataFromUtm = () => {
   const urlParams = new URLSearchParams(window.location.search);
-  
-  // Check for UTM parameters (standard)
   const utmSource = urlParams.get('utm_source');
   const utmMedium = urlParams.get('utm_medium');
   const utmCampaign = urlParams.get('utm_campaign');
   const utmTerm = urlParams.get('utm_term');
   const utmContent = urlParams.get('utm_content');
-  
-  // Check for custom source parameter (fallback)
-  const customSource = urlParams.get('source') || urlParams.get('ref');
-  
-  // Determine the source
+  const customSource = urlParams.get('source');
   const source = utmSource || customSource || null;
-  
-  // Only return campaign data if we have at least a source
   if (source) {
     return {
       source,
@@ -95,7 +87,57 @@ const getCampaignData = () => {
       landingPage: window.location.pathname + window.location.search
     };
   }
-  
+  return null;
+};
+
+// Async: resolve campaign data (ref token lookup, cookie, UTM)
+const getCampaignData = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const landingPage = window.location.pathname + window.location.search;
+
+  // 1. Ref token (works with PDFs - short URL, DB lookup)
+  const refToken = urlParams.get('ref');
+  if (refToken) {
+    try {
+      const { lookupTrackingToken, setAttributionCookie, incrementTokenClicks, getAttributionFromCookie } = await import('./trackingTokenService');
+      const tokenData = await lookupTrackingToken(refToken);
+      if (tokenData) {
+        incrementTokenClicks(refToken); // fire-and-forget
+        setAttributionCookie(tokenData); // persist for returning visitors
+        return {
+          source: tokenData.source,
+          medium: tokenData.medium || null,
+          campaign: tokenData.campaign || null,
+          term: null,
+          content: null,
+          landingPage,
+        };
+      }
+    } catch (e) {
+      console.warn('Token lookup failed:', e);
+    }
+  }
+
+  // 2. UTM params (direct links)
+  const utmData = getCampaignDataFromUtm();
+  if (utmData) return utmData;
+
+  // 3. Cookie (returning visitor - came via ref link before)
+  try {
+    const { getAttributionFromCookie } = await import('./trackingTokenService');
+    const cookieData = getAttributionFromCookie();
+    if (cookieData) {
+      return {
+        ...cookieData,
+        term: null,
+        content: null,
+        landingPage,
+      };
+    }
+  } catch {
+    // ignore
+  }
+
   return null;
 };
 
@@ -322,8 +364,8 @@ const trackVisitor = async () => {
     // Detect environment
     const environment = getEnvironment();
     
-    // Get campaign data from URL parameters
-    const campaignData = getCampaignData();
+    // Get campaign data (ref token > UTM > cookie)
+    const campaignData = await getCampaignData();
     
     // Build session object
     const sessionData = {
