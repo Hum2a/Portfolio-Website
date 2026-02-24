@@ -10,6 +10,7 @@ const Projects = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [filterExpanded, setFilterExpanded] = useState(false);
 
   useEffect(() => {
     setFilteredProjects(getVisibleProjects());
@@ -61,20 +62,32 @@ const Projects = () => {
         </div>
 
         {allTags.length > 0 && (
-          <div className="tag-filter">
-            <span className="tag-filter-label">Filter by technology:</span>
-            <div className="tag-buttons">
-              {allTags.map((tag, index) => (
-                <button
-                  key={index}
-                  className={`tag-button ${
-                    selectedTags.includes(tag) ? "tag-button-selected" : ""
-                  }`}
-                  onClick={() => handleTagClick(tag)}
-                >
-                  {tag}
-                </button>
-              ))}
+          <div className={`tag-filter ${filterExpanded ? 'tag-filter-expanded' : ''}`}>
+            <button
+              className="tag-filter-header"
+              onClick={() => setFilterExpanded(!filterExpanded)}
+              aria-expanded={filterExpanded}
+            >
+              <span className="tag-filter-label">Filter by technology</span>
+              {selectedTags.length > 0 && (
+                <span className="tag-filter-badge">{selectedTags.length} selected</span>
+              )}
+              <span className="tag-filter-chevron">{filterExpanded ? '▼' : '▶'}</span>
+            </button>
+            <div className="tag-filter-content">
+              <div className="tag-buttons">
+                {allTags.map((tag, index) => (
+                  <button
+                    key={index}
+                    className={`tag-button ${
+                      selectedTags.includes(tag) ? "tag-button-selected" : ""
+                    }`}
+                    onClick={() => handleTagClick(tag)}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -86,8 +99,8 @@ const Projects = () => {
               className="project-card"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
+              transition={{ duration: 0.4, delay: index * 0.05, ease: [0.4, 0, 0.2, 1] }}
+              whileHover={{ y: -5, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } }}
             >
               <Link to={project.route} className="project-link">
                 <div 

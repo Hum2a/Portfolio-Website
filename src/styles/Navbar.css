@@ -27,7 +27,7 @@
   font-weight: var(--font-semibold);
   color: var(--text-primary);
   text-decoration: none;
-  transition: all var(--transition-base);
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navbar-logo:hover {
@@ -62,7 +62,7 @@
   text-decoration: none;
   position: relative;
   padding: 0.5rem 0;
-  transition: color var(--transition-base);
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navbar-link::after {
@@ -73,7 +73,7 @@
   width: 0;
   height: 2px;
   background: var(--accent-primary);
-  transition: width var(--transition-base);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navbar-link:hover {
@@ -103,7 +103,7 @@
   border-radius: 6px;
   padding: 0.6rem 1.5rem;
   text-decoration: none;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   display: inline-flex;
   align-items: center;

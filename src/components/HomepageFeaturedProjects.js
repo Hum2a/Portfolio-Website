@@ -5,11 +5,11 @@ import { getFeaturedProjects } from '../data/projects';
 import '../styles/HomepageFeaturedProjects.css';
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 32 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.55, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 };
 
@@ -17,7 +17,7 @@ const sectionVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
   },
 };
 
@@ -51,7 +51,7 @@ export function HomepageFeaturedProjects() {
               className="featured-card"
               variants={cardVariants}
               custom={index + 1}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              whileHover={{ y: -8, transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
             >
               <Link to={project.route} className="featured-card-link">
                 <div

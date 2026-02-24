@@ -83,7 +83,7 @@
   border: 2px solid var(--accent-primary);
   border-radius: 8px;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -121,7 +121,7 @@
 .button-arrow {
   position: relative;
   z-index: 1;
-  transition: transform var(--transition-base);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .homepage-button:hover .button-arrow {

@@ -2081,7 +2081,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .url-generator-header:hover {
@@ -2101,13 +2101,13 @@
 
 .url-generator-content {
   padding: 25px;
-  animation: slideDown 0.3s ease-out;
+  animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
@@ -2137,7 +2137,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mode-btn:hover {
@@ -2169,7 +2169,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 6px rgba(67, 233, 123, 0.3);
 }
 

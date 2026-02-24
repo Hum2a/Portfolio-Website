@@ -75,7 +75,9 @@
   border: 1px solid var(--border-primary);
   border-radius: 16px;
   overflow: hidden;
-  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
 }
 
 .featured-card:hover {
@@ -118,7 +120,7 @@
   height: 100%;
   object-fit: contain;
   padding: 1.5rem;
-  transition: transform var(--transition-slow);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
 }
@@ -183,7 +185,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  transition: gap var(--transition-base);
+  transition: gap 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .featured-card:hover .featured-card-cta {
@@ -191,7 +193,7 @@
 }
 
 .cta-arrow {
-  transition: transform var(--transition-base);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .featured-card:hover .cta-arrow {
@@ -213,7 +215,7 @@
   border: 2px solid var(--accent-primary);
   border-radius: 10px;
   text-decoration: none;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .featured-view-all:hover {

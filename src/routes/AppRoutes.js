@@ -1,5 +1,6 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Homepage from "../pages/Homepage";
 import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
@@ -24,9 +25,28 @@ import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
 import ProtectedRoute from "../components/ProtectedRoute";
 
+const pageVariants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+};
+
+const pageTransition = { duration: 0.25, ease: [0.4, 0, 0.2, 1] };
+
 const AppRoutes = () => {
+  const location = useLocation();
   return (
-    <Routes>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+        transition={pageTransition}
+        style={{ minHeight: '100%' }}
+      >
+        <Routes location={location}>
       <Route path="/" element={<Homepage />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/Contact" element={<Contact />} />
@@ -57,7 +77,9 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
-    </Routes>
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
