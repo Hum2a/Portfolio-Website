@@ -1,8 +1,47 @@
 rules_version = '2';
-// Firestore rules for analytics_tracking_tokens
-// Merge this block into your existing firestore.rules if you have one
+// IMPORTANT: If you deployed a previous version that ONLY had analytics_tracking_tokens,
+// it would have broken access to the users collection. Your role would default to 'user'
+// and you'd be redirected from /traffic. This file now includes all required rules.
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Users: auth needs to read/write for role (ensureUserDocument)
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Analytics: written by all visitors (client-side), read by Traffic panel (auth)
+    match /analytics_visitors/{docId} {
+      allow read: if request.auth != null;
+      allow create, update: if true;
+    }
+    match /analytics_pageviews/{docId} {
+      allow read: if request.auth != null;
+      allow create, update: if true;
+    }
+    match /analytics_events/{docId} {
+      allow read: if request.auth != null;
+      allow create, update: if true;
+    }
+    match /analytics_page_times/{docId} {
+      allow read: if request.auth != null;
+      allow create, update: if true;
+    }
+    match /analytics_media_clicks/{docId} {
+      allow read: if request.auth != null;
+      allow create, update: if true;
+    }
+    match /analytics_stats/{docId} {
+      allow read: if request.auth != null;
+      allow create, update: if true;
+    }
+
+    // Enquiries: contact form writes, Traffic panel reads
+    match /enquiries/{docId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+    }
+
+    // Tracking tokens: anyone can read (for ?ref= lookup), auth can create
     match /analytics_tracking_tokens/{tokenId} {
       allow read: if true;
       allow create: if request.auth != null;
