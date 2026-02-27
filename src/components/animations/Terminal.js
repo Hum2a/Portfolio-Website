@@ -17,7 +17,8 @@ const Terminal = ({
   showPrompt = true,
   autoStart = true,
   className = '',
-  title = 'Terminal'
+  title = 'Terminal',
+  onComplete,
 }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [completedLines, setCompletedLines] = useState([]);
@@ -27,6 +28,7 @@ const Terminal = ({
     if (!autoStart || lines.length === 0) {
       setCompletedLines(lines);
       setIsComplete(true);
+      if (onComplete) onComplete();
       return;
     }
 
@@ -42,8 +44,9 @@ const Terminal = ({
       return () => clearTimeout(timer);
     } else {
       setIsComplete(true);
+      if (onComplete) onComplete();
     }
-  }, [currentLineIndex, lines, typingSpeed, autoStart]);
+  }, [currentLineIndex, lines, typingSpeed, autoStart, onComplete]);
 
   return (
     <div className={`terminal ${className}`}>

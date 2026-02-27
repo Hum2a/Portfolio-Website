@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -11,6 +11,7 @@ import "../styles/Homepage.css";
 const Homepage = () => {
   const navigate = useNavigate();
   const [showTerminal, setShowTerminal] = useState(false);
+  const featuredRef = useRef(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -25,6 +26,12 @@ const Homepage = () => {
       setShowTerminal(true);
     }, 150);
   };
+
+  const handleTerminalComplete = useCallback(() => {
+    setTimeout(() => {
+      featuredRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 500);
+  }, []);
 
   return (
     <div className="homepage">
@@ -64,6 +71,7 @@ const Homepage = () => {
                   autoStart={true}
                   className="homepage-terminal"
                   title="about.js"
+                  onComplete={handleTerminalComplete}
                 />
               )}
             </div>
@@ -107,7 +115,9 @@ const Homepage = () => {
         </motion.div>
       </motion.div>
 
-      <HomepageFeaturedProjects />
+      <div ref={featuredRef}>
+        <HomepageFeaturedProjects />
+      </div>
       <GitHubSection />
     </div>
   );
