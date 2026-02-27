@@ -220,7 +220,7 @@ const Contact = () => {
               "};"
             ]}
             prompt=">"
-            typingSpeed={80}
+            typingSpeed={35}
             autoStart={true}
             className="contact-terminal"
             title="contact.js"
