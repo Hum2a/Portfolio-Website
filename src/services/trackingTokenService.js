@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc, increment, collection, query, orderBy, getDocs, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, increment, collection, query, orderBy, getDocs, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
 
 const TOKENS_COLLECTION = 'analytics_tracking_tokens';
@@ -131,4 +131,39 @@ export async function listTrackingTokens() {
   const q = query(ref, orderBy('createdAt', 'desc'));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+/**
+ * Update tracking token attributes (source, medium, campaign, label)
+ * @param {string} tokenId - Document ID (the token string)
+ * @param {Object} attrs - { source?, medium?, campaign?, label? }
+ */
+export async function updateTrackingToken(tokenId, { source, medium, campaign, label }) {
+  if (!tokenId || typeof tokenId !== 'string') {
+    throw new Error('Token ID is required');
+  }
+  const tokenRef = doc(db, TOKENS_COLLECTION, tokenId.toLowerCase().trim());
+  const snap = await getDoc(tokenRef);
+  if (!snap.exists()) {
+    throw new Error('Token not found');
+  }
+  const updates = {};
+  if (source !== undefined) updates.source = source ? source.toLowerCase().trim() : null;
+  if (medium !== undefined) updates.medium = medium ? medium.toLowerCase().trim() : null;
+  if (campaign !== undefined) updates.campaign = campaign ? campaign.toLowerCase().trim() : null;
+  if (label !== undefined) updates.label = label || null;
+  if (Object.keys(updates).length === 0) return;
+  await updateDoc(tokenRef, updates);
+}
+
+/**
+ * Delete a tracking token
+ * @param {string} tokenId - Document ID (the token string)
+ */
+export async function deleteTrackingToken(tokenId) {
+  if (!tokenId || typeof tokenId !== 'string') {
+    throw new Error('Token ID is required');
+  }
+  const tokenRef = doc(db, TOKENS_COLLECTION, tokenId.toLowerCase().trim());
+  await deleteDoc(tokenRef);
 }

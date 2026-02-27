@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTraffic } from '../TrafficContext';
+import { ReferenceCodesList } from './ReferenceCodesList';
 
 export function UrlGeneratorSection() {
   const {
@@ -148,6 +149,12 @@ export function UrlGeneratorSection() {
                 {refUrlError && <span className="ref-url-error">{refUrlError}</span>}
               </div>
             ) : null}
+
+            {isRefMode && (
+              <div className="ref-codes-section">
+                <ReferenceCodesList />
+              </div>
+            )}
 
             {displayUrl && (
               <div className="generated-url-section">

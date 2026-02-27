@@ -59,6 +59,9 @@ export function useTrafficData(role) {
   const [generatedRefUrl, setGeneratedRefUrl] = useState('');
   const [refUrlLoading, setRefUrlLoading] = useState(false);
   const [refUrlError, setRefUrlError] = useState('');
+  const [trackingTokens, setTrackingTokens] = useState([]);
+  const [trackingTokensLoading, setTrackingTokensLoading] = useState(false);
+  const [trackingTokensError, setTrackingTokensError] = useState('');
   const [selectedVisitorAnonymizedIP, setSelectedVisitorAnonymizedIP] = useState(null);
   const [visitorSortBy, setVisitorSortBy] = useState('lastVisit');
   const [visitorSortDirection, setVisitorSortDirection] = useState('desc');
@@ -94,6 +97,27 @@ export function useTrafficData(role) {
   useEffect(() => {
     if (role === 'humza') loadData();
   }, [role, loadData]);
+
+  const loadTrackingTokens = useCallback(async () => {
+    setTrackingTokensLoading(true);
+    setTrackingTokensError('');
+    try {
+      const { listTrackingTokens } = await import('../../services/trackingTokenService');
+      const tokens = await listTrackingTokens();
+      setTrackingTokens(tokens);
+    } catch (err) {
+      setTrackingTokensError(err?.message || 'Failed to load reference codes');
+      setTrackingTokens([]);
+    } finally {
+      setTrackingTokensLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (role === 'humza' && showUrlGenerator) {
+      loadTrackingTokens();
+    }
+  }, [role, showUrlGenerator, loadTrackingTokens]);
 
   const toDate = useCallback((timestamp) => {
     if (!timestamp) return null;
@@ -806,13 +830,34 @@ export function useTrafficData(role) {
       const baseUrl = urlGeneratorData.baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
       const url = `${baseUrl.replace(/\/$/, '')}/?ref=${token}`;
       setGeneratedRefUrl(url);
+      loadTrackingTokens();
     } catch (err) {
       setRefUrlError(err?.message || 'Failed to create link');
       setGeneratedRefUrl('');
     } finally {
       setRefUrlLoading(false);
     }
-  }, [urlGeneratorData]);
+  }, [urlGeneratorData, loadTrackingTokens]);
+
+  const updateTrackingTokenHandler = useCallback(async (tokenId, attrs) => {
+    try {
+      const { updateTrackingToken } = await import('../../services/trackingTokenService');
+      await updateTrackingToken(tokenId, attrs);
+      await loadTrackingTokens();
+    } catch (err) {
+      throw err;
+    }
+  }, [loadTrackingTokens]);
+
+  const deleteTrackingTokenHandler = useCallback(async (tokenId) => {
+    try {
+      const { deleteTrackingToken } = await import('../../services/trackingTokenService');
+      await deleteTrackingToken(tokenId);
+      await loadTrackingTokens();
+    } catch (err) {
+      throw err;
+    }
+  }, [loadTrackingTokens]);
 
   const copyToClipboard = useCallback(async () => {
     const toCopy = urlGeneratorMode === 'ref' ? generatedRefUrl : generatedUrl;
@@ -840,6 +885,22 @@ export function useTrafficData(role) {
     setGeneratedRefUrl('');
     setRefUrlError('');
   }, []);
+
+  const getRefTokenDrillThrough = useCallback((tokenId) => {
+    if (!tokenId || !visitors?.length) return [];
+    const sessionMatchesRef = (s) => {
+      if (s.campaign?.refToken === tokenId) return true;
+      // Fallback for sessions stored before refToken was added (landingPage contains ?ref=tokenId)
+      const lp = s.campaign?.landingPage || '';
+      return lp.includes('ref=' + tokenId);
+    };
+    return visitors
+      .filter((v) => v.sessions?.some(sessionMatchesRef))
+      .map((v) => ({
+        ...v,
+        matchingSessions: v.sessions?.filter(sessionMatchesRef) || [],
+      }));
+  }, [visitors]);
 
   return {
     // Data
@@ -879,6 +940,13 @@ export function useTrafficData(role) {
     refUrlError,
     createRefLink,
     copiedUrl,
+    trackingTokens,
+    trackingTokensLoading,
+    trackingTokensError,
+    loadTrackingTokens,
+    updateTrackingToken: updateTrackingTokenHandler,
+    deleteTrackingToken: deleteTrackingTokenHandler,
+    getRefTokenDrillThrough,
     selectedVisitorAnonymizedIP,
     setSelectedVisitorAnonymizedIP,
     // Filtered & computed

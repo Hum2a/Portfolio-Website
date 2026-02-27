@@ -111,6 +111,7 @@ const getCampaignData = async () => {
           term: null,
           content: null,
           landingPage,
+          refToken, // Store for drill-through (which IPs/sessions used this link)
         };
       }
     } catch (e) {
