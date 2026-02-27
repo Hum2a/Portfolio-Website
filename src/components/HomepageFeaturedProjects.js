@@ -48,8 +48,12 @@ export function HomepageFeaturedProjects() {
           {featuredProjects.map((project, index) => (
             <motion.div
               key={project.id}
-              className="featured-card"
-              style={{ background: project.gradient || 'var(--bg-tertiary)' }}
+              className={`featured-card ${project.id ? `featured-card--${project.id}` : ''}`}
+              style={{
+                background: project.name === 'BakesByOlayide'
+                  ? 'linear-gradient(135deg, #000000 0%, #171717 50%, #0a0a0a 100%)'
+                  : (project.gradient || 'var(--bg-tertiary)'),
+              }}
               variants={cardVariants}
               custom={index + 1}
               whileHover={{ y: -8, transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] } }}

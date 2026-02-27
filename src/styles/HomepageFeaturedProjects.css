@@ -65,8 +65,8 @@
 
 .featured-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
   margin-bottom: 3rem;
 }
 
@@ -95,7 +95,7 @@
 
 .featured-card-visual {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,17 +106,24 @@
 .featured-card-logo {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-  transform: scale(1.4);
-  transform-origin: center center;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
 }
 
 .featured-card:hover .featured-card-logo {
-  transform: scale(1.5);
+  transform: scale(1.05);
+}
+
+/* Breathapplyser: logo sizing - scale down to fit better */
+.featured-card--breathapplyser .featured-card-logo {
+  transform: scale(0.78);
+}
+
+.featured-card--breathapplyser:hover .featured-card-logo {
+  transform: scale(0.82);
 }
 
 .featured-card-content {
