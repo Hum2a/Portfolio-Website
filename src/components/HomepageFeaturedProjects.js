@@ -9,7 +9,7 @@ const cardVariants = {
   visible: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.28, delay: i * 0.04, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 };
 
@@ -17,7 +17,7 @@ const sectionVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
+    transition: { staggerChildren: 0.04, delayChildren: 0.06 },
   },
 };
 
@@ -51,7 +51,7 @@ export function HomepageFeaturedProjects() {
               className="featured-card"
               variants={cardVariants}
               custom={index + 1}
-              whileHover={{ y: -8, transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
+              whileHover={{ y: -8, transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] } }}
             >
               <Link to={project.route} className="featured-card-link">
                 <div

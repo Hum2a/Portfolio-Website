@@ -9,7 +9,7 @@ const cardVariants = {
   visible: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, delay: i * 0.06, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.28, delay: i * 0.03, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 };
 
@@ -88,7 +88,7 @@ export function GitHubSection() {
         className="github-inner"
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.28 }}
       >
         <div className="github-header">
           <div className="github-header-top">
@@ -130,7 +130,7 @@ export function GitHubSection() {
                 initial="hidden"
                 animate={isInView ? 'visible' : 'hidden'}
                 custom={index}
-                whileHover={{ y: -6, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } }}
+                whileHover={{ y: -6, transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] } }}
               >
                 <div className="github-card-header">
                   <h3 className="github-card-name">{repo.name}</h3>

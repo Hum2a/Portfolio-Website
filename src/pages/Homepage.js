@@ -16,14 +16,14 @@ const Homepage = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
+      transition: { duration: 0.35, ease: "easeOut" },
     },
   };
 
   const handleTypewriterComplete = () => {
     setTimeout(() => {
       setShowTerminal(true);
-    }, 500);
+    }, 150);
   };
 
   return (
@@ -41,7 +41,7 @@ const Homepage = () => {
             <h1 className="homepage-title">
               <Typewriter
                 text="Humza Butt"
-                speed={100}
+                speed={45}
                 showCursor={true}
                 onComplete={handleTypewriterComplete}
                 codeStyle={false}
@@ -60,7 +60,7 @@ const Homepage = () => {
                     "};"
                   ]}
                   prompt=">"
-                  typingSpeed={60}
+                  typingSpeed={35}
                   autoStart={true}
                   className="homepage-terminal"
                   title="about.js"
@@ -74,7 +74,7 @@ const Homepage = () => {
           className="homepage-cta"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 0.6 }}
+          transition={{ delay: 0.8, duration: 0.3 }}
         >
           <motion.button
             whileHover={{
@@ -94,13 +94,13 @@ const Homepage = () => {
           className="homepage-scroll-hint"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.8, duration: 0.6 }}
+          transition={{ delay: 1.2, duration: 0.3 }}
         >
           <span className="scroll-hint-text">Scroll to see featured projects</span>
           <motion.span
             className="scroll-hint-chevron"
             animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
           >
             ↓
           </motion.span>

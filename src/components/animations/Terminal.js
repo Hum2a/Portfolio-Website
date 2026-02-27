@@ -32,7 +32,7 @@ const Terminal = ({
 
     if (currentLineIndex < lines.length) {
       const currentLine = lines[currentLineIndex] || '';
-      const delay = typingSpeed * currentLine.length + 300;
+      const delay = typingSpeed * currentLine.length + 120;
       
       const timer = setTimeout(() => {
         setCompletedLines([...lines.slice(0, currentLineIndex + 1)]);
