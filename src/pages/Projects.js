@@ -97,20 +97,18 @@ const Projects = () => {
             <motion.div
               key={project.id}
               className="project-card"
+              style={{ background: project.gradient || 'var(--bg-tertiary)' }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.05, ease: [0.4, 0, 0.2, 1] }}
               whileHover={{ y: -5, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } }}
             >
               <Link to={project.route} className="project-link">
-                <div 
-                  className="project-image-container"
-                  style={{ background: project.gradient || 'var(--bg-tertiary)' }}
-                >
+                <div className="project-image-container">
                   <img
                     src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
                     alt={`${project.name} Logo`}
-                    className={`project-logo ${project.name === "BakesByOlayide" ? "bakesbyolayide-logo" : ""}`}
+                    className="project-logo"
                   />
                 </div>
                 <div className="project-content">

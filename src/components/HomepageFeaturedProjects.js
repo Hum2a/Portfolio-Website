@@ -49,19 +49,17 @@ export function HomepageFeaturedProjects() {
             <motion.div
               key={project.id}
               className="featured-card"
+              style={{ background: project.gradient || 'var(--bg-tertiary)' }}
               variants={cardVariants}
               custom={index + 1}
               whileHover={{ y: -8, transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] } }}
             >
               <Link to={project.route} className="featured-card-link">
-                <div
-                  className="featured-card-visual"
-                  style={{ background: project.gradient || 'var(--bg-tertiary)' }}
-                >
+                <div className="featured-card-visual">
                   <img
                     src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
                     alt={project.name}
-                    className={`featured-card-logo ${project.name === 'BakesByOlayide' ? 'bakes-logo' : ''}`}
+                    className="featured-card-logo"
                   />
                 </div>
                 <div className="featured-card-content">

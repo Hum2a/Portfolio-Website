@@ -161,8 +161,7 @@
 }
 
 .project-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -189,7 +188,7 @@
 
 .project-image-container {
   width: 100%;
-  height: 200px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -200,36 +199,36 @@
 .project-logo {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
+  transform: scale(1.4);
+  transform-origin: center center;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 1rem;
   z-index: 1;
 }
 
 .project-card:hover .project-logo {
-  transform: scale(1.05);
-}
-
-.bakesbyolayide-logo {
-  object-fit: contain;
-  width: 90%;
-  height: 90%;
-  padding: 1rem;
+  transform: scale(1.5);
 }
 
 .project-content {
-  padding: 1.5rem;
+  padding: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(
+    to top,
+    var(--bg-secondary) 0%,
+    var(--bg-secondary) 50%,
+    transparent 100%
+  );
 }
 
 .project-name {
   font-size: var(--text-xl);
   font-weight: var(--font-semibold);
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
   font-family: var(--font-primary);
 }
 
@@ -237,7 +236,7 @@
   font-size: var(--text-sm);
   color: var(--text-secondary);
   line-height: var(--leading-relaxed);
-  margin-bottom: 1rem;
+  margin-bottom: 0.65rem;
   flex: 1;
 }
 
@@ -284,6 +283,10 @@
   .projects-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .project-content {
+    padding: 0.875rem;
   }
 
   .tag-filter {
