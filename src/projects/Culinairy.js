@@ -87,7 +87,7 @@ const CulinAIry = () => {
               "};"
             ]}
             prompt=">"
-            typingSpeed={80}
+            typingSpeed={35}
             autoStart={true}
             className="project-terminal"
             title="project.js"

@@ -67,7 +67,7 @@ const About = () => {
               "};"
             ]}
             prompt=">"
-            typingSpeed={35}
+            typingSpeed={22}
             autoStart={true}
             className="about-terminal"
             title="about.js"
@@ -185,7 +185,7 @@ const About = () => {
               "// through technology, I strive to make a difference."
             ]}
             prompt=">"
-            typingSpeed={35}
+            typingSpeed={22}
             autoStart={true}
             className="about-footer-terminal"
             title="connect.js"

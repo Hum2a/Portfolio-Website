@@ -67,7 +67,7 @@ const Homepage = () => {
                     "};"
                   ]}
                   prompt=">"
-                  typingSpeed={35}
+                  typingSpeed={22}
                   autoStart={true}
                   className="homepage-terminal"
                   title="about.js"
