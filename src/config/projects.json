@@ -1,6 +1,18 @@
 {
   "projects": [
     {
+      "id": "monzo1pchallenge",
+      "name": "Monzo 1p Challenge Calculator",
+      "description": "Savings calculator inspired by the Monzo 1p challenge with 3 modes (Next N days, Month, Custom range), magic link auth, and PWA support",
+      "logo": "Monzo.png",
+      "gradient": "linear-gradient(135deg, #FF1154 0%, #00D3FF 50%, #FFD90F 100%)",
+      "route": "/monzo1pchallenge",
+      "tags": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Radix UI", "shadcn", "Prisma", "PostgreSQL", "Neon", "Auth.js", "Resend", "Zod", "Cloudflare Workers", "OpenNext", "Vitest", "Playwright", "PWA", "FinTech"],
+      "visible": true,
+      "featured": true,
+      "priority": 1
+    },
+    {
       "id": "breathapplyser",
       "name": "Breathapplyser",
       "description": "Modern breathalyzer app with advanced tracking, caffeine monitoring, social features, and comprehensive analytics (2026). Includes legacy version (2024).",
