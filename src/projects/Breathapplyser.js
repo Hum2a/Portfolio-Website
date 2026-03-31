@@ -17,10 +17,8 @@ const Breathapplyser = () => {
   const legacyVideos = [
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/Homepage.mp4`, caption: "Homepage" },
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/TapToStartDrinking.mp4`, caption: "Tap to Start Drinking" },
-    { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/History.mp4`, caption: "History" },
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/Animated Charts.mp4`, caption: "Animated Charts" },
     { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/AnimatedSettings.mp4`, caption: "Animated Settings" },
-    { src: `${process.env.PUBLIC_URL}/videos/Breathapplyser/SettingsJumping.mp4`, caption: "Settings Jumping" },
   ];
 
   // V2 (2026) images
