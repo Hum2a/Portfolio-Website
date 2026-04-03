@@ -19,6 +19,7 @@ import PNGtoSVG from "../projects/PNGtoSVG";
 import DoppelganCar from "../projects/DoppelganCar";
 import Bgr8 from "../projects/Bgr8";
 import Monzo1pChallenge from "../projects/Monzo1pChallenge";
+import Recount from "../projects/Recount";
 import MinistryOfJustice from "../projects/MinistryOfJustice";
 import Flashcards from "../projects/Flashcards";
 import BakesByOlayide from "../pages/BakesByOlayide";
@@ -68,6 +69,7 @@ const AppRoutes = () => {
       <Route path="/doppelgancar" element={<DoppelganCar />} />
       <Route path="/bgr8" element={<Bgr8 />} />
       <Route path="/monzo1pchallenge" element={<Monzo1pChallenge />} />
+      <Route path="/recount" element={<Recount />} />
       <Route path="/ministryofjustice" element={<MinistryOfJustice />} />
       <Route path="/flashcards" element={<Flashcards />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />

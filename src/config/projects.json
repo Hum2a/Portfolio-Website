@@ -13,6 +13,18 @@
       "priority": 1
     },
     {
+      "id": "recount",
+      "name": "Recount",
+      "description": "Productivity suite: Chrome MV3 extension tracks time by domain; Next.js app for marketing, dashboard, and admin; REST API on Express and Cloudflare (Hono) with Supabase, Stripe, and AI reports",
+      "logo": "Recount.svg",
+      "gradient": "linear-gradient(135deg, #1a1a2e 0%, #3B82F6 45%, #6366F1 100%)",
+      "route": "/recount",
+      "tags": ["Next.js", "TypeScript", "React", "Tailwind CSS", "Chrome Extension", "Express", "Hono", "Cloudflare Workers", "Supabase", "PostgreSQL", "Stripe", "OpenAI", "Resend", "Zustand", "Recharts", "Vitest", "SaaS", "Productivity"],
+      "visible": true,
+      "featured": true,
+      "priority": 1
+    },
+    {
       "id": "breathapplyser",
       "name": "Breathapplyser",
       "description": "Modern breathalyzer app with advanced tracking, caffeine monitoring, social features, and comprehensive analytics (2026). Includes legacy version (2024).",

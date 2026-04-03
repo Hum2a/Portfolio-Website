@@ -1,6 +1,6 @@
 rules_version = '2';
-// Portfolio Firestore rules: anonymous analytics + contact writes; reads and admin ops for role "humza" only.
-// Schema reference: .cursor/firestore-schema.md
+// Portfolio Firestore: analytics/contact are writable by anyone (logged in or not) so tracking always works;
+// reads + admin stay on role "humza". Schema notes: .cursor/firestore-schema.md
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -14,7 +14,6 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid == userId;
     }
 
-    // --- strings / primitives -------------------------------------------------
     function nonEmptyString(s, maxLen) {
       return s is string && s.size() > 0 && s.size() <= maxLen;
     }
@@ -23,11 +22,7 @@ service cloud.firestore {
       return s == null || (s is string && s.size() <= maxLen);
     }
 
-    function isEnv(v) {
-      return v == 'localhost' || v == 'production';
-    }
-
-    // --- users: self only; role fixed after create (promote humza in Console) ---
+    // --- users: self only; role fixed after create -----------------------------
     match /users/{userId} {
       allow get: if isSignedInUser(userId);
       allow list: if false;
@@ -52,11 +47,10 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // --- enquiries: create only for public; no public reads -------------------
+    // --- enquiries -------------------------------------------------------------
     match /enquiries/{enquiryId} {
       allow get, list: if isHumza();
 
-      // Allow whether or not the submitter is signed in (you may test the form while logged in).
       allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'enquiry', 'timestamp', 'status'])
         && nonEmptyString(request.resource.data.name, 200)
         && optionalString(request.resource.data.email, 320)
@@ -68,9 +62,9 @@ service cloud.firestore {
       allow update, delete: if isHumza();
     }
 
-    // --- tracking tokens: public get-by-id only (no listing); click bump ----
+    // --- tracking tokens: list only for humza; click bump for anyone ---------
     match /analytics_tracking_tokens/{tokenId} {
-      allow get: if tokenId.size() <= 32;
+      allow get: if tokenId.size() <= 64;
       allow list: if isHumza();
 
       allow create: if isHumza()
@@ -83,235 +77,67 @@ service cloud.firestore {
         && request.resource.data.clicks == 0
         && request.resource.data.createdAt is timestamp;
 
+      // Ref links must work whether the visitor is signed in or not.
       allow update: if isHumza()
         || (
-          request.auth == null
-          && resource != null
+          resource != null
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['clicks', 'lastUsedAt'])
           && request.resource.data.clicks is int
-          && request.resource.data.clicks >= resource.data.clicks
-          && request.resource.data.clicks <= resource.data.clicks + 25
+          && request.resource.data.clicks >= resource.data.get('clicks', 0)
+          && request.resource.data.clicks <= resource.data.get('clicks', 0) + 50
           && request.resource.data.lastUsedAt is timestamp
         );
 
       allow delete: if isHumza();
     }
 
-    // --- analytics_stats: fixed doc ids; unauth merge with bounded churn -----
+    // --- analytics_stats: permissive writes; humza reads ----------------------
     match /analytics_stats/{statId} {
       allow get, list: if isHumza();
-
-      allow create: if isHumza()
-        || (
-          request.auth == null
-          && statId in ['visitors', 'pages', 'events', 'page_times', 'media_clicks']
-          && request.resource.data.keys().size() <= 400
-        );
-
-      allow update: if isHumza()
-        || (
-          request.auth == null
-          && statId in ['visitors', 'pages', 'events', 'page_times', 'media_clicks']
-          && request.resource.data.keys().size() <= 400
-          && request.resource.data.diff(resource.data).affectedKeys().size() <= 40
-        );
-
+      allow create, update: if true;
       allow delete: if isHumza();
     }
 
-    // --- analytics_visitors + nested pageviews --------------------------------
+    // --- analytics_visitors + pageviews subcollection -------------------------
     match /analytics_visitors/{visitorDocId} {
       allow get, list: if isHumza();
-
-      allow create: if request.auth == null
-        && visitorDocId.size() <= 200
-        && request.resource.data.keys().hasOnly([
-          'visitorId', 'code', 'anonymizedIP', 'firstVisit', 'lastVisit', 'visits',
-          'deviceInfo', 'location', 'environment', 'sessions'
-        ])
-        && nonEmptyString(request.resource.data.visitorId, 80)
-        && optionalString(request.resource.data.code, 45)
-        && optionalString(request.resource.data.anonymizedIP, 80)
-        && request.resource.data.firstVisit is timestamp
-        && request.resource.data.lastVisit is timestamp
-        && request.resource.data.visits == 1
-        && request.resource.data.deviceInfo is map
-        && request.resource.data.deviceInfo.size() <= 45
-        && request.resource.data.location is map
-        && request.resource.data.location.size() <= 25
-        && isEnv(request.resource.data.environment)
-        && request.resource.data.sessions is list
-        && request.resource.data.sessions.size() <= 200;
-
-      allow update: if request.auth == null
-        && visitorDocId.size() <= 200
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'visitorId', 'code', 'anonymizedIP', 'lastVisit', 'visits',
-          'deviceInfo', 'location', 'environment', 'sessions'
-        ])
-        && optionalString(request.resource.data.visitorId, 80)
-        && optionalString(request.resource.data.code, 45)
-        && optionalString(request.resource.data.anonymizedIP, 80)
-        && request.resource.data.lastVisit is timestamp
-        && request.resource.data.visits is int
-        && request.resource.data.visits > 0
-        && request.resource.data.visits < 10000000
-        && request.resource.data.deviceInfo is map
-        && request.resource.data.deviceInfo.size() <= 45
-        && request.resource.data.location is map
-        && request.resource.data.location.size() <= 25
-        && isEnv(request.resource.data.environment)
-        && request.resource.data.sessions is list
-        && request.resource.data.sessions.size() <= 200;
-
+      allow create, update: if true;
       allow delete: if isHumza();
 
       match /pageviews/{pageViewId} {
         allow get, list: if isHumza();
-
-        allow create: if request.auth == null
-          && pageViewId.size() <= 500
-          && request.resource.data.keys().hasOnly(['path', 'title', 'timestamp', 'pageViewId'])
-          && optionalString(request.resource.data.path, 2000)
-          && optionalString(request.resource.data.title, 500)
-          && request.resource.data.timestamp is timestamp
-          && optionalString(request.resource.data.pageViewId, 500);
-
-        allow update, delete: if isHumza();
+        allow create, update: if true;
+        allow delete: if isHumza();
       }
     }
 
-    // --- analytics_pageviews --------------------------------------------------
     match /analytics_pageviews/{pageViewId} {
       allow get, list: if isHumza();
-
-      allow create: if request.auth == null
-        && pageViewId.size() <= 500
-        && request.resource.data.keys().hasOnly([
-          'visitorId', 'anonymizedIP', 'sessionId', 'path', 'title', 'referrer',
-          'timestamp', 'environment', 'timeSpent', 'pageViewId'
-        ])
-        && optionalString(request.resource.data.visitorId, 80)
-        && optionalString(request.resource.data.anonymizedIP, 80)
-        && optionalString(request.resource.data.sessionId, 80)
-        && optionalString(request.resource.data.path, 2000)
-        && optionalString(request.resource.data.title, 500)
-        && optionalString(request.resource.data.referrer, 2000)
-        && request.resource.data.timestamp is timestamp
-        && isEnv(request.resource.data.environment)
-        && request.resource.data.timeSpent is int
-        && request.resource.data.timeSpent >= 0
-        && request.resource.data.timeSpent <= 86400
-        && optionalString(request.resource.data.pageViewId, 500);
-
-      allow update: if request.auth == null
-        && pageViewId.size() <= 500
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['timeSpent', 'endTime', 'updatedAt'])
-        && request.resource.data.timeSpent is int
-        && request.resource.data.timeSpent >= 0
-        && request.resource.data.timeSpent <= 86400
-        && request.resource.data.endTime is timestamp
-        && request.resource.data.updatedAt is timestamp;
-
+      allow create, update: if true;
       allow delete: if isHumza();
     }
 
-    // --- analytics_page_times -------------------------------------------------
     match /analytics_page_times/{timeDocId} {
       allow get, list: if isHumza();
-
-      allow create, update: if request.auth == null
-        && timeDocId.size() <= 600
-        && request.resource.data.keys().hasOnly([
-          'pageViewId', 'visitorId', 'anonymizedIP', 'sessionId', 'path',
-          'timeSpent', 'startTime', 'endTime', 'timestamp', 'environment'
-        ])
-        && optionalString(request.resource.data.pageViewId, 500)
-        && optionalString(request.resource.data.visitorId, 80)
-        && optionalString(request.resource.data.anonymizedIP, 80)
-        && optionalString(request.resource.data.sessionId, 80)
-        && optionalString(request.resource.data.path, 2000)
-        && request.resource.data.timeSpent is int
-        && request.resource.data.timeSpent >= 0
-        && request.resource.data.timeSpent <= 86400
-        && request.resource.data.startTime is timestamp
-        && request.resource.data.endTime is timestamp
-        && request.resource.data.timestamp is timestamp
-        && isEnv(request.resource.data.environment);
-
+      allow create, update: if true;
       allow delete: if isHumza();
     }
 
-    // --- analytics_events -----------------------------------------------------
     match /analytics_events/{eventId} {
       allow get, list: if isHumza();
-
-      allow create: if request.auth == null
-        && eventId.size() <= 500
-        && request.resource.data.keys().hasOnly([
-          'category', 'action', 'label', 'value', 'path', 'timestamp',
-          'sessionId', 'visitorId', 'anonymizedIP', 'environment'
-        ])
-        && nonEmptyString(request.resource.data.category, 120)
-        && nonEmptyString(request.resource.data.action, 120)
-        && optionalString(request.resource.data.label, 500)
-        && (request.resource.data.value == null
-          || request.resource.data.value is int
-          || request.resource.data.value is float)
-        && optionalString(request.resource.data.path, 2000)
-        && request.resource.data.timestamp is timestamp
-        && optionalString(request.resource.data.sessionId, 80)
-        && optionalString(request.resource.data.visitorId, 80)
-        && optionalString(request.resource.data.anonymizedIP, 80)
-        && isEnv(request.resource.data.environment);
-
-      allow update, delete: if isHumza();
+      allow create, update: if true;
+      allow delete: if isHumza();
     }
 
-    // --- analytics_media_clicks -----------------------------------------------
     match /analytics_media_clicks/{clickId} {
       allow get, list: if isHumza();
-
-      allow create: if request.auth == null
-        && clickId.size() <= 500
-        && request.resource.data.keys().hasOnly([
-          'visitorId', 'anonymizedIP', 'sessionId', 'mediaType', 'mediaSrc',
-          'mediaCaption', 'projectPath', 'timestamp', 'environment'
-        ])
-        && optionalString(request.resource.data.visitorId, 80)
-        && optionalString(request.resource.data.anonymizedIP, 80)
-        && optionalString(request.resource.data.sessionId, 80)
-        && nonEmptyString(request.resource.data.mediaType, 40)
-        && nonEmptyString(request.resource.data.mediaSrc, 2000)
-        && optionalString(request.resource.data.mediaCaption, 500)
-        && optionalString(request.resource.data.projectPath, 2000)
-        && request.resource.data.timestamp is timestamp
-        && isEnv(request.resource.data.environment);
-
-      allow update, delete: if isHumza();
+      allow create, update: if true;
+      allow delete: if isHumza();
     }
 
-    // --- analytics_sessions (session end beacon) -----------------------------
     match /analytics_sessions/{sessionId} {
       allow get, list: if isHumza();
-
-      allow create, update: if request.auth == null
-        && sessionId.size() <= 80
-        && request.resource.data.keys().hasOnly([
-          'sessionId', 'visitorId', 'anonymizedIP', 'startTime', 'endTime',
-          'duration', 'path', 'environment'
-        ])
-        && optionalString(request.resource.data.sessionId, 80)
-        && optionalString(request.resource.data.visitorId, 80)
-        && optionalString(request.resource.data.anonymizedIP, 80)
-        && request.resource.data.startTime is timestamp
-        && request.resource.data.endTime is timestamp
-        && request.resource.data.duration is number
-        && request.resource.data.duration >= 0
-        && request.resource.data.duration <= 864000
-        && optionalString(request.resource.data.path, 2000)
-        && isEnv(request.resource.data.environment);
-
+      allow create, update: if true;
       allow delete: if isHumza();
     }
   }
