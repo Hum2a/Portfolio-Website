@@ -25,6 +25,18 @@
       "priority": 1
     },
     {
+      "id": "imposter",
+      "name": "Imposter",
+      "description": "Real-time multiplayer word imposter party game: Discord Activity (voice-channel embedded) and standalone web/PWA, one React client and authoritative PartyKit server",
+      "logo": "Imposter.svg",
+      "gradient": "linear-gradient(135deg, #0a0a0f 0%, #5c1010 45%, #ff3b3b 100%)",
+      "route": "/imposter",
+      "tags": ["React", "TypeScript", "Vite", "Tailwind CSS", "PartyKit", "WebSocket", "Discord", "Embedded App SDK", "Cloudflare Pages", "Cloudflare Workers", "Supabase", "PostgreSQL", "PWA", "i18next", "Playwright", "Game", "Realtime"],
+      "visible": true,
+      "featured": true,
+      "priority": 1
+    },
+    {
       "id": "breathapplyser",
       "name": "Breathapplyser",
       "description": "Modern breathalyzer app with advanced tracking, caffeine monitoring, social features, and comprehensive analytics (2026). Includes legacy version (2024).",
