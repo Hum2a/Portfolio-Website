@@ -13,6 +13,18 @@
       "priority": 1
     },
     {
+      "id": "brute-forcer",
+      "name": "Brute-forcer",
+      "description": "Privacy-focused password entropy and crack-time estimator—client-side math, no real brute forcing, embedded live demo",
+      "logo": "BruteForcer.svg",
+      "gradient": "linear-gradient(135deg, #0f172a 0%, #047857 45%, #0ea5e9 100%)",
+      "route": "/tools/brute-forcer",
+      "tags": ["Next.js", "React", "TypeScript", "Tailwind CSS", "OpenNext", "Cloudflare Workers", "Privacy", "Security", "WebApp"],
+      "visible": true,
+      "featured": true,
+      "priority": 1
+    },
+    {
       "id": "recount",
       "name": "Recount",
       "description": "Productivity suite: Chrome MV3 extension tracks time by domain; Next.js app for marketing, dashboard, and admin; REST API on Express and Cloudflare (Hono) with Supabase, Stripe, and AI reports",

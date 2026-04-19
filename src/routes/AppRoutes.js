@@ -23,6 +23,7 @@ import Recount from "../projects/Recount";
 import Imposter from "../projects/Imposter";
 import MinistryOfJustice from "../projects/MinistryOfJustice";
 import Flashcards from "../projects/Flashcards";
+import BruteForcer from "../projects/BruteForcer";
 import BakesByOlayide from "../pages/BakesByOlayide";
 import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
@@ -74,6 +75,7 @@ const AppRoutes = () => {
       <Route path="/imposter" element={<Imposter />} />
       <Route path="/ministryofjustice" element={<MinistryOfJustice />} />
       <Route path="/flashcards" element={<Flashcards />} />
+      <Route path="/tools/brute-forcer" element={<BruteForcer />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
       <Route path="/humza-login" element={<HumzaLogin />} />
       <Route path="/github" element={<GitHub />} />
