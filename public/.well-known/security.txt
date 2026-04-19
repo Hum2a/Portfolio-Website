@@ -1,0 +1,5 @@
+# RFC 9116 — update Expires yearly; see https://securitytxt.org/
+Contact: mailto:Humzabutt1711@hotmail.com
+Expires: 2027-04-19T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://humza-butt.space/.well-known/security.txt
