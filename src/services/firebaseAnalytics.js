@@ -244,24 +244,37 @@ const getDeviceInfo = () => {
 // Track visitor
 const trackVisitor = async () => {
   try {
-    // Get IP address
-    const ipResponse = await fetch('https://api.ipify.org?format=json');
-    const ipData = await ipResponse.json();
-    const ipAddress = ipData.ip;
-    
-    // Anonymize IP by removing last octet
-    const ipParts = ipAddress.split('.');
-    const anonymizedIP = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.0`;
-    
-    // Store anonymizedIP in localStorage for use in other functions
-    localStorage.setItem('anonymizedIP', anonymizedIP);
-    
     // Generate visitor ID if not exists
     let visitorId = localStorage.getItem('visitorId');
     if (!visitorId) {
       visitorId = uuidv4();
       localStorage.setItem('visitorId', visitorId);
     }
+    
+    // Generate or reuse anonymized IP. If external IP lookup fails, keep tracking with a stable fallback.
+    let ipAddress = null;
+    let anonymizedIP = localStorage.getItem('anonymizedIP');
+    try {
+      const ipResponse = await fetch('https://api.ipify.org?format=json');
+      const ipData = await ipResponse.json();
+      if (ipData?.ip) {
+        ipAddress = ipData.ip;
+        const ipParts = ipAddress.split('.');
+        if (ipParts.length === 4) {
+          anonymizedIP = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.0`;
+        }
+      }
+    } catch (error) {
+      console.warn('IP lookup failed, using fallback visitor key.', error);
+    }
+    
+    if (!anonymizedIP) {
+      const fallbackHash = CryptoJS.SHA256(visitorId).toString().substring(0, 12);
+      anonymizedIP = `anon_${fallbackHash}`;
+    }
+    
+    // Store anonymizedIP in localStorage for use in other functions
+    localStorage.setItem('anonymizedIP', anonymizedIP);
     
     // Generate session ID
     const sessionId = uuidv4();
@@ -282,7 +295,7 @@ const trackVisitor = async () => {
     
     try {
       // Try to get location from IPInfo if API token is available
-      if (apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN' && apiKeys.ipinfoToken !== '') {
+      if (ipAddress && apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN' && apiKeys.ipinfoToken !== '') {
         const locationResponse = await fetch(`https://ipinfo.io/${ipAddress}/json?token=${apiKeys.ipinfoToken}`);
         if (locationResponse.ok) {
           const locationData = await locationResponse.json();
@@ -302,7 +315,7 @@ const trackVisitor = async () => {
       }
       
       // Fallback to free IP geolocation API if IPInfo not available or failed
-      if (userLocation.city === "Unknown" && userLocation.country === "Unknown") {
+      if (ipAddress && userLocation.city === "Unknown" && userLocation.country === "Unknown") {
         try {
           // Try bigdatacloud.net first (more reliable, no rate limits for basic use)
           const bigDataResponse = await fetch(`https://api.bigdatacloud.net/data/ip-geolocation?ip=${ipAddress}`);
@@ -327,7 +340,7 @@ const trackVisitor = async () => {
       }
       
       // Try ip-api.com as another fallback (may have rate limits/403 errors)
-      if (userLocation.city === "Unknown" && userLocation.country === "Unknown") {
+      if (ipAddress && userLocation.city === "Unknown" && userLocation.country === "Unknown") {
         try {
           const freeApiResponse = await fetch(`https://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`);
           if (freeApiResponse.ok && freeApiResponse.status === 200) {
