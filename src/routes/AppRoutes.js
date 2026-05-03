@@ -8,6 +8,7 @@ import About from "../pages/About";
 import Breathapplyser from "../projects/Breathapplyser";
 import BiasLens from "../projects/BiasLens";
 import LifeSmart from "../projects/LifeSmart";
+import NetworthTool from "../projects/NetworthTool";
 import Mentage from "../projects/Mentage";
 import Therabot from "../projects/Therabot";
 import CulinAIry from "../projects/Culinairy";
@@ -61,6 +62,7 @@ const AppRoutes = () => {
       <Route path="/breathapplyser-v2" element={<Breathapplyser />} />
       <Route path="/biaslens" element={<BiasLens />} />
       <Route path="/lifesmart" element={<LifeSmart />} />
+      <Route path="/networth-tool" element={<NetworthTool />} />
       <Route path="/mentage" element={<Mentage />} />
       <Route path="/therabot" element={<Therabot />} />
       <Route path="/culinary" element={<CulinAIry />} />

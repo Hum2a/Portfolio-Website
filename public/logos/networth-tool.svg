@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Networth Tool">
+  <defs>
+    <linearGradient id="nw-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070d1a"/>
+      <stop offset="55%" stop-color="#0f1d32"/>
+      <stop offset="100%" stop-color="#0fbfb8"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="url(#nw-bg)"/>
+  <path fill="none" stroke="#14d4cc" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+    d="M28 88 L48 52 L68 72 L88 36 L100 48"/>
+  <circle cx="28" cy="88" r="5" fill="#f59e0b"/>
+  <circle cx="100" cy="48" r="5" fill="#34d399"/>
+</svg>

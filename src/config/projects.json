@@ -253,6 +253,46 @@
       "dateUpdated": "2026-05-02"
     },
     {
+      "id": "networth-tool",
+      "name": "Networth Tool",
+      "description": "Mobile-first LifeSmart PWA for net worth, learning paths, and financial literacy—React, Workers, Neon.",
+      "logo": "networth-tool.svg",
+      "gradient": "linear-gradient(135deg, #070d1a 0%, #0f1d32 45%, #0fbfb8 100%)",
+      "route": "/networth-tool",
+      "tags": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS",
+        "PWA",
+        "Hono",
+        "Cloudflare Workers",
+        "PostgreSQL",
+        "Neon",
+        "Better Auth",
+        "Stripe",
+        "FinTech",
+        "EdTech",
+        "Vitest",
+        "GitHub Actions",
+        "Drizzle ORM",
+        "Workbox",
+        "Row Level Security",
+        "WebApp",
+        "B2C",
+        "LifeSmart"
+      ],
+      "visible": true,
+      "featured": false,
+      "priority": 2,
+      "categories": [
+        "website",
+        "mobile"
+      ],
+      "dateAdded": "2026-05-02",
+      "dateUpdated": "2026-05-02"
+    },
+    {
       "id": "bgr8",
       "name": "Bgr8",
       "description": "Comprehensive mentoring and community platform with intelligent mentor-mentee matching",
