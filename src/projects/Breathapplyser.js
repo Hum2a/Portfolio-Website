@@ -4,8 +4,14 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/Breathapplyser.css";
+
+/** In-browser web app */
+const BREATHAPPLYSER_WEB_APP_URL = "https://breathapplyser.online";
+/** Downloads, store links, marketing */
+const BREATHAPPLYSER_DOWNLOAD_URL = "https://download.breathapplyser.online";
 
 const Breathapplyser = () => {
   const [version, setVersion] = useState('v2'); // Default to V2 (2026)
@@ -211,13 +217,22 @@ const Breathapplyser = () => {
                 </h2>
                 <div className="project-links">
                   <a 
-                    href="https://download-breathapplyser.onrender.com" 
+                    href={BREATHAPPLYSER_WEB_APP_URL} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="project-link"
                   >
                     <span className="link-icon">🌐</span>
-                    <span className="link-text">Official Website (App Store & Google Play Links)</span>
+                    <span className="link-text">Web app (breathapplyser.online)</span>
+                  </a>
+                  <a 
+                    href={BREATHAPPLYSER_DOWNLOAD_URL} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="project-link"
+                  >
+                    <span className="link-icon">📲</span>
+                    <span className="link-text">Downloads &amp; stores (download.breathapplyser.online)</span>
                   </a>
                   <a 
                     href="https://github.com/Breathapplyser" 
@@ -229,6 +244,46 @@ const Breathapplyser = () => {
                     <span className="link-text">GitHub Organization</span>
                   </a>
                 </div>
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                aria-labelledby="breathapplyser-web-app-heading"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.46 }}
+                key="live-web-v2"
+              >
+                <h2 className="section-title" id="breathapplyser-web-app-heading">
+                  <span className="code-comment">{'//'}</span> Web app
+                </h2>
+                <p className="section-description">
+                  Interactive web client at breathapplyser.online (lazy-loaded iframe).
+                </p>
+                <ProjectSiteEmbed
+                  url={BREATHAPPLYSER_WEB_APP_URL}
+                  iframeTitle="Breathapplyser web app"
+                />
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                aria-labelledby="breathapplyser-download-heading"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.47 }}
+                key="live-download-v2"
+              >
+                <h2 className="section-title" id="breathapplyser-download-heading">
+                  <span className="code-comment">{'//'}</span> Downloads &amp; marketing
+                </h2>
+                <p className="section-description">
+                  Store links and marketing page at download.breathapplyser.online.
+                </p>
+                <ProjectSiteEmbed
+                  url={BREATHAPPLYSER_DOWNLOAD_URL}
+                  iframeTitle="Breathapplyser downloads"
+                />
               </motion.section>
 
               <motion.section
@@ -340,13 +395,22 @@ const Breathapplyser = () => {
                 </h2>
                 <div className="project-links">
                   <a 
-                    href="https://download-breathapplyser.onrender.com" 
+                    href={BREATHAPPLYSER_WEB_APP_URL} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="project-link"
                   >
                     <span className="link-icon">🌐</span>
-                    <span className="link-text">Official Website (App Store & Google Play Links)</span>
+                    <span className="link-text">Web app (breathapplyser.online)</span>
+                  </a>
+                  <a 
+                    href={BREATHAPPLYSER_DOWNLOAD_URL} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="project-link"
+                  >
+                    <span className="link-icon">📲</span>
+                    <span className="link-text">Downloads &amp; stores</span>
                   </a>
                   <a 
                     href="https://github.com/Breathapplyser" 

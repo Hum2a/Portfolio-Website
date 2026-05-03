@@ -4,9 +4,10 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import "../styles/project-shared.css";
 
-const WEB_APP_URL = "https://imposter-game.pages.dev";
+const WEB_APP_URL = "https://imposter-game.site";
 
 const Imposter = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -119,6 +120,26 @@ const Imposter = () => {
             >
               Play on web →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="imposter-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="imposter-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              The web / PWA build loads below when you scroll (lazy iframe). If the frame stays blank,
+              the host may block embedding—use Play on web above.
+            </p>
+            <ProjectSiteEmbed
+              url={WEB_APP_URL}
+              iframeTitle="Imposter — word party game"
+            />
           </motion.section>
 
           <motion.section

@@ -4,8 +4,11 @@ import Navbar from '../components/Navbar';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Terminal from '../components/animations/Terminal';
 import CodeBlock from '../components/animations/CodeBlock';
+import ProjectSiteEmbed from '../components/ProjectSiteEmbed';
 import '../styles/project-shared.css';
 import '../styles/Flashcards.css';
+
+const FLASHCARDS_URL = 'https://flashcards-pj01.onrender.com';
 
 const Flashcards = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -141,13 +144,29 @@ const Flashcards = () => {
               copyable={false}
             />
             <a
-              href="https://flashcards-pj01.onrender.com"
+              href={FLASHCARDS_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="flashcards-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="flashcards-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Hosted app preview (lazy-loaded).
+            </p>
+            <ProjectSiteEmbed url={FLASHCARDS_URL} iframeTitle="Flashcards" />
           </motion.section>
 
           <motion.section

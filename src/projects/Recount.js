@@ -4,14 +4,18 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import "../styles/project-shared.css";
 
+const RECOUNT_WEB_URL = "https://recount.world";
+/** Replace when the Chrome Web Store listing is ready */
 const Recount = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const projectInfo = `const recount = {
   name: "Recount",
   type: "Productivity (extension + web + API)",
+  url: "https://recount.world",
   description:
     "Passive time tracking by domain, dashboard & billing, staff admin",
   stack: [
@@ -109,6 +113,64 @@ const Recount = () => {
               showLineNumbers={true}
               copyable={false}
             />
+            <a
+              href={RECOUNT_WEB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link-button"
+            >
+              Visit recount.world →
+            </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="recount-links-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="recount-links-heading">
+              <span className="code-comment">//</span> Links
+            </h2>
+            <p className="section-description">
+              Web app and dashboard live at recount.world. Chrome Web Store link will be added when
+              the listing is published.
+            </p>
+            <div className="recount-links-row">
+              <a
+                href={RECOUNT_WEB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="external-link-button"
+              >
+                Open recount.world →
+              </a>
+              <button
+                type="button"
+                className="recount-store-soon"
+                disabled
+                title="Replace with Chrome Web Store URL when ready"
+              >
+                Chrome Web Store (coming soon)
+              </button>
+            </div>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="recount-live-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.34 }}
+          >
+            <h2 className="section-title" id="recount-live-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Lazy-loaded preview of the deployed web app (use a new tab if framing is blocked).
+            </p>
+            <ProjectSiteEmbed url={RECOUNT_WEB_URL} iframeTitle="Recount web app" />
           </motion.section>
 
           <motion.section

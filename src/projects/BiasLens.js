@@ -4,9 +4,12 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/BiasLens.css";
+
+const BIAS_LENS_URL = "https://biaslens.vercel.app";
 
 const BiasLens = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -116,13 +119,29 @@ const BiasLens = () => {
               copyable={false}
             />
             <a
-              href="https://biaslens.vercel.app"
+              href={BIAS_LENS_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="biaslens-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="biaslens-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Embedded deployment (lazy-loaded). Open in a new tab if the preview is blocked.
+            </p>
+            <ProjectSiteEmbed url={BIAS_LENS_URL} iframeTitle="BiasLens" />
           </motion.section>
 
           <motion.section

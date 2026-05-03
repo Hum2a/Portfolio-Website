@@ -6,8 +6,74 @@ import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
 import "../styles/About.css";
 
+/** Narrative blurbs; six are chosen at random per visit (see {@link JOURNEY_VISIBLE_COUNT}). */
+const PROFESSIONAL_JOURNEY_SPOTLIGHTS = [
+  {
+    name: "Breathapplyser",
+    description: "Android and iOS app tracking alcohol intake",
+    metaLabel: "features",
+    metaItems: ["Real-time BAC calculation", "Drink tracking"],
+  },
+  {
+    name: "TheraBot",
+    description: "Conversational AI mental health support chatbot",
+    metaLabel: "platforms",
+    metaItems: ["WhatsApp", "React Web"],
+  },
+  {
+    name: "CulinAIry",
+    description: "AI-powered recipe generator for personalized meals",
+    metaLabel: "tech",
+    metaItems: ["AI", "React", "Firebase"],
+  },
+  {
+    name: "BiasLens",
+    description: "News aggregator analyzing sentiment and political bias",
+    metaLabel: "tech",
+    metaItems: ["NLP", "Next.js", "Python"],
+  },
+  {
+    name: "LifeSmart",
+    description: "Financial literacy tools with stock market simulators",
+    metaLabel: "features",
+    metaItems: ["Asset simulators", "Educational tools"],
+  },
+  {
+    name: "Gremlins",
+    description: "Playful Windows tray companion with configurable gremlins and quiet hours",
+    metaLabel: "tech",
+    metaItems: ["C#", ".NET", "WPF", "React"],
+  },
+  {
+    name: "Recount",
+    description: "Productivity suite: extension and dashboard for time and focus",
+    metaLabel: "tech",
+    metaItems: ["Chrome MV3", "Next.js", "Supabase"],
+  },
+  {
+    name: "Brute-forcer",
+    description: "Client-side password entropy and crack-time estimator",
+    metaLabel: "features",
+    metaItems: ["Privacy-first", "Live demo"],
+  },
+];
+
+const JOURNEY_VISIBLE_COUNT = 6;
+
+function shuffleCopy(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 const About = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [journeySpotlights] = useState(() =>
+    shuffleCopy(PROFESSIONAL_JOURNEY_SPOTLIGHTS).slice(0, JOURNEY_VISIBLE_COUNT)
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,59 +145,28 @@ const About = () => {
             <span className="code-comment">//</span> Professional Journey
           </h2>
           <p className="section-description">
-            Here are some of the innovative projects I've worked on:
+            Here are some of the innovative projects I've worked on — this section shows six at
+            a time, picked at random (refresh to reshuffle):
           </p>
           <div className="projects-list">
-            <div className="project-item">
-              <span className="project-keyword">const</span>{" "}
-              <span className="project-name">Breathapplyser</span> = {"{"}
-              <br />
-              <span className="project-property">  description</span>: "Android and iOS app tracking alcohol intake",
-              <br />
-              <span className="project-property">  features</span>: ["Real-time BAC calculation", "Drink tracking"],
-              <br />
-              {"}"};
-            </div>
-            <div className="project-item">
-              <span className="project-keyword">const</span>{" "}
-              <span className="project-name">TheraBot</span> = {"{"}
-              <br />
-              <span className="project-property">  description</span>: "Conversational AI mental health support chatbot",
-              <br />
-              <span className="project-property">  platforms</span>: ["WhatsApp", "React Web"],
-              <br />
-              {"}"};
-            </div>
-            <div className="project-item">
-              <span className="project-keyword">const</span>{" "}
-              <span className="project-name">CulinAIry</span> = {"{"}
-              <br />
-              <span className="project-property">  description</span>: "AI-powered recipe generator for personalized meals",
-              <br />
-              <span className="project-property">  tech</span>: ["AI", "React", "Firebase"],
-              <br />
-              {"}"};
-            </div>
-            <div className="project-item">
-              <span className="project-keyword">const</span>{" "}
-              <span className="project-name">BiasLens</span> = {"{"}
-              <br />
-              <span className="project-property">  description</span>: "News aggregator analyzing sentiment and political bias",
-              <br />
-              <span className="project-property">  tech</span>: ["NLP", "Next.js", "Python"],
-              <br />
-              {"}"};
-            </div>
-            <div className="project-item">
-              <span className="project-keyword">const</span>{" "}
-              <span className="project-name">LifeSmart</span> = {"{"}
-              <br />
-              <span className="project-property">  description</span>: "Financial literacy tools with stock market simulators",
-              <br />
-              <span className="project-property">  features</span>: ["Asset simulators", "Educational tools"],
-              <br />
-              {"}"};
-            </div>
+            {journeySpotlights.map((spotlight) => (
+              <div className="project-item" key={spotlight.name}>
+                <span className="project-keyword">const</span>{" "}
+                <span className="project-name">{spotlight.name}</span> = {"{"}
+                <br />
+                <span className="project-property">  description</span>: "{spotlight.description}",
+                <br />
+                <span className="project-property">
+                  {"  "}
+                  {spotlight.metaLabel}
+                </span>
+                :{" "}
+                {JSON.stringify(spotlight.metaItems).replace(/","/g, '", "')}
+                ,
+                <br />
+                {"}"};
+              </div>
+            ))}
           </div>
         </motion.div>
 

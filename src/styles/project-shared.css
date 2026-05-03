@@ -293,6 +293,24 @@
   box-shadow: var(--shadow-glow);
 }
 
+.recount-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.recount-store-soon {
+  font-family: var(--font-code);
+  font-size: var(--text-sm);
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  border: 1px dashed var(--border-primary);
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .project-container {

@@ -4,9 +4,24 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/LifeSmart.css";
+
+/** Hub / marketing entry */
+const LIFESMART_HUB_URL = "https://home.lifesmartfinance.com";
+
+/** Deployed URL per tool (SPZeroFinance subdomains) */
+const LIFESMART_TOOL_URLS = {
+  spzero: "https://spzero.lifesmartfinance.com",
+  "spzero-calculator": "https://investing-tool.lifesmartfinance.com",
+  misc: "https://home.lifesmartfinance.com",
+  "financial-quiz": "https://financial-quiz.lifesmartfinance.com",
+  "asset-market-simulation": "https://home.lifesmartfinance.com",
+  "budget-tool": "https://lifebalance.lifesmartfinance.com",
+  "investment-calculator": "https://investing-tool.lifesmartfinance.com",
+};
 
 const projects = [
   {
@@ -220,6 +235,9 @@ const LifeSmart = () => {
     };
   }, []);
 
+  const toolLiveUrl =
+    LIFESMART_TOOL_URLS[selectedProject.id] ?? LIFESMART_HUB_URL;
+
   return (
     <div className="project-page">
       {isMobile ? <HamburgerMenu /> : <Navbar />}
@@ -250,7 +268,7 @@ const LifeSmart = () => {
               "  client: 'SPZeroFinance',",
               "  mainProject: 'SpZero Learning Platform',",
               "  stack: 'React + TypeScript + Cloudflare',",
-              "  url: 'https://lifesmart.onrender.com'",
+              "  hub: 'https://home.lifesmartfinance.com',",
               "};"
             ]}
             prompt=">"
@@ -278,12 +296,12 @@ const LifeSmart = () => {
               copyable={false}
             />
             <a
-              href="https://lifesmart.onrender.com"
+              href={LIFESMART_HUB_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
-              Visit the Website →
+              Open LifeSmart hub →
             </a>
           </motion.section>
 
@@ -353,6 +371,36 @@ const LifeSmart = () => {
                 </div>
               </div>
             )}
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="lifesmart-live-preview-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            key={`live-${selectedProject.id}`}
+          >
+            <h2 className="section-title" id="lifesmart-live-preview-heading">
+              <span className="code-comment">//</span> Live preview
+            </h2>
+            <p className="section-description">
+              Deployed instance for <strong>{selectedProject.title}</strong> (
+              {toolLiveUrl.replace(/^https:\/\//, "")}). Other tools use their own subdomains—pick a
+              tool above to switch the preview.
+            </p>
+            <a
+              href={toolLiveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link-button"
+            >
+              Open in new tab →
+            </a>
+            <ProjectSiteEmbed
+              url={toolLiveUrl}
+              iframeTitle={`LifeSmart — ${selectedProject.title}`}
+            />
           </motion.section>
 
           <motion.section

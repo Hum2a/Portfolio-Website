@@ -1,5 +1,60 @@
 import projectsData from '../config/projects.json';
 
+/** Display order for category filter chips */
+export const PROJECT_CATEGORY_ORDER = ['website', 'mobile', 'desktop', 'extension'];
+
+/** Labels and styling keys for project surfaces */
+export const PROJECT_CATEGORY_META = {
+  website: {
+    id: 'website',
+    label: 'Websites',
+    shortLabel: 'Web',
+    hint: 'Web apps, dashboards & PWAs',
+  },
+  mobile: {
+    id: 'mobile',
+    label: 'Mobile apps',
+    shortLabel: 'Mobile',
+    hint: 'iOS, Android & cross-platform',
+  },
+  desktop: {
+    id: 'desktop',
+    label: 'Desktop apps',
+    shortLabel: 'Desktop',
+    hint: 'Windows, macOS & native shells',
+  },
+  extension: {
+    id: 'extension',
+    label: 'Browser extensions',
+    shortLabel: 'Extension',
+    hint: 'Chrome & Chromium MV3',
+  },
+};
+
+/**
+ * Format ISO date string (YYYY-MM-DD) for display. Returns null if missing/invalid.
+ */
+export const formatProjectDate = (isoDate) => {
+  if (!isoDate || typeof isoDate !== 'string') return null;
+  const d = new Date(`${isoDate.trim()}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+/**
+ * Categories for a project (defaults for legacy entries)
+ */
+export const getProjectCategories = (project) => {
+  if (project.categories && project.categories.length > 0) {
+    return project.categories;
+  }
+  return ['website'];
+};
+
 /**
  * Get all projects
  * @returns {Array} All projects
@@ -21,7 +76,14 @@ export const getVisibleProjects = () => {
  * @returns {Array} Featured projects
  */
 export const getFeaturedProjects = () => {
-  return projectsData.projects.filter(project => project.featured && project.visible);
+  return projectsData.projects
+    .filter((project) => project.featured && project.visible)
+    .sort((a, b) => {
+      const pa = a.priority ?? 99;
+      const pb = b.priority ?? 99;
+      if (pa !== pb) return pa - pb;
+      return a.name.localeCompare(b.name);
+    });
 };
 
 /**
@@ -64,6 +126,35 @@ export const filterProjectsByTags = (selectedTags) => {
   
   return getVisibleProjects().filter(project =>
     selectedTags.every(tag => project.tags.includes(tag))
+  );
+};
+
+/**
+ * Filter by surface types (OR). Empty selection = no category filter.
+ * @param {Array} projects - Projects to filter
+ * @param {string[]} selectedCategoryIds - e.g. ['website','mobile']
+ */
+export const filterProjectsByCategories = (projects, selectedCategoryIds) => {
+  if (!selectedCategoryIds || selectedCategoryIds.length === 0) {
+    return projects;
+  }
+  return projects.filter((project) => {
+    const cats = getProjectCategories(project);
+    return selectedCategoryIds.some((id) => cats.includes(id));
+  });
+};
+
+/**
+ * Visible projects filtered by category chips (OR) and tech tags (AND across selected tags).
+ */
+export const filterProjectsCombined = (selectedCategoryIds, selectedTags) => {
+  let list = getVisibleProjects();
+  list = filterProjectsByCategories(list, selectedCategoryIds);
+  if (!selectedTags || selectedTags.length === 0) {
+    return list;
+  }
+  return list.filter((project) =>
+    selectedTags.every((tag) => project.tags.includes(tag))
   );
 };
 

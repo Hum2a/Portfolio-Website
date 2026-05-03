@@ -4,9 +4,12 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/DadJokeGenerator.css";
+
+const DAD_JOKE_SITE_URL = "https://dad-joke-generator-68xz.onrender.com";
 
 const DadJokeGenerator = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,13 +99,32 @@ const DadJokeGenerator = () => {
               copyable={false}
             />
             <a
-              href="https://dad-joke-generator-68xz.onrender.com"
+              href={DAD_JOKE_SITE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="dadjoke-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="dadjoke-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Deployed app (lazy-loaded iframe).
+            </p>
+            <ProjectSiteEmbed
+              url={DAD_JOKE_SITE_URL}
+              iframeTitle="Dad Joke Generator"
+            />
           </motion.section>
 
           <motion.section

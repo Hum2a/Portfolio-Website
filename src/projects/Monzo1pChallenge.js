@@ -4,8 +4,11 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import "../styles/project-shared.css";
 import "../styles/Monzo1pChallenge.css";
+
+const MONZO_APP_URL = "https://monzo-1p-challenge-calculator.online";
 
 const Monzo1pChallenge = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -127,7 +130,7 @@ const Monzo1pChallenge = () => {
               copyable={false}
             />
             <a
-              href="https://monzo-1p-challenge-calculator.humzab1711.workers.dev"
+              href={MONZO_APP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
@@ -148,23 +151,11 @@ const Monzo1pChallenge = () => {
             <p className="section-description">
               Try the calculator below—configure your challenge settings and see your savings projection.
             </p>
-            <div className="calculator-embed-wrapper">
-              <iframe
-                src="https://monzo-1p-challenge-calculator.humzab1711.workers.dev"
-                title="Monzo 1p Challenge Calculator"
-                className="calculator-iframe"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                loading="lazy"
-              />
-            </div>
-            <a
-              href="https://monzo-1p-challenge-calculator.humzab1711.workers.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="external-link-button external-link-button--secondary"
-            >
-              Open in new tab →
-            </a>
+            <ProjectSiteEmbed
+              url={MONZO_APP_URL}
+              iframeTitle="Monzo 1p Challenge Calculator"
+              useSandbox
+            />
           </motion.section>
 
           <motion.section
