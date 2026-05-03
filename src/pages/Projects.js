@@ -10,6 +10,7 @@ import {
   PROJECT_CATEGORY_META,
   getProjectCategories,
   getVisibleProjects,
+  formatProjectDate,
 } from "../data/projects";
 import "../styles/Projects.css";
 
@@ -223,6 +224,27 @@ const Projects = () => {
                         })}
                       </div>
                       <h2 className="project-tile__name">{project.name}</h2>
+                      {(formatProjectDate(project.dateAdded) ||
+                        formatProjectDate(project.dateUpdated)) && (
+                        <p className="project-tile__dates" aria-label="Project timeline">
+                          {formatProjectDate(project.dateAdded) && (
+                            <span className="project-tile__date">
+                              <span className="project-tile__date-label">Added</span>
+                              <time dateTime={project.dateAdded}>
+                                {formatProjectDate(project.dateAdded)}
+                              </time>
+                            </span>
+                          )}
+                          {formatProjectDate(project.dateUpdated) && (
+                            <span className="project-tile__date">
+                              <span className="project-tile__date-label">Updated</span>
+                              <time dateTime={project.dateUpdated}>
+                                {formatProjectDate(project.dateUpdated)}
+                              </time>
+                            </span>
+                          )}
+                        </p>
+                      )}
                       <p className="project-tile__desc">{project.description}</p>
                       <div className="project-tile__tech">
                         {project.tags.slice(0, 5).map((tag) => (

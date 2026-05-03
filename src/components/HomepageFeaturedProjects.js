@@ -1,7 +1,12 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { getFeaturedProjects, PROJECT_CATEGORY_META, getProjectCategories } from '../data/projects';
+import {
+  getFeaturedProjects,
+  PROJECT_CATEGORY_META,
+  getProjectCategories,
+  formatProjectDate,
+} from '../data/projects';
 import '../styles/HomepageFeaturedProjects.css';
 
 const cardVariants = {
@@ -84,6 +89,27 @@ export function HomepageFeaturedProjects() {
                       })}
                     </div>
                     <h3 className="featured-card-name">{project.name}</h3>
+                    {(formatProjectDate(project.dateAdded) ||
+                      formatProjectDate(project.dateUpdated)) && (
+                      <p className="featured-card-dates">
+                        {formatProjectDate(project.dateAdded) && (
+                          <span className="featured-card-date">
+                            Added{' '}
+                            <time dateTime={project.dateAdded}>
+                              {formatProjectDate(project.dateAdded)}
+                            </time>
+                          </span>
+                        )}
+                        {formatProjectDate(project.dateUpdated) && (
+                          <span className="featured-card-date">
+                            Updated{' '}
+                            <time dateTime={project.dateUpdated}>
+                              {formatProjectDate(project.dateUpdated)}
+                            </time>
+                          </span>
+                        )}
+                      </p>
+                    )}
                     <p className="featured-card-desc">{project.description}</p>
                     <div className="featured-card-tags">
                       {project.tags.slice(0, 4).map((tag, i) => (

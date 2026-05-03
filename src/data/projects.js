@@ -32,6 +32,20 @@ export const PROJECT_CATEGORY_META = {
 };
 
 /**
+ * Format ISO date string (YYYY-MM-DD) for display. Returns null if missing/invalid.
+ */
+export const formatProjectDate = (isoDate) => {
+  if (!isoDate || typeof isoDate !== 'string') return null;
+  const d = new Date(`${isoDate.trim()}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+/**
  * Categories for a project (defaults for legacy entries)
  */
 export const getProjectCategories = (project) => {
