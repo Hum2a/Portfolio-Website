@@ -4,8 +4,11 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/Breathapplyser.css";
+
+const BREATHAPPLYSER_SITE_URL = "https://download-breathapplyser.onrender.com";
 
 const Breathapplyser = () => {
   const [version, setVersion] = useState('v2'); // Default to V2 (2026)
@@ -211,7 +214,7 @@ const Breathapplyser = () => {
                 </h2>
                 <div className="project-links">
                   <a 
-                    href="https://download-breathapplyser.onrender.com" 
+                    href={BREATHAPPLYSER_SITE_URL} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="project-link"
@@ -229,6 +232,26 @@ const Breathapplyser = () => {
                     <span className="link-text">GitHub Organization</span>
                   </a>
                 </div>
+              </motion.section>
+
+              <motion.section
+                className="project-section"
+                aria-labelledby="breathapplyser-live-site-heading"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.47 }}
+                key="live-site-v2"
+              >
+                <h2 className="section-title" id="breathapplyser-live-site-heading">
+                  <span className="code-comment">{'//'}</span> Live site
+                </h2>
+                <p className="section-description">
+                  Official downloads / store links page (lazy-loaded iframe).
+                </p>
+                <ProjectSiteEmbed
+                  url={BREATHAPPLYSER_SITE_URL}
+                  iframeTitle="Breathapplyser downloads"
+                />
               </motion.section>
 
               <motion.section
@@ -340,7 +363,7 @@ const Breathapplyser = () => {
                 </h2>
                 <div className="project-links">
                   <a 
-                    href="https://download-breathapplyser.onrender.com" 
+                    href={BREATHAPPLYSER_SITE_URL} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="project-link"

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Terminal from '../components/animations/Terminal';
 import CodeBlock from '../components/animations/CodeBlock';
+import ProjectSiteEmbed from '../components/ProjectSiteEmbed';
 import useMediaTracking from '../hooks/useMediaTracking';
 import '../styles/project-shared.css';
 import '../styles/Bgr8.css';
@@ -74,6 +75,8 @@ const mediaSection = {
   ],
   videos: []
 };
+
+const BGR8_URL = 'https://bgr8.com';
 
 export default function Bgr8() {
   const [activeMediaType, setActiveMediaType] = useState('images');
@@ -174,13 +177,29 @@ export default function Bgr8() {
               copyable={false}
             />
             <a
-              href="https://bgr8.com"
+              href={BGR8_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="bgr8-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="bgr8-live-site-heading">
+              <span className="code-comment">{'//'}</span> Live site
+            </h2>
+            <p className="section-description">
+              Production platform (lazy-loaded iframe).
+            </p>
+            <ProjectSiteEmbed url={BGR8_URL} iframeTitle="Bgr8" />
           </motion.section>
 
           <motion.section

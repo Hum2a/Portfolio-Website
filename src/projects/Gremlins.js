@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/Gremlins.css";
@@ -17,13 +18,6 @@ const Gremlins = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [selectedImage, setSelectedImage] = useState(null);
   const { trackMediaClick } = useMediaTracking();
-
-  const embedWrapRef = useRef(null);
-  const shouldLoadIframe = useInView(embedWrapRef, {
-    once: true,
-    margin: "120px",
-    amount: 0.05,
-  });
 
   const media = [
     { type: "image", src: img("Gremlins 1.png"), caption: "Gremlins UI — primary view" },
@@ -220,36 +214,16 @@ const Gremlins = () => {
               portfolio.
             </p>
 
-            <div ref={embedWrapRef} className="gremlins-site-embed-card">
-              <div className="gremlins-site-frame-wrap">
-                {!shouldLoadIframe && (
-                  <div className="gremlins-site-deferred-placeholder">
-                    Scroll to load the site preview (deferred for performance).
-                  </div>
-                )}
-
-                {shouldLoadIframe && (
-                  <iframe
-                    src={GREMLINS_SITE_URL}
-                    title="Gremlins marketing site"
-                    className="gremlins-site-iframe"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                )}
-              </div>
-            </div>
-
-            <a
-              href={GREMLINS_SITE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="external-link-button external-link-button--secondary"
-              onClick={() => trackMediaClick("link", GREMLINS_SITE_URL, "gremlins.site embed footer")}
-            >
-              Open gremlins.site in a new tab →
-            </a>
+            <ProjectSiteEmbed
+              url={GREMLINS_SITE_URL}
+              iframeTitle="Gremlins marketing site"
+              useSandbox
+              newTabLabel="Open gremlins.site in a new tab →"
+              secondaryLinkProps={{
+                onClick: () =>
+                  trackMediaClick("link", GREMLINS_SITE_URL, "gremlins.site embed footer"),
+              }}
+            />
           </motion.section>
 
           <motion.section

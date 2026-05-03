@@ -4,8 +4,11 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import "../styles/project-shared.css";
 import "../styles/BakesByOlayide.css";
+
+const BAKES_SITE_URL = "https://bakesbyolayide.co.uk";
 
 const BakesByOlayide = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -93,13 +96,29 @@ const BakesByOlayide = () => {
               copyable={false}
             />
             <a
-              href="https://bakesbyolayide.co.uk"
+              href={BAKES_SITE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="bakes-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="bakes-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Storefront preview (lazy-loaded iframe).
+            </p>
+            <ProjectSiteEmbed url={BAKES_SITE_URL} iframeTitle="BakesByOlayide" />
           </motion.section>
 
           <motion.section

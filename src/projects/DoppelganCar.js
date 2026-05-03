@@ -4,9 +4,12 @@ import HamburgerMenu from "../components/HamburgerMenu";
 import Navbar from "../components/Navbar";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/DoppelganCar.css";
+
+const DOPPELGAN_CAR_URL = "https://doppelgang-car.vercel.app";
 
 const DoppelganCar = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -107,13 +110,29 @@ const DoppelganCar = () => {
               copyable={false}
             />
             <a
-              href="https://doppelgang-car.vercel.app"
+              href={DOPPELGAN_CAR_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="doppelgancar-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="doppelgancar-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Deployed app (lazy-loaded iframe).
+            </p>
+            <ProjectSiteEmbed url={DOPPELGAN_CAR_URL} iframeTitle="Doppelgan-Car" />
           </motion.section>
 
           <motion.section

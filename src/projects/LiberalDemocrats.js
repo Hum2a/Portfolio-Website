@@ -4,9 +4,12 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/LiberalDemocrats.css";
+
+const LDMF_URL = "https://ldmf.onrender.com";
 
 const LiberalDemocrats = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -112,13 +115,29 @@ const LiberalDemocrats = () => {
               copyable={false}
             />
             <a
-              href="https://ldmf.onrender.com"
+              href={LDMF_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="ldmf-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="ldmf-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Deployed site (lazy-loaded iframe).
+            </p>
+            <ProjectSiteEmbed url={LDMF_URL} iframeTitle="LDMF" />
           </motion.section>
 
           <motion.section

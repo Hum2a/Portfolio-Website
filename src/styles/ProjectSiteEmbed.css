@@ -1,0 +1,55 @@
+/* Shared lazy-loaded site iframe (project detail pages) */
+@import './project-shared.css';
+
+.project-site-embed-card {
+  position: relative;
+  width: 100%;
+  margin-top: 0.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-lg);
+}
+
+.project-site-embed-frame-wrap {
+  position: relative;
+  width: 100%;
+  min-height: min(680px, 85vh);
+}
+
+.project-site-embed-iframe {
+  width: 100%;
+  height: min(680px, 85vh);
+  min-height: 560px;
+  border: none;
+  display: block;
+  background: var(--bg-primary);
+}
+
+.project-site-embed-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min(680px, 85vh);
+  padding: 2rem;
+  color: var(--text-secondary);
+  font-family: var(--font-code);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .project-site-embed-frame-wrap {
+    min-height: min(720px, 88vh);
+  }
+
+  .project-site-embed-iframe {
+    height: min(720px, 88vh);
+    min-height: 600px;
+  }
+
+  .project-site-embed-placeholder {
+    min-height: min(720px, 88vh);
+  }
+}

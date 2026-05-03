@@ -4,9 +4,12 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/LifeSmart.css";
+
+const LIFESMART_URL = "https://lifesmart.onrender.com";
 
 const projects = [
   {
@@ -278,13 +281,32 @@ const LifeSmart = () => {
               copyable={false}
             />
             <a
-              href="https://lifesmart.onrender.com"
+              href={LIFESMART_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="lifesmart-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="lifesmart-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              SpZero / LifeSmart deployment (lazy-loaded). Use a new tab if the embed is blocked.
+            </p>
+            <ProjectSiteEmbed
+              url={LIFESMART_URL}
+              iframeTitle="LifeSmart — SpZero"
+            />
           </motion.section>
 
           <motion.section

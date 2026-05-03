@@ -4,9 +4,12 @@ import Navbar from "../components/Navbar";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
 import "../styles/project-shared.css";
 import "../styles/Therabot.css";
+
+const THERABOT_URL = "https://therabot-site.onrender.com";
 
 const Therabot = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -114,13 +117,29 @@ const Therabot = () => {
               copyable={false}
             />
             <a
-              href="https://therabot-site.onrender.com"
+              href={THERABOT_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="external-link-button"
             >
               Visit the Website →
             </a>
+          </motion.section>
+
+          <motion.section
+            className="project-section"
+            aria-labelledby="therabot-live-site-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32 }}
+          >
+            <h2 className="section-title" id="therabot-live-site-heading">
+              <span className="code-comment">//</span> Live site
+            </h2>
+            <p className="section-description">
+              Deployed site (lazy-loaded iframe).
+            </p>
+            <ProjectSiteEmbed url={THERABOT_URL} iframeTitle="Therabot" />
           </motion.section>
 
           <motion.section
