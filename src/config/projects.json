@@ -25,6 +25,35 @@
       "priority": 1
     },
     {
+      "id": "gremlins",
+      "name": "Gremlins",
+      "description": "Playful Windows tray companion—configurable gremlins, quiet hours, panic mode, and a local-first marketing site.",
+      "logo": "gremlin-icon.png",
+      "gradient": "linear-gradient(135deg, #0a0c10 0%, #2EA83E 45%, #7c4dff 100%)",
+      "route": "/gremlins",
+      "tags": [
+        "C#",
+        ".NET",
+        "WPF",
+        "React",
+        "TypeScript",
+        "Vite",
+        "Windows",
+        "Desktop",
+        "Win32",
+        "Cloudflare Workers",
+        "Microsoft Store",
+        "Tray App",
+        "Local-first",
+        "xUnit",
+        "Humor",
+        "Productivity"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 2
+    },
+    {
       "id": "recount",
       "name": "Recount",
       "description": "Productivity suite: Chrome MV3 extension tracks time by domain; Next.js app for marketing, dashboard, and admin; REST API on Express and Cloudflare (Hono) with Supabase, Stripe, and AI reports",
