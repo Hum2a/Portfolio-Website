@@ -7,10 +7,32 @@
       "logo": "Monzo.png",
       "gradient": "linear-gradient(135deg, #FF1154 0%, #00D3FF 50%, #FFD90F 100%)",
       "route": "/monzo1pchallenge",
-      "tags": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Radix UI", "shadcn", "Prisma", "PostgreSQL", "Neon", "Auth.js", "Resend", "Zod", "Cloudflare Workers", "OpenNext", "Vitest", "Playwright", "PWA", "FinTech"],
+      "tags": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Radix UI",
+        "shadcn",
+        "Prisma",
+        "PostgreSQL",
+        "Neon",
+        "Auth.js",
+        "Resend",
+        "Zod",
+        "Cloudflare Workers",
+        "OpenNext",
+        "Vitest",
+        "Playwright",
+        "PWA",
+        "FinTech"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "brute-forcer",
@@ -19,10 +41,23 @@
       "logo": "BruteForcer.svg",
       "gradient": "linear-gradient(135deg, #0f172a 0%, #047857 45%, #0ea5e9 100%)",
       "route": "/tools/brute-forcer",
-      "tags": ["Next.js", "React", "TypeScript", "Tailwind CSS", "OpenNext", "Cloudflare Workers", "Privacy", "Security", "WebApp"],
+      "tags": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "OpenNext",
+        "Cloudflare Workers",
+        "Privacy",
+        "Security",
+        "WebApp"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "gremlins",
@@ -51,7 +86,11 @@
       ],
       "visible": true,
       "featured": true,
-      "priority": 2
+      "priority": 2,
+      "categories": [
+        "desktop",
+        "website"
+      ]
     },
     {
       "id": "recount",
@@ -60,10 +99,33 @@
       "logo": "Recount.svg",
       "gradient": "linear-gradient(135deg, #1a1a2e 0%, #3B82F6 45%, #6366F1 100%)",
       "route": "/recount",
-      "tags": ["Next.js", "TypeScript", "React", "Tailwind CSS", "Chrome Extension", "Express", "Hono", "Cloudflare Workers", "Supabase", "PostgreSQL", "Stripe", "OpenAI", "Resend", "Zustand", "Recharts", "Vitest", "SaaS", "Productivity"],
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "React",
+        "Tailwind CSS",
+        "Chrome Extension",
+        "Express",
+        "Hono",
+        "Cloudflare Workers",
+        "Supabase",
+        "PostgreSQL",
+        "Stripe",
+        "OpenAI",
+        "Resend",
+        "Zustand",
+        "Recharts",
+        "Vitest",
+        "SaaS",
+        "Productivity"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "extension",
+        "website"
+      ]
     },
     {
       "id": "imposter",
@@ -72,10 +134,31 @@
       "logo": "Imposter.svg",
       "gradient": "linear-gradient(135deg, #0a0a0f 0%, #5c1010 45%, #ff3b3b 100%)",
       "route": "/imposter",
-      "tags": ["React", "TypeScript", "Vite", "Tailwind CSS", "PartyKit", "WebSocket", "Discord", "Embedded App SDK", "Cloudflare Pages", "Cloudflare Workers", "Supabase", "PostgreSQL", "PWA", "i18next", "Playwright", "Game", "Realtime"],
+      "tags": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS",
+        "PartyKit",
+        "WebSocket",
+        "Discord",
+        "Embedded App SDK",
+        "Cloudflare Pages",
+        "Cloudflare Workers",
+        "Supabase",
+        "PostgreSQL",
+        "PWA",
+        "i18next",
+        "Playwright",
+        "Game",
+        "Realtime"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "breathapplyser",
@@ -84,10 +167,33 @@
       "logo": "Breathapplyser.png",
       "gradient": "linear-gradient(135deg, #4A90E2 0%, #7BB3F0 50%, #A8D5F0 100%)",
       "route": "/breathapplyser",
-      "tags": ["Android", "IOS", "Flutter", "NativeApp", "Kotlin", "Java", "Swift", "Objective-C", "NeonDB", "PostgreSQL", "JavaScript", "Node.js", "React Native", "Firebase", "TypeScript", "BevTech", "Google Play", "App Store"],
+      "tags": [
+        "Android",
+        "IOS",
+        "Flutter",
+        "NativeApp",
+        "Kotlin",
+        "Java",
+        "Swift",
+        "Objective-C",
+        "NeonDB",
+        "PostgreSQL",
+        "JavaScript",
+        "Node.js",
+        "React Native",
+        "Firebase",
+        "TypeScript",
+        "BevTech",
+        "Google Play",
+        "App Store"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "mobile",
+        "website"
+      ]
     },
     {
       "id": "lifesmart",
@@ -96,10 +202,41 @@
       "logo": "LifeSmart.png",
       "gradient": "linear-gradient(135deg, #1e3a5f 0%, #1e40af 50%, #2563eb 100%)",
       "route": "/lifesmart",
-      "tags": ["TypeScript", "React.js", "Vite", "Tailwind CSS", "Hono", "Cloudflare Pages", "Cloudflare Workers", "PostgreSQL", "Drizzle ORM", "Better-auth", "Cloudflare R2", "Bunny", "Cloudflare AI", "Zustand", "Recharts", "Chart.js", "Wrangler", "Vitest", "Playwright", "Prettier", "React Icons", "Node.js", "Vue.js", "Firebase", "EdTech", "FinTech", "NeonDB"],
+      "tags": [
+        "TypeScript",
+        "React.js",
+        "Vite",
+        "Tailwind CSS",
+        "Hono",
+        "Cloudflare Pages",
+        "Cloudflare Workers",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "Better-auth",
+        "Cloudflare R2",
+        "Bunny",
+        "Cloudflare AI",
+        "Zustand",
+        "Recharts",
+        "Chart.js",
+        "Wrangler",
+        "Vitest",
+        "Playwright",
+        "Prettier",
+        "React Icons",
+        "Node.js",
+        "Vue.js",
+        "Firebase",
+        "EdTech",
+        "FinTech",
+        "NeonDB"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "bgr8",
@@ -108,10 +245,29 @@
       "logo": "Bgr8.png",
       "gradient": "linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #00D9FF 100%)",
       "route": "/bgr8",
-      "tags": ["TypeScript", "React.js", "Firebase", "Vite", "Cal.com API", "MentorAlgorithm", "EdTech", "WebApp", "React", "Node.js", "Firebase", "Vite", "Cal.com API", "MentorAlgorithm", "EdTech"],
+      "tags": [
+        "TypeScript",
+        "React.js",
+        "Firebase",
+        "Vite",
+        "Cal.com API",
+        "MentorAlgorithm",
+        "EdTech",
+        "WebApp",
+        "React",
+        "Node.js",
+        "Firebase",
+        "Vite",
+        "Cal.com API",
+        "MentorAlgorithm",
+        "EdTech"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "bakesbyolayide",
@@ -120,10 +276,21 @@
       "logo": "BakesByOlayide.png",
       "gradient": "linear-gradient(135deg, #FBBF24 0%, #FCD34D 50%, #FEF08A 100%)",
       "route": "/bakesbyolayide",
-      "tags": ["JavaScript", "React.js", "Node.js", "Firebase", "Stripe", "FoodTech", "E-commerce"],
+      "tags": [
+        "JavaScript",
+        "React.js",
+        "Node.js",
+        "Firebase",
+        "Stripe",
+        "FoodTech",
+        "E-commerce"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 2
+      "priority": 2,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "biaslens",
@@ -132,10 +299,22 @@
       "logo": "BiasLens.png",
       "gradient": "linear-gradient(135deg, #DC143C 0%, #8B0000 50%, #000000 100%)",
       "route": "/biaslens",
-      "tags": ["JavaScript", "Next.js", "Node.js", "Python", "Django", "Firebase", "Vercel", "MediaTech"],
+      "tags": [
+        "JavaScript",
+        "Next.js",
+        "Node.js",
+        "Python",
+        "Django",
+        "Firebase",
+        "Vercel",
+        "MediaTech"
+      ],
       "visible": true,
       "featured": true,
-      "priority": 1
+      "priority": 1,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "ministryofjustice",
@@ -144,10 +323,19 @@
       "logo": "MinistryofJustice.png",
       "gradient": "linear-gradient(135deg, #1E40AF 0%, #3B82F6 50%, #60A5FA 100%)",
       "route": "/ministryofjustice",
-      "tags": ["JavaScript", "React.js", "Node.js", "Firebase", "Render"],
+      "tags": [
+        "JavaScript",
+        "React.js",
+        "Node.js",
+        "Firebase",
+        "Render"
+      ],
       "visible": false,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "mentage",
@@ -156,10 +344,24 @@
       "logo": "Mentage.png",
       "gradient": "linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%)",
       "route": "/mentage",
-      "tags": ["JavaScript", "AI", "Chatbot", "EdTech", "React.js", "Python", "Flask", "Firebase", "OpenAi API", "WebApp"],
+      "tags": [
+        "JavaScript",
+        "AI",
+        "Chatbot",
+        "EdTech",
+        "React.js",
+        "Python",
+        "Flask",
+        "Firebase",
+        "OpenAi API",
+        "WebApp"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 2
+      "priority": 2,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "therabot",
@@ -168,10 +370,23 @@
       "logo": "Therabot.png",
       "gradient": "linear-gradient(135deg, #0D9488 0%, #14B8A6 50%, #2DD4BF 100%)",
       "route": "/therabot",
-      "tags": ["JavaScript", "HealthTec", "Chatbot", "Node.js", "React.js", "Firebase", "Render", "OpenAi API", "WebApp"],
+      "tags": [
+        "JavaScript",
+        "HealthTec",
+        "Chatbot",
+        "Node.js",
+        "React.js",
+        "Firebase",
+        "Render",
+        "OpenAi API",
+        "WebApp"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 2
+      "priority": 2,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "flashcards",
@@ -180,10 +395,19 @@
       "logo": "Flashcards.svg",
       "gradient": "linear-gradient(135deg, #F59E0B 0%, #FCD34D 50%, #FEF3C7 100%)",
       "route": "/flashcards",
-      "tags": ["JavaScript", "React", "CSS3", "HTML5", "Education"],
+      "tags": [
+        "JavaScript",
+        "React",
+        "CSS3",
+        "HTML5",
+        "Education"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "culinary",
@@ -192,10 +416,22 @@
       "logo": "CulinAIry.png",
       "gradient": "linear-gradient(135deg, #7DD3FC 0%, #38BDF8 50%, #0EA5E9 100%)",
       "route": "/culinary",
-      "tags": ["JavaScript", "Node.js", "React.js", "Firebase", "TypeScript", "Render", "FoodTech", "AI"],
+      "tags": [
+        "JavaScript",
+        "Node.js",
+        "React.js",
+        "Firebase",
+        "TypeScript",
+        "Render",
+        "FoodTech",
+        "AI"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 2
+      "priority": 2,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "dadjokegenerator",
@@ -204,10 +440,19 @@
       "logo": "DadJokeGenerator.png",
       "gradient": "linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #FDE047 100%)",
       "route": "/dadjokegenerator",
-      "tags": ["JavaScript", "Ember.js", "Node.js", "Render", "JokeTech"],
+      "tags": [
+        "JavaScript",
+        "Ember.js",
+        "Node.js",
+        "Render",
+        "JokeTech"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "doomscroll",
@@ -216,10 +461,19 @@
       "logo": "Doomscroll.png",
       "gradient": "linear-gradient(135deg, #7F1D1D 0%, #DC2626 50%, #B91C1C 100%)",
       "route": "/doomscroll",
-      "tags": ["JavaScript", "Node.js", "React.js", "Render", "JokeTech"],
+      "tags": [
+        "JavaScript",
+        "Node.js",
+        "React.js",
+        "Render",
+        "JokeTech"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "contrarian",
@@ -228,10 +482,24 @@
       "logo": "Contrarian.png",
       "gradient": "linear-gradient(135deg, #000000 0%, #171717 50%, #0a0a0a 100%)",
       "route": "/contrarian",
-      "tags": ["JavaScript", "AI", "Python", "React.js", "Flask", "Render", "OpenAi API", "Firebase", "InvestTech", "FinTech"],
+      "tags": [
+        "JavaScript",
+        "AI",
+        "Python",
+        "React.js",
+        "Flask",
+        "Render",
+        "OpenAi API",
+        "Firebase",
+        "InvestTech",
+        "FinTech"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 2
+      "priority": 2,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "ldmf",
@@ -240,10 +508,17 @@
       "logo": "LDMF.png",
       "gradient": "linear-gradient(135deg, #FBBF24 0%, #FCD34D 50%, #FEF08A 100%)",
       "route": "/ldmf",
-      "tags": ["JavaScript", "Vue.js", "Node.js"],
+      "tags": [
+        "JavaScript",
+        "Vue.js",
+        "Node.js"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "pngtosvg",
@@ -252,10 +527,17 @@
       "logo": "PNGtoSVG.png",
       "gradient": "linear-gradient(135deg, #06B6D4 0%, #22D3EE 50%, #67E8F9 100%)",
       "route": "/pngtosvg",
-      "tags": ["JavaScript", "Angular", "Node.js"],
+      "tags": [
+        "JavaScript",
+        "Angular",
+        "Node.js"
+      ],
       "visible": true,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "doppelgancar",
@@ -264,10 +546,22 @@
       "logo": "Doppelgancar.png",
       "gradient": "linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #F87171 100%)",
       "route": "/doppelgancar",
-      "tags": ["AI", "Machine Learning", "Nuxt.js", "JavaScript", "Python", "Flask", "Render", "OpenAI"],
+      "tags": [
+        "AI",
+        "Machine Learning",
+        "Nuxt.js",
+        "JavaScript",
+        "Python",
+        "Flask",
+        "Render",
+        "OpenAI"
+      ],
       "visible": false,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     },
     {
       "id": "tindev",
@@ -276,10 +570,21 @@
       "logo": "Tindev.png",
       "gradient": "linear-gradient(135deg, #EC4899 0%, #F472B6 50%, #F9A8D4 100%)",
       "route": "/tindev",
-      "tags": ["JavaScript", "React.js", "Node.js", "Firebase", "WebRTC", "SocialTech", "WebApp"],
+      "tags": [
+        "JavaScript",
+        "React.js",
+        "Node.js",
+        "Firebase",
+        "WebRTC",
+        "SocialTech",
+        "WebApp"
+      ],
       "visible": false,
       "featured": false,
-      "priority": 3
+      "priority": 3,
+      "categories": [
+        "website"
+      ]
     }
   ]
 }

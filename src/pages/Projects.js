@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Navbar from "../components/Navbar";
-import { getVisibleProjects, getAllTags, filterProjectsByTags } from "../data/projects";
+import {
+  getAllTags,
+  filterProjectsCombined,
+  PROJECT_CATEGORY_ORDER,
+  PROJECT_CATEGORY_META,
+  getProjectCategories,
+  getVisibleProjects,
+} from "../data/projects";
 import "../styles/Projects.css";
 
 const Projects = () => {
   const [selectedTags, setSelectedTags] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [filterExpanded, setFilterExpanded] = useState(false);
+  const [techFilterExpanded, setTechFilterExpanded] = useState(false);
 
-  useEffect(() => {
-    setFilteredProjects(getVisibleProjects());
-  }, []);
+  const filteredProjects = useMemo(
+    () => filterProjectsCombined(selectedCategories, selectedTags),
+    [selectedCategories, selectedTags]
+  );
 
-  useEffect(() => {
-    const filtered = filterProjectsByTags(selectedTags);
-    setFilteredProjects(filtered);
-  }, [selectedTags]);
+  const visibleCount = getVisibleProjects().length;
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,12 +38,24 @@ const Projects = () => {
   }, []);
 
   const handleTagClick = (tag) => {
-    setSelectedTags(prevTags =>
-      prevTags.includes(tag)
-        ? prevTags.filter(t => t !== tag)
-        : [...prevTags, tag]
+    setSelectedTags((prevTags) =>
+      prevTags.includes(tag) ? prevTags.filter((t) => t !== tag) : [...prevTags, tag]
     );
   };
+
+  const toggleCategory = (id) => {
+    setSelectedCategories((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setSelectedTags([]);
+  };
+
+  const hasActiveFilters =
+    selectedCategories.length > 0 || selectedTags.length > 0;
 
   const allTags = getAllTags();
 
@@ -47,96 +64,204 @@ const Projects = () => {
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
-        className="projects-container"
-        initial={{ opacity: 0, y: 20 }}
+        className="projects-shell"
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="projects-header">
-          <h1 className="projects-title">
-            <span className="code-comment">//</span> My Projects
+        <header className="projects-hero">
+          <p className="projects-hero__eyebrow">Portfolio</p>
+          <h1 className="projects-hero__title">
+            <span className="projects-hero__slash">/</span> Projects
           </h1>
-          <p className="projects-subtitle">
-            A collection of my work and side projects
+          <p className="projects-hero__lead">
+            Websites, mobile apps, desktop tools, and browser extensions—often overlapping in one
+            product. Filter by surface type or drill down by tech stack.
           </p>
-        </div>
+          <div className="projects-hero__stats">
+            <span className="projects-stat">
+              <strong>{visibleCount}</strong>
+              <span className="projects-stat__label">published</span>
+            </span>
+            <span className="projects-stat projects-stat--muted">
+              <strong>{filteredProjects.length}</strong>
+              <span className="projects-stat__label">matching</span>
+            </span>
+          </div>
+        </header>
 
-        {allTags.length > 0 && (
-          <div className={`tag-filter ${filterExpanded ? 'tag-filter-expanded' : ''}`}>
-            <button
-              className="tag-filter-header"
-              onClick={() => setFilterExpanded(!filterExpanded)}
-              aria-expanded={filterExpanded}
-            >
-              <span className="tag-filter-label">Filter by technology</span>
-              {selectedTags.length > 0 && (
-                <span className="tag-filter-badge">{selectedTags.length} selected</span>
+        <div className="projects-toolbar">
+          <div className="projects-toolbar__block">
+            <div className="projects-toolbar__head">
+              <span className="projects-toolbar__label">Surface type</span>
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  className="projects-clear-filters"
+                  onClick={clearFilters}
+                >
+                  Clear filters
+                </button>
               )}
-              <span className="tag-filter-chevron">{filterExpanded ? '▼' : '▶'}</span>
-            </button>
-            <div className="tag-filter-content">
-              <div className="tag-buttons">
-                {allTags.map((tag, index) => (
+            </div>
+            <div className="projects-category-chips" role="group" aria-label="Filter by surface type">
+              {PROJECT_CATEGORY_ORDER.map((catId) => {
+                const meta = PROJECT_CATEGORY_META[catId];
+                const active = selectedCategories.includes(catId);
+                return (
                   <button
-                    key={index}
-                    className={`tag-button ${
-                      selectedTags.includes(tag) ? "tag-button-selected" : ""
+                    key={catId}
+                    type="button"
+                    title={meta.hint}
+                    className={`category-chip category-chip--${catId} ${
+                      active ? "category-chip--active" : ""
                     }`}
-                    onClick={() => handleTagClick(tag)}
+                    onClick={() => toggleCategory(catId)}
+                    aria-pressed={active}
                   >
-                    {tag}
+                    <span className="category-chip__dot" aria-hidden />
+                    <span className="category-chip__text">{meta.label}</span>
                   </button>
-                ))}
+                );
+              })}
+            </div>
+            <p className="projects-toolbar__hint">
+              {selectedCategories.length === 0
+                ? "Showing all surfaces. Tap a type to narrow the list (multi-select)."
+                : "Projects match if they use any selected surface—many span more than one."}
+            </p>
+          </div>
+
+          {allTags.length > 0 && (
+            <div className={`tech-filter ${techFilterExpanded ? "tech-filter--open" : ""}`}>
+              <button
+                type="button"
+                className="tech-filter__toggle"
+                onClick={() => setTechFilterExpanded(!techFilterExpanded)}
+                aria-expanded={techFilterExpanded}
+              >
+                <span className="tech-filter__toggle-label">Technology stack</span>
+                {selectedTags.length > 0 && (
+                  <span className="tech-filter__badge">{selectedTags.length}</span>
+                )}
+                <span className="tech-filter__chevron" aria-hidden>
+                  {techFilterExpanded ? "−" : "+"}
+                </span>
+              </button>
+              <div className="tech-filter__panel">
+                <div className="tech-filter__tags">
+                  {allTags.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      className={`tech-pill ${
+                        selectedTags.includes(tag) ? "tech-pill--selected" : ""
+                      }`}
+                      onClick={() => handleTagClick(tag)}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-
-        <div className="projects-grid">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              className="project-card"
-              style={{ background: project.gradient || 'var(--bg-tertiary)' }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.05, ease: [0.4, 0, 0.2, 1] }}
-              whileHover={{ y: -5, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } }}
-            >
-              <Link to={project.route} className="project-link">
-                <div className="project-image-container">
-                  <img
-                    src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
-                    alt={`${project.name} Logo`}
-                    className="project-logo"
-                  />
-                </div>
-                <div className="project-content">
-                  <h3 className="project-name">{project.name}</h3>
-                  <p className="project-description">{project.description}</p>
-                  <div className="project-tags">
-                    {project.tags.slice(0, 4).map((tag, i) => (
-                      <span key={i} className="project-tag">
-                        {tag}
-                      </span>
-                    ))}
-                    {project.tags.length > 4 && (
-                      <span className="project-tag project-tag-more">
-                        +{project.tags.length - 4}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+          )}
         </div>
 
+          <motion.div
+            key={
+              selectedCategories.join(",") +
+              "|" +
+              selectedTags.join(",")
+            }
+            className="projects-grid-modern"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+          >
+            {filteredProjects.map((project, index) => {
+              const cats = getProjectCategories(project);
+              return (
+                <motion.article
+                  key={project.id}
+                  className="project-tile"
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.35,
+                    delay: Math.min(index * 0.04, 0.4),
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  <Link to={project.route} className="project-tile__link">
+                    <div
+                      className="project-tile__visual"
+                      style={{
+                        background:
+                          project.gradient || "var(--bg-tertiary)",
+                      }}
+                    >
+                      <img
+                        src={`${process.env.PUBLIC_URL}/logos/${project.logo}`}
+                        alt=""
+                        className="project-tile__logo"
+                      />
+                    </div>
+                    <div className="project-tile__body">
+                      <div className="project-tile__categories">
+                        {cats.map((cid) => {
+                          const m = PROJECT_CATEGORY_META[cid];
+                          if (!m) return null;
+                          return (
+                            <span
+                              key={cid}
+                              className={`surface-pill surface-pill--${cid}`}
+                            >
+                              {m.shortLabel}
+                            </span>
+                          );
+                        })}
+                      </div>
+                      <h2 className="project-tile__name">{project.name}</h2>
+                      <p className="project-tile__desc">{project.description}</p>
+                      <div className="project-tile__tech">
+                        {project.tags.slice(0, 5).map((tag) => (
+                          <span key={tag} className="project-tile__tech-tag">
+                            {tag}
+                          </span>
+                        ))}
+                        {project.tags.length > 5 && (
+                          <span className="project-tile__tech-more">
+                            +{project.tags.length - 5}
+                          </span>
+                        )}
+                      </div>
+                      <span className="project-tile__cta">
+                        View case study
+                        <span className="project-tile__cta-arrow" aria-hidden>
+                          →
+                        </span>
+                      </span>
+                    </div>
+                  </Link>
+                </motion.article>
+              );
+            })}
+          </motion.div>
+
         {filteredProjects.length === 0 && (
-          <div className="projects-empty">
-            <p className="projects-empty-text">
-              No projects found matching the selected filters.
+          <div className="projects-empty-state">
+            <p className="projects-empty-state__title">No projects match</p>
+            <p className="projects-empty-state__text">
+              Try clearing surface filters or removing some tech tags.
             </p>
+            <button
+              type="button"
+              className="projects-empty-state__btn"
+              onClick={clearFilters}
+            >
+              Reset filters
+            </button>
           </div>
         )}
       </motion.div>
