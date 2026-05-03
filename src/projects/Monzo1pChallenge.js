@@ -8,8 +8,7 @@ import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import "../styles/project-shared.css";
 import "../styles/Monzo1pChallenge.css";
 
-const MONZO_APP_URL =
-  "https://monzo-1p-challenge-calculator.humzab1711.workers.dev";
+const MONZO_APP_URL = "https://monzo-1p-challenge-calculator.online";
 
 const Monzo1pChallenge = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);

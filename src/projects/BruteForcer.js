@@ -7,7 +7,7 @@ import CodeBlock from "../components/animations/CodeBlock";
 import "../styles/project-shared.css";
 import "../styles/BruteForcer.css";
 
-const BRUTE_FORCER_APP_URL = "https://bruteforce.online";
+const BRUTE_FORCER_APP_URL = "https://bruteforcer.online";
 const LOAD_TIMEOUT_MS = 28000;
 
 const BruteForcer = () => {
@@ -27,7 +27,7 @@ const BruteForcer = () => {
   const projectInfo = `const bruteForcer = {
   name: "Brute-forcer",
   type: "Privacy-focused web tool",
-  url: "https://bruteforce.online",
+  url: "https://bruteforcer.online",
   description: "Entropy, search space, and crack-time estimates from password length + charset pools — no real brute forcing",
   stack: [
     "Next.js 16 (App Router)",
@@ -127,7 +127,7 @@ const BruteForcer = () => {
               "const bruteForcer = {",
               "  name: 'Brute-forcer',",
               "  type: 'Privacy-focused web tool',",
-              "  url: 'https://bruteforce.online',",
+              "  url: 'https://bruteforcer.online',",
               "  note: 'Estimates only — calculations run in your browser',",
               "};",
             ]}
@@ -161,7 +161,7 @@ const BruteForcer = () => {
               rel="noopener noreferrer"
               className="external-link-button"
             >
-              Open bruteforce.online →
+              Open bruteforcer.online →
             </a>
           </motion.section>
 
@@ -256,7 +256,7 @@ const BruteForcer = () => {
                       rel="noopener noreferrer"
                       className="external-link-button"
                     >
-                      Open bruteforce.online →
+                      Open bruteforcer.online →
                     </a>
                     <button
                       type="button"

@@ -7,7 +7,7 @@ import CodeBlock from "../components/animations/CodeBlock";
 import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
 import "../styles/project-shared.css";
 
-const WEB_APP_URL = "https://imposter-game.pages.dev";
+const WEB_APP_URL = "https://imposter-game.site";
 
 const Imposter = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
