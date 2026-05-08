@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">FireWatch Logo</title>
+  <desc id="desc">Flame and location pin icon for FireWatch</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090b10"/>
+      <stop offset="50%" stop-color="#111520"/>
+      <stop offset="100%" stop-color="#ff4500"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ffd3bf"/>
+      <stop offset="55%" stop-color="#ff6a33"/>
+      <stop offset="100%" stop-color="#ff4500"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="110" fill="url(#bg)"/>
+  <path d="M256 98c-38 46-94 93-94 168 0 56 42 98 94 98s94-42 94-98c0-62-36-103-74-146-8 26-18 42-36 60 2-35 12-54 16-82z" fill="url(#flame)"/>
+  <path d="M256 188c-21 28-46 49-46 88 0 27 20 48 46 48s46-21 46-48c0-30-15-49-35-70-3 12-9 21-18 31 0-20 4-31 7-49z" fill="#fff0e9" opacity="0.9"/>
+  <circle cx="256" cy="400" r="18" fill="#3b82f6"/>
+  <path d="M256 332c-38 0-68 30-68 68 0 37 30 67 68 67s68-30 68-67c0-38-30-68-68-68zm0 106c-21 0-38-17-38-38 0-22 17-39 38-39s38 17 38 39c0 21-17 38-38 38z" fill="#3b82f6" opacity="0.42"/>
+</svg>

@@ -99,6 +99,34 @@
       "dateUpdated": "2026-05-02"
     },
     {
+      "id": "firewatch",
+      "name": "FireWatch - Fire Intelligence Dashboard",
+      "description": "Geospatial wildfire intelligence dashboard with map-based risk analysis and metre-accurate proximity checks for analysts.",
+      "logo": "firewatch-logo.svg",
+      "gradient": "linear-gradient(135deg, #090b10 0%, #111520 50%, #ff4500 100%)",
+      "route": "/firewatch",
+      "tags": [
+        "Angular",
+        "TypeScript",
+        "OpenLayers",
+        "Node.js",
+        "Express",
+        "PostgreSQL",
+        "PostGIS",
+        "Docker",
+        "Cloudflare Workers",
+        "Geospatial"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-05-08",
+      "dateUpdated": "2026-05-08"
+    },
+    {
       "id": "recount",
       "name": "Recount",
       "description": "Productivity suite: Chrome MV3 extension tracks time by domain; Next.js app for marketing, dashboard, and admin; REST API on Express and Cloudflare (Hono) with Supabase, Stripe, and AI reports",
