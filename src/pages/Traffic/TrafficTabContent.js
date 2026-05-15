@@ -21,6 +21,8 @@ import { useTraffic } from './TrafficContext';
 import { COLORS } from './constants';
 import { getLocationString, hasValidCoordinates, getGoogleMapsUrl } from './utils';
 
+import { TrafficTrendsContent } from './components/TrafficTrendsContent';
+
 export function TrafficTabContent() {
   const {
     activeTab,
@@ -85,6 +87,7 @@ export function TrafficTabContent() {
 
   return (
     <>
+      {activeTab === 'trends' && <TrafficTrendsContent />}
       {activeTab === 'visitors' && (
         <div className="traffic-tab-content">
           <div className="charts-grid">

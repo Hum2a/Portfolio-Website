@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { loadTrafficData as fetchTrafficData } from './loadTrafficData';
 import { formatDate, formatDuration, getLocationString } from './utils';
 import { buildRefDrillData, buildRefTokenAnalytics } from './refTokenAnalytics';
+import { computeTrafficTrends } from './trafficTrends';
 import {
   parseRollupStats,
   getDailySeries,
@@ -127,10 +128,10 @@ export function useTrafficData(role) {
   }, []);
 
   useEffect(() => {
-    if (role === 'humza' && showUrlGenerator) {
+    if (role === 'humza') {
       loadTrackingTokens();
     }
-  }, [role, showUrlGenerator, loadTrackingTokens]);
+  }, [role, loadTrackingTokens]);
 
   const toDate = useCallback((timestamp) => {
     if (!timestamp) return null;
@@ -758,6 +759,22 @@ export function useTrafficData(role) {
       .slice(0, 10);
   }, [filteredMediaClicks]);
 
+  const trafficTrends = useMemo(
+    () =>
+      computeTrafficTrends({
+        pageViews,
+        events,
+        pageTimes,
+        mediaClicks,
+        visitors,
+        enquiries,
+        trackingTokens,
+        environmentFilter,
+        toDate,
+      }),
+    [pageViews, events, pageTimes, mediaClicks, visitors, enquiries, trackingTokens, environmentFilter, toDate]
+  );
+
   const formatDateForInput = useCallback(
     (date) => {
       if (!date) return '';
@@ -1082,6 +1099,7 @@ export function useTrafficData(role) {
     mediaClicksByType,
     mediaClicksOverTime,
     topMediaClicks,
+    trafficTrends,
     filteredStats,
     visitorActivityTimeline,
     // Helpers

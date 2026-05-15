@@ -17,6 +17,12 @@ export function TrafficTabList() {
 
   return (
     <div className="traffic-tabs">
+      <button
+        className={`traffic-tab traffic-tab-primary ${activeTab === 'trends' ? 'active' : ''}`}
+        onClick={() => setActiveTab('trends')}
+      >
+        Trends
+      </button>
       <button className={`traffic-tab ${activeTab === 'visitors' ? 'active' : ''}`} onClick={() => setActiveTab('visitors')}>
         <span>Visitors ({filteredVisitors.length})</span>
         {selectedCountry && (
