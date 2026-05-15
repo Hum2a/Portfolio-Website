@@ -8,6 +8,17 @@ import {
   arrayUnion, 
   serverTimestamp 
 } from 'firebase/firestore';
+import {
+  trackVisitorStats,
+  trackPageViewStats,
+  trackPageTimeStats,
+  trackEventStats,
+  trackMediaClickStats,
+  trackCampaignStats,
+  trackEngagementStats,
+  trackContactFormStats,
+  trackScrollDepthStats,
+} from './analyticsStatsUpdater';
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
 import { featureFlags, apiKeys } from '../utils/env';
@@ -408,20 +419,31 @@ const trackVisitor = async () => {
 
     const campaignData = await getCampaignData();
 
+    const landingPath = window.location.pathname + window.location.search;
+    sessionStorage.setItem('sessionLandingPath', landingPath);
+    sessionStorage.setItem('sessionPageCount', '0');
+
     const sessionData = {
       sessionId,
       startTime: timestamp,
       referrer: document.referrer || 'direct',
       environment,
+      landingPath,
+      exitPath: window.location.pathname,
+      pageCount: 1,
     };
 
     if (campaignData) {
       sessionData.campaign = campaignData;
       sessionStorage.setItem('campaignSource', campaignData.source);
+      if (campaignData.refToken) {
+        sessionStorage.setItem('sessionRefToken', campaignData.refToken);
+      }
     }
 
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
     const docSnap = await getDoc(visitorRef);
+    const isReturning = docSnap.exists();
 
     if (docSnap.exists()) {
       await updateDoc(visitorRef, {
@@ -461,11 +483,8 @@ const trackVisitor = async () => {
       });
     }
 
-    const statsRef = doc(db, 'analytics_stats', 'visitors');
-    await setDoc(statsRef, {
-      total: increment(1),
-      lastUpdated: timestamp,
-    }, { merge: true });
+    trackVisitorStats({ environment, isReturning, deviceInfo, location: userLocation });
+    if (campaignData) trackCampaignStats(campaignData, environment);
 
     enrichVisitorLocation(anonymizedIP, ipAddress, deviceInfo).catch(() => {});
 
@@ -533,14 +552,11 @@ const trackPageView = async (path, title) => {
       pageViewId // Store for updating time spent later
     });
     
-    // Update page view count in analytics_stats
-    const pageStatsRef = doc(db, 'analytics_stats', 'pages');
-    await setDoc(pageStatsRef, {
-      [currentPath]: increment(1),
-      total: increment(1),
-      lastUpdated: timestamp
-    }, { merge: true });
-    
+    const pageCount = parseInt(sessionStorage.getItem('sessionPageCount') || '0', 10) + 1;
+    sessionStorage.setItem('sessionPageCount', String(pageCount));
+
+    trackPageViewStats(currentPath, environment);
+
     // Also update the visitor's document with this page view
     const visitorPageViewRef = doc(db, 'analytics_visitors', anonymizedIP, 'pageviews', pageViewId);
     await setDoc(visitorPageViewRef, {
@@ -612,15 +628,10 @@ const trackPageTime = async (path, pageViewId = null) => {
       environment
     }, { merge: true });
     
-    // Update page time stats
-    const pageTimeStatsRef = doc(db, 'analytics_stats', 'page_times');
-    await setDoc(pageTimeStatsRef, {
-      [currentPath]: arrayUnion(timeSpent), // Track all time spent values for averaging
-      total: increment(timeSpent),
-      count: increment(1),
-      lastUpdated: serverTimestamp()
-    }, { merge: true });
-    
+    if (timeSpent > 0) {
+      trackPageTimeStats(currentPath, timeSpent, environment);
+    }
+
     // Clean up session storage
     sessionStorage.removeItem(startTimeKey);
     sessionStorage.removeItem(pageViewIdKey);
@@ -670,14 +681,7 @@ const trackEvent = async (category, action, label = null, value = null) => {
     const eventsRef = collection(db, 'analytics_events');
     await setDoc(doc(eventsRef, eventId), eventData);
     
-    // Update event count in analytics_stats
-    const eventKey = `${category}_${action}`;
-    const eventStatsRef = doc(db, 'analytics_stats', 'events');
-    await setDoc(eventStatsRef, {
-      [eventKey]: increment(1),
-      total: increment(1),
-      lastUpdated: timestamp
-    }, { merge: true });
+    trackEventStats(category, action, environment);
   } catch (error) {
     // Silent fail
   }
@@ -718,17 +722,8 @@ const trackMediaClick = async (mediaType, mediaSrc, mediaCaption, projectPath) =
       environment
     });
     
-    // Update media click stats
-    const mediaStatsRef = doc(db, 'analytics_stats', 'media_clicks');
-    const statsKey = `${currentPath}_${mediaType}`;
-    await setDoc(mediaStatsRef, {
-      [statsKey]: increment(1),
-      [`${currentPath}_total`]: increment(1),
-      [`${mediaType}_total`]: increment(1),
-      total: increment(1),
-      lastUpdated: serverTimestamp()
-    }, { merge: true });
-    
+    trackMediaClickStats(currentPath, mediaType, environment);
+
     // Also track as a regular event for consistency
     await trackEvent('media', 'click', `${mediaType}: ${mediaCaption || mediaSrc}`, null);
     
@@ -764,8 +759,12 @@ const trackSessionEnd = async () => {
     const visitorId = getVisitorId();
     const anonymizedIP = localStorage.getItem('anonymizedIP');
     const environment = getEnvironment();
-    
-    // Update session data in analytics_sessions collection
+    const pageCount = parseInt(sessionStorage.getItem('sessionPageCount') || '1', 10);
+    const landingPath = sessionStorage.getItem('sessionLandingPath') || window.location.pathname;
+    const exitPath = window.location.pathname + window.location.search;
+    const refToken = sessionStorage.getItem('sessionRefToken') || null;
+    const campaignSource = sessionStorage.getItem('campaignSource') || null;
+
     const sessionRef = doc(db, 'analytics_sessions', sessionId);
     await setDoc(sessionRef, {
       sessionId,
@@ -774,9 +773,16 @@ const trackSessionEnd = async () => {
       startTime,
       endTime,
       duration,
-      path: window.location.pathname,
-      environment
+      path: exitPath,
+      landingPath,
+      exitPath,
+      pageCount,
+      refToken,
+      campaignSource,
+      environment,
     }, { merge: true });
+
+    trackEngagementStats({ duration, pageCount, environment });
   } catch (error) {
     // Silent fail
   }
@@ -820,5 +826,20 @@ const firebaseAnalytics = {
 };
 
 export default firebaseAnalytics;
+
+export const trackContactSubmit = () => {
+  trackEvent('contact', 'submit', window.location.pathname);
+  trackContactFormStats('submit', getEnvironment());
+};
+
+export const trackContactFormStart = () => {
+  trackEvent('contact', 'start', window.location.pathname);
+  trackContactFormStats('start', getEnvironment());
+};
+
+export const trackScrollDepth = (depthPercent, pageName) => {
+  trackEvent('engagement', 'scroll_depth', `${depthPercent}% - ${pageName}`);
+  trackScrollDepthStats(depthPercent, window.location.pathname, getEnvironment());
+};
 
 export { trackVisitor, trackPageView, trackPageTime, trackEvent, trackMediaClick, trackSessionEnd, initAnalytics }; 

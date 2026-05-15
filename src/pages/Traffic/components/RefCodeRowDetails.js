@@ -25,7 +25,7 @@ function formatSessionDate(timestamp) {
 }
 
 export function RefCodeRowDetails({ token }) {
-  const { getRefTokenAnalytics, openVisitorActivity } = useTraffic();
+  const { getRefTokenAnalytics, openVisitorActivity, exportRefTokenCsv } = useTraffic();
 
   const analytics = useMemo(
     () => (token?.id ? getRefTokenAnalytics(token.id, token) : null),
@@ -40,6 +40,16 @@ export function RefCodeRowDetails({ token }) {
 
   return (
     <div className="ref-code-details">
+      <div className="ref-code-details-toolbar">
+        <button
+          type="button"
+          className="ref-code-export-btn"
+          onClick={() => exportRefTokenCsv(token.id, token)}
+          disabled={!hasVisitors}
+        >
+          Export CSV
+        </button>
+      </div>
       <div className="ref-code-details-summary">
         <div className="ref-code-stat">
           <span className="ref-code-stat-label">Stored clicks</span>

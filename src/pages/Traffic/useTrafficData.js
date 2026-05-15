@@ -2,6 +2,14 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { loadTrafficData as fetchTrafficData } from './loadTrafficData';
 import { formatDate, formatDuration, getLocationString } from './utils';
 import { buildRefDrillData, buildRefTokenAnalytics } from './refTokenAnalytics';
+import {
+  parseRollupStats,
+  getDailySeries,
+  getLast24hSummary,
+  mergeHeadlineStats,
+  getRefTokenRollup,
+  mapDimensionCounts,
+} from './statsHelpers';
 
 function getDateFilter(timeRange, dateRange) {
   if (timeRange === 'custom' && (dateRange.start || dateRange.end)) {
@@ -36,6 +44,7 @@ export function useTrafficData(role) {
   const [enquiries, setEnquiries] = useState([]);
   const [refHits, setRefHits] = useState([]);
   const [stats, setStats] = useState(null);
+  const [dataTruncated, setDataTruncated] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('visitors');
   const [expandedVisitors, setExpandedVisitors] = useState(new Set());
@@ -90,6 +99,7 @@ export function useTrafficData(role) {
       setEnquiries(data.enquiries);
       setRefHits(data.refHits || []);
       setStats(data.stats);
+      setDataTruncated(data.truncated || null);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -484,7 +494,67 @@ export function useTrafficData(role) {
     return filtered;
   }, [visitors, environmentFilter, dateFilter, isDateInRange]);
 
+  const rollup = useMemo(() => parseRollupStats(stats), [stats]);
+
+  const filteredStats = useMemo(() => {
+    if (!stats) return null;
+    const totalTimeSpent = filteredPageTimes.reduce((sum, pt) => sum + (pt.timeSpent || 0), 0);
+    const avgTimeSpent = filteredPageTimes.length > 0 ? (totalTimeSpent / filteredPageTimes.length).toFixed(1) : 0;
+    const rawCounts = {
+      localhostVisitors: visitors.filter((v) => v.environment === 'localhost').length,
+      productionVisitors: visitors.filter((v) => v.environment === 'production').length,
+      localhostPageViews: pageViews.filter((pv) => pv.environment === 'localhost').length,
+      productionPageViews: pageViews.filter((pv) => pv.environment === 'production').length,
+      localhostEvents: events.filter((e) => e.environment === 'localhost').length,
+      productionEvents: events.filter((e) => e.environment === 'production').length,
+      localhostPageTimes: pageTimes.filter((pt) => pt.environment === 'localhost').length,
+      productionPageTimes: pageTimes.filter((pt) => pt.environment === 'production').length,
+      localhostMediaClicks: mediaClicks.filter((mc) => mc.environment === 'localhost').length,
+      productionMediaClicks: mediaClicks.filter((mc) => mc.environment === 'production').length,
+      totalVisitors: visitors.length,
+      totalPageViews: pageViews.length,
+      totalEvents: events.length,
+      totalPageTimes: pageTimes.length,
+      totalMediaClicks: mediaClicks.length,
+      avgTimeSpent: parseFloat(avgTimeSpent),
+      totalTimeSpent,
+    };
+    const merged = mergeHeadlineStats(rollup, rawCounts, environmentFilter);
+    const prodOnly = environmentFilter === 'production';
+    const last24h = getLast24hSummary(rollup.daily, prodOnly);
+    return { ...merged, last24h, dataTruncated };
+  }, [stats, rollup, visitors, pageViews, events, pageTimes, mediaClicks, filteredPageTimes, environmentFilter, dataTruncated]);
+
+  const visitsOverTimeFromRollup = useMemo(() => {
+    const series = getDailySeries(rollup.daily, {
+      days: 30,
+      productionOnly: environmentFilter === 'production',
+    });
+    if (series.length === 0) return null;
+    return series.map((d) => ({ name: d.name, value: d.visitors || d.sessionsEnded || 0 }));
+  }, [rollup.daily, environmentFilter]);
+
+  const pageViewsOverTimeFromRollup = useMemo(() => {
+    const series = getDailySeries(rollup.daily, {
+      days: 30,
+      productionOnly: environmentFilter === 'production',
+    });
+    if (series.length === 0) return null;
+    return series.map((d) => ({ name: d.name, value: d.pageViews || 0 }));
+  }, [rollup.daily, environmentFilter]);
+
+  const visitorsByCountryFromRollup = useMemo(() => {
+    const dims = mapDimensionCounts(rollup.visitors, 'dim_country', environmentFilter === 'production');
+    return dims.length > 0 ? dims : null;
+  }, [rollup.visitors, environmentFilter]);
+
+  const visitorsByDeviceFromRollup = useMemo(() => {
+    const dims = mapDimensionCounts(rollup.visitors, 'dim_device', environmentFilter === 'production');
+    return dims.length > 0 ? dims : null;
+  }, [rollup.visitors, environmentFilter]);
+
   const visitorsByCountry = useMemo(() => {
+    if (visitorsByCountryFromRollup?.length) return visitorsByCountryFromRollup;
     const countryMap = {};
     visitorsForCountryBreakdown.forEach((v) => {
       const country = v.location?.country || 'Unknown';
@@ -493,7 +563,7 @@ export function useTrafficData(role) {
     return Object.entries(countryMap)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  }, [visitorsForCountryBreakdown]);
+  }, [visitorsForCountryBreakdown, visitorsByCountryFromRollup]);
 
   const matchVisitorByIP = useCallback(
     (item) => Boolean(selectedVisitorAnonymizedIP && item.anonymizedIP === selectedVisitorAnonymizedIP),
@@ -517,6 +587,7 @@ export function useTrafficData(role) {
   }, [selectedVisitorAnonymizedIP, matchVisitorByIP, pageViews, events, pageTimes, mediaClicks, toDate]);
 
   const pageViewsOverTime = useMemo(() => {
+    if (pageViewsOverTimeFromRollup?.length) return pageViewsOverTimeFromRollup;
     const dateMap = {};
     filteredPageViews.forEach((pv) => {
       const dateKey = formatDate(pv.timestamp).split(',')[0];
@@ -526,7 +597,7 @@ export function useTrafficData(role) {
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => new Date(a.name) - new Date(b.name))
       .slice(-30);
-  }, [filteredPageViews]);
+  }, [filteredPageViews, pageViewsOverTimeFromRollup]);
 
   const eventsByCategory = useMemo(() => {
     const categoryMap = {};
@@ -552,6 +623,7 @@ export function useTrafficData(role) {
   }, [filteredPageViews]);
 
   const visitsOverTime = useMemo(() => {
+    if (visitsOverTimeFromRollup?.length) return visitsOverTimeFromRollup;
     const dateMap = {};
     filteredVisitors.forEach((v) => {
       if (v.sessions && Array.isArray(v.sessions)) {
@@ -562,23 +634,22 @@ export function useTrafficData(role) {
           }
         });
       }
-      const dateKey = formatDate(v.lastVisit).split(',')[0];
-      dateMap[dateKey] = (dateMap[dateKey] || 0) + 1;
     });
     return Object.entries(dateMap)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => new Date(a.name) - new Date(b.name))
       .slice(-30);
-  }, [filteredVisitors, environmentFilter]);
+  }, [filteredVisitors, environmentFilter, visitsOverTimeFromRollup]);
 
   const visitorsByDevice = useMemo(() => {
+    if (visitorsByDeviceFromRollup?.length) return visitorsByDeviceFromRollup;
     const deviceMap = {};
     filteredVisitors.forEach((v) => {
       const device = v.deviceInfo?.deviceType || 'Unknown';
       deviceMap[device] = (deviceMap[device] || 0) + 1;
     });
     return Object.entries(deviceMap).map(([name, value]) => ({ name, value }));
-  }, [filteredVisitors]);
+  }, [filteredVisitors, visitorsByDeviceFromRollup]);
 
   const averageTimeByPath = useMemo(() => {
     const pathMap = {};
@@ -686,31 +757,6 @@ export function useTrafficData(role) {
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
   }, [filteredMediaClicks]);
-
-  const filteredStats = useMemo(() => {
-    if (!stats) return null;
-    const totalTimeSpent = filteredPageTimes.reduce((sum, pt) => sum + (pt.timeSpent || 0), 0);
-    const avgTimeSpent = filteredPageTimes.length > 0 ? (totalTimeSpent / filteredPageTimes.length).toFixed(1) : 0;
-    return {
-      localhostVisitors: visitors.filter((v) => v.environment === 'localhost').length,
-      productionVisitors: visitors.filter((v) => v.environment === 'production').length,
-      localhostPageViews: pageViews.filter((pv) => pv.environment === 'localhost').length,
-      productionPageViews: pageViews.filter((pv) => pv.environment === 'production').length,
-      localhostEvents: events.filter((e) => e.environment === 'localhost').length,
-      productionEvents: events.filter((e) => e.environment === 'production').length,
-      localhostPageTimes: pageTimes.filter((pt) => pt.environment === 'localhost').length,
-      productionPageTimes: pageTimes.filter((pt) => pt.environment === 'production').length,
-      localhostMediaClicks: mediaClicks.filter((mc) => mc.environment === 'localhost').length,
-      productionMediaClicks: mediaClicks.filter((mc) => mc.environment === 'production').length,
-      totalVisitors: visitors.length,
-      totalPageViews: pageViews.length,
-      totalEvents: events.length,
-      totalPageTimes: pageTimes.length,
-      totalMediaClicks: mediaClicks.length,
-      avgTimeSpent: parseFloat(avgTimeSpent),
-      totalTimeSpent,
-    };
-  }, [stats, visitors, pageViews, events, pageTimes, mediaClicks, filteredPageTimes]);
 
   const formatDateForInput = useCallback(
     (date) => {
@@ -895,8 +941,50 @@ export function useTrafficData(role) {
   );
 
   const getRefTokenAnalytics = useCallback(
-    (tokenId, tokenMeta = {}) => buildRefTokenAnalytics(tokenId, visitors, refHits, tokenMeta),
-    [visitors, refHits]
+    (tokenId, tokenMeta = {}) => {
+      const base = buildRefTokenAnalytics(tokenId, visitors, refHits, tokenMeta);
+      const rollupData = getRefTokenRollup(rollup.refTokens, tokenId);
+      if (!rollupData) return base;
+      return {
+        ...base,
+        summary: {
+          ...base.summary,
+          storedClicks: Math.max(base.summary.storedClicks, rollupData.clicks || 0),
+          trackedVisits: Math.max(base.summary.trackedVisits, rollupData.sessions || base.summary.trackedVisits),
+        },
+        visitsOverTime:
+          rollupData.visitsOverTime?.length > 0 ? rollupData.visitsOverTime : base.visitsOverTime,
+      };
+    },
+    [visitors, refHits, rollup.refTokens]
+  );
+
+  const exportRefTokenCsv = useCallback(
+    (tokenId, tokenMeta = {}) => {
+      const { visitRows } = getRefTokenAnalytics(tokenId, tokenMeta);
+      const header = ['When', 'Visitor IP', 'Location', 'Device', 'Environment', 'Referrer'];
+      const rows = visitRows.map((r) => {
+        const d = r.startTime?.toDate?.() || r.startTime;
+        const when = d instanceof Date ? d.toISOString() : String(r.startTime || '');
+        return [
+          when,
+          r.anonymizedIP,
+          getLocationString(r.location),
+          r.deviceType || '',
+          r.environment || '',
+          r.referrer || '',
+        ];
+      });
+      const csv = [header, ...rows].map((row) => row.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ref-${tokenId}-visits.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+    [getRefTokenAnalytics]
   );
 
   return {
@@ -945,6 +1033,8 @@ export function useTrafficData(role) {
     deleteTrackingToken: deleteTrackingTokenHandler,
     getRefTokenDrillThrough,
     getRefTokenAnalytics,
+    exportRefTokenCsv,
+    rollup,
     selectedVisitorAnonymizedIP,
     setSelectedVisitorAnonymizedIP,
     // Filtered & computed

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { analytics } from '../utils/analytics';
+import { trackScrollDepth } from '../services/firebaseAnalytics';
 
 const ScrollTracker = ({ pageName }) => {
   const [scrollMarkers, setScrollMarkers] = useState({
@@ -20,7 +21,8 @@ const ScrollTracker = ({ pageName }) => {
       Object.keys(scrollMarkers).forEach(marker => {
         if (scrollPercentage >= parseInt(marker) && !scrollMarkers[marker]) {
           setScrollMarkers(prev => ({ ...prev, [marker]: true }));
-          analytics.trackScrollDepth(parseInt(marker), pageName);
+          analytics.trackScrollDepth(parseInt(marker, 10), pageName);
+          trackScrollDepth(parseInt(marker, 10), pageName);
         }
       });
     };

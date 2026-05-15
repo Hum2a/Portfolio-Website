@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, increment, collection, query, orderBy, getDocs, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
+import { trackRefTokenStats } from './analyticsStatsUpdater';
 
 const TOKENS_COLLECTION = 'analytics_tracking_tokens';
 const COOKIE_NAME = '_pb_ref';
@@ -94,6 +95,7 @@ export async function recordRefAttribution(refToken, { anonymizedIP, visitorId, 
   const token = refToken.toLowerCase().trim();
   try {
     await incrementTokenClicks(token);
+    trackRefTokenStats(token, environment, { includeSession: true });
     const hitId = `${token}_${Date.now()}_${sessionId || visitorId || 'na'}`;
     await setDoc(doc(db, 'analytics_ref_hits', hitId), {
       refToken: token,

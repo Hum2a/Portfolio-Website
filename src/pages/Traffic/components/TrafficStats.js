@@ -16,8 +16,21 @@ export function TrafficStats() {
 
   if (!filteredStats) return null;
 
+  const last24h = filteredStats.last24h;
+
   return (
     <div className="traffic-stats">
+      {last24h && (
+        <div className="stat-card last24h-card full-width-stat">
+          <h3>Last 24 hours</h3>
+          <div className="last24h-grid">
+            <span><strong>{last24h.visitors}</strong> sessions</span>
+            <span><strong>{last24h.pageViews}</strong> page views</span>
+            <span><strong>{last24h.refClicks}</strong> ref clicks</span>
+            <span><strong>{last24h.sessionsEnded}</strong> ended</span>
+          </div>
+        </div>
+      )}
       <div className="stat-card">
         <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Visitors</h3>
         <p className="stat-value">
@@ -31,6 +44,12 @@ export function TrafficStats() {
           <div className="stat-breakdown">
             <span className="breakdown-item production">Prod: {filteredStats.productionVisitors}</span>
             <span className="breakdown-item localhost">Local: {filteredStats.localhostVisitors}</span>
+          </div>
+        )}
+        {(filteredStats.newVisitors > 0 || filteredStats.returningVisitors > 0) && (
+          <div className="stat-breakdown">
+            <span className="breakdown-item">New: {filteredStats.newVisitors}</span>
+            <span className="breakdown-item">Returning: {filteredStats.returningVisitors}</span>
           </div>
         )}
       </div>
@@ -163,6 +182,21 @@ export function TrafficStats() {
           </div>
         )}
       </div>
+      {filteredStats.bounceRate != null && (
+        <div className="stat-card">
+          <h3>Bounce rate (&lt;5s)</h3>
+          <p className="stat-value">{filteredStats.bounceRate}%</p>
+          <div className="stat-breakdown">
+            <span className="breakdown-item">30s+ sessions: {filteredStats.sessionsOver30s}</span>
+          </div>
+        </div>
+      )}
+      {filteredStats.contactFormSubmits > 0 && (
+        <div className="stat-card">
+          <h3>Contact submits</h3>
+          <p className="stat-value">{filteredStats.contactFormSubmits}</p>
+        </div>
+      )}
       <div className="stat-card">
         <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Media Clicks</h3>
         <p className="stat-value">
@@ -182,3 +216,6 @@ export function TrafficStats() {
     </div>
   );
 }
+
+
+

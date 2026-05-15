@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useTraffic } from '../TrafficContext';
 import { RefCodeRowDetails } from './RefCodeRowDetails';
+import { RefCodeCompare } from './RefCodeCompare';
 
 function formatTokenDate(timestamp) {
   if (!timestamp) return '—';
@@ -31,8 +32,17 @@ export function ReferenceCodesList() {
   const [deletingId, setDeletingId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [expandedIds, setExpandedIds] = useState(() => new Set());
+  const [compareIds, setCompareIds] = useState([]);
   const [deleteConfirmToken, setDeleteConfirmToken] = useState(null);
   const [deleteError, setDeleteError] = useState('');
+
+  const toggleCompare = (tokenId) => {
+    setCompareIds((prev) => {
+      if (prev.includes(tokenId)) return prev.filter((id) => id !== tokenId);
+      if (prev.length >= 2) return [prev[1], tokenId];
+      return [...prev, tokenId];
+    });
+  };
 
   const toggleExpanded = (tokenId) => {
     setExpandedIds((prev) => {
@@ -150,10 +160,20 @@ export function ReferenceCodesList() {
     <div className="ref-codes-list">
       <div className="ref-codes-header">
         <h3>Active Reference Codes</h3>
-        <button type="button" className="ref-codes-refresh-btn" onClick={loadTrackingTokens}>
-          ↻ Refresh
-        </button>
+        <div className="ref-codes-header-actions">
+          {compareIds.length > 0 && (
+            <button type="button" className="ref-codes-clear-compare-btn" onClick={() => setCompareIds([])}>
+              Clear compare ({compareIds.length})
+            </button>
+          )}
+          <button type="button" className="ref-codes-refresh-btn" onClick={loadTrackingTokens}>
+            ↻ Refresh
+          </button>
+        </div>
       </div>
+      {compareIds.length === 2 && (
+        <RefCodeCompare tokens={compareIds.map((id) => trackingTokens.find((t) => t.id === id)).filter(Boolean)} />
+      )}
       <div className="ref-codes-table-wrap">
         <table className="ref-codes-table">
           <thead>
@@ -278,6 +298,14 @@ export function ReferenceCodesList() {
                         <td className="actions-cell">
                           <button
                             type="button"
+                            className={`ref-codes-compare-btn ${compareIds.includes(token.id) ? 'active' : ''}`}
+                            onClick={() => toggleCompare(token.id)}
+                            title="Add to compare (max 2)"
+                          >
+                            Cmp
+                          </button>
+                          <button
+                            type="button"
                             className="ref-codes-edit-btn"
                             onClick={() => startEdit(token)}
                             title="Edit attributes"
@@ -350,4 +378,5 @@ export function ReferenceCodesList() {
     </div>
   );
 }
+
 

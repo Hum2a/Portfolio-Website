@@ -6,6 +6,7 @@ import { FaEnvelope, FaLinkedin, FaGithub } from "react-icons/fa";
 import Terminal from "../components/animations/Terminal";
 import { db } from "../services/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { trackContactSubmit } from "../services/firebaseAnalytics";
 import "../styles/Contact.css";
 
 const Contact = () => {
@@ -115,7 +116,9 @@ const Contact = () => {
         timestamp: serverTimestamp(),
         status: "new"
       });
-      
+
+      trackContactSubmit();
+
       // Success
       setSubmitStatus({
         type: "success",

@@ -39,6 +39,11 @@ export function TrafficDashboard() {
       </div>
 
       <UrlGeneratorSection />
+      {filteredStats?.dataTruncated && (filteredStats.dataTruncated.visitors || filteredStats.dataTruncated.pageViews) && (
+        <div className="traffic-truncate-notice" role="status">
+          Showing the most recent loaded records only (per-collection cap). Totals in stat cards use rollups when available.
+        </div>
+      )}
       <TrafficFilters />
       {filteredStats && <TrafficStats />}
       <TrafficTabList />
@@ -53,3 +58,4 @@ export function TrafficDashboard() {
     </>
   );
 }
+
