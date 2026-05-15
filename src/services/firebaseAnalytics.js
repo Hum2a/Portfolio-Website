@@ -27,10 +27,64 @@ const getSessionId = () => {
 const getVisitorId = () => {
   let visitorId = localStorage.getItem('analytics_visitor_id');
   if (!visitorId) {
+    visitorId = localStorage.getItem('visitorId');
+  }
+  if (!visitorId) {
     visitorId = uuidv4();
     localStorage.setItem('analytics_visitor_id', visitorId);
   }
+  localStorage.setItem('visitorId', visitorId);
   return visitorId;
+};
+
+// Keep session / visitor IDs aligned across trackVisitor and trackPageView
+const ensureTrackingIds = () => {
+  const visitorId = getVisitorId();
+  const sessionId = getSessionId();
+  sessionStorage.setItem('sessionId', sessionId);
+  if (!sessionStorage.getItem('sessionStartTime')) {
+    sessionStorage.setItem('sessionStartTime', new Date().toString());
+  }
+  return { visitorId, sessionId };
+};
+
+const fetchWithTimeout = async (url, ms = 2500) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    return response;
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
+const resolveAnonymizedIP = async (visitorId) => {
+  let anonymizedIP = localStorage.getItem('anonymizedIP');
+  if (anonymizedIP) return { anonymizedIP, ipAddress: null };
+
+  let ipAddress = null;
+  try {
+    const ipResponse = await fetchWithTimeout('https://api.ipify.org?format=json', 2500);
+    const ipData = await ipResponse.json();
+    if (ipData?.ip) {
+      ipAddress = ipData.ip;
+      const ipParts = ipAddress.split('.');
+      if (ipParts.length === 4) {
+        anonymizedIP = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.0`;
+      }
+    }
+  } catch (error) {
+    console.warn('IP lookup failed, using fallback visitor key.', error);
+  }
+
+  if (!anonymizedIP) {
+    const fallbackHash = CryptoJS.SHA256(visitorId).toString().substring(0, 12);
+    anonymizedIP = `anon_${fallbackHash}`;
+  }
+
+  localStorage.setItem('anonymizedIP', anonymizedIP);
+  return { anonymizedIP, ipAddress };
 };
 
 // Anonymize IP address
@@ -102,8 +156,7 @@ const getCampaignData = async () => {
       const { lookupTrackingToken, setAttributionCookie, incrementTokenClicks, getAttributionFromCookie } = await import('./trackingTokenService');
       const tokenData = await lookupTrackingToken(refToken);
       if (tokenData) {
-        incrementTokenClicks(refToken); // fire-and-forget
-        setAttributionCookie(tokenData); // persist for returning visitors
+        setAttributionCookie({ ...tokenData, refToken: refToken.toLowerCase().trim() });
         return {
           source: tokenData.source,
           medium: tokenData.medium || null,
@@ -133,6 +186,7 @@ const getCampaignData = async () => {
         term: null,
         content: null,
         landingPage,
+        refToken: cookieData.refToken || null,
       };
     }
   } catch {
@@ -241,169 +295,135 @@ const getDeviceInfo = () => {
   };
 };
 
-// Track visitor
-const trackVisitor = async () => {
-  try {
-    // Generate visitor ID if not exists
-    let visitorId = localStorage.getItem('visitorId');
-    if (!visitorId) {
-      visitorId = uuidv4();
-      localStorage.setItem('visitorId', visitorId);
-    }
-    
-    // Generate or reuse anonymized IP. If external IP lookup fails, keep tracking with a stable fallback.
-    let ipAddress = null;
-    let anonymizedIP = localStorage.getItem('anonymizedIP');
+const defaultLocation = (deviceInfo) => ({
+  city: 'Unknown',
+  region: 'Unknown',
+  country: 'Unknown',
+  coordinates: ['0', '0'],
+  timezone: deviceInfo?.timezone || 'Unknown',
+  isp: 'Unknown',
+});
+
+// Resolve geo in the background so quick visits still get a session saved first
+const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
+  let userLocation = defaultLocation(deviceInfo);
+
+  if (!ipAddress) {
     try {
-      const ipResponse = await fetch('https://api.ipify.org?format=json');
+      const ipResponse = await fetchWithTimeout('https://api.ipify.org?format=json', 4000);
       const ipData = await ipResponse.json();
-      if (ipData?.ip) {
-        ipAddress = ipData.ip;
-        const ipParts = ipAddress.split('.');
-        if (ipParts.length === 4) {
-          anonymizedIP = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.0`;
+      ipAddress = ipData?.ip || null;
+    } catch {
+      return;
+    }
+  }
+
+  if (!ipAddress) return;
+
+  try {
+    if (apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN' && apiKeys.ipinfoToken !== '') {
+      const locationResponse = await fetch(`https://ipinfo.io/${ipAddress}/json?token=${apiKeys.ipinfoToken}`);
+      if (locationResponse.ok) {
+        const locationData = await locationResponse.json();
+        if (locationData && !locationData.error) {
+          userLocation = {
+            city: locationData.city || 'Unknown',
+            region: locationData.region || 'Unknown',
+            country: locationData.country || 'Unknown',
+            coordinates: locationData.loc ? locationData.loc.split(',') : ['0', '0'],
+            timezone: locationData.timezone || deviceInfo.timezone,
+            isp: locationData.org || 'Unknown',
+          };
         }
       }
-    } catch (error) {
-      console.warn('IP lookup failed, using fallback visitor key.', error);
     }
-    
-    if (!anonymizedIP) {
-      const fallbackHash = CryptoJS.SHA256(visitorId).toString().substring(0, 12);
-      anonymizedIP = `anon_${fallbackHash}`;
-    }
-    
-    // Store anonymizedIP in localStorage for use in other functions
-    localStorage.setItem('anonymizedIP', anonymizedIP);
-    
-    // Generate session ID
-    const sessionId = uuidv4();
-    sessionStorage.setItem('sessionId', sessionId);
-    
-    // Get enhanced device info
-    const deviceInfo = getDeviceInfo();
-    
-    // Use a try/catch block for geolocation to prevent failures
-    let userLocation = {
-      city: "Unknown",
-      region: "Unknown",
-      country: "Unknown",
-      coordinates: ["0", "0"],
-      timezone: deviceInfo.timezone,
-      isp: "Unknown"
-    };
-    
-    try {
-      // Try to get location from IPInfo if API token is available
-      if (ipAddress && apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN' && apiKeys.ipinfoToken !== '') {
-        const locationResponse = await fetch(`https://ipinfo.io/${ipAddress}/json?token=${apiKeys.ipinfoToken}`);
-        if (locationResponse.ok) {
-          const locationData = await locationResponse.json();
-          
-          // Extract location details
-          if (locationData && !locationData.error) {
+
+    if (userLocation.city === 'Unknown' && userLocation.country === 'Unknown') {
+      try {
+        const bigDataResponse = await fetch(`https://api.bigdatacloud.net/data/ip-geolocation?ip=${ipAddress}`);
+        if (bigDataResponse.ok) {
+          const bigDataData = await bigDataResponse.json();
+          if (bigDataData && !bigDataData.error) {
             userLocation = {
-              city: locationData.city || "Unknown",
-              region: locationData.region || "Unknown",
-              country: locationData.country || "Unknown",
-              coordinates: locationData.loc ? locationData.loc.split(",") : ["0", "0"],
-              timezone: locationData.timezone || deviceInfo.timezone,
-              isp: locationData.org || "Unknown"
+              city: bigDataData.location?.city || bigDataData.location?.locality || 'Unknown',
+              region: bigDataData.location?.principalSubdivision || 'Unknown',
+              country: bigDataData.location?.country?.name || bigDataData.country?.name || 'Unknown',
+              coordinates: bigDataData.location?.latitude && bigDataData.location?.longitude
+                ? [bigDataData.location.latitude.toString(), bigDataData.location.longitude.toString()]
+                : ['0', '0'],
+              timezone: bigDataData.location?.timeZone?.name || deviceInfo.timezone,
+              isp: bigDataData.network?.organization || 'Unknown',
             };
           }
         }
+      } catch {
+        // try next provider
       }
-      
-      // Fallback to free IP geolocation API if IPInfo not available or failed
-      if (ipAddress && userLocation.city === "Unknown" && userLocation.country === "Unknown") {
-        try {
-          // Try bigdatacloud.net first (more reliable, no rate limits for basic use)
-          const bigDataResponse = await fetch(`https://api.bigdatacloud.net/data/ip-geolocation?ip=${ipAddress}`);
-          if (bigDataResponse.ok) {
-            const bigDataData = await bigDataResponse.json();
-            if (bigDataData && !bigDataData.error) {
-              userLocation = {
-                city: bigDataData.location?.city || bigDataData.location?.locality || "Unknown",
-                region: bigDataData.location?.principalSubdivision || "Unknown",
-                country: bigDataData.location?.country?.name || bigDataData.country?.name || "Unknown",
-                coordinates: bigDataData.location?.latitude && bigDataData.location?.longitude
-                  ? [bigDataData.location.latitude.toString(), bigDataData.location.longitude.toString()]
-                  : ["0", "0"],
-                timezone: bigDataData.location?.timeZone?.name || deviceInfo.timezone,
-                isp: bigDataData.network?.organization || "Unknown"
-              };
-            }
-          }
-        } catch (bigDataError) {
-          console.log('BigDataCloud IP geolocation failed, trying ip-api.com...');
-        }
-      }
-      
-      // Try ip-api.com as another fallback (may have rate limits/403 errors)
-      if (ipAddress && userLocation.city === "Unknown" && userLocation.country === "Unknown") {
-        try {
-          const freeApiResponse = await fetch(`https://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`);
-          if (freeApiResponse.ok && freeApiResponse.status === 200) {
-            const freeApiData = await freeApiResponse.json();
-            if (freeApiData && freeApiData.status === 'success') {
-              userLocation = {
-                city: freeApiData.city || "Unknown",
-                region: freeApiData.regionName || "Unknown",
-                country: freeApiData.country || "Unknown",
-                coordinates: freeApiData.lat && freeApiData.lon 
-                  ? [freeApiData.lat.toString(), freeApiData.lon.toString()] 
-                  : ["0", "0"],
-                timezone: freeApiData.timezone || deviceInfo.timezone,
-                isp: freeApiData.isp || "Unknown"
-              };
-            }
-          } else if (freeApiResponse.status === 403) {
-            console.log('ip-api.com returned 403 (rate limited or forbidden), using browser geolocation fallback...');
-          }
-        } catch (freeApiError) {
-          console.log('ip-api.com failed, trying browser geolocation...');
-        }
-      }
-      
-      // Browser geolocation fallback removed - it triggers a location permission prompt.
-      // Location is determined via IP-based APIs only (ipinfo, bigdatacloud, ip-api).
-    } catch (error) {
-      console.error('Error getting location data:', error);
-      // Keep default location data
     }
-    
-    // Current timestamp
+
+    if (userLocation.city === 'Unknown' && userLocation.country === 'Unknown') {
+      try {
+        const freeApiResponse = await fetch(
+          `https://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`
+        );
+        if (freeApiResponse.ok && freeApiResponse.status === 200) {
+          const freeApiData = await freeApiResponse.json();
+          if (freeApiData && freeApiData.status === 'success') {
+            userLocation = {
+              city: freeApiData.city || 'Unknown',
+              region: freeApiData.regionName || 'Unknown',
+              country: freeApiData.country || 'Unknown',
+              coordinates: freeApiData.lat && freeApiData.lon
+                ? [freeApiData.lat.toString(), freeApiData.lon.toString()]
+                : ['0', '0'],
+              timezone: freeApiData.timezone || deviceInfo.timezone,
+              isp: freeApiData.isp || 'Unknown',
+            };
+          }
+        }
+      } catch {
+        // keep defaults
+      }
+    }
+
+    const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
+    await updateDoc(visitorRef, {
+      code: ipAddress,
+      location: userLocation,
+    });
+  } catch (error) {
+    console.warn('Location enrichment failed:', error);
+  }
+};
+
+// Track visitor — save session immediately; enrich location afterward
+const trackVisitor = async () => {
+  try {
+    const { visitorId, sessionId } = ensureTrackingIds();
+    const { anonymizedIP, ipAddress } = await resolveAnonymizedIP(visitorId);
+    const deviceInfo = getDeviceInfo();
     const timestamp = new Date();
-    
-    // Detect environment
     const environment = getEnvironment();
-    
-    // Get campaign data (ref token > UTM > cookie)
+    const userLocation = defaultLocation(deviceInfo);
+
     const campaignData = await getCampaignData();
-    
-    // Build session object
+
     const sessionData = {
       sessionId,
       startTime: timestamp,
       referrer: document.referrer || 'direct',
-      environment, // Include environment in session
+      environment,
     };
-    
-    // Add campaign data if available
+
     if (campaignData) {
       sessionData.campaign = campaignData;
-      // Store campaign source in sessionStorage for later use
       sessionStorage.setItem('campaignSource', campaignData.source);
     }
-    
-    // Use anonymizedIP as the document ID, but include environment in data
+
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
-    
-    // Get the current document to check if it exists
     const docSnap = await getDoc(visitorRef);
-    
+
     if (docSnap.exists()) {
-      // Update existing visitor document
       await updateDoc(visitorRef, {
         visitorId,
         code: ipAddress,
@@ -412,11 +432,10 @@ const trackVisitor = async () => {
         visits: increment(1),
         deviceInfo,
         location: userLocation,
-        environment, // Add environment field
-        sessions: arrayUnion(sessionData)
+        environment,
+        sessions: arrayUnion(sessionData),
       });
     } else {
-      // Create new visitor document with initial visit count of 1
       await setDoc(visitorRef, {
         visitorId,
         code: ipAddress,
@@ -426,20 +445,33 @@ const trackVisitor = async () => {
         visits: 1,
         deviceInfo,
         location: userLocation,
-        environment, // Add environment field
-        sessions: [sessionData]
+        environment,
+        sessions: [sessionData],
       });
     }
-    
-    // Update total visitor count
+
+    if (campaignData?.refToken) {
+      const { recordRefAttribution } = await import('./trackingTokenService');
+      recordRefAttribution(campaignData.refToken, {
+        anonymizedIP,
+        visitorId,
+        sessionId,
+        environment,
+        landingPage: campaignData.landingPage,
+      });
+    }
+
     const statsRef = doc(db, 'analytics_stats', 'visitors');
     await setDoc(statsRef, {
       total: increment(1),
-      lastUpdated: timestamp
+      lastUpdated: timestamp,
     }, { merge: true });
-    
+
+    enrichVisitorLocation(anonymizedIP, ipAddress, deviceInfo).catch(() => {});
+
     return { visitorId, sessionId, anonymizedIP, deviceInfo, location: userLocation };
   } catch (error) {
+    console.warn('trackVisitor failed:', error);
     return null;
   }
 };
@@ -447,20 +479,23 @@ const trackVisitor = async () => {
 // Track page view
 const trackPageView = async (path, title) => {
   try {
-    const sessionId = getSessionId();
-    const visitorId = getVisitorId();
-    // Get anonymizedIP from localStorage (set by trackVisitor during init)
+    const sessionId = getSessionId() || sessionStorage.getItem('sessionId');
+    const visitorId = getVisitorId() || localStorage.getItem('visitorId');
     let anonymizedIP = localStorage.getItem('anonymizedIP');
-    
-    // If not available, try to get it (fallback)
+
+    if (!anonymizedIP && visitorId) {
+      const resolved = await resolveAnonymizedIP(visitorId);
+      anonymizedIP = resolved.anonymizedIP;
+    }
+
     if (!anonymizedIP) {
       anonymizedIP = await anonymizeIP();
       if (anonymizedIP) {
         localStorage.setItem('anonymizedIP', anonymizedIP);
       }
     }
-    
-    if (!sessionId || !visitorId || !anonymizedIP) {
+
+    if (!sessionId || !visitorId) {
       return null;
     }
     
@@ -540,8 +575,7 @@ const trackPageTime = async (path, pageViewId = null) => {
     const endTime = Date.now();
     const timeSpent = Math.floor((endTime - startTime) / 1000); // Time in seconds
     
-    // Only track if time spent is meaningful (at least 1 second)
-    if (timeSpent < 1) {
+    if (timeSpent < 0) {
       return;
     }
     
@@ -723,8 +757,7 @@ const trackSessionEnd = async () => {
     const endTime = new Date();
     const duration = (endTime - startTime) / 1000; // duration in seconds
     
-    // Only track sessions longer than 5 seconds
-    if (duration < 5) {
+    if (duration < 1) {
       return;
     }
     
@@ -752,7 +785,10 @@ const trackSessionEnd = async () => {
 // Initialize analytics
 const initAnalytics = async () => {
   try {
-    // Track visitor
+    if (!featureFlags.enableAnalytics) {
+      return null;
+    }
+
     const visitorData = await trackVisitor();
     
     if (visitorData) {

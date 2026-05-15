@@ -39,9 +39,10 @@ export function ClicksDrillThrough({ token, onClose }) {
         {drillData.length === 0 ? (
           <div className="drill-through-empty">
             <p>
-              No session data yet. Drill-through shows visitors whose sessions used this ref link.
+              No visitor or session data matched this ref link yet. Clicks are counted when someone opens the link;
+              sessions appear here once their visit is saved (including quick bounces).
               <br />
-              <small>If you just created this link or the click was very recent, refresh the Traffic page to load the latest visitor data.</small>
+              <small>Refresh the Traffic page after new visits. Older clicks before this update may only show a click count.</small>
             </p>
           </div>
         ) : (

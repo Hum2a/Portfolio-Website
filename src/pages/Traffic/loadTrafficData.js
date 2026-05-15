@@ -13,6 +13,7 @@ export async function loadTrafficData() {
     mediaClicksSnapshot,
     enquiriesSnapshot,
     statsSnapshot,
+    refHitsSnapshot,
   ] = await Promise.all([
     getDocs(query(collection(db, 'analytics_visitors'), orderBy('lastVisit', 'desc'))),
     getDocs(query(collection(db, 'analytics_pageviews'), orderBy('timestamp', 'desc'))),
@@ -21,6 +22,7 @@ export async function loadTrafficData() {
     getDocs(query(collection(db, 'analytics_media_clicks'), orderBy('timestamp', 'desc'))),
     getDocs(query(collection(db, 'enquiries'), orderBy('timestamp', 'desc'))),
     getDocs(collection(db, 'analytics_stats')),
+    getDocs(query(collection(db, 'analytics_ref_hits'), orderBy('timestamp', 'desc'))),
   ]);
 
   const visitors = visitorsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -29,6 +31,7 @@ export async function loadTrafficData() {
   const pageTimes = pageTimesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const mediaClicks = mediaClicksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const enquiries = enquiriesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  const refHits = refHitsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
   const stats = {};
   statsSnapshot.forEach((doc) => {
@@ -42,6 +45,7 @@ export async function loadTrafficData() {
     pageTimes,
     mediaClicks,
     enquiries,
+    refHits,
     stats,
   };
 }

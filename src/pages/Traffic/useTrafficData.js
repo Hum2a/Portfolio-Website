@@ -33,6 +33,7 @@ export function useTrafficData(role) {
   const [pageTimes, setPageTimes] = useState([]);
   const [mediaClicks, setMediaClicks] = useState([]);
   const [enquiries, setEnquiries] = useState([]);
+  const [refHits, setRefHits] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('visitors');
@@ -86,6 +87,7 @@ export function useTrafficData(role) {
       setPageTimes(data.pageTimes);
       setMediaClicks(data.mediaClicks);
       setEnquiries(data.enquiries);
+      setRefHits(data.refHits || []);
       setStats(data.stats);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -887,20 +889,61 @@ export function useTrafficData(role) {
   }, []);
 
   const getRefTokenDrillThrough = useCallback((tokenId) => {
-    if (!tokenId || !visitors?.length) return [];
+    if (!tokenId) return [];
+    if (!visitors?.length && !refHits?.length) return [];
+
+    const token = tokenId.toLowerCase().trim();
     const sessionMatchesRef = (s) => {
-      if (s.campaign?.refToken === tokenId) return true;
-      // Fallback for sessions stored before refToken was added (landingPage contains ?ref=tokenId)
+      if (s.campaign?.refToken === tokenId || s.campaign?.refToken === token) return true;
       const lp = s.campaign?.landingPage || '';
-      return lp.includes('ref=' + tokenId);
+      return lp.includes('ref=' + tokenId) || lp.includes('ref=' + token);
     };
-    return visitors
-      .filter((v) => v.sessions?.some(sessionMatchesRef))
-      .map((v) => ({
-        ...v,
-        matchingSessions: v.sessions?.filter(sessionMatchesRef) || [],
-      }));
-  }, [visitors]);
+
+    const hitToSession = (h) => ({
+      sessionId: h.sessionId || `ref-hit-${h.id}`,
+      startTime: h.timestamp,
+      referrer: 'ref link',
+      environment: h.environment,
+      campaign: { refToken: token, landingPage: h.landingPage },
+    });
+
+    const byIP = new Map();
+
+    visitors.forEach((v) => {
+      const matching = v.sessions?.filter(sessionMatchesRef) || [];
+      if (matching.length > 0) {
+        byIP.set(v.anonymizedIP || v.id, { ...v, matchingSessions: [...matching] });
+      }
+    });
+
+    (refHits || []).forEach((h) => {
+      if ((h.refToken || '').toLowerCase() !== token) return;
+      const ip = h.anonymizedIP;
+      if (!ip) return;
+
+      let entry = byIP.get(ip);
+      if (!entry) {
+        const visitor = visitors.find((v) => (v.anonymizedIP || v.id) === ip);
+        entry = visitor
+          ? { ...visitor, matchingSessions: [] }
+          : {
+              id: ip,
+              anonymizedIP: ip,
+              environment: h.environment,
+              location: null,
+              matchingSessions: [],
+            };
+        byIP.set(ip, entry);
+      }
+
+      const sess = hitToSession(h);
+      if (!entry.matchingSessions.some((s) => s.sessionId === sess.sessionId)) {
+        entry.matchingSessions.push(sess);
+      }
+    });
+
+    return Array.from(byIP.values()).filter((v) => v.matchingSessions.length > 0);
+  }, [visitors, refHits]);
 
   return {
     // Data

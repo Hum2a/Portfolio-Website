@@ -88,6 +88,28 @@ export async function incrementTokenClicks(token) {
 }
 
 /**
+ * Record a ref-link hit for drill-through (survives quick bounces / partial sessions).
+ */
+export async function recordRefAttribution(refToken, { anonymizedIP, visitorId, sessionId, environment, landingPage }) {
+  const token = refToken.toLowerCase().trim();
+  try {
+    await incrementTokenClicks(token);
+    const hitId = `${token}_${Date.now()}_${sessionId || visitorId || 'na'}`;
+    await setDoc(doc(db, 'analytics_ref_hits', hitId), {
+      refToken: token,
+      anonymizedIP: anonymizedIP || null,
+      visitorId: visitorId || null,
+      sessionId: sessionId || null,
+      environment: environment || null,
+      landingPage: landingPage || null,
+      timestamp: new Date(),
+    });
+  } catch (e) {
+    console.warn('Ref attribution record failed:', e);
+  }
+}
+
+/**
  * Set attribution cookie (persists source across visits)
  */
 export function setAttributionCookie(attribution) {
@@ -115,6 +137,7 @@ export function getAttributionFromCookie() {
         source: data.source,
         medium: data.medium || null,
         campaign: data.campaign || null,
+        refToken: data.refToken || null,
       };
     }
   } catch {

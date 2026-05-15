@@ -140,5 +140,11 @@ service cloud.firestore {
       allow create, update: if true;
       allow delete: if isHumza();
     }
+
+    match /analytics_ref_hits/{hitId} {
+      allow get, list: if isHumza();
+      allow create: if true;
+      allow update, delete: if isHumza();
+    }
   }
 }
