@@ -349,53 +349,7 @@ const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
       }
     }
 
-    if (userLocation.city === 'Unknown' && userLocation.country === 'Unknown') {
-      try {
-        const bigDataResponse = await fetch(`https://api.bigdatacloud.net/data/ip-geolocation?ip=${ipAddress}`);
-        if (bigDataResponse.ok) {
-          const bigDataData = await bigDataResponse.json();
-          if (bigDataData && !bigDataData.error) {
-            userLocation = {
-              city: bigDataData.location?.city || bigDataData.location?.locality || 'Unknown',
-              region: bigDataData.location?.principalSubdivision || 'Unknown',
-              country: bigDataData.location?.country?.name || bigDataData.country?.name || 'Unknown',
-              coordinates: bigDataData.location?.latitude && bigDataData.location?.longitude
-                ? [bigDataData.location.latitude.toString(), bigDataData.location.longitude.toString()]
-                : ['0', '0'],
-              timezone: bigDataData.location?.timeZone?.name || deviceInfo.timezone,
-              isp: bigDataData.network?.organization || 'Unknown',
-            };
-          }
-        }
-      } catch {
-        // try next provider
-      }
-    }
-
-    if (userLocation.city === 'Unknown' && userLocation.country === 'Unknown') {
-      try {
-        const freeApiResponse = await fetch(
-          `https://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city,lat,lon,timezone,isp,query`
-        );
-        if (freeApiResponse.ok && freeApiResponse.status === 200) {
-          const freeApiData = await freeApiResponse.json();
-          if (freeApiData && freeApiData.status === 'success') {
-            userLocation = {
-              city: freeApiData.city || 'Unknown',
-              region: freeApiData.regionName || 'Unknown',
-              country: freeApiData.country || 'Unknown',
-              coordinates: freeApiData.lat && freeApiData.lon
-                ? [freeApiData.lat.toString(), freeApiData.lon.toString()]
-                : ['0', '0'],
-              timezone: freeApiData.timezone || deviceInfo.timezone,
-              isp: freeApiData.isp || 'Unknown',
-            };
-          }
-        }
-      } catch {
-        // keep defaults
-      }
-    }
+    // BigDataCloud / ip-api.com are often 403 from browsers; use REACT_APP_IPINFO_TOKEN for geo.
 
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
     await updateDoc(visitorRef, {
