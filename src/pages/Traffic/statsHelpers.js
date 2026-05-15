@@ -2,18 +2,19 @@ import { getDayKey } from '../../services/analyticsStatsUpdater';
 
 const MS_DAY = 24 * 60 * 60 * 1000;
 
-export function parseRollupStats(stats = {}) {
-  const visitors = stats.visitors || {};
-  const pages = stats.pages || {};
-  const pageTimes = stats.page_times || {};
-  const events = stats.events || {};
-  const daily = stats.daily || {};
-  const refTokens = stats.ref_tokens || {};
-  const engagement = stats.engagement || {};
-  const campaigns = stats.campaigns || {};
-  const contactForms = stats.contact_forms || {};
-  const mediaClicks = stats.media_clicks || {};
-  const scrollDepth = stats.scroll_depth || {};
+export function parseRollupStats(stats) {
+  const s = stats == null ? {} : stats;
+  const visitors = typeof s.visitors === 'object' && s.visitors !== null ? s.visitors : {};
+  const pages = typeof s.pages === 'object' && s.pages !== null ? s.pages : {};
+  const pageTimes = typeof s.page_times === 'object' && s.page_times !== null ? s.page_times : {};
+  const events = typeof s.events === 'object' && s.events !== null ? s.events : {};
+  const daily = typeof s.daily === 'object' && s.daily !== null ? s.daily : {};
+  const refTokens = typeof s.ref_tokens === 'object' && s.ref_tokens !== null ? s.ref_tokens : {};
+  const engagement = typeof s.engagement === 'object' && s.engagement !== null ? s.engagement : {};
+  const campaigns = typeof s.campaigns === 'object' && s.campaigns !== null ? s.campaigns : {};
+  const contactForms = typeof s.contact_forms === 'object' && s.contact_forms !== null ? s.contact_forms : {};
+  const mediaClicks = typeof s.media_clicks === 'object' && s.media_clicks !== null ? s.media_clicks : {};
+  const scrollDepth = typeof s.scroll_depth === 'object' && s.scroll_depth !== null ? s.scroll_depth : {};
 
   return {
     visitors,
@@ -128,13 +129,14 @@ export function getPageTimeAverages(pageTimesDoc) {
 }
 
 export function mergeHeadlineStats(rollup, rawCounts, environmentFilter) {
-  const v = rollup.visitors || {};
-  const p = rollup.pages || {};
-  const e = rollup.events || {};
-  const pt = rollup.pageTimes || {};
-  const mc = rollup.mediaClicks || {};
-  const eng = rollup.engagement || {};
-  const cf = rollup.contactForms || {};
+  const r = rollup ?? {};
+  const v = r.visitors || {};
+  const p = r.pages || {};
+  const e = r.events || {};
+  const pt = r.pageTimes || {};
+  const mc = r.mediaClicks || {};
+  const eng = r.engagement || {};
+  const cf = r.contactForms || {};
   const prodOnly = environmentFilter === 'production';
   const localOnly = environmentFilter === 'localhost';
 
