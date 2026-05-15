@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useTraffic } from '../TrafficContext';
-import { ClicksDrillThrough } from './ClicksDrillThrough';
+import { RefCodeRowDetails } from './RefCodeRowDetails';
 
 function formatTokenDate(timestamp) {
   if (!timestamp) return '—';
@@ -10,6 +11,8 @@ function formatTokenDate(timestamp) {
   else d = new Date(timestamp);
   return isNaN(d.getTime()) ? '—' : d.toLocaleDateString(undefined, { dateStyle: 'medium' });
 }
+
+const COL_COUNT = 10;
 
 export function ReferenceCodesList() {
   const {
@@ -27,9 +30,18 @@ export function ReferenceCodesList() {
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
-  const [drillToken, setDrillToken] = useState(null);
+  const [expandedIds, setExpandedIds] = useState(() => new Set());
   const [deleteConfirmToken, setDeleteConfirmToken] = useState(null);
   const [deleteError, setDeleteError] = useState('');
+
+  const toggleExpanded = (tokenId) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(tokenId)) next.delete(tokenId);
+      else next.add(tokenId);
+      return next;
+    });
+  };
 
   const startEdit = (token) => {
     setEditingId(token.id);
@@ -86,6 +98,11 @@ export function ReferenceCodesList() {
     try {
       await deleteTrackingToken(deleteConfirmToken.id);
       setDeleteConfirmToken(null);
+      setExpandedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(deleteConfirmToken.id);
+        return next;
+      });
     } catch (err) {
       setDeleteError(err?.message || 'Failed to delete');
     } finally {
@@ -141,6 +158,7 @@ export function ReferenceCodesList() {
         <table className="ref-codes-table">
           <thead>
             <tr>
+              <th className="ref-codes-expand-col" aria-label="Expand" />
               <th>Token</th>
               <th>Source</th>
               <th>Medium</th>
@@ -153,120 +171,145 @@ export function ReferenceCodesList() {
             </tr>
           </thead>
           <tbody>
-            {trackingTokens.map((token) => (
-              <tr key={token.id} className={editingId === token.id ? 'editing' : ''}>
-                <td className="token-cell">
-                  <code>{token.id}</code>
-                </td>
-                {editingId === token.id ? (
-                  <>
-                    <td>
-                      <input
-                        type="text"
-                        value={editForm.source}
-                        onChange={(e) => setEditForm((f) => ({ ...f, source: e.target.value }))}
-                        placeholder="Source"
-                        className="ref-codes-edit-input"
-                      />
+            {trackingTokens.map((token) => {
+              const isExpanded = expandedIds.has(token.id);
+              const isEditing = editingId === token.id;
+
+              return (
+                <React.Fragment key={token.id}>
+                  <tr className={`${isEditing ? 'editing' : ''} ${isExpanded ? 'expanded' : ''}`}>
+                    <td className="ref-codes-expand-col">
+                      {!isEditing && (
+                        <button
+                          type="button"
+                          className="ref-codes-expand-btn"
+                          onClick={() => toggleExpanded(token.id)}
+                          aria-expanded={isExpanded}
+                          aria-label={isExpanded ? 'Collapse analytics' : 'Expand analytics'}
+                          title={isExpanded ? 'Hide charts & visits' : 'Show charts & visits'}
+                        >
+                          {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+                        </button>
+                      )}
                     </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={editForm.medium}
-                        onChange={(e) => setEditForm((f) => ({ ...f, medium: e.target.value }))}
-                        placeholder="Medium"
-                        className="ref-codes-edit-input"
-                      />
+                    <td className="token-cell">
+                      <code>{token.id}</code>
                     </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={editForm.campaign}
-                        onChange={(e) => setEditForm((f) => ({ ...f, campaign: e.target.value }))}
-                        placeholder="Campaign"
-                        className="ref-codes-edit-input"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={editForm.label}
-                        onChange={(e) => setEditForm((f) => ({ ...f, label: e.target.value }))}
-                        placeholder="Label"
-                        className="ref-codes-edit-input"
-                      />
-                    </td>
-                    <td colSpan="4" className="edit-actions-cell">
-                      {saveError && <span className="ref-codes-save-error">{saveError}</span>}
-                      <button
-                        type="button"
-                        className="ref-codes-save-btn"
-                        onClick={saveEdit}
-                        disabled={saving || !editForm.source?.trim()}
-                      >
-                        {saving ? 'Saving...' : 'Save'}
-                      </button>
-                      <button type="button" className="ref-codes-cancel-btn" onClick={cancelEdit} disabled={saving}>
-                        Cancel
-                      </button>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td>{token.source || '—'}</td>
-                    <td>{token.medium || '—'}</td>
-                    <td>{token.campaign || '—'}</td>
-                    <td>{token.label || '—'}</td>
-                    <td className="clicks-cell">
-                      <button
-                        type="button"
-                        className="ref-codes-clicks-btn"
-                        onClick={() => setDrillToken(token)}
-                        title="View IP addresses and sessions for this link"
-                      >
-                        {token.clicks ?? 0}
-                      </button>
-                    </td>
-                    <td className="date-cell">{formatTokenDate(token.createdAt)}</td>
-                    <td className="link-cell">
-                      <button
-                        type="button"
-                        className="ref-codes-copy-link-btn"
-                        onClick={() => copyRefUrl(token)}
-                        title="Copy link"
-                      >
-                        {copiedId === token.id ? '✓ Copied!' : '📋 Copy'}
-                      </button>
-                    </td>
-                    <td className="actions-cell">
-                      <button
-                        type="button"
-                        className="ref-codes-edit-btn"
-                        onClick={() => startEdit(token)}
-                        title="Edit attributes"
-                      >
-                        ✏️ Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="ref-codes-delete-btn"
-                        onClick={() => openDeleteConfirm(token)}
-                        disabled={deletingId === token.id}
-                        title="Delete (links will break)"
-                      >
-                        {deletingId === token.id ? '...' : '🗑️ Delete'}
-                      </button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
+                    {isEditing ? (
+                      <>
+                        <td>
+                          <input
+                            type="text"
+                            value={editForm.source}
+                            onChange={(e) => setEditForm((f) => ({ ...f, source: e.target.value }))}
+                            placeholder="Source"
+                            className="ref-codes-edit-input"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={editForm.medium}
+                            onChange={(e) => setEditForm((f) => ({ ...f, medium: e.target.value }))}
+                            placeholder="Medium"
+                            className="ref-codes-edit-input"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={editForm.campaign}
+                            onChange={(e) => setEditForm((f) => ({ ...f, campaign: e.target.value }))}
+                            placeholder="Campaign"
+                            className="ref-codes-edit-input"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={editForm.label}
+                            onChange={(e) => setEditForm((f) => ({ ...f, label: e.target.value }))}
+                            placeholder="Label"
+                            className="ref-codes-edit-input"
+                          />
+                        </td>
+                        <td colSpan="4" className="edit-actions-cell">
+                          {saveError && <span className="ref-codes-save-error">{saveError}</span>}
+                          <button
+                            type="button"
+                            className="ref-codes-save-btn"
+                            onClick={saveEdit}
+                            disabled={saving || !editForm.source?.trim()}
+                          >
+                            {saving ? 'Saving...' : 'Save'}
+                          </button>
+                          <button type="button" className="ref-codes-cancel-btn" onClick={cancelEdit} disabled={saving}>
+                            Cancel
+                          </button>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td>{token.source || '—'}</td>
+                        <td>{token.medium || '—'}</td>
+                        <td>{token.campaign || '—'}</td>
+                        <td>{token.label || '—'}</td>
+                        <td className="clicks-cell">
+                          <button
+                            type="button"
+                            className={`ref-codes-clicks-btn ${isExpanded ? 'active' : ''}`}
+                            onClick={() => toggleExpanded(token.id)}
+                            title="Show visit charts and history"
+                          >
+                            {token.clicks ?? 0}
+                          </button>
+                        </td>
+                        <td className="date-cell">{formatTokenDate(token.createdAt)}</td>
+                        <td className="link-cell">
+                          <button
+                            type="button"
+                            className="ref-codes-copy-link-btn"
+                            onClick={() => copyRefUrl(token)}
+                            title="Copy link"
+                          >
+                            {copiedId === token.id ? '✓ Copied!' : '📋 Copy'}
+                          </button>
+                        </td>
+                        <td className="actions-cell">
+                          <button
+                            type="button"
+                            className="ref-codes-edit-btn"
+                            onClick={() => startEdit(token)}
+                            title="Edit attributes"
+                          >
+                            ✏️ Edit
+                          </button>
+                          <button
+                            type="button"
+                            className="ref-codes-delete-btn"
+                            onClick={() => openDeleteConfirm(token)}
+                            disabled={deletingId === token.id}
+                            title="Delete (links will break)"
+                          >
+                            {deletingId === token.id ? '...' : '🗑️ Delete'}
+                          </button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                  {isExpanded && !isEditing && (
+                    <tr className="ref-codes-detail-row">
+                      <td colSpan={COL_COUNT}>
+                        <RefCodeRowDetails token={token} />
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
-      {drillToken && (
-        <ClicksDrillThrough token={drillToken} onClose={() => setDrillToken(null)} />
-      )}
       {deleteConfirmToken && (
         <div className="delete-confirm-overlay" onClick={closeDeleteConfirm}>
           <div className="delete-confirm-modal" onClick={(e) => e.stopPropagation()}>
@@ -307,3 +350,4 @@ export function ReferenceCodesList() {
     </div>
   );
 }
+

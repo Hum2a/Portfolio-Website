@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { loadTrafficData as fetchTrafficData } from './loadTrafficData';
 import { formatDate, formatDuration, getLocationString } from './utils';
+import { buildRefDrillData, buildRefTokenAnalytics } from './refTokenAnalytics';
 
 function getDateFilter(timeRange, dateRange) {
   if (timeRange === 'custom' && (dateRange.start || dateRange.end)) {
@@ -888,62 +889,15 @@ export function useTrafficData(role) {
     setRefUrlError('');
   }, []);
 
-  const getRefTokenDrillThrough = useCallback((tokenId) => {
-    if (!tokenId) return [];
-    if (!visitors?.length && !refHits?.length) return [];
+  const getRefTokenDrillThrough = useCallback(
+    (tokenId) => buildRefDrillData(tokenId, visitors, refHits),
+    [visitors, refHits]
+  );
 
-    const token = tokenId.toLowerCase().trim();
-    const sessionMatchesRef = (s) => {
-      if (s.campaign?.refToken === tokenId || s.campaign?.refToken === token) return true;
-      const lp = s.campaign?.landingPage || '';
-      return lp.includes('ref=' + tokenId) || lp.includes('ref=' + token);
-    };
-
-    const hitToSession = (h) => ({
-      sessionId: h.sessionId || `ref-hit-${h.id}`,
-      startTime: h.timestamp,
-      referrer: 'ref link',
-      environment: h.environment,
-      campaign: { refToken: token, landingPage: h.landingPage },
-    });
-
-    const byIP = new Map();
-
-    visitors.forEach((v) => {
-      const matching = v.sessions?.filter(sessionMatchesRef) || [];
-      if (matching.length > 0) {
-        byIP.set(v.anonymizedIP || v.id, { ...v, matchingSessions: [...matching] });
-      }
-    });
-
-    (refHits || []).forEach((h) => {
-      if ((h.refToken || '').toLowerCase() !== token) return;
-      const ip = h.anonymizedIP;
-      if (!ip) return;
-
-      let entry = byIP.get(ip);
-      if (!entry) {
-        const visitor = visitors.find((v) => (v.anonymizedIP || v.id) === ip);
-        entry = visitor
-          ? { ...visitor, matchingSessions: [] }
-          : {
-              id: ip,
-              anonymizedIP: ip,
-              environment: h.environment,
-              location: null,
-              matchingSessions: [],
-            };
-        byIP.set(ip, entry);
-      }
-
-      const sess = hitToSession(h);
-      if (!entry.matchingSessions.some((s) => s.sessionId === sess.sessionId)) {
-        entry.matchingSessions.push(sess);
-      }
-    });
-
-    return Array.from(byIP.values()).filter((v) => v.matchingSessions.length > 0);
-  }, [visitors, refHits]);
+  const getRefTokenAnalytics = useCallback(
+    (tokenId, tokenMeta = {}) => buildRefTokenAnalytics(tokenId, visitors, refHits, tokenMeta),
+    [visitors, refHits]
+  );
 
   return {
     // Data
@@ -990,6 +944,7 @@ export function useTrafficData(role) {
     updateTrackingToken: updateTrackingTokenHandler,
     deleteTrackingToken: deleteTrackingTokenHandler,
     getRefTokenDrillThrough,
+    getRefTokenAnalytics,
     selectedVisitorAnonymizedIP,
     setSelectedVisitorAnonymizedIP,
     // Filtered & computed
