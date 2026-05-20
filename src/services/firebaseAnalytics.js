@@ -346,16 +346,7 @@ const locationFromGeoJs = (data, deviceInfo) => {
   };
 };
 
-const locationFromBrowser = (position, deviceInfo) => ({
-  city: 'Unknown',
-  region: 'Unknown',
-  country: 'Unknown',
-  coordinates: [String(position.coords.latitude), String(position.coords.longitude)],
-  timezone: deviceInfo?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown',
-  isp: 'Unknown',
-});
-
-// IP-based lookup — no permission prompt (preferred for analytics)
+// IP-based lookup only — never prompts for browser GPS
 const fetchIpGeo = async (deviceInfo) => {
   const token = apiKeys.ipinfoToken;
   const hasToken = token && token !== 'YOUR_IPINFO_TOKEN' && token !== '';
@@ -380,25 +371,11 @@ const fetchIpGeo = async (deviceInfo) => {
       if (hasUsableLocation(loc)) return loc;
     }
   } catch {
-    // optional browser fallback below
+    // no further fallbacks
   }
 
   return null;
 };
-
-// GPS — only works if the visitor clicks Allow; cannot be auto-granted
-const fetchBrowserGeo = (deviceInfo) =>
-  new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      resolve(null);
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => resolve(locationFromBrowser(position, deviceInfo)),
-      () => resolve(null),
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
-    );
-  });
 
 const resolveVisitorIp = async () => {
   try {
@@ -417,11 +394,6 @@ const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
   try {
     const ipGeo = await fetchIpGeo(deviceInfo);
     if (ipGeo) userLocation = ipGeo;
-
-    if (!hasUsableLocation(userLocation)) {
-      const browserGeo = await fetchBrowserGeo(deviceInfo);
-      if (browserGeo) userLocation = browserGeo;
-    }
 
     if (!ipAddress) {
       ipAddress = await resolveVisitorIp();
