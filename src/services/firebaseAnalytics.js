@@ -315,45 +315,121 @@ const defaultLocation = (deviceInfo) => ({
   isp: 'Unknown',
 });
 
+const hasUsableLocation = (location) => {
+  if (!location) return false;
+  const [lat, lon] = location.coordinates || [];
+  const hasCoords = lat && lon && (lat !== '0' || lon !== '0');
+  return hasCoords || (location.country && location.country !== 'Unknown');
+};
+
+const locationFromIpinfo = (data, deviceInfo) => {
+  if (!data || data.error || data.bogon) return null;
+  return {
+    city: data.city || 'Unknown',
+    region: data.region || 'Unknown',
+    country: data.country || 'Unknown',
+    coordinates: data.loc ? data.loc.split(',') : ['0', '0'],
+    timezone: data.timezone || deviceInfo?.timezone || 'Unknown',
+    isp: data.org || 'Unknown',
+  };
+};
+
+const locationFromGeoJs = (data, deviceInfo) => {
+  if (!data || !data.ip) return null;
+  return {
+    city: data.city || 'Unknown',
+    region: data.region || 'Unknown',
+    country: data.country_code || data.country || 'Unknown',
+    coordinates: [String(data.latitude ?? '0'), String(data.longitude ?? '0')],
+    timezone: deviceInfo?.timezone || 'Unknown',
+    isp: 'Unknown',
+  };
+};
+
+const locationFromBrowser = (position, deviceInfo) => ({
+  city: 'Unknown',
+  region: 'Unknown',
+  country: 'Unknown',
+  coordinates: [String(position.coords.latitude), String(position.coords.longitude)],
+  timezone: deviceInfo?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown',
+  isp: 'Unknown',
+});
+
+// IP-based lookup — no permission prompt (preferred for analytics)
+const fetchIpGeo = async (deviceInfo) => {
+  const token = apiKeys.ipinfoToken;
+  const hasToken = token && token !== 'YOUR_IPINFO_TOKEN' && token !== '';
+  const ipinfoUrl = hasToken
+    ? `https://ipinfo.io/json?token=${encodeURIComponent(token)}`
+    : 'https://ipinfo.io/json';
+
+  try {
+    const res = await fetchWithTimeout(ipinfoUrl, 4000);
+    if (res.ok) {
+      const loc = locationFromIpinfo(await res.json(), deviceInfo);
+      if (hasUsableLocation(loc)) return loc;
+    }
+  } catch {
+    // try next provider
+  }
+
+  try {
+    const res = await fetchWithTimeout('https://get.geojs.io/v1/ip/geo.json', 4000);
+    if (res.ok) {
+      const loc = locationFromGeoJs(await res.json(), deviceInfo);
+      if (hasUsableLocation(loc)) return loc;
+    }
+  } catch {
+    // optional browser fallback below
+  }
+
+  return null;
+};
+
+// GPS — only works if the visitor clicks Allow; cannot be auto-granted
+const fetchBrowserGeo = (deviceInfo) =>
+  new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(null);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => resolve(locationFromBrowser(position, deviceInfo)),
+      () => resolve(null),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+    );
+  });
+
+const resolveVisitorIp = async () => {
+  try {
+    const ipResponse = await fetchWithTimeout('https://api.ipify.org?format=json', 4000);
+    const ipData = await ipResponse.json();
+    return ipData?.ip || null;
+  } catch {
+    return null;
+  }
+};
+
 // Resolve geo in the background so quick visits still get a session saved first
 const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
   let userLocation = defaultLocation(deviceInfo);
 
-  if (!ipAddress) {
-    try {
-      const ipResponse = await fetchWithTimeout('https://api.ipify.org?format=json', 4000);
-      const ipData = await ipResponse.json();
-      ipAddress = ipData?.ip || null;
-    } catch {
-      return;
-    }
-  }
-
-  if (!ipAddress) return;
-
   try {
-    if (apiKeys.ipinfoToken && apiKeys.ipinfoToken !== 'YOUR_IPINFO_TOKEN' && apiKeys.ipinfoToken !== '') {
-      const locationResponse = await fetch(`https://ipinfo.io/${ipAddress}/json?token=${apiKeys.ipinfoToken}`);
-      if (locationResponse.ok) {
-        const locationData = await locationResponse.json();
-        if (locationData && !locationData.error) {
-          userLocation = {
-            city: locationData.city || 'Unknown',
-            region: locationData.region || 'Unknown',
-            country: locationData.country || 'Unknown',
-            coordinates: locationData.loc ? locationData.loc.split(',') : ['0', '0'],
-            timezone: locationData.timezone || deviceInfo.timezone,
-            isp: locationData.org || 'Unknown',
-          };
-        }
-      }
+    const ipGeo = await fetchIpGeo(deviceInfo);
+    if (ipGeo) userLocation = ipGeo;
+
+    if (!hasUsableLocation(userLocation)) {
+      const browserGeo = await fetchBrowserGeo(deviceInfo);
+      if (browserGeo) userLocation = browserGeo;
     }
 
-    // BigDataCloud / ip-api.com are often 403 from browsers; use REACT_APP_IPINFO_TOKEN for geo.
+    if (!ipAddress) {
+      ipAddress = await resolveVisitorIp();
+    }
 
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
     await updateDoc(visitorRef, {
-      code: ipAddress,
+      ...(ipAddress ? { code: ipAddress } : {}),
       location: userLocation,
     });
   } catch (error) {
