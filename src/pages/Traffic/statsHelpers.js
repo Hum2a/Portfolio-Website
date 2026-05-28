@@ -2,6 +2,24 @@ import { getDayKey } from '../../services/analyticsStatsUpdater';
 
 const MS_DAY = 24 * 60 * 60 * 1000;
 
+/** Coerce Firestore/rollup values to a non-negative integer, or null if invalid. */
+export function asCount(value) {
+  if (value == null || value === '') return null;
+  const n = Number(value);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return Math.floor(n);
+}
+
+/** Bounce % = sessions under 5s / total sessions. Returns null when undefined or invalid. */
+export function computeBounceRatePercent(bounceCount, sessionCount) {
+  const bounces = asCount(bounceCount);
+  const sessions = asCount(sessionCount);
+  if (bounces == null || sessions == null || sessions <= 0) return null;
+  const rate = (bounces / sessions) * 100;
+  if (!Number.isFinite(rate)) return null;
+  return parseFloat(rate.toFixed(1));
+}
+
 export function parseRollupStats(stats) {
   const s = stats == null ? {} : stats;
   const visitors = typeof s.visitors === 'object' && s.visitors !== null ? s.visitors : {};
@@ -139,14 +157,17 @@ export function computeRawCountsFromRecords({
   const totalTimeSpent = pageTimes.reduce((sum, pt) => sum + (pt.timeSpent || 0), 0);
   const avgTimeSpent =
     pageTimes.length > 0 ? parseFloat((totalTimeSpent / pageTimes.length).toFixed(1)) : 0;
-  const sessionsEnded = pageTimes.length;
-  const bounces = pageTimes.filter((pt) => (pt.timeSpent || 0) < 5).length;
-  const sessionsOver30s = pageTimes.filter((pt) => (pt.timeSpent || 0) >= 30).length;
-  let bounceRate = null;
-  if (sessionsEnded > 0) {
-    const rate = parseFloat(((bounces / sessionsEnded) * 100).toFixed(1));
-    bounceRate = Number.isFinite(rate) ? rate : null;
-  }
+  const sessionCount = pageTimes.length;
+  const bounceCount = pageTimes.filter((pt) => {
+    const seconds = Number(pt.timeSpent);
+    const duration = Number.isFinite(seconds) ? seconds : 0;
+    return duration < 5;
+  }).length;
+  const sessionsOver30s = pageTimes.filter((pt) => {
+    const seconds = Number(pt.timeSpent);
+    return Number.isFinite(seconds) && seconds >= 30;
+  }).length;
+  const bounceRate = computeBounceRatePercent(bounceCount, sessionCount);
   const newVisitors = visitors.filter((v) => (v.visits || 0) <= 1).length;
   const returningVisitors = Math.max(0, visitors.length - newVisitors);
 
@@ -171,6 +192,8 @@ export function computeRawCountsFromRecords({
     newVisitors,
     returningVisitors,
     bounceRate,
+    bounceCount,
+    sessionCount,
     sessionsOver30s,
     contactFormSubmits: events.filter(
       (e) => e.category === 'contact' && (e.action === 'submit' || e.action === 'start')
@@ -282,8 +305,14 @@ export function mergeHeadlineStats(rollup, rawCounts, environmentFilter) {
         ? p.total
         : rawCounts.totalPageViews;
 
-  const sessionsEnded = prodOnly ? eng.prod_sessionsEnded ?? eng.sessionsEnded : eng.sessionsEnded;
-  const bounces = prodOnly ? eng.prod_bounce_under_5s ?? eng.bounce_under_5s : eng.bounce_under_5s;
+  const rollupSessions = asCount(
+    prodOnly ? eng.prod_sessionsEnded ?? eng.sessionsEnded : eng.sessionsEnded
+  );
+  const rollupBounces = asCount(
+    prodOnly ? eng.prod_bounce_under_5s ?? eng.bounce_under_5s : eng.bounce_under_5s
+  );
+  const rollupBounceRate = computeBounceRatePercent(rollupBounces, rollupSessions);
+  const pageTimeBounceRate = computeBounceRatePercent(rawCounts.bounceCount, rawCounts.sessionCount);
 
   return {
     ...rawCounts,
@@ -307,17 +336,10 @@ export function mergeHeadlineStats(rollup, rawCounts, environmentFilter) {
     avgTimeSpent:
       pt.count > 0 ? parseFloat((pt.total / pt.count).toFixed(1)) : rawCounts.avgTimeSpent ?? 0,
     totalTimeSpent: pt.total ?? rawCounts.totalTimeSpent ?? 0,
-    bounceRate: (() => {
-      if (sessionsEnded > 0 && Number.isFinite(bounces) && Number.isFinite(sessionsEnded)) {
-        const rate = parseFloat(((bounces / sessionsEnded) * 100).toFixed(1));
-        if (Number.isFinite(rate)) return rate;
-      }
-      if (rawCounts.bounceRate != null && Number.isFinite(rawCounts.bounceRate)) {
-        return rawCounts.bounceRate;
-      }
-      return null;
-    })(),
-    sessionsOver30s: eng.sessions_over_30s ?? rawCounts.sessionsOver30s ?? 0,
+    bounceRate: pageTimeBounceRate ?? rollupBounceRate,
+    bounceCount: rawCounts.bounceCount ?? rollupBounces,
+    sessionCount: rawCounts.sessionCount ?? rollupSessions,
+    sessionsOver30s: asCount(eng.sessions_over_30s) ?? rawCounts.sessionsOver30s ?? 0,
     contactFormSubmits: cf['action.submit'] ?? cf['action.start'] ?? 0,
     fromRollups: hasRollupVisitors,
   };

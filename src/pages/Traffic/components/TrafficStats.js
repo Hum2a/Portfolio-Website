@@ -205,12 +205,17 @@ export function TrafficStats() {
           </div>
         )}
       </div>
-      {Number.isFinite(filteredStats.bounceRate) && (
+      {(filteredStats.sessionCount ?? 0) > 0 && (
         <div className="stat-card">
           <h3>Bounce rate (&lt;5s)</h3>
-          <p className="stat-value">{filteredStats.bounceRate}%</p>
+          <p className="stat-value">
+            {Number.isFinite(filteredStats.bounceRate) ? `${filteredStats.bounceRate}%` : '—'}
+          </p>
           <div className="stat-breakdown">
-            <span className="breakdown-item">30s+ sessions: {filteredStats.sessionsOver30s}</span>
+            <span className="breakdown-item">
+              {filteredStats.bounceCount ?? 0} of {filteredStats.sessionCount ?? 0} sessions &lt;5s
+            </span>
+            <span className="breakdown-item">30s+ sessions: {filteredStats.sessionsOver30s ?? 0}</span>
           </div>
         </div>
       )}
