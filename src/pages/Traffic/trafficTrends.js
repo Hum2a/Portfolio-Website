@@ -112,12 +112,28 @@ export function computeTrafficTrends({
   trackingTokens = [],
   environmentFilter = 'all',
   toDate,
+  dateFilter = null,
 }) {
   const now = Date.now();
-  const recentStart = now - 7 * MS_DAY;
-  const prevStart = now - 14 * MS_DAY;
-  const prevEnd = recentStart;
-  const d30 = now - 30 * MS_DAY;
+  let recentStart = now - 7 * MS_DAY;
+  let prevStart = now - 14 * MS_DAY;
+  let prevEnd = recentStart;
+  let d30 = now - 30 * MS_DAY;
+  let trendWindowDays = 30;
+
+  if (dateFilter?.start || dateFilter?.end) {
+    const rangeEnd = dateFilter.end ? new Date(dateFilter.end).getTime() : now;
+    const rangeStart = dateFilter.start
+      ? new Date(dateFilter.start).setHours(0, 0, 0, 0)
+      : rangeEnd - 30 * MS_DAY;
+    const spanMs = Math.max(MS_DAY, rangeEnd - rangeStart);
+    const half = Math.floor(spanMs / 2);
+    recentStart = rangeEnd - half;
+    prevEnd = recentStart;
+    prevStart = rangeStart;
+    d30 = rangeStart;
+    trendWindowDays = Math.min(90, Math.max(7, Math.ceil(spanMs / MS_DAY)));
+  }
 
   const recentPv = bucketPaths(pageViews, environmentFilter, toDate, recentStart, now);
   const prevPv = bucketPaths(pageViews, environmentFilter, toDate, prevStart, prevEnd);
@@ -187,7 +203,7 @@ export function computeTrafficTrends({
     return t != null && t >= prevStart && t < prevEnd;
   }).length;
 
-  const dailyPageViews30 = dailySeries(pageViews, environmentFilter, toDate, 30);
+  const dailyPageViews30 = dailySeries(pageViews, environmentFilter, toDate, trendWindowDays);
 
   const topRefLinks = [...(trackingTokens || [])]
     .sort((a, b) => (b.clicks || 0) - (a.clicks || 0))

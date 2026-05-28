@@ -6,11 +6,16 @@ import { computeTrafficTrends } from './trafficTrends';
 import {
   parseRollupStats,
   getDailySeries,
+  getDailySeriesInRange,
   getLast24hSummary,
   mergeHeadlineStats,
   getRefTokenRollup,
   mapDimensionCounts,
+  computeRawCountsFromRecords,
+  sumDailyBucketsInRange,
+  getTimeRangeLabel,
 } from './statsHelpers';
+import { isExcludedAnalyticsPath, visitorHasNonAdminActivity } from '../../utils/analyticsPaths';
 
 function getDateFilter(timeRange, dateRange) {
   if (timeRange === 'custom' && (dateRange.start || dateRange.end)) {
@@ -52,6 +57,7 @@ export function useTrafficData(role) {
   const [visitorActiveTabs, setVisitorActiveTabs] = useState({});
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [environmentFilter, setEnvironmentFilter] = useState('all');
+  const [excludeAdminPaths, setExcludeAdminPaths] = useState(true);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [timeRange, setTimeRange] = useState('all');
   const [expandedCountries, setExpandedCountries] = useState(false);
@@ -172,8 +178,53 @@ export function useTrafficData(role) {
     [timeRange, dateRange]
   );
 
+  const pageViewsForAnalytics = useMemo(() => {
+    if (!excludeAdminPaths) return pageViews;
+    return pageViews.filter((pv) => !isExcludedAnalyticsPath(pv.path));
+  }, [pageViews, excludeAdminPaths]);
+
+  const eventsForAnalytics = useMemo(() => {
+    if (!excludeAdminPaths) return events;
+    return events.filter((e) => !isExcludedAnalyticsPath(e.path));
+  }, [events, excludeAdminPaths]);
+
+  const pageTimesForAnalytics = useMemo(() => {
+    if (!excludeAdminPaths) return pageTimes;
+    return pageTimes.filter((pt) => !isExcludedAnalyticsPath(pt.path));
+  }, [pageTimes, excludeAdminPaths]);
+
+  const mediaClicksForAnalytics = useMemo(() => {
+    if (!excludeAdminPaths) return mediaClicks;
+    return mediaClicks.filter(
+      (mc) =>
+        !isExcludedAnalyticsPath(mc.path) && !isExcludedAnalyticsPath(mc.projectPath)
+    );
+  }, [mediaClicks, excludeAdminPaths]);
+
+  const visitorsForAnalytics = useMemo(() => {
+    if (!excludeAdminPaths) return visitors;
+    return visitors.filter((v) => visitorHasNonAdminActivity(v, pageViews));
+  }, [visitors, pageViews, excludeAdminPaths]);
+
+  const formatDateForInput = useCallback(
+    (date) => {
+      if (!date) return '';
+      try {
+        const d = typeof date === 'string' ? new Date(date) : toDate(date);
+        if (!d || isNaN(d.getTime())) return '';
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      } catch (error) {
+        return '';
+      }
+    },
+    [toDate]
+  );
+
   const visitorsForActivitySelector = useMemo(() => {
-    let filtered = visitors;
+    let filtered = visitorsForAnalytics;
     if (environmentFilter !== 'all') filtered = filtered.filter((v) => v.environment === environmentFilter);
     if (selectedCountry && selectedCountry !== 'all') filtered = filtered.filter((v) => v.location?.country === selectedCountry);
     return filtered.sort((a, b) => {
@@ -181,15 +232,15 @@ export function useTrafficData(role) {
       const bTime = toDate(b.lastVisit)?.getTime() || 0;
       return bTime - aTime;
     });
-  }, [visitors, environmentFilter, selectedCountry, toDate]);
+  }, [visitorsForAnalytics, environmentFilter, selectedCountry, toDate]);
 
   const filteredVisitors = useMemo(() => {
-    let filtered = visitors;
+    let filtered = visitorsForAnalytics;
     if (environmentFilter !== 'all') filtered = filtered.filter((v) => v.environment === environmentFilter);
     if (selectedCountry && selectedCountry !== 'all') filtered = filtered.filter((v) => v.location?.country === selectedCountry);
     if (dateFilter) filtered = filtered.filter((v) => isDateInRange(v.lastVisit, dateFilter.start, dateFilter.end));
     return filtered;
-  }, [visitors, environmentFilter, selectedCountry, dateFilter, isDateInRange]);
+  }, [visitorsForAnalytics, environmentFilter, selectedCountry, dateFilter, isDateInRange]);
 
   const sortedVisitors = useMemo(() => {
     const list = [...filteredVisitors];
@@ -237,11 +288,11 @@ export function useTrafficData(role) {
   }, []);
 
   const filteredPageViews = useMemo(() => {
-    let filtered = pageViews;
+    let filtered = pageViewsForAnalytics;
     if (environmentFilter !== 'all') filtered = filtered.filter((pv) => pv.environment === environmentFilter);
     if (dateFilter) filtered = filtered.filter((pv) => isDateInRange(pv.timestamp, dateFilter.start, dateFilter.end));
     return filtered;
-  }, [pageViews, environmentFilter, dateFilter, isDateInRange]);
+  }, [pageViewsForAnalytics, environmentFilter, dateFilter, isDateInRange]);
 
   const sortedPageViews = useMemo(() => {
     const list = [...filteredPageViews];
@@ -283,11 +334,11 @@ export function useTrafficData(role) {
   }, []);
 
   const filteredEvents = useMemo(() => {
-    let filtered = events;
+    let filtered = eventsForAnalytics;
     if (environmentFilter !== 'all') filtered = filtered.filter((e) => e.environment === environmentFilter);
     if (dateFilter) filtered = filtered.filter((e) => isDateInRange(e.timestamp, dateFilter.start, dateFilter.end));
     return filtered;
-  }, [events, environmentFilter, dateFilter, isDateInRange]);
+  }, [eventsForAnalytics, environmentFilter, dateFilter, isDateInRange]);
 
   const sortedEvents = useMemo(() => {
     const list = [...filteredEvents];
@@ -332,7 +383,7 @@ export function useTrafficData(role) {
   }, []);
 
   const filteredPageTimes = useMemo(() => {
-    let filtered = pageTimes;
+    let filtered = pageTimesForAnalytics;
     if (environmentFilter !== 'all') filtered = filtered.filter((pt) => pt.environment === environmentFilter);
     if (dateFilter) {
       filtered = filtered.filter((pt) => {
@@ -342,7 +393,7 @@ export function useTrafficData(role) {
       });
     }
     return filtered;
-  }, [pageTimes, environmentFilter, dateFilter, isDateInRange, toDate]);
+  }, [pageTimesForAnalytics, environmentFilter, dateFilter, isDateInRange, toDate]);
 
   const sortedPageTimes = useMemo(() => {
     const list = [...filteredPageTimes];
@@ -395,7 +446,7 @@ export function useTrafficData(role) {
   }, []);
 
   const filteredMediaClicks = useMemo(() => {
-    let filtered = mediaClicks;
+    let filtered = mediaClicksForAnalytics;
     if (environmentFilter !== 'all') filtered = filtered.filter((mc) => mc.environment === environmentFilter);
     if (dateFilter) {
       filtered = filtered.filter((mc) => {
@@ -405,7 +456,7 @@ export function useTrafficData(role) {
       });
     }
     return filtered;
-  }, [mediaClicks, environmentFilter, dateFilter, isDateInRange, toDate]);
+  }, [mediaClicksForAnalytics, environmentFilter, dateFilter, isDateInRange, toDate]);
 
   const sortedMediaClicks = useMemo(() => {
     const list = [...filteredMediaClicks];
@@ -489,70 +540,126 @@ export function useTrafficData(role) {
   }, []);
 
   const visitorsForCountryBreakdown = useMemo(() => {
-    let filtered = visitors;
+    let filtered = visitorsForAnalytics;
     if (environmentFilter !== 'all') filtered = filtered.filter((v) => v.environment === environmentFilter);
     if (dateFilter) filtered = filtered.filter((v) => isDateInRange(v.lastVisit, dateFilter.start, dateFilter.end));
     return filtered;
-  }, [visitors, environmentFilter, dateFilter, isDateInRange]);
+  }, [visitorsForAnalytics, environmentFilter, dateFilter, isDateInRange]);
 
   const rollup = useMemo(() => parseRollupStats(stats), [stats]);
 
   const filteredStats = useMemo(() => {
     if (!stats) return null;
-    const totalTimeSpent = filteredPageTimes.reduce((sum, pt) => sum + (pt.timeSpent || 0), 0);
-    const avgTimeSpent = filteredPageTimes.length > 0 ? (totalTimeSpent / filteredPageTimes.length).toFixed(1) : 0;
-    const rawCounts = {
-      localhostVisitors: visitors.filter((v) => v.environment === 'localhost').length,
-      productionVisitors: visitors.filter((v) => v.environment === 'production').length,
-      localhostPageViews: pageViews.filter((pv) => pv.environment === 'localhost').length,
-      productionPageViews: pageViews.filter((pv) => pv.environment === 'production').length,
-      localhostEvents: events.filter((e) => e.environment === 'localhost').length,
-      productionEvents: events.filter((e) => e.environment === 'production').length,
-      localhostPageTimes: pageTimes.filter((pt) => pt.environment === 'localhost').length,
-      productionPageTimes: pageTimes.filter((pt) => pt.environment === 'production').length,
-      localhostMediaClicks: mediaClicks.filter((mc) => mc.environment === 'localhost').length,
-      productionMediaClicks: mediaClicks.filter((mc) => mc.environment === 'production').length,
-      totalVisitors: visitors.length,
-      totalPageViews: pageViews.length,
-      totalEvents: events.length,
-      totalPageTimes: pageTimes.length,
-      totalMediaClicks: mediaClicks.length,
-      avgTimeSpent: parseFloat(avgTimeSpent),
-      totalTimeSpent,
-    };
-    const merged = mergeHeadlineStats(rollup, rawCounts, environmentFilter);
     const prodOnly = environmentFilter === 'production';
-    const last24h = getLast24hSummary(rollup.daily, prodOnly);
-    return { ...merged, last24h, dataTruncated };
-  }, [stats, rollup, visitors, pageViews, events, pageTimes, mediaClicks, filteredPageTimes, environmentFilter, dataTruncated]);
+    const useDateScopedCounts = Boolean(dateFilter);
+
+    const rawCounts = useDateScopedCounts
+      ? computeRawCountsFromRecords({
+          visitors: filteredVisitors,
+          pageViews: filteredPageViews,
+          events: filteredEvents,
+          pageTimes: filteredPageTimes,
+          mediaClicks: filteredMediaClicks,
+        })
+      : computeRawCountsFromRecords({
+          visitors: visitorsForAnalytics,
+          pageViews: pageViewsForAnalytics,
+          events: eventsForAnalytics,
+          pageTimes: pageTimesForAnalytics,
+          mediaClicks: mediaClicksForAnalytics,
+        });
+
+    if (useDateScopedCounts) {
+      const dailySum = sumDailyBucketsInRange(rollup.daily, dateFilter, prodOnly);
+      if (dailySum) {
+        if (environmentFilter === 'production') {
+          rawCounts.totalVisitors = dailySum.visitors;
+          rawCounts.totalPageViews = dailySum.pageViews;
+          rawCounts.totalEvents = dailySum.events;
+        } else if (environmentFilter !== 'localhost') {
+          rawCounts.totalVisitors = Math.max(rawCounts.totalVisitors, dailySum.visitors);
+          rawCounts.totalPageViews = Math.max(rawCounts.totalPageViews, dailySum.pageViews);
+          rawCounts.totalEvents = Math.max(rawCounts.totalEvents, dailySum.events);
+        }
+      }
+    }
+
+    const merged = mergeHeadlineStats(
+      useDateScopedCounts ? null : rollup,
+      rawCounts,
+      environmentFilter
+    );
+    const last24h = useDateScopedCounts ? null : getLast24hSummary(rollup.daily, prodOnly);
+    const dailySumForRange = useDateScopedCounts
+      ? sumDailyBucketsInRange(rollup.daily, dateFilter, prodOnly)
+      : null;
+    const rangeSummary = useDateScopedCounts
+      ? {
+          visitors: merged.totalVisitors,
+          pageViews: merged.totalPageViews,
+          refClicks: dailySumForRange?.refClicks ?? 0,
+          sessionsEnded: dailySumForRange?.sessionsEnded ?? merged.totalPageTimes ?? 0,
+        }
+      : null;
+
+    return {
+      ...merged,
+      last24h,
+      rangeSummary,
+      timeRangeLabel: getTimeRangeLabel(timeRange, dateRange, formatDateForInput),
+      isDateFiltered: useDateScopedCounts,
+      dataTruncated,
+    };
+  }, [
+    stats,
+    rollup,
+    visitorsForAnalytics,
+    pageViewsForAnalytics,
+    eventsForAnalytics,
+    pageTimesForAnalytics,
+    mediaClicksForAnalytics,
+    filteredVisitors,
+    filteredPageViews,
+    filteredEvents,
+    filteredPageTimes,
+    filteredMediaClicks,
+    environmentFilter,
+    dateFilter,
+    timeRange,
+    dateRange,
+    formatDateForInput,
+    dataTruncated,
+  ]);
 
   const visitsOverTimeFromRollup = useMemo(() => {
-    const series = getDailySeries(rollup.daily, {
-      days: 30,
-      productionOnly: environmentFilter === 'production',
-    });
+    const productionOnly = environmentFilter === 'production';
+    const series = dateFilter
+      ? getDailySeriesInRange(rollup.daily, dateFilter, productionOnly)
+      : getDailySeries(rollup.daily, { days: 30, productionOnly });
     if (series.length === 0) return null;
     return series.map((d) => ({ name: d.name, value: d.visitors || d.sessionsEnded || 0 }));
-  }, [rollup.daily, environmentFilter]);
+  }, [rollup.daily, environmentFilter, dateFilter]);
 
   const pageViewsOverTimeFromRollup = useMemo(() => {
-    const series = getDailySeries(rollup.daily, {
-      days: 30,
-      productionOnly: environmentFilter === 'production',
-    });
+    const productionOnly = environmentFilter === 'production';
+    const series = dateFilter
+      ? getDailySeriesInRange(rollup.daily, dateFilter, productionOnly)
+      : getDailySeries(rollup.daily, { days: 30, productionOnly });
     if (series.length === 0) return null;
     return series.map((d) => ({ name: d.name, value: d.pageViews || 0 }));
-  }, [rollup.daily, environmentFilter]);
+  }, [rollup.daily, environmentFilter, dateFilter]);
 
   const visitorsByCountryFromRollup = useMemo(() => {
+    if (dateFilter) return null;
     const dims = mapDimensionCounts(rollup.visitors, 'dim_country', environmentFilter === 'production');
     return dims.length > 0 ? dims : null;
-  }, [rollup.visitors, environmentFilter]);
+  }, [rollup.visitors, environmentFilter, dateFilter]);
 
   const visitorsByDeviceFromRollup = useMemo(() => {
+    if (dateFilter) return null;
     const dims = mapDimensionCounts(rollup.visitors, 'dim_device', environmentFilter === 'production');
     return dims.length > 0 ? dims : null;
-  }, [rollup.visitors, environmentFilter]);
+  }, [rollup.visitors, environmentFilter, dateFilter]);
 
   const visitorsByCountry = useMemo(() => {
     if (visitorsByCountryFromRollup?.length) return visitorsByCountryFromRollup;
@@ -578,14 +685,22 @@ export function useTrafficData(role) {
       return t ? toDate(t) : null;
     };
     const items = [];
-    pageViews.filter(matchVisitorByIP).forEach((pv) => items.push({ type: 'pageview', timestamp: getTs(pv), raw: pv }));
-    events.filter(matchVisitorByIP).forEach((e) => items.push({ type: 'event', timestamp: getTs(e), raw: e }));
-    pageTimes.filter(matchVisitorByIP).forEach((pt) => items.push({ type: 'pagetime', timestamp: getTs(pt), raw: pt }));
-    mediaClicks.filter(matchVisitorByIP).forEach((mc) => items.push({ type: 'mediaclick', timestamp: getTs(mc), raw: mc }));
+    pageViewsForAnalytics.filter(matchVisitorByIP).forEach((pv) => items.push({ type: 'pageview', timestamp: getTs(pv), raw: pv }));
+    eventsForAnalytics.filter(matchVisitorByIP).forEach((e) => items.push({ type: 'event', timestamp: getTs(e), raw: e }));
+    pageTimesForAnalytics.filter(matchVisitorByIP).forEach((pt) => items.push({ type: 'pagetime', timestamp: getTs(pt), raw: pt }));
+    mediaClicksForAnalytics.filter(matchVisitorByIP).forEach((mc) => items.push({ type: 'mediaclick', timestamp: getTs(mc), raw: mc }));
     return items
       .filter((i) => i.timestamp && !isNaN(i.timestamp.getTime()))
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-  }, [selectedVisitorAnonymizedIP, matchVisitorByIP, pageViews, events, pageTimes, mediaClicks, toDate]);
+  }, [
+    selectedVisitorAnonymizedIP,
+    matchVisitorByIP,
+    pageViewsForAnalytics,
+    eventsForAnalytics,
+    pageTimesForAnalytics,
+    mediaClicksForAnalytics,
+    toDate,
+  ]);
 
   const pageViewsOverTime = useMemo(() => {
     if (pageViewsOverTimeFromRollup?.length) return pageViewsOverTimeFromRollup;
@@ -759,37 +874,59 @@ export function useTrafficData(role) {
       .slice(0, 10);
   }, [filteredMediaClicks]);
 
+  const filterCountsByEnvironment = useMemo(() => {
+    const filterVisitorsByDate = (list) => {
+      if (!dateFilter) return list;
+      return list.filter((v) => isDateInRange(v.lastVisit, dateFilter.start, dateFilter.end));
+    };
+    const filterByTimestamp = (list) => {
+      if (!dateFilter) return list;
+      return list.filter((item) => isDateInRange(item.timestamp, dateFilter.start, dateFilter.end));
+    };
+    const v = filterVisitorsByDate(visitorsForAnalytics);
+    const pv = filterByTimestamp(pageViewsForAnalytics);
+    const ev = filterByTimestamp(eventsForAnalytics);
+    return {
+      all: { visitors: v.length, pageViews: pv.length, events: ev.length },
+      production: {
+        visitors: v.filter((x) => x.environment === 'production').length,
+        pageViews: pv.filter((x) => x.environment === 'production').length,
+        events: ev.filter((x) => x.environment === 'production').length,
+      },
+      localhost: {
+        visitors: v.filter((x) => x.environment === 'localhost').length,
+        pageViews: pv.filter((x) => x.environment === 'localhost').length,
+        events: ev.filter((x) => x.environment === 'localhost').length,
+      },
+    };
+  }, [visitorsForAnalytics, pageViewsForAnalytics, eventsForAnalytics, dateFilter, isDateInRange]);
+
   const trafficTrends = useMemo(
     () =>
       computeTrafficTrends({
-        pageViews,
-        events,
-        pageTimes,
-        mediaClicks,
-        visitors,
+        pageViews: pageViewsForAnalytics,
+        events: eventsForAnalytics,
+        pageTimes: pageTimesForAnalytics,
+        mediaClicks: mediaClicksForAnalytics,
+        visitors: visitorsForAnalytics,
         enquiries,
         trackingTokens,
         environmentFilter,
         toDate,
+        dateFilter,
       }),
-    [pageViews, events, pageTimes, mediaClicks, visitors, enquiries, trackingTokens, environmentFilter, toDate]
-  );
-
-  const formatDateForInput = useCallback(
-    (date) => {
-      if (!date) return '';
-      try {
-        const d = typeof date === 'string' ? new Date(date) : toDate(date);
-        if (!d || isNaN(d.getTime())) return '';
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      } catch (error) {
-        return '';
-      }
-    },
-    [toDate]
+    [
+      pageViewsForAnalytics,
+      eventsForAnalytics,
+      pageTimesForAnalytics,
+      mediaClicksForAnalytics,
+      visitorsForAnalytics,
+      enquiries,
+      trackingTokens,
+      environmentFilter,
+      toDate,
+      dateFilter,
+    ]
   );
 
   const handleDateRangeChange = useCallback((field, value) => {
@@ -1024,6 +1161,8 @@ export function useTrafficData(role) {
     setSelectedLocation,
     environmentFilter,
     setEnvironmentFilter,
+    excludeAdminPaths,
+    setExcludeAdminPaths,
     dateRange,
     setDateRange,
     timeRange,
@@ -1101,6 +1240,8 @@ export function useTrafficData(role) {
     topMediaClicks,
     trafficTrends,
     filteredStats,
+    filterCountsByEnvironment,
+    dateFilter,
     visitorActivityTimeline,
     // Helpers
     formatDate,

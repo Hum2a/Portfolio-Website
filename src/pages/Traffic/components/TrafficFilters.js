@@ -5,9 +5,9 @@ export function TrafficFilters() {
   const {
     environmentFilter,
     setEnvironmentFilter,
-    visitors,
-    pageViews,
-    events,
+    excludeAdminPaths,
+    setExcludeAdminPaths,
+    filterCountsByEnvironment,
     timeRange,
     handleTimeRangeChange,
     formatDateForInput,
@@ -16,8 +16,29 @@ export function TrafficFilters() {
     setDateRange,
   } = useTraffic();
 
+  const counts = filterCountsByEnvironment || {
+    all: { visitors: 0, pageViews: 0, events: 0 },
+    production: { visitors: 0, pageViews: 0, events: 0 },
+    localhost: { visitors: 0, pageViews: 0, events: 0 },
+  };
+
   return (
     <div className="filters-section">
+      <div className="environment-filter admin-path-filter">
+        <div className="filter-header">
+          <h3>Admin pages</h3>
+          <span className="filter-subtitle">Hide /traffic from stats (your dashboard visits)</span>
+        </div>
+        <label className="admin-path-filter-toggle">
+          <input
+            type="checkbox"
+            checked={excludeAdminPaths}
+            onChange={(e) => setExcludeAdminPaths(e.target.checked)}
+          />
+          <span>Exclude /traffic from analytics</span>
+        </label>
+      </div>
+
       <div className="environment-filter">
         <div className="filter-header">
           <h3>Environment Filter</h3>
@@ -28,19 +49,19 @@ export function TrafficFilters() {
             className={`filter-btn ${environmentFilter === 'all' ? 'active' : ''}`}
             onClick={() => setEnvironmentFilter('all')}
           >
-            All ({visitors.length} visitors, {pageViews.length} page views, {events.length} events)
+            All ({counts.all.visitors} visitors, {counts.all.pageViews} page views, {counts.all.events} events)
           </button>
           <button
             className={`filter-btn ${environmentFilter === 'production' ? 'active' : ''}`}
             onClick={() => setEnvironmentFilter('production')}
           >
-            Production ({visitors.filter((v) => v.environment === 'production').length} visitors, {pageViews.filter((pv) => pv.environment === 'production').length} page views, {events.filter((e) => e.environment === 'production').length} events)
+            Production ({counts.production.visitors} visitors, {counts.production.pageViews} page views, {counts.production.events} events)
           </button>
           <button
             className={`filter-btn ${environmentFilter === 'localhost' ? 'active' : ''}`}
             onClick={() => setEnvironmentFilter('localhost')}
           >
-            Localhost ({visitors.filter((v) => v.environment === 'localhost').length} visitors, {pageViews.filter((pv) => pv.environment === 'localhost').length} page views, {events.filter((e) => e.environment === 'localhost').length} events)
+            Localhost ({counts.localhost.visitors} visitors, {counts.localhost.pageViews} page views, {counts.localhost.events} events)
           </button>
         </div>
       </div>

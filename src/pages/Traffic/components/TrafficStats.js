@@ -17,10 +17,33 @@ export function TrafficStats() {
   if (!filteredStats) return null;
 
   const last24h = filteredStats.last24h;
+  const rangeSummary = filteredStats.rangeSummary;
+  const periodLabel = filteredStats.timeRangeLabel || 'All time';
+  const statPrefix =
+    environmentFilter === 'production'
+      ? 'Production'
+      : environmentFilter === 'localhost'
+        ? 'Localhost'
+        : filteredStats.isDateFiltered
+          ? ''
+          : 'Total';
 
   return (
     <div className="traffic-stats">
-      {last24h && (
+      {filteredStats.isDateFiltered && (
+        <div className="stat-card period-banner full-width-stat" role="status">
+          <h3>{periodLabel}</h3>
+          {rangeSummary && (
+            <div className="last24h-grid">
+              <span><strong>{rangeSummary.visitors}</strong> sessions</span>
+              <span><strong>{rangeSummary.pageViews}</strong> page views</span>
+              <span><strong>{rangeSummary.refClicks}</strong> ref clicks</span>
+              <span><strong>{rangeSummary.sessionsEnded}</strong> sessions tracked</span>
+            </div>
+          )}
+        </div>
+      )}
+      {!filteredStats.isDateFiltered && last24h && (
         <div className="stat-card last24h-card full-width-stat">
           <h3>Last 24 hours</h3>
           <div className="last24h-grid">
@@ -32,7 +55,7 @@ export function TrafficStats() {
         </div>
       )}
       <div className="stat-card">
-        <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Visitors</h3>
+        <h3>{statPrefix ? `${statPrefix} ` : ''}Visitors</h3>
         <p className="stat-value">
           {environmentFilter === 'all'
             ? filteredStats.totalVisitors
@@ -54,7 +77,7 @@ export function TrafficStats() {
         )}
       </div>
       <div className="stat-card">
-        <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Page Views</h3>
+        <h3>{statPrefix ? `${statPrefix} ` : ''}Page Views</h3>
         <p className="stat-value">
           {environmentFilter === 'all'
             ? filteredStats.totalPageViews
@@ -70,7 +93,7 @@ export function TrafficStats() {
         )}
       </div>
       <div className="stat-card">
-        <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Events</h3>
+        <h3>{statPrefix ? `${statPrefix} ` : ''}Events</h3>
         <p className="stat-value">
           {environmentFilter === 'all'
             ? filteredStats.totalEvents
@@ -164,7 +187,7 @@ export function TrafficStats() {
         )}
       </div>
       <div className="stat-card">
-        <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Page Times</h3>
+        <h3>{statPrefix ? `${statPrefix} ` : ''}Page Times</h3>
         <p className="stat-value">{filteredStats.totalPageTimes || 0}</p>
         {environmentFilter === 'all' && (
           <div className="stat-breakdown">
@@ -182,7 +205,7 @@ export function TrafficStats() {
           </div>
         )}
       </div>
-      {filteredStats.bounceRate != null && (
+      {Number.isFinite(filteredStats.bounceRate) && (
         <div className="stat-card">
           <h3>Bounce rate (&lt;5s)</h3>
           <p className="stat-value">{filteredStats.bounceRate}%</p>
@@ -198,7 +221,7 @@ export function TrafficStats() {
         </div>
       )}
       <div className="stat-card">
-        <h3>{environmentFilter === 'all' ? 'Total' : environmentFilter === 'production' ? 'Production' : 'Localhost'} Media Clicks</h3>
+        <h3>{statPrefix ? `${statPrefix} ` : ''}Media Clicks</h3>
         <p className="stat-value">
           {environmentFilter === 'all'
             ? filteredStats.totalMediaClicks || 0

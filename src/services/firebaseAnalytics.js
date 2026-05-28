@@ -22,7 +22,10 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
 import { featureFlags, apiKeys } from '../utils/env';
+import { isExcludedAnalyticsPath } from '../utils/analyticsPaths';
 import { db } from './firebase';
+
+const isCurrentPathExcluded = () => isExcludedAnalyticsPath(window.location.pathname);
 
 // Generate or retrieve session ID
 const getSessionId = () => {
@@ -155,39 +158,81 @@ const getCampaignDataFromUtm = () => {
   return null;
 };
 
+const getRefTokenFromReferrer = () => {
+  const referrer = document.referrer;
+  if (!referrer) return null;
+  try {
+    const refUrl = new URL(referrer);
+    if (refUrl.origin !== window.location.origin) return null;
+    return refUrl.searchParams.get('ref');
+  } catch {
+    return null;
+  }
+};
+
+const resolveRefTokenCampaign = async (refToken, landingPage) => {
+  const normalized = refToken.toLowerCase().trim();
+  if (!normalized) return null;
+
+  const { lookupTrackingToken, setAttributionCookie } = await import('./trackingTokenService');
+  const tokenData = await lookupTrackingToken(normalized);
+  if (!tokenData) {
+    // Unknown token — still record that a ref was used (e.g. deleted or typo)
+    return {
+      source: 'ref-link',
+      medium: null,
+      campaign: normalized,
+      term: null,
+      content: null,
+      landingPage,
+      refToken: normalized,
+    };
+  }
+
+  setAttributionCookie({ ...tokenData, refToken: normalized });
+  return {
+    source: tokenData.source,
+    medium: tokenData.medium || null,
+    campaign: tokenData.campaign || null,
+    term: null,
+    content: null,
+    landingPage,
+    refToken: normalized,
+  };
+};
+
 // Async: resolve campaign data (ref token lookup, cookie, UTM)
 const getCampaignData = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const landingPage = window.location.pathname + window.location.search;
 
-  // 1. Ref token (works with PDFs - short URL, DB lookup)
-  const refToken = urlParams.get('ref');
-  if (refToken) {
+  // 1. Ref token on landing URL (PDF / shared link)
+  const refOnPage = urlParams.get('ref');
+  if (refOnPage) {
     try {
-      const { lookupTrackingToken, setAttributionCookie, incrementTokenClicks, getAttributionFromCookie } = await import('./trackingTokenService');
-      const tokenData = await lookupTrackingToken(refToken);
-      if (tokenData) {
-        setAttributionCookie({ ...tokenData, refToken: refToken.toLowerCase().trim() });
-        return {
-          source: tokenData.source,
-          medium: tokenData.medium || null,
-          campaign: tokenData.campaign || null,
-          term: null,
-          content: null,
-          landingPage,
-          refToken, // Store for drill-through (which IPs/sessions used this link)
-        };
-      }
+      const campaign = await resolveRefTokenCampaign(refOnPage, landingPage);
+      if (campaign) return campaign;
     } catch (e) {
       console.warn('Token lookup failed:', e);
     }
   }
 
-  // 2. UTM params (direct links)
+  // 2. Ref token on same-site referrer (navigated from /?ref=… to another page, then refreshed)
+  const refFromReferrer = getRefTokenFromReferrer();
+  if (refFromReferrer && refFromReferrer !== refOnPage) {
+    try {
+      const campaign = await resolveRefTokenCampaign(refFromReferrer, landingPage);
+      if (campaign) return campaign;
+    } catch (e) {
+      console.warn('Referrer token lookup failed:', e);
+    }
+  }
+
+  // 3. UTM params (direct links)
   const utmData = getCampaignDataFromUtm();
   if (utmData) return utmData;
 
-  // 3. Cookie (returning visitor - came via ref link before)
+  // 4. Cookie (returning visitor - came via ref link before)
   try {
     const { getAttributionFromCookie } = await import('./trackingTokenService');
     const cookieData = getAttributionFromCookie();
@@ -411,6 +456,8 @@ const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
 
 // Track visitor — save session immediately; enrich location afterward
 const trackVisitor = async () => {
+  if (isCurrentPathExcluded()) return null;
+
   try {
     const { visitorId, sessionId } = ensureTrackingIds();
     const { anonymizedIP, ipAddress } = await resolveAnonymizedIP(visitorId);
@@ -499,6 +546,9 @@ const trackVisitor = async () => {
 
 // Track page view
 const trackPageView = async (path, title) => {
+  const currentPath = path || window.location.pathname;
+  if (isExcludedAnalyticsPath(currentPath)) return null;
+
   try {
     const sessionId = getSessionId() || sessionStorage.getItem('sessionId');
     const visitorId = getVisitorId() || localStorage.getItem('visitorId');
@@ -520,8 +570,6 @@ const trackPageView = async (path, title) => {
       return null;
     }
     
-    // Ensure path and title are defined
-    const currentPath = path || window.location.pathname;
     const currentTitle = title || document.title;
     const currentReferrer = document.referrer || null;
     const timestamp = new Date();
@@ -577,8 +625,10 @@ const trackPageView = async (path, title) => {
 
 // Track time spent on a page
 const trackPageTime = async (path, pageViewId = null) => {
+  const currentPath = path || window.location.pathname;
+  if (isExcludedAnalyticsPath(currentPath)) return;
+
   try {
-    const currentPath = path || window.location.pathname;
     const startTimeKey = `pageView_${currentPath}_start`;
     const pageViewIdKey = `pageView_${currentPath}_id`;
     
@@ -645,6 +695,8 @@ const trackPageTime = async (path, pageViewId = null) => {
 
 // Track events (clicks, form submissions, etc.)
 const trackEvent = async (category, action, label = null, value = null) => {
+  if (isCurrentPathExcluded()) return;
+
   try {
     const sessionId = getSessionId();
     if (!sessionId) {
@@ -691,6 +743,8 @@ const trackEvent = async (category, action, label = null, value = null) => {
 
 // Track media clicks (images, videos) in project pages
 const trackMediaClick = async (mediaType, mediaSrc, mediaCaption, projectPath) => {
+  if (isExcludedAnalyticsPath(projectPath || window.location.pathname)) return;
+
   try {
     const sessionId = getSessionId();
     const visitorId = getVisitorId();
@@ -793,7 +847,7 @@ const trackSessionEnd = async () => {
 // Initialize analytics
 const initAnalytics = async () => {
   try {
-    if (!featureFlags.enableAnalytics) {
+    if (!featureFlags.enableAnalytics || isCurrentPathExcluded()) {
       return null;
     }
 
@@ -840,6 +894,7 @@ export const trackContactFormStart = () => {
 };
 
 export const trackScrollDepth = (depthPercent, pageName) => {
+  if (isCurrentPathExcluded()) return;
   trackEvent('engagement', 'scroll_depth', `${depthPercent}% - ${pageName}`);
   trackScrollDepthStats(depthPercent, window.location.pathname, getEnvironment());
 };

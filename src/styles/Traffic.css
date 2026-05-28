@@ -3300,8 +3300,14 @@
 }
 
 .stat-card.last24h-card,
+.stat-card.period-banner,
 .stat-card.full-width-stat {
   grid-column: 1 / -1;
+}
+
+.stat-card.period-banner h3 {
+  text-transform: none;
+  letter-spacing: 0.02em;
 }
 
 .last24h-grid {

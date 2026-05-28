@@ -1,4 +1,5 @@
 import React from 'react';
+import { isExcludedAnalyticsPath } from '../../utils/analyticsPaths';
 import {
   LineChart,
   Line,
@@ -75,6 +76,7 @@ export function TrafficTabContent() {
     selectedLocation,
     setSelectedLocation,
     environmentFilter,
+    excludeAdminPaths,
     selectedVisitorAnonymizedIP,
     setSelectedVisitorAnonymizedIP,
     formatDate,
@@ -328,11 +330,36 @@ export function TrafficTabContent() {
                             </div>
 
                             <div className={`expanded-panel panel-visits ${getVisitorTab(visitor.id) === 'visits' ? 'active' : ''}`}>
-                              <h4>Visit History ({visitor.sessions && Array.isArray(visitor.sessions) ? visitor.sessions.length : 0} sessions)</h4>
+                              <h4>
+                                Visit History (
+                                {visitor.sessions && Array.isArray(visitor.sessions)
+                                  ? visitor.sessions.filter((session) => {
+                                      if (
+                                        excludeAdminPaths &&
+                                        isExcludedAnalyticsPath(session.landingPath) &&
+                                        (!session.campaign?.landingPage ||
+                                          isExcludedAnalyticsPath(session.campaign.landingPage))
+                                      ) {
+                                        return false;
+                                      }
+                                      if (environmentFilter === 'all') return true;
+                                      return (session.environment || visitor.environment) === environmentFilter;
+                                    }).length
+                                  : 0}{' '}
+                                sessions)
+                              </h4>
                               {visitor.sessions && Array.isArray(visitor.sessions) && visitor.sessions.length > 0 ? (
                                 <div className="sessions-container">
                                   {visitor.sessions
                                     .filter((session) => {
+                                      if (
+                                        excludeAdminPaths &&
+                                        isExcludedAnalyticsPath(session.landingPath) &&
+                                        (!session.campaign?.landingPage ||
+                                          isExcludedAnalyticsPath(session.campaign.landingPage))
+                                      ) {
+                                        return false;
+                                      }
                                       if (environmentFilter === 'all') return true;
                                       return (session.environment || visitor.environment) === environmentFilter;
                                     })
@@ -356,6 +383,14 @@ export function TrafficTabContent() {
                                             <span className="detail-label">Referrer:</span>
                                             <span className="detail-value">{session.referrer || 'Direct'}</span>
                                           </div>
+                                          {(session.landingPath || session.campaign?.landingPage) && (
+                                            <div className="detail-row">
+                                              <span className="detail-label">Landing Page:</span>
+                                              <span className="detail-value landing-page">
+                                                {session.landingPath || session.campaign.landingPage}
+                                              </span>
+                                            </div>
+                                          )}
                                           {session.campaign && (
                                             <>
                                               <div className="detail-row campaign-row">
@@ -374,10 +409,10 @@ export function TrafficTabContent() {
                                                   <span className="detail-value">{session.campaign.campaign}</span>
                                                 </div>
                                               )}
-                                              {session.campaign.landingPage && (
+                                              {session.campaign.refToken && (
                                                 <div className="detail-row">
-                                                  <span className="detail-label">Landing Page:</span>
-                                                  <span className="detail-value landing-page">{session.campaign.landingPage}</span>
+                                                  <span className="detail-label">Ref code:</span>
+                                                  <span className="detail-value landing-page">{session.campaign.refToken}</span>
                                                 </div>
                                               )}
                                             </>

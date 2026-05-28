@@ -31,6 +31,22 @@ export function parseRollupStats(stats) {
   };
 }
 
+function dayKeyInRange(dayKey, start, end) {
+  const ts = new Date(dayKey).getTime();
+  if (isNaN(ts)) return false;
+  if (start) {
+    const startMs = new Date(start);
+    startMs.setHours(0, 0, 0, 0);
+    if (ts < startMs.getTime()) return false;
+  }
+  if (end) {
+    const endMs = new Date(end);
+    endMs.setHours(23, 59, 59, 999);
+    if (ts > endMs.getTime()) return false;
+  }
+  return true;
+}
+
 export function getDailySeries(dailyDoc, { days = 30, productionOnly = false } = {}) {
   const daysMap = dailyDoc?.days || {};
   const cutoff = Date.now() - days * MS_DAY;
@@ -52,6 +68,114 @@ export function getDailySeries(dailyDoc, { days = 30, productionOnly = false } =
     })
     .filter(Boolean)
     .sort((a, b) => new Date(a.name) - new Date(b.name));
+}
+
+export function getDailySeriesInRange(dailyDoc, dateFilter, productionOnly = false) {
+  if (!dateFilter) return [];
+  const daysMap = dailyDoc?.days || {};
+  return Object.entries(daysMap)
+    .map(([name, bucket]) => {
+      if (!dayKeyInRange(name, dateFilter.start, dateFilter.end)) return null;
+      const pick = (key) =>
+        productionOnly ? bucket[`prod_${key}`] || 0 : bucket[key] || 0;
+      return {
+        name,
+        visitors: pick('visitors'),
+        pageViews: pick('pageViews'),
+        refClicks: pick('refClicks'),
+        sessionsEnded: pick('sessionsEnded'),
+        events: pick('events'),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => new Date(a.name) - new Date(b.name));
+}
+
+export function sumDailyBucketsInRange(dailyDoc, dateFilter, productionOnly = false) {
+  const series = getDailySeriesInRange(dailyDoc, dateFilter, productionOnly);
+  if (series.length === 0) return null;
+  return series.reduce(
+    (acc, day) => ({
+      visitors: acc.visitors + day.visitors,
+      pageViews: acc.pageViews + day.pageViews,
+      refClicks: acc.refClicks + day.refClicks,
+      sessionsEnded: acc.sessionsEnded + day.sessionsEnded,
+      events: acc.events + day.events,
+    }),
+    { visitors: 0, pageViews: 0, refClicks: 0, sessionsEnded: 0, events: 0 }
+  );
+}
+
+export function getTimeRangeLabel(timeRange, dateRange, formatDateForInput) {
+  switch (timeRange) {
+    case 'today':
+      return 'Today';
+    case '7d':
+      return 'Last 7 days';
+    case '30d':
+      return 'Last 30 days';
+    case '90d':
+      return 'Last 90 days';
+    case 'custom':
+      if (dateRange.start && dateRange.end) {
+        return `${formatDateForInput(dateRange.start)} – ${formatDateForInput(dateRange.end)}`;
+      }
+      if (dateRange.start) return `From ${formatDateForInput(dateRange.start)}`;
+      if (dateRange.end) return `Until ${formatDateForInput(dateRange.end)}`;
+      return 'Custom range';
+    case 'all':
+    default:
+      return 'All time';
+  }
+}
+
+export function computeRawCountsFromRecords({
+  visitors = [],
+  pageViews = [],
+  events = [],
+  pageTimes = [],
+  mediaClicks = [],
+}) {
+  const totalTimeSpent = pageTimes.reduce((sum, pt) => sum + (pt.timeSpent || 0), 0);
+  const avgTimeSpent =
+    pageTimes.length > 0 ? parseFloat((totalTimeSpent / pageTimes.length).toFixed(1)) : 0;
+  const sessionsEnded = pageTimes.length;
+  const bounces = pageTimes.filter((pt) => (pt.timeSpent || 0) < 5).length;
+  const sessionsOver30s = pageTimes.filter((pt) => (pt.timeSpent || 0) >= 30).length;
+  let bounceRate = null;
+  if (sessionsEnded > 0) {
+    const rate = parseFloat(((bounces / sessionsEnded) * 100).toFixed(1));
+    bounceRate = Number.isFinite(rate) ? rate : null;
+  }
+  const newVisitors = visitors.filter((v) => (v.visits || 0) <= 1).length;
+  const returningVisitors = Math.max(0, visitors.length - newVisitors);
+
+  return {
+    localhostVisitors: visitors.filter((v) => v.environment === 'localhost').length,
+    productionVisitors: visitors.filter((v) => v.environment === 'production').length,
+    localhostPageViews: pageViews.filter((pv) => pv.environment === 'localhost').length,
+    productionPageViews: pageViews.filter((pv) => pv.environment === 'production').length,
+    localhostEvents: events.filter((e) => e.environment === 'localhost').length,
+    productionEvents: events.filter((e) => e.environment === 'production').length,
+    localhostPageTimes: pageTimes.filter((pt) => pt.environment === 'localhost').length,
+    productionPageTimes: pageTimes.filter((pt) => pt.environment === 'production').length,
+    localhostMediaClicks: mediaClicks.filter((mc) => mc.environment === 'localhost').length,
+    productionMediaClicks: mediaClicks.filter((mc) => mc.environment === 'production').length,
+    totalVisitors: visitors.length,
+    totalPageViews: pageViews.length,
+    totalEvents: events.length,
+    totalPageTimes: pageTimes.length,
+    totalMediaClicks: mediaClicks.length,
+    avgTimeSpent,
+    totalTimeSpent,
+    newVisitors,
+    returningVisitors,
+    bounceRate,
+    sessionsOver30s,
+    contactFormSubmits: events.filter(
+      (e) => e.category === 'contact' && (e.action === 'submit' || e.action === 'start')
+    ).length,
+  };
 }
 
 export function getLast24hSummary(dailyDoc, productionOnly = false) {
@@ -183,9 +307,17 @@ export function mergeHeadlineStats(rollup, rawCounts, environmentFilter) {
     avgTimeSpent:
       pt.count > 0 ? parseFloat((pt.total / pt.count).toFixed(1)) : rawCounts.avgTimeSpent ?? 0,
     totalTimeSpent: pt.total ?? rawCounts.totalTimeSpent ?? 0,
-    bounceRate:
-      sessionsEnded > 0 ? parseFloat(((bounces / sessionsEnded) * 100).toFixed(1)) : null,
-    sessionsOver30s: eng.sessions_over_30s ?? 0,
+    bounceRate: (() => {
+      if (sessionsEnded > 0 && Number.isFinite(bounces) && Number.isFinite(sessionsEnded)) {
+        const rate = parseFloat(((bounces / sessionsEnded) * 100).toFixed(1));
+        if (Number.isFinite(rate)) return rate;
+      }
+      if (rawCounts.bounceRate != null && Number.isFinite(rawCounts.bounceRate)) {
+        return rawCounts.bounceRate;
+      }
+      return null;
+    })(),
+    sessionsOver30s: eng.sessions_over_30s ?? rawCounts.sessionsOver30s ?? 0,
     contactFormSubmits: cf['action.submit'] ?? cf['action.start'] ?? 0,
     fromRollups: hasRollupVisitors,
   };
