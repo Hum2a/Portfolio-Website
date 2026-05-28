@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTraffic } from '../TrafficContext';
+import { OwnerDevicesPanel } from './VisitorDataAdmin';
 
 export function TrafficFilters() {
   const {
@@ -14,6 +15,7 @@ export function TrafficFilters() {
     dateRange,
     handleDateRangeChange,
     setDateRange,
+    adminMessage,
   } = useTraffic();
 
   const counts = filterCountsByEnvironment || {
@@ -24,6 +26,13 @@ export function TrafficFilters() {
 
   return (
     <div className="filters-section">
+      <OwnerDevicesPanel />
+      {adminMessage && (
+        <p className="admin-message" role="status">
+          {adminMessage}
+        </p>
+      )}
+
       <div className="environment-filter admin-path-filter">
         <div className="filter-header">
           <h3>Admin pages</h3>

@@ -16,6 +16,13 @@ import {
   getTimeRangeLabel,
 } from './statsHelpers';
 import { isExcludedAnalyticsPath, visitorHasNonAdminActivity } from '../../utils/analyticsPaths';
+import {
+  listOwnerTags,
+  setOwnerTag,
+  removeOwnerTag,
+  deleteAnalyticsForIP,
+  getBrowserAnonymizedIP,
+} from '../../services/analyticsAdminService';
 
 function getDateFilter(timeRange, dateRange) {
   if (timeRange === 'custom' && (dateRange.start || dateRange.end)) {
@@ -93,6 +100,9 @@ export function useTrafficData(role) {
   const [mediaClickSortDirection, setMediaClickSortDirection] = useState('desc');
   const [enquirySortBy, setEnquirySortBy] = useState('timestamp');
   const [enquirySortDirection, setEnquirySortDirection] = useState('desc');
+  const [ownerTags, setOwnerTags] = useState({});
+  const [deleteAnalyticsLoading, setDeleteAnalyticsLoading] = useState(null);
+  const [adminMessage, setAdminMessage] = useState(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -117,6 +127,97 @@ export function useTrafficData(role) {
   useEffect(() => {
     if (role === 'humza') loadData();
   }, [role, loadData]);
+
+  const loadOwnerTags = useCallback(async () => {
+    try {
+      const tags = await listOwnerTags();
+      setOwnerTags(tags);
+    } catch (error) {
+      console.error('Failed to load owner tags:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (role === 'humza') loadOwnerTags();
+  }, [role, loadOwnerTags]);
+
+  const getVisitorKey = useCallback(
+    (visitor) => visitor?.anonymizedIP || visitor?.id || '',
+    []
+  );
+
+  const isOwnerVisitor = useCallback(
+    (key) => Boolean(key && ownerTags[key]),
+    [ownerTags]
+  );
+
+  const browserAnonymizedIP =
+    typeof window !== 'undefined' ? getBrowserAnonymizedIP() : null;
+
+  const tagVisitorAsOwner = useCallback(
+    async (key, label = 'Mine') => {
+      await setOwnerTag(key, label);
+      await loadOwnerTags();
+      setAdminMessage(`Tagged ${key} as yours.`);
+    },
+    [loadOwnerTags]
+  );
+
+  const tagCurrentBrowser = useCallback(async () => {
+    const ip = getBrowserAnonymizedIP();
+    if (!ip) {
+      setAdminMessage('Visit the main site in this browser first so an analytics ID is created.');
+      return;
+    }
+    await tagVisitorAsOwner(ip);
+  }, [tagVisitorAsOwner]);
+
+  const untagVisitorAsOwner = useCallback(
+    async (key) => {
+      await removeOwnerTag(key);
+      await loadOwnerTags();
+    },
+    [loadOwnerTags]
+  );
+
+  const deleteVisitorAnalytics = useCallback(
+    async (key, { skipConfirm = false } = {}) => {
+      if (!key) return;
+      if (
+        !skipConfirm &&
+        !window.confirm(
+          `Delete ALL analytics for ${key}?\n\nThis removes the visitor record, page views, events, sessions, and ref hits. It cannot be undone.`
+        )
+      ) {
+        return;
+      }
+
+      setDeleteAnalyticsLoading(key);
+      setAdminMessage(null);
+      try {
+        const result = await deleteAnalyticsForIP(key);
+        await loadData();
+        await loadOwnerTags();
+        setExpandedVisitors((prev) => {
+          const next = new Set(prev);
+          next.delete(key);
+          return next;
+        });
+        if (selectedVisitorAnonymizedIP === key) {
+          setSelectedVisitorAnonymizedIP(null);
+        }
+        setAdminMessage(
+          `Deleted analytics for ${key} (${result.total} document${result.total === 1 ? '' : 's'}). Rollup totals may still include old counts until reset.`
+        );
+      } catch (error) {
+        console.error('Delete analytics failed:', error);
+        setAdminMessage(error.message || 'Delete failed');
+      } finally {
+        setDeleteAnalyticsLoading(null);
+      }
+    },
+    [loadData, loadOwnerTags, selectedVisitorAnonymizedIP]
+  );
 
   const loadTrackingTokens = useCallback(async () => {
     setTrackingTokensLoading(true);
@@ -1259,5 +1360,17 @@ export function useTrafficData(role) {
     applyPreset,
     copyToClipboard,
     resetUrlGenerator,
+    // Owner IP tagging & purge
+    ownerTags,
+    browserAnonymizedIP,
+    tagVisitorAsOwner,
+    tagCurrentBrowser,
+    untagVisitorAsOwner,
+    deleteVisitorAnalytics,
+    deleteAnalyticsLoading,
+    adminMessage,
+    setAdminMessage,
+    getVisitorKey,
+    isOwnerVisitor,
   };
 }

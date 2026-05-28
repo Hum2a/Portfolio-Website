@@ -3,9 +3,11 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaStar, FaCodeBranch, FaUsers, FaFolderOpen } from 'react-icons/fa';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Navbar from '../components/Navbar';
+import ContributionCalendar from '../components/ContributionCalendar';
 import {
   fetchGitHubRepos,
   fetchGitHubProfile,
+  fetchGitHubContributions,
   getGitHubUsername,
 } from '../services/githubService';
 import '../styles/GitHubSection.css';
@@ -32,6 +34,9 @@ const LANGUAGE_COLORS = {
 export default function GitHub() {
   const [repos, setRepos] = useState([]);
   const [profile, setProfile] = useState(null);
+  const [contributions, setContributions] = useState(null);
+  const [contributionsLoading, setContributionsLoading] = useState(true);
+  const [contributionsError, setContributionsError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [sortBy, setSortBy] = useState('updated');
@@ -73,6 +78,33 @@ export default function GitHub() {
     load();
     return () => { cancelled = true; };
   }, [sortBy]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadContributions() {
+      setContributionsLoading(true);
+      setContributionsError(null);
+      try {
+        const calendar = await fetchGitHubContributions();
+        if (!cancelled) {
+          setContributions(calendar);
+          if (!calendar) {
+            setContributionsError('Could not load contribution data.');
+          }
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setContributionsError(err.message || 'Could not load contribution data.');
+        }
+      } finally {
+        if (!cancelled) setContributionsLoading(false);
+      }
+    }
+
+    loadContributions();
+    return () => { cancelled = true; };
+  }, []);
 
   if (loading && !profile) {
     return (
@@ -153,10 +185,11 @@ export default function GitHub() {
             {username && (
               <div className="github-contribution-section">
                 <h3 className="github-contribution-title">Contribution activity</h3>
-                <img
-                  src={`https://ghchart.rshah.org/${username}`}
-                  alt="GitHub contribution chart"
-                  className="github-contribution-chart"
+                <ContributionCalendar
+                  calendar={contributions}
+                  loading={contributionsLoading}
+                  error={contributionsError}
+                  username={username}
                 />
               </div>
             )}

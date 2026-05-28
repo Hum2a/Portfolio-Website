@@ -169,13 +169,212 @@
   margin-bottom: 1rem;
 }
 
-.github-contribution-chart {
+.github-contribution-chart-fallback {
   width: 100%;
   max-width: 100%;
   height: auto;
+  margin-top: 1rem;
   border-radius: 8px;
   background: var(--bg-secondary);
   padding: 0.5rem;
+}
+
+/* Interactive contribution graph */
+.github-contribution-graph {
+  position: relative;
+  --github-contrib-empty: #161b22;
+  --github-contrib-cell: 11px;
+  --github-contrib-gap: 3px;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+.github-contribution-graph--loading,
+.github-contribution-graph--error {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.github-contribution-summary {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.github-contribution-summary strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.github-contribution-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.github-contribution-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 4px 8px;
+  min-width: min(100%, 720px);
+}
+
+.github-contribution-months {
+  grid-column: 2;
+  display: grid;
+  gap: var(--github-contrib-gap);
+  height: 1rem;
+  align-items: end;
+}
+
+.github-contribution-month {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.github-contribution-day-labels {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-rows: repeat(7, var(--github-contrib-cell));
+  gap: var(--github-contrib-gap);
+  align-content: start;
+  padding-top: 2px;
+}
+
+.github-contribution-day-label {
+  font-size: 0.7rem;
+  line-height: var(--github-contrib-cell);
+  color: var(--text-secondary);
+  text-align: right;
+  padding-right: 4px;
+  min-width: 1.75rem;
+}
+
+.github-contribution-grid {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  gap: var(--github-contrib-gap);
+  align-content: start;
+}
+
+.github-contribution-week {
+  display: grid;
+  grid-template-rows: repeat(7, var(--github-contrib-cell));
+  gap: var(--github-contrib-gap);
+}
+
+.github-contribution-cell {
+  width: var(--github-contrib-cell);
+  height: var(--github-contrib-cell);
+  border-radius: 2px;
+  outline: none;
+  cursor: default;
+  transition: outline-color 0.15s ease, transform 0.15s ease;
+}
+
+.github-contribution-cell:not(.github-contribution-cell--empty):hover,
+.github-contribution-cell:not(.github-contribution-cell--empty):focus-visible {
+  outline: 1px solid var(--text-primary);
+  outline-offset: 1px;
+  transform: scale(1.15);
+  z-index: 1;
+  position: relative;
+}
+
+.github-contribution-cell--empty {
+  background: transparent;
+  pointer-events: none;
+}
+
+.github-contribution-tooltip {
+  position: absolute;
+  z-index: 20;
+  transform: translate(-50%, calc(-100% - 8px));
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  background: #24292f;
+  color: #f0f6fc;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+.github-contribution-tooltip::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: #24292f;
+}
+
+.github-contribution-tooltip strong {
+  font-weight: 600;
+}
+
+.github-contribution-tooltip-date {
+  color: #8b949e;
+}
+
+.github-contribution-tooltip-level {
+  color: #8b949e;
+  font-size: 0.7rem;
+}
+
+.github-contribution-tooltip-breakdown {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0.35rem 0 0;
+  border-top: 1px solid rgba(240, 246, 252, 0.12);
+  text-align: left;
+}
+
+.github-contribution-tooltip-breakdown li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.7rem;
+  color: #c9d1d9;
+}
+
+.github-contribution-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.github-contribution-legend-cells {
+  display: flex;
+  gap: 2px;
+}
+
+.github-contribution-legend-cell {
+  width: var(--github-contrib-cell);
+  height: var(--github-contrib-cell);
+  border-radius: 2px;
 }
 
 /* Repos section */

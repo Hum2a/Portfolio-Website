@@ -1,5 +1,6 @@
 import React from 'react';
 import { isExcludedAnalyticsPath } from '../../utils/analyticsPaths';
+import { VisitorDataAdmin } from './components/VisitorDataAdmin';
 import {
   LineChart,
   Line,
@@ -77,6 +78,8 @@ export function TrafficTabContent() {
     setSelectedLocation,
     environmentFilter,
     excludeAdminPaths,
+    isOwnerVisitor,
+    getVisitorKey,
     selectedVisitorAnonymizedIP,
     setSelectedVisitorAnonymizedIP,
     formatDate,
@@ -265,6 +268,11 @@ export function TrafficTabContent() {
                       <td>
                         <div className="ip-cell">
                           {visitor.anonymizedIP || visitor.id}
+                          {isOwnerVisitor(getVisitorKey(visitor)) && (
+                            <span className="owner-tag-badge" title="Your device">
+                              Mine
+                            </span>
+                          )}
                           <span className={`env-badge ${visitor.environment === 'localhost' ? 'localhost' : 'production'}`}>
                             {visitor.environment || 'unknown'}
                           </span>
@@ -295,6 +303,7 @@ export function TrafficTabContent() {
                               <FaMapMarkerAlt />
                             </button>
                           )}
+                          <VisitorDataAdmin visitor={visitor} compact />
                         </div>
                       </td>
                     </tr>
