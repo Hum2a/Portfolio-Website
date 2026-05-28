@@ -1,6 +1,7 @@
 import React from 'react';
 import { isExcludedAnalyticsPath } from '../../utils/analyticsPaths';
 import { VisitorDataAdmin } from './components/VisitorDataAdmin';
+import { DeviceInfoPanel } from './components/DeviceInfoPanel';
 import {
   LineChart,
   Line,
@@ -445,95 +446,7 @@ export function TrafficTabContent() {
 
                             <div className={`expanded-panel panel-device ${getVisitorTab(visitor.id) === 'device' ? 'active' : ''}`}>
                               <h4>Device Information</h4>
-                              {visitor.deviceInfo ? (
-                                <div className="info-grid">
-                                  <div className="info-section">
-                                    <h5>Browser</h5>
-                                    <div className="info-item">
-                                      <span className="info-label">Browser:</span>
-                                      <span className="info-value">{visitor.deviceInfo.browser || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Browser Version:</span>
-                                      <span className="info-value">{visitor.deviceInfo.browserVersion || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">User Agent:</span>
-                                      <span className="info-value user-agent">{visitor.deviceInfo.userAgent || 'N/A'}</span>
-                                    </div>
-                                  </div>
-                                  <div className="info-section">
-                                    <h5>Operating System</h5>
-                                    <div className="info-item">
-                                      <span className="info-label">OS:</span>
-                                      <span className="info-value">{visitor.deviceInfo.os || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">OS Version:</span>
-                                      <span className="info-value">{visitor.deviceInfo.osVersion || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Device Type:</span>
-                                      <span className="info-value">{visitor.deviceInfo.deviceType || 'N/A'}</span>
-                                    </div>
-                                  </div>
-                                  <div className="info-section">
-                                    <h5>Display</h5>
-                                    <div className="info-item">
-                                      <span className="info-label">Screen Size:</span>
-                                      <span className="info-value">{visitor.deviceInfo.screenSize || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Screen Resolution:</span>
-                                      <span className="info-value">{visitor.deviceInfo.screenResolution || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Color Depth:</span>
-                                      <span className="info-value">{visitor.deviceInfo.colorDepth || 'N/A'} bits</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Pixel Ratio:</span>
-                                      <span className="info-value">{visitor.deviceInfo.pixelRatio || 'N/A'}</span>
-                                    </div>
-                                  </div>
-                                  <div className="info-section">
-                                    <h5>Network & Settings</h5>
-                                    <div className="info-item">
-                                      <span className="info-label">Connection Type:</span>
-                                      <span className="info-value">{visitor.deviceInfo.connectionType || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Effective Connection:</span>
-                                      <span className="info-value">{visitor.deviceInfo.effectiveConnectionType || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Language:</span>
-                                      <span className="info-value">{visitor.deviceInfo.language || 'N/A'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Timezone:</span>
-                                      <span className="info-value">{visitor.deviceInfo.timezone || 'N/A'}</span>
-                                    </div>
-                                  </div>
-                                  <div className="info-section">
-                                    <h5>Privacy & Status</h5>
-                                    <div className="info-item">
-                                      <span className="info-label">Cookies Enabled:</span>
-                                      <span className="info-value">{visitor.deviceInfo.cookiesEnabled ? 'Yes' : 'No'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Do Not Track:</span>
-                                      <span className="info-value">{visitor.deviceInfo.doNotTrack || '0'}</span>
-                                    </div>
-                                    <div className="info-item">
-                                      <span className="info-label">Online Status:</span>
-                                      <span className="info-value">{visitor.deviceInfo.online ? 'Online' : 'Offline'}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              ) : (
-                                <p className="no-data">No device information available</p>
-                              )}
+                              <DeviceInfoPanel deviceInfo={visitor.deviceInfo} />
                             </div>
 
                             <div className={`expanded-panel panel-location ${getVisitorTab(visitor.id) === 'location' ? 'active' : ''}`}>

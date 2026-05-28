@@ -252,56 +252,113 @@ const getCampaignData = async () => {
   return null;
 };
 
-// Enhanced device info detection
+const readMediaPreference = (query) => {
+  try {
+    return window.matchMedia(query).matches;
+  } catch {
+    return null;
+  }
+};
+
+const getScreenOrientation = () => {
+  const o = window.screen?.orientation?.type;
+  if (o) return o;
+  if (window.innerWidth > window.innerHeight) return 'landscape';
+  if (window.innerWidth < window.innerHeight) return 'portrait';
+  return 'unknown';
+};
+
+/** Chromium User-Agent Client Hints (async where supported). */
+const enrichDeviceInfoWithClientHints = async (base) => {
+  const ua = navigator.userAgentData;
+  if (!ua) return base;
+
+  const next = {
+    ...base,
+    uaBrands: ua.brands?.map((b) => `${b.brand} ${b.version}`).join(', ') || null,
+    uaMobile: ua.mobile,
+    uaPlatform: ua.platform,
+  };
+
+  if (typeof ua.getHighEntropyValues !== 'function') return next;
+
+  try {
+    const hints = await ua.getHighEntropyValues([
+      'architecture',
+      'bitness',
+      'model',
+      'platformVersion',
+      'fullVersionList',
+      'wow64',
+    ]);
+    return {
+      ...next,
+      uaArchitecture: hints.architecture || null,
+      uaBitness: hints.bitness || null,
+      uaDeviceModel: hints.model || null,
+      uaPlatformVersion: hints.platformVersion || null,
+      uaFullVersionList:
+        hints.fullVersionList?.map((b) => `${b.brand} ${b.version}`).join(', ') || null,
+      uaWow64: hints.wow64 ?? null,
+    };
+  } catch {
+    return next;
+  }
+};
+
+// Enhanced device info detection (no prompts; technical signals only)
 const getDeviceInfo = () => {
   const userAgent = navigator.userAgent;
   const screenSize = `${window.innerWidth}x${window.innerHeight}`;
   const screenResolution = `${window.screen.width}x${window.screen.height}`;
+  const screenAvailSize = `${window.screen.availWidth}x${window.screen.availHeight}`;
+  const outerSize = `${window.outerWidth}x${window.outerHeight}`;
   const language = navigator.language;
+  const languages = Array.isArray(navigator.languages) ? [...navigator.languages] : [language];
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezoneOffset = new Date().getTimezoneOffset();
   const colorDepth = window.screen.colorDepth;
   const pixelRatio = window.devicePixelRatio || 1;
-  
-  // Detect device type
+
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
   const isTablet = /(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(userAgent);
-  
+
   let deviceType = 'desktop';
   if (isTablet) deviceType = 'tablet';
   if (isMobile) deviceType = 'mobile';
-  
-  // Detect browser
+
   let browser = 'Unknown';
   let browserVersion = 'Unknown';
-  
+
   if (userAgent.indexOf('Firefox') > -1) {
     browser = 'Firefox';
-    browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)[1];
+    browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)?.[1] || 'Unknown';
   } else if (userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('Edge') === -1 && userAgent.indexOf('Edg') === -1) {
     browser = 'Chrome';
-    browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)[1];
+    browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)?.[1] || 'Unknown';
   } else if (userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') === -1) {
     browser = 'Safari';
     browserVersion = userAgent.match(/Version\/([0-9.]+)/)?.[1] || 'Unknown';
   } else if (userAgent.indexOf('Edge') > -1 || userAgent.indexOf('Edg') > -1) {
     browser = 'Edge';
-    browserVersion = userAgent.match(/Edge\/([0-9.]+)/)?.[1] || userAgent.match(/Edg\/([0-9.]+)/)?.[1] || 'Unknown';
+    browserVersion =
+      userAgent.match(/Edge\/([0-9.]+)/)?.[1] ||
+      userAgent.match(/Edg\/([0-9.]+)/)?.[1] ||
+      'Unknown';
   } else if (userAgent.indexOf('MSIE') > -1 || userAgent.indexOf('Trident') > -1) {
     browser = 'Internet Explorer';
-    browserVersion = userAgent.match(/(?:MSIE |rv:)([0-9.]+)/)[1];
+    browserVersion = userAgent.match(/(?:MSIE |rv:)([0-9.]+)/)?.[1] || 'Unknown';
   } else if (userAgent.indexOf('Opera') > -1 || userAgent.indexOf('OPR') > -1) {
     browser = 'Opera';
-    browserVersion = userAgent.match(/(?:Opera|OPR)\/([0-9.]+)/)[1];
+    browserVersion = userAgent.match(/(?:Opera|OPR)\/([0-9.]+)/)?.[1] || 'Unknown';
   }
-  
-  // Detect OS
+
   let os = 'Unknown';
   let osVersion = 'Unknown';
-  
+
   if (userAgent.indexOf('Windows') > -1) {
     os = 'Windows';
     osVersion = userAgent.match(/Windows NT ([0-9.]+)/)?.[1] || 'Unknown';
-    // Map Windows NT version to common names
     if (osVersion === '10.0') osVersion = '10';
     else if (osVersion === '6.3') osVersion = '8.1';
     else if (osVersion === '6.2') osVersion = '8';
@@ -320,36 +377,64 @@ const getDeviceInfo = () => {
   } else if (userAgent.indexOf('Linux') > -1) {
     os = 'Linux';
   }
-  
-  // Connection info
-  let connectionType = 'Unknown';
-  let effectiveConnectionType = 'Unknown';
-  
-  if (navigator.connection) {
-    connectionType = navigator.connection.type || 'Unknown';
-    effectiveConnectionType = navigator.connection.effectiveType || 'Unknown';
-  }
-  
+
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const connectionType = conn?.type || 'Unknown';
+  const effectiveConnectionType = conn?.effectiveType || 'Unknown';
+  const downlinkMbps = conn?.downlink != null ? conn.downlink : null;
+  const networkRtt = conn?.rtt != null ? conn.rtt : null;
+  const saveData = conn?.saveData === true;
+
+  const hardwareConcurrency =
+    typeof navigator.hardwareConcurrency === 'number' ? navigator.hardwareConcurrency : null;
+  const deviceMemory =
+    typeof navigator.deviceMemory === 'number' ? navigator.deviceMemory : null;
+  const maxTouchPoints =
+    typeof navigator.maxTouchPoints === 'number' ? navigator.maxTouchPoints : null;
+
   return {
     userAgent,
     screenSize,
     screenResolution,
+    screenAvailSize,
+    outerSize,
     language,
+    languages: languages.join(', '),
     timezone,
+    timezoneOffset,
     colorDepth,
     pixelRatio,
+    orientation: getScreenOrientation(),
     deviceType,
     browser,
     browserVersion,
     os,
     osVersion,
+    platform: navigator.platform || 'Unknown',
+    vendor: navigator.vendor || 'Unknown',
     connectionType,
     effectiveConnectionType,
+    downlinkMbps,
+    networkRtt,
+    saveData,
+    hardwareConcurrency,
+    deviceMemory,
+    maxTouchPoints,
+    touchCapable: maxTouchPoints != null ? maxTouchPoints > 0 : null,
+    prefersColorScheme: readMediaPreference('(prefers-color-scheme: dark)') ? 'dark' : 'light',
+    prefersReducedMotion: readMediaPreference('(prefers-reduced-motion: reduce)') ? 'reduce' : 'no-preference',
+    pdfViewerEnabled:
+      typeof navigator.pdfViewerEnabled === 'boolean' ? navigator.pdfViewerEnabled : null,
+    webdriver: navigator.webdriver === true,
+    characterSet: document.characterSet || 'Unknown',
     cookiesEnabled: navigator.cookieEnabled,
     doNotTrack: navigator.doNotTrack || window.doNotTrack || '0',
-    online: navigator.onLine
+    globalPrivacyControl: navigator.globalPrivacyControl === true,
+    online: navigator.onLine,
   };
 };
+
+const collectDeviceInfo = async () => enrichDeviceInfoWithClientHints(getDeviceInfo());
 
 const defaultLocation = (deviceInfo) => ({
   city: 'Unknown',
@@ -461,7 +546,7 @@ const trackVisitor = async () => {
   try {
     const { visitorId, sessionId } = ensureTrackingIds();
     const { anonymizedIP, ipAddress } = await resolveAnonymizedIP(visitorId);
-    const deviceInfo = getDeviceInfo();
+    const deviceInfo = await collectDeviceInfo();
     const timestamp = new Date();
     const environment = getEnvironment();
     const userLocation = defaultLocation(deviceInfo);
