@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
 import { featureFlags, apiKeys } from '../utils/env';
 import { isExcludedAnalyticsPath } from '../utils/analyticsPaths';
+import { buildTrafficSignals } from '../utils/trafficSignals';
 import { db } from './firebase';
 
 const isCurrentPathExcluded = () => isExcludedAnalyticsPath(window.location.pathname);
@@ -487,8 +488,14 @@ const fetchIpGeo = async (deviceInfo) => {
   try {
     const res = await fetchWithTimeout(ipinfoUrl, 4000);
     if (res.ok) {
-      const loc = locationFromIpinfo(await res.json(), deviceInfo);
-      if (hasUsableLocation(loc)) return loc;
+      const ipinfoData = await res.json();
+      const loc = locationFromIpinfo(ipinfoData, deviceInfo);
+      if (hasUsableLocation(loc)) {
+        return { location: loc, ipinfoData };
+      }
+      if (ipinfoData?.privacy) {
+        return { location: null, ipinfoData };
+      }
     }
   } catch {
     // try next provider
@@ -498,13 +505,13 @@ const fetchIpGeo = async (deviceInfo) => {
     const res = await fetchWithTimeout('https://get.geojs.io/v1/ip/geo.json', 4000);
     if (res.ok) {
       const loc = locationFromGeoJs(await res.json(), deviceInfo);
-      if (hasUsableLocation(loc)) return loc;
+      if (hasUsableLocation(loc)) return { location: loc, ipinfoData: null };
     }
   } catch {
     // no further fallbacks
   }
 
-  return null;
+  return { location: null, ipinfoData: null };
 };
 
 const resolveVisitorIp = async () => {
@@ -517,22 +524,31 @@ const resolveVisitorIp = async () => {
   }
 };
 
-// Resolve geo in the background so quick visits still get a session saved first
+// Resolve geo + VPN/bot signals in the background after session is saved
 const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
   let userLocation = defaultLocation(deviceInfo);
+  let ipinfoData = null;
 
   try {
     const ipGeo = await fetchIpGeo(deviceInfo);
-    if (ipGeo) userLocation = ipGeo;
+    if (ipGeo?.location) userLocation = ipGeo.location;
+    ipinfoData = ipGeo?.ipinfoData ?? null;
 
     if (!ipAddress) {
       ipAddress = await resolveVisitorIp();
     }
 
+    const trafficSignals = buildTrafficSignals({
+      deviceInfo,
+      ipinfoData,
+      location: userLocation,
+    });
+
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
     await updateDoc(visitorRef, {
       ...(ipAddress ? { code: ipAddress } : {}),
       location: userLocation,
+      trafficSignals,
     });
   } catch (error) {
     console.warn('Location enrichment failed:', error);
@@ -550,6 +566,7 @@ const trackVisitor = async () => {
     const timestamp = new Date();
     const environment = getEnvironment();
     const userLocation = defaultLocation(deviceInfo);
+    const trafficSignals = buildTrafficSignals({ deviceInfo, location: userLocation });
 
     const campaignData = await getCampaignData();
 
@@ -588,6 +605,7 @@ const trackVisitor = async () => {
         visits: increment(1),
         deviceInfo,
         location: userLocation,
+        trafficSignals,
         environment,
         sessions: arrayUnion(sessionData),
       });
@@ -601,6 +619,7 @@ const trackVisitor = async () => {
         visits: 1,
         deviceInfo,
         location: userLocation,
+        trafficSignals,
         environment,
         sessions: [sessionData],
       });

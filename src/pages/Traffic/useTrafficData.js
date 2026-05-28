@@ -16,6 +16,7 @@ import {
   getTimeRangeLabel,
 } from './statsHelpers';
 import { isExcludedAnalyticsPath, visitorHasNonAdminActivity } from '../../utils/analyticsPaths';
+import { getTrafficSignalsForVisitor } from '../../utils/trafficSignals';
 import {
   listOwnerTags,
   setOwnerTag,
@@ -65,6 +66,7 @@ export function useTrafficData(role) {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [environmentFilter, setEnvironmentFilter] = useState('all');
   const [excludeAdminPaths, setExcludeAdminPaths] = useState(true);
+  const [hideBots, setHideBots] = useState(false);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [timeRange, setTimeRange] = useState('all');
   const [expandedCountries, setExpandedCountries] = useState(false);
@@ -303,9 +305,15 @@ export function useTrafficData(role) {
   }, [mediaClicks, excludeAdminPaths]);
 
   const visitorsForAnalytics = useMemo(() => {
-    if (!excludeAdminPaths) return visitors;
-    return visitors.filter((v) => visitorHasNonAdminActivity(v, pageViews));
-  }, [visitors, pageViews, excludeAdminPaths]);
+    let list = visitors;
+    if (excludeAdminPaths) {
+      list = list.filter((v) => visitorHasNonAdminActivity(v, pageViews));
+    }
+    if (hideBots) {
+      list = list.filter((v) => !getTrafficSignalsForVisitor(v)?.isLikelyBot);
+    }
+    return list;
+  }, [visitors, pageViews, excludeAdminPaths, hideBots]);
 
   const formatDateForInput = useCallback(
     (date) => {
@@ -1264,6 +1272,8 @@ export function useTrafficData(role) {
     setEnvironmentFilter,
     excludeAdminPaths,
     setExcludeAdminPaths,
+    hideBots,
+    setHideBots,
     dateRange,
     setDateRange,
     timeRange,

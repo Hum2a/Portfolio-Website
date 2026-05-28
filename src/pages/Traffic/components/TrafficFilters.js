@@ -8,6 +8,8 @@ export function TrafficFilters() {
     setEnvironmentFilter,
     excludeAdminPaths,
     setExcludeAdminPaths,
+    hideBots,
+    setHideBots,
     filterCountsByEnvironment,
     timeRange,
     handleTimeRangeChange,
@@ -45,6 +47,14 @@ export function TrafficFilters() {
             onChange={(e) => setExcludeAdminPaths(e.target.checked)}
           />
           <span>Exclude /traffic from analytics</span>
+        </label>
+        <label className="admin-path-filter-toggle">
+          <input
+            type="checkbox"
+            checked={hideBots}
+            onChange={(e) => setHideBots(e.target.checked)}
+          />
+          <span>Hide likely bots from visitor list</span>
         </label>
       </div>
 

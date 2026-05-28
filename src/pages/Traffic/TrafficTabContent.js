@@ -2,6 +2,8 @@ import React from 'react';
 import { isExcludedAnalyticsPath } from '../../utils/analyticsPaths';
 import { VisitorDataAdmin } from './components/VisitorDataAdmin';
 import { DeviceInfoPanel } from './components/DeviceInfoPanel';
+import { TrafficSignalsPanel, TrafficSignalBadges } from './components/TrafficSignalsPanel';
+import { getTrafficSignalsForVisitor } from '../../utils/trafficSignals';
 import {
   LineChart,
   Line,
@@ -269,6 +271,7 @@ export function TrafficTabContent() {
                       <td>
                         <div className="ip-cell">
                           {visitor.anonymizedIP || visitor.id}
+                          <TrafficSignalBadges signals={getTrafficSignalsForVisitor(visitor)} />
                           {isOwnerVisitor(getVisitorKey(visitor)) && (
                             <span className="owner-tag-badge" title="Your device">
                               Mine
@@ -330,6 +333,12 @@ export function TrafficTabContent() {
                                 onClick={() => setVisitorTab(visitor.id, 'location')}
                               >
                                 Location
+                              </button>
+                              <button
+                                className={`expanded-tab ${getVisitorTab(visitor.id) === 'signals' ? 'active' : ''}`}
+                                onClick={() => setVisitorTab(visitor.id, 'signals')}
+                              >
+                                Signals
                               </button>
                               <button
                                 className={`expanded-tab ${getVisitorTab(visitor.id) === 'summary' ? 'active' : ''}`}
@@ -447,6 +456,11 @@ export function TrafficTabContent() {
                             <div className={`expanded-panel panel-device ${getVisitorTab(visitor.id) === 'device' ? 'active' : ''}`}>
                               <h4>Device Information</h4>
                               <DeviceInfoPanel deviceInfo={visitor.deviceInfo} />
+                            </div>
+
+                            <div className={`expanded-panel panel-signals ${getVisitorTab(visitor.id) === 'signals' ? 'active' : ''}`}>
+                              <h4>Bot &amp; VPN signals</h4>
+                              <TrafficSignalsPanel signals={getTrafficSignalsForVisitor(visitor)} />
                             </div>
 
                             <div className={`expanded-panel panel-location ${getVisitorTab(visitor.id) === 'location' ? 'active' : ''}`}>

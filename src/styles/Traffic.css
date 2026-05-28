@@ -3716,3 +3716,53 @@
   margin-left: 0;
   margin-top: 0.25rem;
 }
+
+.traffic-signal-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.traffic-signal-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.traffic-signal-badge.signal-bot {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.traffic-signal-badge.signal-vpn,
+.traffic-signal-badge.signal-proxy,
+.traffic-signal-badge.signal-tor {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+
+.traffic-signal-badge.signal-vpn-hint {
+  background: #fff8e1;
+  color: #f57f17;
+  border: 1px dashed #ffcc80;
+}
+
+.traffic-signal-badge.signal-hosting {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.traffic-signals-note {
+  grid-column: 1 / -1;
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0.5rem 0 0;
+  line-height: 1.4;
+}
