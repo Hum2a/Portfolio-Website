@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import {
   trackVisitorStats,
+  trackVisitorCountryStats,
   trackPageViewStats,
   trackPageTimeStats,
   trackEventStats,
@@ -525,7 +526,7 @@ const resolveVisitorIp = async () => {
 };
 
 // Resolve geo + VPN/bot signals in the background after session is saved
-const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
+const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo, environment) => {
   let userLocation = defaultLocation(deviceInfo);
   let ipinfoData = null;
 
@@ -552,6 +553,10 @@ const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo) => {
     });
   } catch (error) {
     console.warn('Location enrichment failed:', error);
+  } finally {
+    // Record the country into the rollup only once the real geo is resolved,
+    // so dim_country reflects actual locations rather than the placeholder.
+    trackVisitorCountryStats({ country: userLocation.country, environment });
   }
 };
 
@@ -636,10 +641,11 @@ const trackVisitor = async () => {
       });
     }
 
-    trackVisitorStats({ environment, isReturning, deviceInfo, location: userLocation });
+    // Country is deferred to enrichVisitorLocation so it captures the real geo.
+    trackVisitorStats({ environment, isReturning, deviceInfo, location: userLocation, includeCountry: false });
     if (campaignData) trackCampaignStats(campaignData, environment);
 
-    enrichVisitorLocation(anonymizedIP, ipAddress, deviceInfo).catch(() => {});
+    enrichVisitorLocation(anonymizedIP, ipAddress, deviceInfo, environment).catch(() => {});
 
     return { visitorId, sessionId, anonymizedIP, deviceInfo, location: userLocation };
   } catch (error) {

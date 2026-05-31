@@ -771,15 +771,24 @@ export function useTrafficData(role) {
   }, [rollup.visitors, environmentFilter, dateFilter]);
 
   const visitorsByCountry = useMemo(() => {
-    if (visitorsByCountryFromRollup?.length) return visitorsByCountryFromRollup;
+    // Prefer the enriched per-visitor location (resolved via IP geo lookup).
     const countryMap = {};
     visitorsForCountryBreakdown.forEach((v) => {
       const country = v.location?.country || 'Unknown';
       countryMap[country] = (countryMap[country] || 0) + 1;
     });
-    return Object.entries(countryMap)
+    const fromVisitors = Object.entries(countryMap)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
+
+    // Use per-visitor data whenever it has any real (resolved) country. Fall
+    // back to the rollup only if visitor docs carry no usable geo at all, since
+    // older rollups may still hold the legacy "Unknown" placeholder counts.
+    const hasResolvedCountry = fromVisitors.some((c) => c.name && c.name !== 'Unknown');
+    if (fromVisitors.length && (hasResolvedCountry || !visitorsByCountryFromRollup?.length)) {
+      return fromVisitors;
+    }
+    return visitorsByCountryFromRollup || fromVisitors;
   }, [visitorsForCountryBreakdown, visitorsByCountryFromRollup]);
 
   const matchVisitorByIP = useCallback(

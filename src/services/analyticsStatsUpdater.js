@@ -37,17 +37,20 @@ export async function bumpDaily(metrics, environment) {
   await mergeStatDoc('daily', updates);
 }
 
-export async function bumpVisitorStats({ environment, isReturning, deviceInfo, location }) {
+export async function bumpVisitorStats({ environment, isReturning, deviceInfo, location, includeCountry = true }) {
   const country = statKeySafe(location?.country || 'Unknown');
   const device = statKeySafe(deviceInfo?.deviceType || 'unknown');
   const browser = statKeySafe(deviceInfo?.browser || 'unknown');
 
   const updates = {
     total: increment(1),
-    [`dim_country.${country}`]: increment(1),
     [`dim_device.${device}`]: increment(1),
     [`dim_browser.${browser}`]: increment(1),
   };
+  // Country is usually recorded separately after IP geo enrichment resolves
+  // (see bumpVisitorCountry), so the dim_country rollup reflects real
+  // locations instead of the "Unknown" placeholder.
+  if (includeCountry) updates[`dim_country.${country}`] = increment(1);
 
   if (isReturning) {
     updates.returning = increment(1);
@@ -59,7 +62,7 @@ export async function bumpVisitorStats({ environment, isReturning, deviceInfo, l
     updates.prod_total = increment(1);
     if (isReturning) updates.prod_returning = increment(1);
     else updates.prod_newVisitors = increment(1);
-    updates[`prod_dim_country.${country}`] = increment(1);
+    if (includeCountry) updates[`prod_dim_country.${country}`] = increment(1);
     updates[`prod_dim_device.${device}`] = increment(1);
   } else {
     updates.local_total = increment(1);
@@ -67,6 +70,18 @@ export async function bumpVisitorStats({ environment, isReturning, deviceInfo, l
 
   await mergeStatDoc('visitors', updates);
   await bumpDaily({ visitors: 1 }, environment);
+}
+
+/** Records the resolved country into the visitors rollup after geo enrichment. */
+export async function bumpVisitorCountry({ country, environment }) {
+  const safeCountry = statKeySafe(country || 'Unknown');
+  const updates = {
+    [`dim_country.${safeCountry}`]: increment(1),
+  };
+  if (isProduction(environment)) {
+    updates[`prod_dim_country.${safeCountry}`] = increment(1);
+  }
+  await mergeStatDoc('visitors', updates);
 }
 
 export async function bumpPageViewStats(path, environment) {
@@ -210,6 +225,10 @@ export async function bumpScrollDepth(depthPercent, path, environment) {
 
 export function trackVisitorStats(payload) {
   fireAndForget(bumpVisitorStats(payload));
+}
+
+export function trackVisitorCountryStats(payload) {
+  fireAndForget(bumpVisitorCountry(payload));
 }
 
 export function trackPageViewStats(path, environment) {
