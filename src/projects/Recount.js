@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import Navbar from "../components/layout/Navbar";
-import HamburgerMenu from "../components/layout/HamburgerMenu";
-import Terminal from "../components/animations/Terminal";
-import CodeBlock from "../components/animations/CodeBlock";
-import ProjectSiteEmbed from "../components/projects/ProjectSiteEmbed";
-import "./project-shared.css";
+import React from "react";
+import ProjectLayout from "../components/projects/ProjectLayout";
 
 const RECOUNT_WEB_URL = "https://recount.world";
-/** Replace when the Chrome Web Store listing is ready */
-const Recount = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  const projectInfo = `const recount = {
+const terminalLines = [
+  "const recount = {",
+  "  name: 'Recount',",
+  "  type: 'Extension + Next.js + API',",
+  "  data: 'Supabase + Stripe + OpenAI + Resend',",
+  "};",
+];
+
+const projectInfo = `const recount = {
   name: "Recount",
   type: "Productivity (extension + web + API)",
   url: "https://recount.world",
@@ -28,211 +27,92 @@ const Recount = () => {
   packages: ["extension", "web", "api", "api-worker", "shared"],
 };`;
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+const techStack = [
+  "Next.js 14 (App Router), React, TypeScript, Tailwind CSS",
+  "Chrome Extension MV3, esbuild, Zustand, Recharts, Framer Motion",
+  "Express 4 (ESM), Hono on Cloudflare Workers",
+  "Supabase (Auth, Postgres, RLS); Zod, Pino",
+  "Stripe (checkout + webhooks), OpenAI, Resend",
+  "Vitest, Supertest, GitHub Actions CI",
+  "npm workspaces monorepo",
+];
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+const features = [
+  "Extension passively aggregates active tab time by domain and batches events to the API",
+  "Web app: marketing site plus authenticated dashboard (intentions, history, reports, settings)",
+  "Elevated staff roles for admin analytics and operations",
+  "REST API owns mutations and privileged reads; browser uses anon JWT + RLS where appropriate",
+  "Stripe licensing with idempotent webhook processing",
+  "Optional AI-generated daily reports and email digests (Resend)",
+  "Shared package for domain classification and app roles",
+];
 
-  const techStack = [
-    "Next.js 14 (App Router), React, TypeScript, Tailwind CSS",
-    "Chrome Extension MV3, esbuild, Zustand, Recharts, Framer Motion",
-    "Express 4 (ESM), Hono on Cloudflare Workers",
-    "Supabase (Auth, Postgres, RLS); Zod, Pino",
-    "Stripe (checkout + webhooks), OpenAI, Resend",
-    "Vitest, Supertest, GitHub Actions CI",
-    "npm workspaces monorepo",
-  ];
-
-  const features = [
-    "Extension passively aggregates active tab time by domain and batches events to the API",
-    "Web app: marketing site plus authenticated dashboard (intentions, history, reports, settings)",
-    "Elevated staff roles for admin analytics and operations",
-    "REST API owns mutations and privileged reads; browser uses anon JWT + RLS where appropriate",
-    "Stripe licensing with idempotent webhook processing",
-    "Optional AI-generated daily reports and email digests (Resend)",
-    "Shared package for domain classification and app roles",
-  ];
-
+const Recount = () => {
   return (
-    <div className="project-page">
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
+    <ProjectLayout
+      title="Recount"
+      terminalLines={terminalLines}
+      logo={`${process.env.PUBLIC_URL}/logos/Recount.svg`}
+      codeSnippet={projectInfo}
+      embedUrl={RECOUNT_WEB_URL}
+      embedTitle="Recount web app"
+      features={features}
+      techStack={techStack}
+    >
+      <div>
+        <a
+          href={RECOUNT_WEB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="external-link-button"
+        >
+          Visit recount.world →
+        </a>
+      </div>
 
-      <motion.div
-        className="project-container"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="project-header">
-          <motion.img
-            src={`${process.env.PUBLIC_URL}/logos/Recount.svg`}
-            alt="Recount Logo"
-            className="project-logo"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          />
-          <h1 className="project-title">
-            <span className="code-comment">//</span> Recount
-          </h1>
-          <Terminal
-            lines={[
-              "const recount = {",
-              "  name: 'Recount',",
-              "  type: 'Extension + Next.js + API',",
-              "  data: 'Supabase + Stripe + OpenAI + Resend',",
-              "};",
-            ]}
-            prompt=">"
-            typingSpeed={35}
-            autoStart={true}
-            className="project-terminal"
-            title="project.js"
-          />
+      <section className="project-section" aria-labelledby="recount-links-heading">
+        <h2 className="section-title" id="recount-links-heading">
+          <span className="code-comment">//</span> Links
+        </h2>
+        <p className="section-description">
+          Web app and dashboard live at recount.world. Chrome Web Store link will be added when
+          the listing is published.
+        </p>
+        <div className="recount-links-row">
+          <a
+            href={RECOUNT_WEB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="external-link-button"
+          >
+            Open recount.world →
+          </a>
+          <button
+            type="button"
+            className="recount-store-soon"
+            disabled
+            title="Replace with Chrome Web Store URL when ready"
+          >
+            Chrome Web Store (coming soon)
+          </button>
         </div>
+      </section>
 
-        <div className="project-content">
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Project Information
-            </h2>
-            <CodeBlock
-              code={projectInfo}
-              language="javascript"
-              showLineNumbers={true}
-              copyable={false}
-            />
-            <a
-              href={RECOUNT_WEB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="external-link-button"
-            >
-              Visit recount.world →
-            </a>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            aria-labelledby="recount-links-heading"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.32 }}
-          >
-            <h2 className="section-title" id="recount-links-heading">
-              <span className="code-comment">//</span> Links
-            </h2>
-            <p className="section-description">
-              Web app and dashboard live at recount.world. Chrome Web Store link will be added when
-              the listing is published.
-            </p>
-            <div className="recount-links-row">
-              <a
-                href={RECOUNT_WEB_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="external-link-button"
-              >
-                Open recount.world →
-              </a>
-              <button
-                type="button"
-                className="recount-store-soon"
-                disabled
-                title="Replace with Chrome Web Store URL when ready"
-              >
-                Chrome Web Store (coming soon)
-              </button>
-            </div>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            aria-labelledby="recount-live-heading"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.34 }}
-          >
-            <h2 className="section-title" id="recount-live-heading">
-              <span className="code-comment">//</span> Live site
-            </h2>
-            <p className="section-description">
-              Lazy-loaded preview of the deployed web app (use a new tab if framing is blocked).
-            </p>
-            <ProjectSiteEmbed url={RECOUNT_WEB_URL} iframeTitle="Recount web app" />
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Overview
-            </h2>
-            <p className="section-description">
-              Recount is a productivity product built as an npm workspaces monorepo: a Chrome
-              Manifest V3 extension passively tracks time by domain and sends batched events to a
-              backend; a Next.js web app serves the marketing site and authenticated experience
-              (intentions, history, reports, settings, and staff admin); and a REST API handles
-              mutations and privileged reads against Supabase (Postgres and Auth), with Stripe for
-              licensing, optional OpenAI for report generation, and Resend for transactional and
-              digest email.
-            </p>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Features
-            </h2>
-            <div className="features-list">
-              {features.map((feature, index) => (
-                <div key={index} className="feature-item">
-                  <span className="feature-keyword">✓</span>
-                  <span className="feature-text">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Tech Stack
-            </h2>
-            <div className="tech-stack-grid">
-              {techStack.map((tech, index) => (
-                <div key={index} className="tech-badge">
-                  <span className="tech-icon">⚡</span>
-                  <span className="tech-name">{tech}</span>
-                </div>
-              ))}
-            </div>
-          </motion.section>
-        </div>
-      </motion.div>
-    </div>
+      <section className="project-section">
+        <h2 className="section-title">
+          <span className="code-comment">//</span> Overview
+        </h2>
+        <p className="section-description">
+          Recount is a productivity product built as an npm workspaces monorepo: a Chrome
+          Manifest V3 extension passively tracks time by domain and sends batched events to a
+          backend; a Next.js web app serves the marketing site and authenticated experience
+          (intentions, history, reports, settings, and staff admin); and a REST API handles
+          mutations and privileged reads against Supabase (Postgres and Auth), with Stripe for
+          licensing, optional OpenAI for report generation, and Resend for transactional and
+          digest email.
+        </p>
+      </section>
+    </ProjectLayout>
   );
 };
 
