@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import HamburgerMenu from "../components/HamburgerMenu";
-import Navbar from "../components/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
 import {
   getAllTags,
   filterProjectsCombined,
@@ -12,7 +12,7 @@ import {
   getVisibleProjects,
   formatProjectDate,
 } from "../data/projects";
-import "../styles/Projects.css";
+import "./Projects.css";
 
 const Projects = () => {
   const [selectedTags, setSelectedTags] = useState([]);

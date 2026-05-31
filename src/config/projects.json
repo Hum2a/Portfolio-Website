@@ -42,7 +42,7 @@
       "description": "Privacy-focused password entropy and crack-time estimator—client-side math, no real brute forcing, embedded live demo",
       "logo": "BruteForcer.svg",
       "gradient": "linear-gradient(135deg, #0f172a 0%, #047857 45%, #0ea5e9 100%)",
-      "route": "/tools/brute-forcer",
+      "route": "/bruteforcer",
       "tags": [
         "Next.js",
         "React",

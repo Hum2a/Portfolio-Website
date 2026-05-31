@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
-import Terminal from "../components/animations/Terminal";
-import CodeBlock from "../components/animations/CodeBlock";
-import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
+import ProjectLayout from "../components/projects/ProjectLayout";
+import ProjectSiteEmbed from "../components/projects/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
-import "../styles/project-shared.css";
-import "../styles/LifeSmart.css";
+import "./LifeSmart.css";
 
 /** Hub / marketing entry */
 const LIFESMART_HUB_URL = "https://home.lifesmartfinance.com";
@@ -186,13 +182,18 @@ const projects = [
   }
 ];
 
-const LifeSmart = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [selectedProject, setSelectedProject] = useState(projects[0]);
-  const [selectedMedia, setSelectedMedia] = useState(null);
-  const { trackMediaClick } = useMediaTracking();
+const terminalLines = [
+  "const lifesmart = {",
+  "  name: 'LifeSmart',",
+  "  type: 'Financial Education Platform',",
+  "  client: 'SPZeroFinance',",
+  "  mainProject: 'SpZero Learning Platform',",
+  "  stack: 'React + TypeScript + Cloudflare',",
+  "  hub: 'https://home.lifesmartfinance.com',",
+  "};",
+];
 
-  const projectInfo = `const lifesmart = {
+const projectInfo = `const lifesmart = {
   name: "LifeSmart",
   type: "Web Application Suite",
   client: "SPZeroFinance",
@@ -224,258 +225,183 @@ const LifeSmart = () => {
   ]
 };`;
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+const LifeSmart = () => {
+  const [selectedProject, setSelectedProject] = useState(projects[0]);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const { trackMediaClick } = useMediaTracking();
 
   const toolLiveUrl =
     LIFESMART_TOOL_URLS[selectedProject.id] ?? LIFESMART_HUB_URL;
 
   return (
-    <div className="project-page">
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
+    <ProjectLayout
+      title="LifeSmart"
+      terminalLines={terminalLines}
+      logo={`${process.env.PUBLIC_URL}/logos/LifeSmart.png`}
+      codeSnippet={projectInfo}
+    >
+      <div>
+        <a
+          href={LIFESMART_HUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="external-link-button"
+        >
+          Open LifeSmart hub →
+        </a>
+      </div>
 
-      <motion.div
-        className="project-container"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
+      <section className="project-section">
+        <h2 className="section-title">
+          <span className="code-comment">//</span> Select a Tool
+        </h2>
+        <div className="project-selector">
+          <label htmlFor="project-dropdown" className="selector-label">
+            Select a Project:
+          </label>
+          <select
+            id="project-dropdown"
+            value={selectedProject.id}
+            onChange={(e) =>
+              setSelectedProject(
+                projects.find((project) => project.id === e.target.value)
+              )
+            }
+            className="project-dropdown"
+          >
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
+
+      <motion.section
+        className="project-section"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        key={selectedProject.id}
       >
-        <div className="project-header">
-          <motion.img
-            src={`${process.env.PUBLIC_URL}/logos/LifeSmart.png`}
-            alt="LifeSmart Logo"
-            className="project-logo"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          />
-          <h1 className="project-title">
-            <span className="code-comment">//</span> LifeSmart
-          </h1>
-          <Terminal
-            lines={[
-              "const lifesmart = {",
-              "  name: 'LifeSmart',",
-              "  type: 'Financial Education Platform',",
-              "  client: 'SPZeroFinance',",
-              "  mainProject: 'SpZero Learning Platform',",
-              "  stack: 'React + TypeScript + Cloudflare',",
-              "  hub: 'https://home.lifesmartfinance.com',",
-              "};"
-            ]}
-            prompt=">"
-            typingSpeed={35}
-            autoStart={true}
-            className="project-terminal"
-            title="project.js"
-          />
-        </div>
-
-        <div className="project-content">
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Project Information
-            </h2>
-            <CodeBlock
-              code={projectInfo}
-              language="javascript"
-              showLineNumbers={true}
-              copyable={false}
-            />
-            <a
-              href={LIFESMART_HUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="external-link-button"
-            >
-              Open LifeSmart hub →
-            </a>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Select a Tool
-            </h2>
-            <div className="project-selector">
-              <label htmlFor="project-dropdown" className="selector-label">
-                Select a Project:
-              </label>
-              <select
-                id="project-dropdown"
-                value={selectedProject.id}
-                onChange={(e) =>
-                  setSelectedProject(
-                    projects.find((project) => project.id === e.target.value)
-                  )
-                }
-                className="project-dropdown"
-              >
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.title}
-                  </option>
-                ))}
-              </select>
+        <h2 className="section-title">
+          <span className="code-comment">//</span> {selectedProject.title}
+        </h2>
+        <p className="section-description">{selectedProject.description}</p>
+        <div className="features-list">
+          {selectedProject.features.map((feature, index) => (
+            <div key={index} className="feature-item">
+              <span className="feature-keyword">✓</span>
+              <span className="feature-text">{feature}</span>
             </div>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            key={selectedProject.id}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> {selectedProject.title}
-            </h2>
-            <p className="section-description">{selectedProject.description}</p>
-            <div className="features-list">
-              {selectedProject.features.map((feature, index) => (
-                <div key={index} className="feature-item">
-                  <span className="feature-keyword">✓</span>
-                  <span className="feature-text">{feature}</span>
+          ))}
+        </div>
+        {selectedProject.techStack && (
+          <div className="tech-stack-section">
+            <h3 className="tech-stack-title">
+              <span className="code-comment">//</span> Tech Stack
+            </h3>
+            <div className="tech-stack-grid">
+              {selectedProject.techStack.map((tech, index) => (
+                <div key={index} className="tech-badge">
+                  <span className="tech-icon">⚡</span>
+                  <span className="tech-name">{tech}</span>
                 </div>
               ))}
             </div>
-            {selectedProject.techStack && (
-              <div className="tech-stack-section">
-                <h3 className="tech-stack-title">
-                  <span className="code-comment">//</span> Tech Stack
-                </h3>
-                <div className="tech-stack-grid">
-                  {selectedProject.techStack.map((tech, index) => (
-                    <div key={index} className="tech-badge">
-                      <span className="tech-icon">⚡</span>
-                      <span className="tech-name">{tech}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            aria-labelledby="lifesmart-live-preview-heading"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55 }}
-            key={`live-${selectedProject.id}`}
-          >
-            <h2 className="section-title" id="lifesmart-live-preview-heading">
-              <span className="code-comment">//</span> Live preview
-            </h2>
-            <p className="section-description">
-              Deployed instance for <strong>{selectedProject.title}</strong> (
-              {toolLiveUrl.replace(/^https:\/\//, "")}). Other tools use their own subdomains—pick a
-              tool above to switch the preview.
-            </p>
-            <a
-              href={toolLiveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="external-link-button"
-            >
-              Open in new tab →
-            </a>
-            <ProjectSiteEmbed
-              url={toolLiveUrl}
-              iframeTitle={`LifeSmart — ${selectedProject.title}`}
-            />
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            key={`media-${selectedProject.id}`}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Media
-            </h2>
-            <div className="project-media">
-              {selectedProject.media.map((media, index) => (
-                <motion.div
-                  key={index}
-                  className="media-container"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 + index * 0.05 }}
-                  whileHover={{ y: -5 }}
-                  onClick={() => {
-                    trackMediaClick(media.type, media.src, media.caption);
-                    setSelectedMedia(media);
-                  }}
-                >
-                  {media.type === "image" ? (
-                    <img
-                      src={media.src}
-                      alt={media.caption}
-                      className="project-image"
-                    />
-                  ) : (
-                    <video className="project-video-preview" src={media.src} />
-                  )}
-                  <p className="media-caption">{media.caption}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-        </div>
-
-        {selectedMedia && (
-          <div className="modal" onClick={() => setSelectedMedia(null)}>
-            <motion.div
-              className="modal-content"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close" onClick={() => setSelectedMedia(null)}>
-                ×
-              </button>
-              {selectedMedia.type === "image" ? (
-                <img
-                  src={selectedMedia.src}
-                  alt={selectedMedia.caption}
-                  className="modal-image"
-                />
-              ) : (
-                <video
-                  controls
-                  className="modal-video"
-                  autoPlay
-                  src={selectedMedia.src}
-                />
-              )}
-              <p className="modal-caption">{selectedMedia.caption}</p>
-            </motion.div>
           </div>
         )}
-      </motion.div>
-    </div>
+      </motion.section>
+
+      <motion.section
+        className="project-section"
+        aria-labelledby="lifesmart-live-preview-heading"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55 }}
+        key={`live-${selectedProject.id}`}
+      >
+        <h2 className="section-title" id="lifesmart-live-preview-heading">
+          <span className="code-comment">//</span> Live preview
+        </h2>
+        <p className="section-description">
+          Deployed instance for <strong>{selectedProject.title}</strong> (
+          {toolLiveUrl.replace(/^https:\/\//, "")}). Other tools use their own subdomains—pick a
+          tool above to switch the preview.
+        </p>
+        <a
+          href={toolLiveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="external-link-button"
+        >
+          Open in new tab →
+        </a>
+        <ProjectSiteEmbed
+          url={toolLiveUrl}
+          iframeTitle={`LifeSmart — ${selectedProject.title}`}
+        />
+      </motion.section>
+
+      <motion.section
+        className="project-section"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        key={`media-${selectedProject.id}`}
+      >
+        <h2 className="section-title">
+          <span className="code-comment">//</span> Media
+        </h2>
+        <div className="project-media">
+          {selectedProject.media.map((media, index) => (
+            <motion.div
+              key={index}
+              className="media-container"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 + index * 0.05 }}
+              whileHover={{ y: -5 }}
+              onClick={() => {
+                trackMediaClick(media.type, media.src, media.caption);
+                setSelectedMedia(media);
+              }}
+            >
+              {media.type === "image" ? (
+                <img src={media.src} alt={media.caption} className="project-image" />
+              ) : (
+                <video className="project-video-preview" src={media.src} />
+              )}
+              <p className="media-caption">{media.caption}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {selectedMedia && (
+        <div className="modal" onClick={() => setSelectedMedia(null)}>
+          <motion.div
+            className="modal-content"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={() => setSelectedMedia(null)}>
+              ×
+            </button>
+            {selectedMedia.type === "image" ? (
+              <img src={selectedMedia.src} alt={selectedMedia.caption} className="modal-image" />
+            ) : (
+              <video controls className="modal-video" autoPlay src={selectedMedia.src} />
+            )}
+            <p className="modal-caption">{selectedMedia.caption}</p>
+          </motion.div>
+        </div>
+      )}
+    </ProjectLayout>
   );
 };
 

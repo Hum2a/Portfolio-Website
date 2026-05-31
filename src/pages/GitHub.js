@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaStar, FaCodeBranch, FaUsers, FaFolderOpen } from 'react-icons/fa';
-import HamburgerMenu from '../components/HamburgerMenu';
-import Navbar from '../components/Navbar';
-import ContributionCalendar from '../components/ContributionCalendar';
+import HamburgerMenu from '../components/layout/HamburgerMenu';
+import Navbar from '../components/layout/Navbar';
+import ContributionCalendar from '../components/github/ContributionCalendar';
 import {
   fetchGitHubRepos,
   fetchGitHubProfile,
   fetchGitHubContributions,
   getGitHubUsername,
 } from '../services/githubService';
-import '../styles/GitHubSection.css';
-import '../styles/GitHubPage.css';
+import '../components/github/GitHubSection.css';
+import './GitHubPage.css';
 
 const LANGUAGE_COLORS = {
   JavaScript: '#f7df1e',

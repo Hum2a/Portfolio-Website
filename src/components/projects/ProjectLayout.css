@@ -1,0 +1,3 @@
+/* ProjectLayout pulls in the shared project styles so consuming pages only
+   need to import this file (plus any per-project overrides). */
+@import '../../projects/project-shared.css';

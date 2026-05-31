@@ -27,11 +27,12 @@ import Flashcards from "../projects/Flashcards";
 import BruteForcer from "../projects/BruteForcer";
 import Gremlins from "../projects/Gremlins";
 import FireWatch from "../projects/FireWatch";
-import BakesByOlayide from "../pages/BakesByOlayide";
+import BakesByOlayide from "../projects/BakesByOlayide";
 import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
 import GitHub from "../pages/GitHub";
-import ProtectedRoute from "../components/ProtectedRoute";
+import NotFound from "../pages/NotFound";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 const pageVariants = {
   initial: { opacity: 0, y: 8 },
@@ -57,8 +58,8 @@ const AppRoutes = () => {
         <Routes location={location}>
       <Route path="/" element={<Homepage />} />
       <Route path="/projects" element={<Projects />} />
-      <Route path="/Contact" element={<Contact />} />
-      <Route path="/About" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<About />} />
       <Route path="/breathapplyser" element={<Breathapplyser />} />
       <Route path="/breathapplyser-v2" element={<Breathapplyser />} />
       <Route path="/biaslens" element={<BiasLens />} />
@@ -79,7 +80,7 @@ const AppRoutes = () => {
       <Route path="/imposter" element={<Imposter />} />
       <Route path="/ministryofjustice" element={<MinistryOfJustice />} />
       <Route path="/flashcards" element={<Flashcards />} />
-      <Route path="/tools/brute-forcer" element={<BruteForcer />} />
+      <Route path="/bruteforcer" element={<BruteForcer />} />
       <Route path="/gremlins" element={<Gremlins />} />
       <Route path="/firewatch" element={<FireWatch />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
@@ -93,6 +94,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
+      <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

@@ -63,18 +63,24 @@ List files that could be copied into the portfolio’s `public/` tree:
 
 ### 8. Detail page content hooks
 
-The portfolio project page often includes:
+Every portfolio project page is rendered through a shared `<ProjectLayout>` component that takes the content below as **props**. Draft each as copy-pasteable text:
 
-- A **code-shaped “project info” blurb** (object literal style: name, type, description, stack array, features array)—draft that object as **copy-pasteable text**.
-- **Terminal animation lines** (short strings, 4–8 lines) summarizing the project for a faux terminal UI.
+- **`title`** — display name shown as the page `<h1>`.
+- **`terminalLines`** — array of short strings (4–8 lines) summarizing the project for the animated faux terminal in the header. Optionally note a custom `terminalPrompt` (default `>`), `terminalSpeed` (default `35`), or `terminalTitle` (default `project.js`) if the project warrants a shell-style look (e.g. `$` prompt, `deploy.sh` title).
+- **`codeSnippet`** — a **code-shaped “Project Information” blurb** (object-literal style: name, type, description, stack array, features array) rendered in a syntax-highlighted block. Draft the literal as copy-pasteable text.
+- **`features`** — array of short strings → rendered as a “Features” list.
+- **`techStack`** — array of short strings → rendered as the tech-badge grid.
+- **`images`** / **`videos`** — arrays of `{ src, alt/caption }` → rendered as galleries with a lightbox modal. List candidate media paths.
+
+If the project needs bespoke interactivity (version switcher, sub-project selector, custom embed lifecycle, etc.), note it here—on the portfolio side that lives in the `children` slot of `<ProjectLayout>` rather than a standard prop.
 
 ### 9. Live demo section
 
-State clearly:
+`<ProjectLayout>` renders an embedded live site when given an `embedUrl`. State clearly:
 
-- **Recommended primary CTA**: “Visit site” link only, vs **embedded iframe** of the production URL.
-- If iframe is **not** viable, say why (security headers, login wall, heavy WebGL, etc.).
-- Any **sandbox** attributes or quirks if embedding were attempted (`allow-scripts`, auth cookies, etc.).
+- **Recommended primary CTA**: “Visit site” link only, vs **embedded iframe** (`embedUrl` + `embedTitle`) of the production URL.
+- If iframe is **not** viable, say why (security headers, login wall, heavy WebGL, etc.)—in that case the page should use a plain link in `children` instead of `embedUrl`.
+- Any **sandbox** needs (maps to the `embedSandbox` prop) or quirks if embedding were attempted (`allow-scripts`, auth cookies, etc.), plus a suggested `embedNewTabLabel` if the default “Open in new tab →” doesn’t fit.
 
 ### 10. Visibility and ordering hints
 
@@ -120,12 +126,14 @@ Adding an entry in this portfolio typically involves:
 | Area | Location |
 |------|----------|
 | Listing metadata | `src/config/projects.json` |
-| Project page component | `src/projects/<Name>.js` (see existing pages for Navbar, `project-shared.css`, Terminal/CodeBlock patterns) |
-| Styles | `src/styles/<Name>.css` |
+| Project page component | `src/projects/<Name>.js` — renders a single `<ProjectLayout>` (from `src/components/projects/ProjectLayout.js`) and passes content as props |
+| Styles | `src/projects/<Name>.css` (co-located; only needed for per-project overrides—`ProjectLayout.css` already pulls in `project-shared.css`). Trivial pages need no CSS file at all. |
 | Route | `src/routes/AppRoutes.js` — `<Route path={...} element={<... />} />` |
 | Logo file | `public/logos/<filename>` — matches `logo` in JSON |
 | Optional images | `public/images/<ProjectFolder>/...` |
 
 Featured projects are driven by `featured` + `visible` in JSON (`src/data/projects.js` reads the file).
+
+**Standard page shape:** most pages are now just `<ProjectLayout title=… terminalLines={…} logo=… codeSnippet={…} features={…} techStack={…} images={…} embedUrl=… />` with no Navbar/Terminal/CodeBlock/framer-motion wiring (the layout owns all of that). Map the brief’s section **8** props straight onto `<ProjectLayout>`. Anything bespoke goes in the `children` slot. For media click-tracking, call `useMediaTracking()` in the page and thread `onClick` handlers through the `images`/`videos` item objects or `children`.
 
 When you receive the brief from another agent, use section **11** as the starting point for `projects.json`, then implement the page and assets using sections **1–10**.

@@ -1,0 +1,59 @@
+/* Networth Tool — LifeSmart palette accents */
+@import "./project-shared.css";
+
+.networth-live-note {
+  margin: 0 0 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(15, 191, 184, 0.08);
+  border: 1px solid rgba(15, 191, 184, 0.25);
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.networth-deploy-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.networth-deploy-grid dt {
+  margin: 0;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.networth-deploy-grid dd {
+  margin: 0.15rem 0 0;
+  font-family: ui-monospace, monospace;
+  font-size: var(--text-sm);
+  word-break: break-all;
+}
+
+.networth-deploy-grid a {
+  color: var(--accent-primary);
+}
+
+.networth-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.external-link-button--secondary {
+  font-size: var(--text-sm);
+  padding: 0.65rem 1.25rem;
+  border: 1px solid var(--border-primary);
+  background: transparent;
+}
+
+/* Tech stack grid / badge base now live in project-shared.css.
+   Keep only the LifeSmart teal hover accent that overrides the shared blue glow. */
+.tech-badge:hover {
+  box-shadow: 0 4px 12px rgba(15, 191, 184, 0.12);
+}

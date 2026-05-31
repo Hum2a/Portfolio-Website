@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
-import "../styles/About.css";
+import "./About.css";
 
 /** Narrative blurbs; six are chosen at random per visit (see {@link JOURNEY_VISIBLE_COUNT}). */
 const PROFESSIONAL_JOURNEY_SPOTLIGHTS = [
