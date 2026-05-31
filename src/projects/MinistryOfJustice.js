@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/layout/Navbar";
-import HamburgerMenu from "../components/layout/HamburgerMenu";
-import Terminal from "../components/animations/Terminal";
-import CodeBlock from "../components/animations/CodeBlock";
+import ProjectLayout from "../components/projects/ProjectLayout";
 import useMediaTracking from "../hooks/useMediaTracking";
-import "./project-shared.css";
 import "./MinistryOfJustice.css";
 
 const projects = [
@@ -62,13 +58,15 @@ const projects = [
   },
 ];
 
-const MinistryOfJustice = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [selectedProject, setSelectedProject] = useState(projects[0]);
-  const [selectedMedia, setSelectedMedia] = useState(null);
-  const { trackMediaClick } = useMediaTracking();
+const terminalLines = [
+  "const ministryOfJustice = {",
+  "  name: 'Ministry of Justice Projects',",
+  "  type: 'Enterprise Web Applications',",
+  "  description: 'Digital transformation initiatives for the justice system'",
+  "};",
+];
 
-  const projectInfo = `const ministryOfJustice = {
+const projectInfo = `const ministryOfJustice = {
   name: "Ministry of Justice Projects",
   type: "Enterprise Web Applications",
   description: "Digital transformation initiatives for the justice system",
@@ -85,199 +83,124 @@ const MinistryOfJustice = () => {
   ]
 };`;
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+const MinistryOfJustice = () => {
+  const [selectedProject, setSelectedProject] = useState(projects[0]);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const { trackMediaClick } = useMediaTracking();
 
   return (
-    <div className="project-page">
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
+    <ProjectLayout
+      title="Ministry of Justice"
+      terminalLines={terminalLines}
+      logo={`${process.env.PUBLIC_URL}/logos/MinistryOfJustice.png`}
+      codeSnippet={projectInfo}
+    >
+      <section className="project-section">
+        <h2 className="section-title">
+          <span className="code-comment">//</span> Select a Project
+        </h2>
+        <div className="project-selector">
+          <label htmlFor="project-dropdown" className="selector-label">
+            Select a Project:
+          </label>
+          <select
+            id="project-dropdown"
+            value={selectedProject.id}
+            onChange={(e) =>
+              setSelectedProject(
+                projects.find((project) => project.id === e.target.value)
+              )
+            }
+            className="project-dropdown"
+          >
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
 
-      <motion.div
-        className="project-container"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
+      <motion.section
+        className="project-section"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        key={selectedProject.id}
       >
-        <div className="project-header">
-          <motion.img
-            src={`${process.env.PUBLIC_URL}/logos/MinistryOfJustice.png`}
-            alt="Ministry of Justice Logo"
-            className="project-logo"
+        <h2 className="section-title">
+          <span className="code-comment">//</span> {selectedProject.title}
+        </h2>
+        <p className="section-description">{selectedProject.description}</p>
+        <div className="features-list">
+          {selectedProject.features.map((feature, index) => (
+            <div key={index} className="feature-item">
+              <span className="feature-keyword">✓</span>
+              <span className="feature-text">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </motion.section>
+
+      <motion.section
+        className="project-section"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        key={`media-${selectedProject.id}`}
+      >
+        <h2 className="section-title">
+          <span className="code-comment">//</span> Screenshots
+        </h2>
+        <div className="project-media">
+          {selectedProject.media.map((media, index) => (
+            <motion.div
+              key={index}
+              className="media-container"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 + index * 0.05 }}
+              whileHover={{ y: -5 }}
+              onClick={() => {
+                trackMediaClick(media.type, media.src, media.caption);
+                setSelectedMedia(media);
+              }}
+            >
+              {media.type === "image" ? (
+                <img src={media.src} alt={media.caption} className="project-image" />
+              ) : (
+                <video className="project-video-preview" src={media.src} />
+              )}
+              <p className="media-caption">{media.caption}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {selectedMedia && (
+        <div className="modal" onClick={() => setSelectedMedia(null)}>
+          <motion.div
+            className="modal-content"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          />
-          <h1 className="project-title">
-            <span className="code-comment">//</span> Ministry of Justice
-          </h1>
-          <Terminal
-            lines={[
-              "const ministryOfJustice = {",
-              "  name: 'Ministry of Justice Projects',",
-              "  type: 'Enterprise Web Applications',",
-              "  description: 'Digital transformation initiatives for the justice system'",
-              "};"
-            ]}
-            prompt=">"
-            typingSpeed={35}
-            autoStart={true}
-            className="project-terminal"
-            title="project.js"
-          />
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={() => setSelectedMedia(null)}>
+              ×
+            </button>
+            {selectedMedia.type === "image" ? (
+              <img src={selectedMedia.src} alt={selectedMedia.caption} className="modal-image" />
+            ) : (
+              <video controls className="modal-video" autoPlay src={selectedMedia.src} />
+            )}
+            <p className="modal-caption">{selectedMedia.caption}</p>
+          </motion.div>
         </div>
-
-        <div className="project-content">
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Project Information
-            </h2>
-            <CodeBlock
-              code={projectInfo}
-              language="javascript"
-              showLineNumbers={true}
-              copyable={false}
-            />
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Select a Project
-            </h2>
-            <div className="project-selector">
-              <label htmlFor="project-dropdown" className="selector-label">
-                Select a Project:
-              </label>
-              <select
-                id="project-dropdown"
-                value={selectedProject.id}
-                onChange={(e) =>
-                  setSelectedProject(
-                    projects.find((project) => project.id === e.target.value)
-                  )
-                }
-                className="project-dropdown"
-              >
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            key={selectedProject.id}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> {selectedProject.title}
-            </h2>
-            <p className="section-description">{selectedProject.description}</p>
-            <div className="features-list">
-              {selectedProject.features.map((feature, index) => (
-                <div key={index} className="feature-item">
-                  <span className="feature-keyword">✓</span>
-                  <span className="feature-text">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            key={`media-${selectedProject.id}`}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Screenshots
-            </h2>
-            <div className="project-media">
-              {selectedProject.media.map((media, index) => (
-                <motion.div
-                  key={index}
-                  className="media-container"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 + index * 0.05 }}
-                  whileHover={{ y: -5 }}
-                  onClick={() => {
-                    trackMediaClick(media.type, media.src, media.caption);
-                    setSelectedMedia(media);
-                  }}
-                >
-                  {media.type === "image" ? (
-                    <img
-                      src={media.src}
-                      alt={media.caption}
-                      className="project-image"
-                    />
-                  ) : (
-                    <video className="project-video-preview" src={media.src} />
-                  )}
-                  <p className="media-caption">{media.caption}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-        </div>
-
-        {selectedMedia && (
-          <div className="modal" onClick={() => setSelectedMedia(null)}>
-            <motion.div
-              className="modal-content"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close" onClick={() => setSelectedMedia(null)}>
-                ×
-              </button>
-              {selectedMedia.type === "image" ? (
-                <img
-                  src={selectedMedia.src}
-                  alt={selectedMedia.caption}
-                  className="modal-image"
-                />
-              ) : (
-                <video
-                  controls
-                  className="modal-video"
-                  autoPlay
-                  src={selectedMedia.src}
-                />
-              )}
-              <p className="modal-caption">{selectedMedia.caption}</p>
-            </motion.div>
-          </div>
-        )}
-      </motion.div>
-    </div>
+      )}
+    </ProjectLayout>
   );
 };
 

@@ -1,26 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/layout/Navbar";
-import HamburgerMenu from "../components/layout/HamburgerMenu";
-import Terminal from "../components/animations/Terminal";
-import CodeBlock from "../components/animations/CodeBlock";
+import ProjectLayout from "../components/projects/ProjectLayout";
 import useMediaTracking from "../hooks/useMediaTracking";
-import "./project-shared.css";
 import "./Contrarian.css";
 
-const Contrarian = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const { trackMediaClick } = useMediaTracking();
+const terminalLines = [
+  "const contrarian = {",
+  "  name: 'Contrarian',",
+  "  type: 'Web Application',",
+  "  description: 'Pitch deck classifier for investors',",
+  "};",
+];
 
-  const media = [
-    { type: "image", src: `${process.env.PUBLIC_URL}/images/Contrarian/Homepage.png`, caption: "Homepage" },
-    { type: "image", src: `${process.env.PUBLIC_URL}/images/Contrarian/Round2.png`, caption: "Round 2" },
-    { type: "video", src: `${process.env.PUBLIC_URL}/videos/Contrarian/OmniWidget.mp4`, caption: "OmniWidget Demo" },
-  ];
-
-  const projectInfo = `const contrarian = {
+const projectInfo = `const contrarian = {
   name: "Contrarian",
   type: "Web Application",
   description: "Pitch deck classifier for investors to analyze startup pitches",
@@ -40,160 +32,91 @@ const Contrarian = () => {
   ]
 };`;
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+const Contrarian = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const { trackMediaClick } = useMediaTracking();
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const media = [
+    { type: "image", src: `${process.env.PUBLIC_URL}/images/Contrarian/Homepage.png`, caption: "Homepage" },
+    { type: "image", src: `${process.env.PUBLIC_URL}/images/Contrarian/Round2.png`, caption: "Round 2" },
+    { type: "video", src: `${process.env.PUBLIC_URL}/videos/Contrarian/OmniWidget.mp4`, caption: "OmniWidget Demo" },
+  ];
 
   return (
-    <div className="project-page">
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
+    <ProjectLayout
+      title="Contrarian"
+      terminalLines={terminalLines}
+      logo={`${process.env.PUBLIC_URL}/logos/Contrarian.png`}
+      codeSnippet={projectInfo}
+    >
+      <section className="project-section">
+        <h2 className="section-title">
+          <span className="code-comment">//</span> Media
+        </h2>
+        <div className="project-media">
+          {media.map((item, index) => (
+            <motion.div
+              key={index}
+              className="media-container"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              whileHover={{ y: -5 }}
+              onClick={() => {
+                trackMediaClick(item.type, item.src, item.caption);
+                item.type === "image" ? setSelectedImage(item) : setSelectedVideo(item);
+              }}
+            >
+              {item.type === "image" ? (
+                <img src={item.src} alt={item.caption} className="gallery-image" />
+              ) : (
+                <video className="gallery-video" src={item.src} />
+              )}
+              <p className="media-caption">{item.caption}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-      <motion.div
-        className="project-container"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="project-header">
-          <motion.img
-            src={`${process.env.PUBLIC_URL}/logos/Contrarian.png`}
-            alt="Contrarian Logo"
-            className="project-logo"
+      {selectedImage && (
+        <div className="modal" onClick={() => setSelectedImage(null)}>
+          <motion.div
+            className="modal-content"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          />
-          <h1 className="project-title">
-            <span className="code-comment">//</span> Contrarian
-          </h1>
-          <Terminal
-            lines={[
-              "const contrarian = {",
-              "  name: 'Contrarian',",
-              "  type: 'Web Application',",
-              "  description: 'Pitch deck classifier for investors',",
-              "};"
-            ]}
-            prompt=">"
-            typingSpeed={35}
-            autoStart={true}
-            className="project-terminal"
-            title="project.js"
-          />
-        </div>
-
-        <div className="project-content">
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Project Information
-            </h2>
-            <CodeBlock
-              code={projectInfo}
-              language="javascript"
-              showLineNumbers={true}
-              copyable={false}
-            />
-          </motion.section>
-
-          <motion.section
-            className="project-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h2 className="section-title">
-              <span className="code-comment">//</span> Media
-            </h2>
-            <div className="project-media">
-              {media.map((item, index) => (
-                <motion.div
-                  key={index}
-                  className="media-container"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  onClick={() => {
-                    trackMediaClick(item.type, item.src, item.caption);
-                    item.type === "image" ? setSelectedImage(item) : setSelectedVideo(item);
-                  }}
-                >
-                  {item.type === "image" ? (
-                    <img
-                      src={item.src}
-                      alt={item.caption}
-                      className="gallery-image"
-                    />
-                  ) : (
-                    <video className="gallery-video" src={item.src} />
-                  )}
-                  <p className="media-caption">{item.caption}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
+            <button className="modal-close" onClick={() => setSelectedImage(null)}>
+              ×
+            </button>
+            <img src={selectedImage.src} alt={selectedImage.caption} className="modal-image" />
+            <p className="modal-caption">{selectedImage.caption}</p>
+          </motion.div>
         </div>
+      )}
 
-        {selectedImage && (
-          <div className="modal" onClick={() => setSelectedImage(null)}>
-            <motion.div
-              className="modal-content"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close" onClick={() => setSelectedImage(null)}>
-                ×
-              </button>
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.caption}
-                className="modal-image"
-              />
-              <p className="modal-caption">{selectedImage.caption}</p>
-            </motion.div>
-          </div>
-        )}
-
-        {selectedVideo && (
-          <div className="modal" onClick={() => setSelectedVideo(null)}>
-            <motion.div
-              className="modal-content"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close" onClick={() => setSelectedVideo(null)}>
-                ×
-              </button>
-              <video
-                controls
-                className="modal-video"
-                autoPlay
-                src={selectedVideo.src}
-              />
-              <p className="modal-caption">{selectedVideo.caption}</p>
-            </motion.div>
-          </div>
-        )}
-      </motion.div>
-    </div>
+      {selectedVideo && (
+        <div className="modal" onClick={() => setSelectedVideo(null)}>
+          <motion.div
+            className="modal-content"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={() => setSelectedVideo(null)}>
+              ×
+            </button>
+            <video controls className="modal-video" autoPlay src={selectedVideo.src} />
+            <p className="modal-caption">{selectedVideo.caption}</p>
+          </motion.div>
+        </div>
+      )}
+    </ProjectLayout>
   );
 };
 
