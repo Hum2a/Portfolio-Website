@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import firebaseAnalytics from '../services/firebaseAnalytics';
+import firebaseAnalytics from '../services/analyticsService';
 
 /**
  * Custom hook for tracking media clicks in project pages

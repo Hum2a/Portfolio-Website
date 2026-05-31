@@ -6,7 +6,7 @@ import { FaEnvelope, FaLinkedin, FaGithub } from "react-icons/fa";
 import Terminal from "../components/animations/Terminal";
 import { db } from "../services/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { trackContactSubmit } from "../services/firebaseAnalytics";
+import { trackContactSubmit } from "../services/analyticsService";
 import "./Contact.css";
 
 const Contact = () => {
