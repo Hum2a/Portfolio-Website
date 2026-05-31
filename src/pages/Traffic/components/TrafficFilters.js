@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaUserShield, FaEyeSlash, FaRobot } from 'react-icons/fa';
 import { useTraffic } from '../TrafficContext';
 import { OwnerDevicesPanel } from './VisitorDataAdmin';
 
@@ -35,27 +36,69 @@ export function TrafficFilters() {
         </p>
       )}
 
-      <div className="environment-filter admin-path-filter">
-        <div className="filter-header">
-          <h3>Admin pages</h3>
-          <span className="filter-subtitle">Hide /traffic from stats (your dashboard visits)</span>
+      <div className="environment-filter admin-pages-card">
+        <div className="filter-header admin-pages-header">
+          <div className="admin-pages-title">
+            <span className="admin-pages-icon">
+              <FaUserShield />
+            </span>
+            <div>
+              <h3>Admin pages</h3>
+              <span className="filter-subtitle">
+                Keep your own activity and bot noise out of the numbers
+              </span>
+            </div>
+          </div>
+          <span className={`admin-pages-status ${excludeAdminPaths || hideBots ? 'on' : ''}`}>
+            {[excludeAdminPaths, hideBots].filter(Boolean).length} of 2 filters on
+          </span>
         </div>
-        <label className="admin-path-filter-toggle">
-          <input
-            type="checkbox"
-            checked={excludeAdminPaths}
-            onChange={(e) => setExcludeAdminPaths(e.target.checked)}
-          />
-          <span>Exclude /traffic from analytics</span>
-        </label>
-        <label className="admin-path-filter-toggle">
-          <input
-            type="checkbox"
-            checked={hideBots}
-            onChange={(e) => setHideBots(e.target.checked)}
-          />
-          <span>Hide likely bots from visitor list</span>
-        </label>
+
+        <div className="admin-toggle-list">
+          <label className={`admin-toggle-row ${excludeAdminPaths ? 'is-active' : ''}`}>
+            <span className="admin-toggle-icon">
+              <FaEyeSlash />
+            </span>
+            <span className="admin-toggle-text">
+              <span className="admin-toggle-label">Exclude /traffic from analytics</span>
+              <span className="admin-toggle-desc">
+                Hide visits to your own dashboard from every chart and total.
+              </span>
+            </span>
+            <span className="admin-switch">
+              <input
+                type="checkbox"
+                checked={excludeAdminPaths}
+                onChange={(e) => setExcludeAdminPaths(e.target.checked)}
+              />
+              <span className="admin-switch-track">
+                <span className="admin-switch-thumb" />
+              </span>
+            </span>
+          </label>
+
+          <label className={`admin-toggle-row ${hideBots ? 'is-active' : ''}`}>
+            <span className="admin-toggle-icon">
+              <FaRobot />
+            </span>
+            <span className="admin-toggle-text">
+              <span className="admin-toggle-label">Hide likely bots</span>
+              <span className="admin-toggle-desc">
+                Filter crawlers and automated traffic out of the visitor list.
+              </span>
+            </span>
+            <span className="admin-switch">
+              <input
+                type="checkbox"
+                checked={hideBots}
+                onChange={(e) => setHideBots(e.target.checked)}
+              />
+              <span className="admin-switch-track">
+                <span className="admin-switch-thumb" />
+              </span>
+            </span>
+          </label>
+        </div>
       </div>
 
       <div className="environment-filter">
