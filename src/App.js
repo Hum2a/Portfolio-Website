@@ -4,10 +4,6 @@ import './App.css';
 import AppRoutes from "./routes/AppRoutes";
 import firebaseAnalytics from './services/firebaseAnalytics';
 import { AuthProvider } from './contexts/AuthContext';
-// Commented out for testing
-// import EnhancedCookieConsent from './components/EnhancedCookieConsent';
-import ScrollTracker from './components/ScrollTracker';
-import TimeTracker from './components/TimeTracker';
 import PageTimeTracker from './components/PageTimeTracker';
 
 function App() {
