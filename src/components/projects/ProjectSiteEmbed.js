@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useInView } from "framer-motion";
-import "../styles/ProjectSiteEmbed.css";
+import "./ProjectSiteEmbed.css";
 
 /**
  * Lazy-loads a site in an iframe when the block scrolls into view.

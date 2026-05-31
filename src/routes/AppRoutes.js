@@ -32,7 +32,7 @@ import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
 import GitHub from "../pages/GitHub";
 import NotFound from "../pages/NotFound";
-import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 const pageVariants = {
   initial: { opacity: 0, y: 8 },

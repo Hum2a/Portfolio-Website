@@ -1,12 +1,12 @@
 import React, { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/layout/Navbar";
 import Typewriter from "../components/animations/Typewriter";
 import Terminal from "../components/animations/Terminal";
-import { HomepageFeaturedProjects } from "../components/HomepageFeaturedProjects";
-import { GitHubSection } from "../components/GitHubSection";
-import "../styles/Homepage.css";
+import { HomepageFeaturedProjects } from "../components/projects/HomepageFeaturedProjects";
+import { GitHubSection } from "../components/github/GitHubSection";
+import "./Homepage.css";
 
 const Homepage = () => {
   const navigate = useNavigate();

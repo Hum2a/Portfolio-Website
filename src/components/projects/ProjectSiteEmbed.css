@@ -1,5 +1,5 @@
 /* Shared lazy-loaded site iframe (project detail pages) */
-@import './project-shared.css';
+@import '../../projects/project-shared.css';
 
 .project-site-embed-card {
   position: relative;

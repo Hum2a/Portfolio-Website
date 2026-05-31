@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
-import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
-import "../styles/project-shared.css";
-import "../styles/Monzo1pChallenge.css";
+import ProjectSiteEmbed from "../components/projects/ProjectSiteEmbed";
+import "./project-shared.css";
+import "./Monzo1pChallenge.css";
 
 const MONZO_APP_URL = "https://monzo-1p-challenge-calculator.online";
 

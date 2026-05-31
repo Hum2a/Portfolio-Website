@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
 import useMediaTracking from "../hooks/useMediaTracking";
-import "../styles/project-shared.css";
-import "../styles/MinistryOfJustice.css";
+import "./project-shared.css";
+import "./MinistryOfJustice.css";
 
 const projects = [
   {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
-import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
-import "../styles/project-shared.css";
+import ProjectSiteEmbed from "../components/projects/ProjectSiteEmbed";
+import "./project-shared.css";
 
 const RECOUNT_WEB_URL = "https://recount.world";
 /** Replace when the Chrome Web Store listing is ready */

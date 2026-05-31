@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
-import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
+import ProjectSiteEmbed from "../components/projects/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
-import "../styles/Breathapplyser.css";
+import "./Breathapplyser.css";
 
 /** In-browser web app */
 const BREATHAPPLYSER_WEB_APP_URL = "https://breathapplyser.online";

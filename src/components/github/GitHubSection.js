@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { FaGithub, FaStar, FaCodeBranch } from 'react-icons/fa';
-import { fetchGitHubRepos, fetchGitHubProfile, getGitHubUsername } from '../services/githubService';
-import '../styles/GitHubSection.css';
+import { fetchGitHubRepos, fetchGitHubProfile, getGitHubUsername } from '../../services/githubService';
+import './GitHubSection.css';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 24 },

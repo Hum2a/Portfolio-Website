@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithGoogle } from '../services/authService';
 import { useAuth } from '../contexts/AuthContext';
-import '../styles/HumzaLogin.css';
+import './HumzaLogin.css';
 
 const HumzaLogin = () => {
   const [error, setError] = useState(null);

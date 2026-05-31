@@ -4,7 +4,7 @@ import './App.css';
 import AppRoutes from "./routes/AppRoutes";
 import firebaseAnalytics from './services/firebaseAnalytics';
 import { AuthProvider } from './contexts/AuthContext';
-import PageTimeTracker from './components/PageTimeTracker';
+import PageTimeTracker from './components/tracking/PageTimeTracker';
 
 function App() {
   useEffect(() => {

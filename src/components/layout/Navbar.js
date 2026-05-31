@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import "../styles/Navbar.css";
+import { useAuth } from "../../contexts/AuthContext";
+import "./Navbar.css";
 
 const Navbar = () => {
   const location = useLocation();

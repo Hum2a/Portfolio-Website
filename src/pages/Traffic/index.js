@@ -1,9 +1,9 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import Navbar from '../../components/Navbar';
+import Navbar from '../../components/layout/Navbar';
 import { TrafficProvider } from './TrafficContext';
 import { TrafficDashboard } from './TrafficDashboard';
-import '../../styles/Traffic.css';
+import './Traffic.css';
 
 function Traffic() {
   const { user, role } = useAuth();

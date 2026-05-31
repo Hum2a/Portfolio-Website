@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
-import { fetchGitHubDayBreakdown } from '../services/githubService';
+import { fetchGitHubDayBreakdown } from '../../services/githubService';
 
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_LABELS_VISIBLE = { 1: 'Mon', 3: 'Wed', 5: 'Fri' };

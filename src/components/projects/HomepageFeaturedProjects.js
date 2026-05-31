@@ -6,8 +6,8 @@ import {
   PROJECT_CATEGORY_META,
   getProjectCategories,
   formatProjectDate,
-} from '../data/projects';
-import '../styles/HomepageFeaturedProjects.css';
+} from '../../data/projects';
+import './HomepageFeaturedProjects.css';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 28 },

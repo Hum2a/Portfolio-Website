@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import HamburgerMenu from "../components/HamburgerMenu";
-import Navbar from "../components/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
-import ProjectSiteEmbed from "../components/ProjectSiteEmbed";
+import ProjectSiteEmbed from "../components/projects/ProjectSiteEmbed";
 import useMediaTracking from "../hooks/useMediaTracking";
-import "../styles/project-shared.css";
-import "../styles/DoppelganCar.css";
+import "./project-shared.css";
+import "./DoppelganCar.css";
 
 const DOPPELGAN_CAR_URL = "https://doppelgang-car.vercel.app";
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import firebaseAnalytics from '../services/firebaseAnalytics';
+import firebaseAnalytics from '../../services/firebaseAnalytics';
 
 /**
  * PageTimeTracker component tracks time spent on each page

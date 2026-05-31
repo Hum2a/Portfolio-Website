@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
-import "../styles/project-shared.css";
-import "../styles/BruteForcer.css";
+import "./project-shared.css";
+import "./BruteForcer.css";
 
 const BRUTE_FORCER_APP_URL = "https://bruteforcer.online";
 const LOAD_TIMEOUT_MS = 28000;

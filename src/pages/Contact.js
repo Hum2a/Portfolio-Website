@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import HamburgerMenu from "../components/HamburgerMenu";
+import Navbar from "../components/layout/Navbar";
+import HamburgerMenu from "../components/layout/HamburgerMenu";
 import { FaEnvelope, FaLinkedin, FaGithub } from "react-icons/fa";
 import Terminal from "../components/animations/Terminal";
 import { db } from "../services/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { trackContactSubmit } from "../services/firebaseAnalytics";
-import "../styles/Contact.css";
+import "./Contact.css";
 
 const Contact = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
