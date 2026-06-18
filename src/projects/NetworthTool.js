@@ -89,7 +89,7 @@ const NetworthTool = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Live product
+          <span className="code-comment">{'//'}</span> Live product
         </h2>
         <p className="section-description">
           Production and staging frontends are public hostnames; the app is session-oriented
@@ -123,7 +123,7 @@ const NetworthTool = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Deployment endpoints
+          <span className="code-comment">{'//'}</span> Deployment endpoints
         </h2>
         <p className="section-description">
           Web and API use separate Cloudflare Worker routes (from Wrangler configs). API hosts
@@ -160,7 +160,7 @@ const NetworthTool = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Overview
+          <span className="code-comment">{'//'}</span> Overview
         </h2>
         <p className="section-description">
           Delivered as an npm monorepo so the Vite/React client, Hono API, and shared Drizzle

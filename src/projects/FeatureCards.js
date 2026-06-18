@@ -96,7 +96,7 @@ const FeatureCards = () => {
     >
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Overview
+          <span className="code-comment">{'//'}</span> Overview
         </h2>
         <p className="section-description">
           The 501 marketing site relied on three static PNG stat cards that required a designer
@@ -111,7 +111,7 @@ const FeatureCards = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Links
+          <span className="code-comment">{'//'}</span> Links
         </h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
           <a

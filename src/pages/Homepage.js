@@ -44,7 +44,7 @@ const Homepage = () => {
       >
         <div className="homepage-hero">
           <div className="homepage-intro">
-            <span className="homepage-greeting">// Hello, I'm</span>
+            <span className="homepage-greeting">{"// Hello, I'm"}</span>
             <h1 className="homepage-title">
               <Typewriter
                 text="Humza Butt"

@@ -97,7 +97,7 @@ const MinistryOfJustice = () => {
     >
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Select a Project
+          <span className="code-comment">{'//'}</span> Select a Project
         </h2>
         <div className="project-selector">
           <label htmlFor="project-dropdown" className="selector-label">
@@ -130,7 +130,7 @@ const MinistryOfJustice = () => {
         key={selectedProject.id}
       >
         <h2 className="section-title">
-          <span className="code-comment">//</span> {selectedProject.title}
+          <span className="code-comment">{'//'}</span> {selectedProject.title}
         </h2>
         <p className="section-description">{selectedProject.description}</p>
         <div className="features-list">
@@ -151,7 +151,7 @@ const MinistryOfJustice = () => {
         key={`media-${selectedProject.id}`}
       >
         <h2 className="section-title">
-          <span className="code-comment">//</span> Screenshots
+          <span className="code-comment">{'//'}</span> Screenshots
         </h2>
         <div className="project-media">
           {selectedProject.media.map((media, index) => (

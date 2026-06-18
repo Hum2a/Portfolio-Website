@@ -55,7 +55,7 @@ const PNGtoSVG = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Sample
+          <span className="code-comment">{'//'}</span> Sample
         </h2>
         <div className="image-gallery">
           <motion.div

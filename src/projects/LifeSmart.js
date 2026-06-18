@@ -253,7 +253,7 @@ const LifeSmart = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Select a Tool
+          <span className="code-comment">{'//'}</span> Select a Tool
         </h2>
         <div className="project-selector">
           <label htmlFor="project-dropdown" className="selector-label">
@@ -286,7 +286,7 @@ const LifeSmart = () => {
         key={selectedProject.id}
       >
         <h2 className="section-title">
-          <span className="code-comment">//</span> {selectedProject.title}
+          <span className="code-comment">{'//'}</span> {selectedProject.title}
         </h2>
         <p className="section-description">{selectedProject.description}</p>
         <div className="features-list">
@@ -300,7 +300,7 @@ const LifeSmart = () => {
         {selectedProject.techStack && (
           <div className="tech-stack-section">
             <h3 className="tech-stack-title">
-              <span className="code-comment">//</span> Tech Stack
+              <span className="code-comment">{'//'}</span> Tech Stack
             </h3>
             <div className="tech-stack-grid">
               {selectedProject.techStack.map((tech, index) => (
@@ -323,7 +323,7 @@ const LifeSmart = () => {
         key={`live-${selectedProject.id}`}
       >
         <h2 className="section-title" id="lifesmart-live-preview-heading">
-          <span className="code-comment">//</span> Live preview
+          <span className="code-comment">{'//'}</span> Live preview
         </h2>
         <p className="section-description">
           Deployed instance for <strong>{selectedProject.title}</strong> (
@@ -352,7 +352,7 @@ const LifeSmart = () => {
         key={`media-${selectedProject.id}`}
       >
         <h2 className="section-title">
-          <span className="code-comment">//</span> Media
+          <span className="code-comment">{'//'}</span> Media
         </h2>
         <div className="project-media">
           {selectedProject.media.map((media, index) => (

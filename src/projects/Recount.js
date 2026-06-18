@@ -72,7 +72,7 @@ const Recount = () => {
 
       <section className="project-section" aria-labelledby="recount-links-heading">
         <h2 className="section-title" id="recount-links-heading">
-          <span className="code-comment">//</span> Links
+          <span className="code-comment">{'//'}</span> Links
         </h2>
         <p className="section-description">
           Web app and dashboard live at recount.world. Chrome Web Store link will be added when
@@ -100,7 +100,7 @@ const Recount = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Overview
+          <span className="code-comment">{'//'}</span> Overview
         </h2>
         <p className="section-description">
           Recount is a productivity product built as an npm workspaces monorepo: a Chrome

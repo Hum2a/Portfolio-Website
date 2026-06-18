@@ -238,7 +238,7 @@ export function mapDimensionCounts(doc, prefix, productionOnly = false) {
 
 export function getRefTokenRollup(refTokensDoc, tokenId) {
   if (!tokenId || !refTokensDoc?.tokens) return null;
-  const token = tokenId.toLowerCase().trim().replace(/[./\[\]#$]/g, '_');
+  const token = tokenId.toLowerCase().trim().replace(/[./[\]#$]/g, '_');
   const data = refTokensDoc.tokens[token];
   if (!data) return null;
 

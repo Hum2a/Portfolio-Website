@@ -68,7 +68,7 @@ const FireWatch = () => {
     >
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Overview
+          <span className="code-comment">{'//'}</span> Overview
         </h2>
         <p className="section-description">
           FireWatch is a map-first wildfire intelligence dashboard designed for analysts who need
@@ -85,7 +85,7 @@ const FireWatch = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Links
+          <span className="code-comment">{'//'}</span> Links
         </h2>
         <p className="section-description">
           Live deployment URL is not confirmed in this repository yet. For now, use the source

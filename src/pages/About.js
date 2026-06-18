@@ -122,7 +122,7 @@ const About = () => {
       >
         <motion.div className="about-header" variants={itemVariants}>
           <h1 className="about-title">
-            <span className="code-comment">//</span> About Me
+            <span className="code-comment">{'//'}</span> About Me
           </h1>
           <Terminal
             lines={[
@@ -142,7 +142,7 @@ const About = () => {
 
         <motion.div className="about-section" variants={itemVariants}>
           <h2 className="section-title">
-            <span className="code-comment">//</span> Professional Journey
+            <span className="code-comment">{'//'}</span> Professional Journey
           </h2>
           <p className="section-description">
             Here are some of the innovative projects I've worked on — this section shows six at
@@ -172,7 +172,7 @@ const About = () => {
 
         <motion.div className="about-section" variants={itemVariants}>
           <h2 className="section-title">
-            <span className="code-comment">//</span> Technical Expertise
+            <span className="code-comment">{'//'}</span> Technical Expertise
           </h2>
           <CodeBlock
             code={skillsCode}
@@ -185,20 +185,20 @@ const About = () => {
 
         <motion.div className="about-section" variants={itemVariants}>
           <h2 className="section-title">
-            <span className="code-comment">//</span> Beyond Coding
+            <span className="code-comment">{'//'}</span> Beyond Coding
           </h2>
           <div className="beyond-coding">
             <div className="activity-item">
-              <span className="activity-keyword">//</span> Leadership
+              <span className="activity-keyword">{'//'}</span> Leadership
               <br />
               <span className="activity-code">
                 Social Secretary for Japanese & Self Defence Societies at University of Portsmouth
                 <br />
-                <span className="code-comment">// Result: Nominated for "Most Improved Society of the Year"</span>
+                <span className="code-comment">{'// Result: Nominated for "Most Improved Society of the Year"'}</span>
               </span>
             </div>
             <div className="activity-item">
-              <span className="activity-keyword">//</span> Sports
+              <span className="activity-keyword">{'//'}</span> Sports
               <br />
               <span className="activity-code">
                 Badminton: Competing since age 7, multiple trophies
