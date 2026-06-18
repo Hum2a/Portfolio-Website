@@ -1,6 +1,39 @@
 {
   "projects": [
     {
+      "id": "feature-cards",
+      "name": "501 Feature Cards",
+      "description": "Accessible, CMS-agnostic Web Component replacing hard-coded landing-page stat cards—vanilla JS, Shadow DOM, live editor demo.",
+      "logo": "feature-cards.svg",
+      "gradient": "linear-gradient(135deg, #c6f135 0%, #e91e8c 50%, #29b6f6 100%)",
+      "route": "/feature-cards",
+      "tags": [
+        "Web Components",
+        "TypeScript",
+        "Vanilla JS",
+        "Shadow DOM",
+        "Zod",
+        "Vite",
+        "Cloudflare Pages",
+        "Cloudflare Workers",
+        "Vitest",
+        "Playwright",
+        "Accessibility",
+        "CMS",
+        "npm",
+        "Open Source",
+        "501 Project"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-06-18",
+      "dateUpdated": "2026-06-18"
+    },
+    {
       "id": "monzo1pchallenge",
       "name": "Monzo 1p Challenge Calculator",
       "description": "Savings calculator inspired by the Monzo 1p challenge with 3 modes (Next N days, Month, Custom range), magic link auth, and PWA support",
