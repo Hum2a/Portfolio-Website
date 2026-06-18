@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Nothing yet
 
+## [v1.1.0] - 2026-06-18
+
+### ✨ Features
+
+- Add library category and enhance project surfaces (24ea947)
+- Add 501 Feature Cards project (a55cc7d)
+- Add comprehensive project reference document for CV and cover letter tailoring (ac40dac)
+
+### 🔧 Chores
+
+- Update caniuse-lite dependency version in package-lock.json (9ca12b3)
+- Update project configurations and enhance code readability (2820cd6)
+
+
+## Added
+- Nothing yet
+
 ## [v1.0.1] - 2026-05-31
 
 ### ✨ Features

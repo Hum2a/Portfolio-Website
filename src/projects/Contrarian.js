@@ -52,7 +52,7 @@ const Contrarian = () => {
     >
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Media
+          <span className="code-comment">{'//'}</span> Media
         </h2>
         <div className="project-media">
           {media.map((item, index) => (

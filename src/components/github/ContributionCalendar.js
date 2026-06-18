@@ -109,7 +109,7 @@ export default function ContributionCalendar({ calendar, loading, error, usernam
   const containerRef = useRef(null);
   const [containerRect, setContainerRect] = useState(null);
 
-  const weeks = calendar?.weeks ?? [];
+  const weeks = useMemo(() => calendar?.weeks ?? [], [calendar?.weeks]);
   const weekGrid = useMemo(() => buildWeekGrid(weeks), [weeks]);
   const monthLabels = useMemo(() => buildMonthLabels(weeks), [weeks]);
 

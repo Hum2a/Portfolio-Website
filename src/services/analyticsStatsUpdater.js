@@ -4,7 +4,7 @@ import { db } from './firebase';
 /** Safe Firestore field segment (paths, tokens, labels). */
 export function statKeySafe(str) {
   if (!str || typeof str !== 'string') return 'unknown';
-  return str.replace(/[./\[\]#$]/g, '_').slice(0, 120);
+  return str.replace(/[./[\]#$]/g, '_').slice(0, 120);
 }
 
 export function getDayKey(date = new Date()) {

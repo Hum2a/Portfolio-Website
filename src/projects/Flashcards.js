@@ -110,7 +110,7 @@ const Flashcards = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Interactive Demo
+          <span className="code-comment">{'//'}</span> Interactive Demo
         </h2>
         <p className="section-description">
           Test your knowledge with these interactive React flashcards:

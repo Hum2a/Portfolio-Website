@@ -6,7 +6,7 @@ import { TrafficDashboard } from './TrafficDashboard';
 import './Traffic.css';
 
 function Traffic() {
-  const { user, role } = useAuth();
+  const { role } = useAuth();
 
   if (role !== 'humza') {
     return (

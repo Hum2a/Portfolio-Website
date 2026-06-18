@@ -70,7 +70,7 @@ const BakesByOlayide = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> About
+          <span className="code-comment">{'//'}</span> About
         </h2>
         <p className="section-description">
           BakesByOlayide offers a seamless online experience for ordering bespoke cakes and baked goods. Whether you're celebrating a birthday, wedding, or any special event, our platform makes it easy to customize, order, and enjoy delicious treats with just a few clicks.
@@ -79,7 +79,7 @@ const BakesByOlayide = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Engineering Excellence
+          <span className="code-comment">{'//'}</span> Engineering Excellence
         </h2>
         <div className="engineering-grid">
           {engineering.map((card, index) => (

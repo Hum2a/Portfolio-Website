@@ -115,7 +115,7 @@ const BruteForcer = () => {
 
       <section className="project-section" aria-labelledby="brute-forcer-live-heading">
         <h2 className="section-title" id="brute-forcer-live-heading">
-          <span className="code-comment">//</span> Live demo
+          <span className="code-comment">{'//'}</span> Live demo
         </h2>
         <p className="section-description">
           The full tool runs below in a cross-origin frame. Calculations are
@@ -224,7 +224,7 @@ const BruteForcer = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Tech Stack
+          <span className="code-comment">{'//'}</span> Tech Stack
         </h2>
         <div className="tech-stack-grid">
           {techStack.map((tech, index) => (

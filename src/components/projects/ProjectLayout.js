@@ -90,7 +90,7 @@ const ProjectLayout = ({
             />
           )}
           <h1 className="project-title">
-            <span className="code-comment">//</span> {title}
+            <span className="code-comment">{'//'}</span> {title}
           </h1>
           <div className="project-terminal">
             <Terminal
@@ -113,7 +113,7 @@ const ProjectLayout = ({
               animate="visible"
             >
               <h2 className="section-title">
-                <span className="code-comment">//</span> Features
+                <span className="code-comment">{'//'}</span> Features
               </h2>
               <div className="features-list">
                 {features.map((feature, index) => (
@@ -134,7 +134,7 @@ const ProjectLayout = ({
               animate="visible"
             >
               <h2 className="section-title">
-                <span className="code-comment">//</span> Tech Stack
+                <span className="code-comment">{'//'}</span> Tech Stack
               </h2>
               <div className="tech-stack-grid">
                 {techStack.map((tech, index) => (
@@ -155,7 +155,7 @@ const ProjectLayout = ({
               animate="visible"
             >
               <h2 className="section-title">
-                <span className="code-comment">//</span> Screenshots
+                <span className="code-comment">{'//'}</span> Screenshots
               </h2>
               <div className="image-gallery">
                 {images.map((image, index) => (
@@ -190,7 +190,7 @@ const ProjectLayout = ({
               animate="visible"
             >
               <h2 className="section-title">
-                <span className="code-comment">//</span> Videos
+                <span className="code-comment">{'//'}</span> Videos
               </h2>
               <div className="video-gallery">
                 {videos.map((video, index) => (
@@ -227,7 +227,7 @@ const ProjectLayout = ({
               animate="visible"
             >
               <h2 className="section-title">
-                <span className="code-comment">//</span> Live site
+                <span className="code-comment">{'//'}</span> Live site
               </h2>
               <ProjectSiteEmbed
                 url={embedUrl}
@@ -249,7 +249,7 @@ const ProjectLayout = ({
               animate="visible"
             >
               <h2 className="section-title">
-                <span className="code-comment">//</span> Project Information
+                <span className="code-comment">{'//'}</span> Project Information
               </h2>
               <CodeBlock
                 code={codeSnippet}

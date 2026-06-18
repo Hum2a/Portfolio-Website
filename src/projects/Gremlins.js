@@ -115,7 +115,7 @@ const Gremlins = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Screenshots
+          <span className="code-comment">{'//'}</span> Screenshots
         </h2>
         <p className="section-description">
           Desktop app UI (Windows)—gallery opens full size on click.
@@ -143,7 +143,7 @@ const Gremlins = () => {
 
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Try it
+          <span className="code-comment">{'//'}</span> Try it
         </h2>
         <p className="section-description">
           Gremlins is a <strong>Windows desktop app</strong>: install from{" "}

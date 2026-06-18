@@ -183,6 +183,11 @@
   box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
 }
 
+.category-chip--library .category-chip__dot {
+  background: linear-gradient(135deg, #f87171, #cb3837);
+  box-shadow: 0 0 12px rgba(203, 56, 55, 0.45);
+}
+
 .category-chip--active {
   border-color: rgba(74, 158, 255, 0.55);
   background: rgba(74, 158, 255, 0.12);
@@ -402,6 +407,12 @@
   color: #6ee7b7;
   background: rgba(52, 211, 153, 0.12);
   border-color: rgba(52, 211, 153, 0.25);
+}
+
+.surface-pill--library {
+  color: #fca5a5;
+  background: rgba(203, 56, 55, 0.14);
+  border-color: rgba(248, 113, 113, 0.3);
 }
 
 .project-tile__name {

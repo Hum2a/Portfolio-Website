@@ -60,7 +60,7 @@ const Imposter = () => {
     >
       <section className="project-section">
         <h2 className="section-title">
-          <span className="code-comment">//</span> Overview
+          <span className="code-comment">{'//'}</span> Overview
         </h2>
         <p className="section-description">
           Imposter is a real-time multiplayer &ldquo;word imposter&rdquo; party game. Players receive
