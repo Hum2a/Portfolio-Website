@@ -76,8 +76,8 @@ const Projects = () => {
             <span className="projects-hero__slash">/</span> Projects
           </h1>
           <p className="projects-hero__lead">
-            Websites, mobile apps, desktop tools, and browser extensions—often overlapping in one
-            product. Filter by surface type or drill down by tech stack.
+            Websites, mobile apps, desktop tools, browser extensions, and npm packages—often
+            overlapping in one product. Filter by surface type or drill down by tech stack.
           </p>
           <div className="projects-hero__stats">
             <span className="projects-stat">

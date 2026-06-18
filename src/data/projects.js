@@ -1,7 +1,7 @@
 import projectsData from '../config/projects.json';
 
 /** Display order for category filter chips */
-export const PROJECT_CATEGORY_ORDER = ['website', 'mobile', 'desktop', 'extension'];
+export const PROJECT_CATEGORY_ORDER = ['website', 'mobile', 'desktop', 'extension', 'library'];
 
 /** Labels and styling keys for project surfaces */
 export const PROJECT_CATEGORY_META = {
@@ -28,6 +28,12 @@ export const PROJECT_CATEGORY_META = {
     label: 'Browser extensions',
     shortLabel: 'Extension',
     hint: 'Chrome & Chromium MV3',
+  },
+  library: {
+    id: 'library',
+    label: 'npm packages',
+    shortLabel: 'npm',
+    hint: 'Published libraries, Web Components & npm packages',
   },
 };
 

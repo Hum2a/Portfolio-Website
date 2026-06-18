@@ -221,6 +221,12 @@
   border-color: rgba(52, 211, 153, 0.28);
 }
 
+.featured-surface--library {
+  color: #fca5a5;
+  background: rgba(203, 56, 55, 0.14);
+  border-color: rgba(248, 113, 113, 0.32);
+}
+
 .featured-card-name {
   font-size: clamp(1.2rem, 2.5vw, 1.45rem);
   font-weight: 700;

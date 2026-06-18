@@ -28,7 +28,8 @@
       "featured": true,
       "priority": 1,
       "categories": [
-        "website"
+        "website",
+        "library"
       ],
       "dateAdded": "2026-06-18",
       "dateUpdated": "2026-06-18"

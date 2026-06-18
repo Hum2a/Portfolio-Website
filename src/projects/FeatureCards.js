@@ -1,10 +1,19 @@
 import React from "react";
 import ProjectLayout from "../components/projects/ProjectLayout";
+import {
+  getProjectById,
+  getProjectCategories,
+  PROJECT_CATEGORY_META,
+} from "../data/projects";
 
 const DEMO_URL = "https://501fun.humza-butt.space";
 const REPO_URL = "https://github.com/Hum2a/feature-cards";
 const NPM_URL = "https://www.npmjs.com/package/@techystuff/feature-cards";
+const NPM_PACKAGE = "@techystuff/feature-cards";
 const CMS_API_URL = "https://cms.501fun.humza-butt.space/api/cards";
+
+const featureCardsProject = getProjectById("feature-cards");
+const surfaceCategories = getProjectCategories(featureCardsProject);
 
 const terminalLines = [
   "npm install @techystuff/feature-cards",
@@ -106,6 +115,41 @@ const FeatureCards = () => {
           figure / label / icon fields. The shipped bundle uses native browser APIs only (~25 KiB
           gzip ESM), degrades to plain links without JavaScript, and passes an axe-core CI gate
           at zero violations.
+        </p>
+      </section>
+
+      <section className="project-section">
+        <h2 className="section-title">
+          <span className="code-comment">{'//'}</span> Surfaces
+        </h2>
+        <div className="project-surfaces" aria-label="Project surface types">
+          {surfaceCategories.map((categoryId) => {
+            const meta = PROJECT_CATEGORY_META[categoryId];
+            return (
+              <span
+                key={categoryId}
+                className={`surface-pill surface-pill--${categoryId}`}
+                title={meta.hint}
+              >
+                {meta.label}
+              </span>
+            );
+          })}
+        </div>
+        <p className="section-description">
+          This project spans two surfaces: a published npm library and a live demo website. The
+          primary deliverable is the npm package{" "}
+          <code>{NPM_PACKAGE}</code> (AGPL-3.0-only)—a vanilla Web Component you can embed via
+          ESM import, IIFE script tag, jsDelivr CDN, or an optional React wrapper. The demo site
+          showcases the live card editor, CMS adapter wiring, and multiple themed instances.
+        </p>
+        <p className="section-description">
+          Install with{" "}
+          <code>npm install {NPM_PACKAGE}</code>, or open the{" "}
+          <a href={NPM_URL} target="_blank" rel="noopener noreferrer">
+            npm registry page
+          </a>{" "}
+          for version history and bundle stats.
         </p>
       </section>
 

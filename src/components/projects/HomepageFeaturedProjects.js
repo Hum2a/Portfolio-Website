@@ -45,8 +45,8 @@ export function HomepageFeaturedProjects() {
           <span className="featured-label">Selected work</span>
           <h2 className="featured-title">Across every surface</h2>
           <p className="featured-subtitle">
-            Shipping on the web, in the browser, on devices, and on the desktop—sometimes all at once.
-            Explore by surface type on the full projects page.
+            Shipping on the web, in the browser, on devices, on the desktop, and on npm—sometimes
+            all at once. Explore by surface type on the full projects page.
           </p>
         </motion.div>
 
