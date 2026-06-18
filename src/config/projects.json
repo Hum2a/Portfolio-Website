@@ -1,6 +1,37 @@
 {
   "projects": [
     {
+      "id": "blitz",
+      "name": "Blitz",
+      "description": "Chrome extension that AI-tailors your CV per job (BYOK), then fills applications on major ATS boards after you review.",
+      "logo": "blitz.svg",
+      "gradient": "linear-gradient(135deg, #080810 0%, #7c3aed 45%, #ec4899 100%)",
+      "route": "/blitz",
+      "tags": [
+        "Chrome Extension",
+        "React",
+        "Vite",
+        "Supabase",
+        "Cloudflare Workers",
+        "AI",
+        "SaaS",
+        "JobTech",
+        "JavaScript",
+        "Tailwind CSS",
+        "Vitest",
+        "Playwright"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "extension",
+        "website"
+      ],
+      "dateAdded": "2026-06-18",
+      "dateUpdated": "2026-06-18"
+    },
+    {
       "id": "feature-cards",
       "name": "501 Feature Cards",
       "description": "Accessible, CMS-agnostic Web Component replacing hard-coded landing-page stat cards—vanilla JS, Shadow DOM, live editor demo.",

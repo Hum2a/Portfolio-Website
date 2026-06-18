@@ -28,6 +28,7 @@ import BruteForcer from "../projects/BruteForcer";
 import Gremlins from "../projects/Gremlins";
 import FireWatch from "../projects/FireWatch";
 import FeatureCards from "../projects/FeatureCards";
+import Blitz from "../projects/Blitz";
 import BakesByOlayide from "../projects/BakesByOlayide";
 import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
@@ -85,6 +86,7 @@ const AppRoutes = () => {
       <Route path="/gremlins" element={<Gremlins />} />
       <Route path="/firewatch" element={<FireWatch />} />
       <Route path="/feature-cards" element={<FeatureCards />} />
+      <Route path="/blitz" element={<Blitz />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
       <Route path="/humza-login" element={<HumzaLogin />} />
       <Route path="/github" element={<GitHub />} />
