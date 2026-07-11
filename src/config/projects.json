@@ -1,6 +1,43 @@
 {
   "projects": [
     {
+      "id": "buzzer",
+      "name": "Buzzer",
+      "description": "LifeSmart’s teacher-led live financial literacy game for schools — anonymous pupil teams, front screen, real-time play.",
+      "logo": "Buzzer.png",
+      "gradient": "linear-gradient(135deg, #0E3A70 0%, #1A5A9E 45%, #F5C41C 100%)",
+      "route": "/buzzer",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Hono",
+        "Cloudflare Workers",
+        "Durable Objects",
+        "WebSockets",
+        "Neon",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "Better Auth",
+        "EdTech",
+        "FinTech",
+        "Game",
+        "Realtime",
+        "SaaS",
+        "WebApp",
+        "LifeSmart"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-07-11",
+      "dateUpdated": "2026-07-11"
+    },
+    {
       "id": "blitz",
       "name": "Blitz",
       "description": "Chrome extension that AI-tailors your CV per job (BYOK), then fills applications on major ATS boards after you review.",
