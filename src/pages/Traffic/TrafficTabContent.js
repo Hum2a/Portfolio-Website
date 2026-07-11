@@ -76,6 +76,7 @@ export function TrafficTabContent() {
     environmentFilter,
     excludeAdminPaths,
     isOwnerVisitor,
+    ownerTags,
     getVisitorKey,
     selectedVisitorAnonymizedIP,
     setSelectedVisitorAnonymizedIP,
@@ -267,8 +268,19 @@ export function TrafficTabContent() {
                           {visitor.anonymizedIP || visitor.id}
                           <TrafficSignalBadges signals={getTrafficSignalsForVisitor(visitor)} />
                           {isOwnerVisitor(getVisitorKey(visitor)) && (
-                            <span className="owner-tag-badge" title="Your device">
-                              Mine
+                            <span
+                              className={`owner-tag-badge${
+                                ownerTags[getVisitorKey(visitor)]?.label === 'Claude Cowork'
+                                  ? ' claude-cowork'
+                                  : ''
+                              }`}
+                              title={
+                                ownerTags[getVisitorKey(visitor)]?.label === 'Claude Cowork'
+                                  ? 'Tagged as a Claude Cowork visit'
+                                  : 'Your device'
+                              }
+                            >
+                              {ownerTags[getVisitorKey(visitor)]?.label || 'Mine'}
                             </span>
                           )}
                           <span className={`env-badge ${visitor.environment === 'localhost' ? 'localhost' : 'production'}`}>

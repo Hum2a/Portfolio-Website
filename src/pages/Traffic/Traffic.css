@@ -3837,6 +3837,10 @@
   vertical-align: middle;
 }
 
+.owner-tag-badge.claude-cowork {
+  background: #d97757;
+}
+
 .visitor-admin-actions {
   display: flex;
   flex-wrap: wrap;
@@ -3874,6 +3878,11 @@
 .visitor-admin-btn.tag-btn {
   border-color: #667eea;
   color: #667eea;
+}
+
+.visitor-admin-btn.claude-tag-btn {
+  border-color: #d97757;
+  color: #d97757;
 }
 
 .visitor-admin-btn.delete-btn {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTrash, FaUserTag } from 'react-icons/fa';
+import { FaTrash, FaUserTag, FaRobot } from 'react-icons/fa';
 import { useTraffic } from '../TrafficContext';
 
 export function VisitorDataAdmin({ visitor, compact = false }) {
@@ -30,16 +30,33 @@ export function VisitorDataAdmin({ visitor, compact = false }) {
   if (compact) {
     return (
       <div className="visitor-admin-actions compact">
-        {tagged && <span className="owner-tag-badge" title="Tagged as your device">{tag?.label || 'Mine'}</span>}
-        {!tagged && (
-          <button
-            type="button"
-            className="visitor-admin-btn tag-btn"
-            onClick={() => tagVisitorAsOwner(key)}
-            title="Tag as your IP"
+        {tagged && (
+          <span
+            className={`owner-tag-badge${tag?.label === 'Claude Cowork' ? ' claude-cowork' : ''}`}
+            title={tag?.label === 'Claude Cowork' ? 'Tagged as a Claude Cowork visit' : 'Tagged as your device'}
           >
-            <FaUserTag />
-          </button>
+            {tag?.label || 'Mine'}
+          </span>
+        )}
+        {!tagged && (
+          <>
+            <button
+              type="button"
+              className="visitor-admin-btn tag-btn"
+              onClick={() => tagVisitorAsOwner(key)}
+              title="Tag as your IP"
+            >
+              <FaUserTag />
+            </button>
+            <button
+              type="button"
+              className="visitor-admin-btn tag-btn claude-tag-btn"
+              onClick={() => tagVisitorAsOwner(key, 'Claude Cowork')}
+              title="Tag as a Claude Cowork visit"
+            >
+              <FaRobot />
+            </button>
+          </>
         )}
         <button
           type="button"
@@ -59,15 +76,26 @@ export function VisitorDataAdmin({ visitor, compact = false }) {
     <div className="visitor-admin-actions">
       {tagged ? (
         <>
-          <span className="owner-tag-badge">{tag?.label || 'Mine'}</span>
+          <span className={`owner-tag-badge${tag?.label === 'Claude Cowork' ? ' claude-cowork' : ''}`}>
+            {tag?.label || 'Mine'}
+          </span>
           <button type="button" className="visitor-admin-btn" onClick={() => untagVisitorAsOwner(key)}>
             Remove tag
           </button>
         </>
       ) : (
-        <button type="button" className="visitor-admin-btn tag-btn" onClick={() => tagVisitorAsOwner(key)}>
-          <FaUserTag /> Tag as mine
-        </button>
+        <>
+          <button type="button" className="visitor-admin-btn tag-btn" onClick={() => tagVisitorAsOwner(key)}>
+            <FaUserTag /> Tag as mine
+          </button>
+          <button
+            type="button"
+            className="visitor-admin-btn tag-btn claude-tag-btn"
+            onClick={() => tagVisitorAsOwner(key, 'Claude Cowork')}
+          >
+            <FaRobot /> Tag as Claude Cowork
+          </button>
+        </>
       )}
       <button
         type="button"
@@ -126,7 +154,9 @@ export function OwnerDevicesPanel() {
           {taggedList.map((t) => (
             <li key={t.id}>
               <code>{t.id}</code>
-              <span className="owner-tag-badge">{t.label || 'Mine'}</span>
+              <span className={`owner-tag-badge${t.label === 'Claude Cowork' ? ' claude-cowork' : ''}`}>
+                {t.label || 'Mine'}
+              </span>
               <button
                 type="button"
                 className="visitor-admin-btn delete-btn"
