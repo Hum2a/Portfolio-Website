@@ -74,6 +74,7 @@ const techStack = [
   "Resend",
   "Vitest",
   "Playwright",
+  "Game",
 ];
 
 const Buzzer = () => {

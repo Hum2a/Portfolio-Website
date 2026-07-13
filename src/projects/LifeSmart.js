@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ProjectLayout from "../components/projects/ProjectLayout";
 import ProjectSiteEmbed from "../components/projects/ProjectSiteEmbed";
@@ -17,6 +18,7 @@ const LIFESMART_TOOL_URLS = {
   "asset-market-simulation": "https://home.lifesmartfinance.com",
   "budget-tool": "https://lifebalance.lifesmartfinance.com",
   "investment-calculator": "https://investing-tool.lifesmartfinance.com",
+  buzzer: "https://buzzer.lifesmartfinance.com",
 };
 
 const projects = [
@@ -179,7 +181,35 @@ const projects = [
     media: [
       { type: "image", src: `${process.env.PUBLIC_URL}/images/LifeSmart/Investment Calculator/Investment Calculator.png`, caption: "Investment Calculator" },
     ],
-  }
+  },
+  {
+    id: "buzzer",
+    title: "Buzzer",
+    caseStudyRoute: "/buzzer",
+    noEmbed: true,
+    description:
+      "LifeSmart's teacher-led live financial literacy game for UK schools. Pupils join anonymously by short code; teams have names, never pupil names. A projected front screen drives the lesson while pupil devices play individual and team rounds in real time.",
+    features: [
+      "Teacher dashboard with classes, live sessions, and lesson preview",
+      "Projected front screen (/screen) with scores, timers, and podium",
+      "Pupil join by short code — no accounts or pupil names",
+      "Live sync via Cloudflare Durable Objects and WebSockets",
+      "Individual and team rounds with rotating captaincy",
+      "Safeguarding-first design with anonymous team labels and teacher-scoped RLS",
+      "Status: live production — early / pilot classroom rollout",
+    ],
+    techStack: [
+      "React 19 + Vite + TypeScript",
+      "Tailwind CSS",
+      "Hono on Cloudflare Workers",
+      "Durable Objects + WebSockets",
+      "Neon Postgres + Drizzle ORM",
+      "Better Auth (teachers only)",
+      "Vitest + Playwright",
+      "Game",
+    ],
+    media: [],
+  },
 ];
 
 const terminalLines = [
@@ -221,7 +251,8 @@ const projectInfo = `const lifesmart = {
     "Financial Quiz",
     "Asset Market Simulation",
     "Budget Planning Tool",
-    "Investment Calculator"
+    "Investment Calculator",
+    "Buzzer (live classroom game)",
   ]
 };`;
 
@@ -289,6 +320,13 @@ const LifeSmart = () => {
           <span className="code-comment">{'//'}</span> {selectedProject.title}
         </h2>
         <p className="section-description">{selectedProject.description}</p>
+        {selectedProject.caseStudyRoute && (
+          <p className="section-description">
+            <Link to={selectedProject.caseStudyRoute} className="external-link-button">
+              View {selectedProject.title} case study →
+            </Link>
+          </p>
+        )}
         <div className="features-list">
           {selectedProject.features.map((feature, index) => (
             <div key={index} className="feature-item">
@@ -326,9 +364,19 @@ const LifeSmart = () => {
           <span className="code-comment">{'//'}</span> Live preview
         </h2>
         <p className="section-description">
-          Deployed instance for <strong>{selectedProject.title}</strong> (
-          {toolLiveUrl.replace(/^https:\/\//, "")}). Other tools use their own subdomains—pick a
-          tool above to switch the preview.
+          {selectedProject.noEmbed ? (
+            <>
+              Deployed at <strong>{toolLiveUrl.replace(/^https:\/\//, "")}</strong>. Full classroom
+              play requires a teacher account and real devices — open the site or the dedicated case
+              study instead of embedding here.
+            </>
+          ) : (
+            <>
+              Deployed instance for <strong>{selectedProject.title}</strong> (
+              {toolLiveUrl.replace(/^https:\/\//, "")}). Other tools use their own subdomains—pick a
+              tool above to switch the preview.
+            </>
+          )}
         </p>
         <a
           href={toolLiveUrl}
@@ -338,12 +386,15 @@ const LifeSmart = () => {
         >
           Open in new tab →
         </a>
-        <ProjectSiteEmbed
-          url={toolLiveUrl}
-          iframeTitle={`LifeSmart — ${selectedProject.title}`}
-        />
+        {!selectedProject.noEmbed && (
+          <ProjectSiteEmbed
+            url={toolLiveUrl}
+            iframeTitle={`LifeSmart — ${selectedProject.title}`}
+          />
+        )}
       </motion.section>
 
+      {selectedProject.media?.length > 0 && (
       <motion.section
         className="project-section"
         initial={{ opacity: 0, y: 20 }}
@@ -378,6 +429,7 @@ const LifeSmart = () => {
           ))}
         </div>
       </motion.section>
+      )}
 
       {selectedMedia && (
         <div className="modal" onClick={() => setSelectedMedia(null)}>
