@@ -1,7 +1,15 @@
 import React from "react";
 import ProjectLayout from "../components/projects/ProjectLayout";
+import {
+  getProjectById,
+  getProjectCategories,
+  PROJECT_CATEGORY_META,
+} from "../data/projects";
 
 const WEB_APP_URL = "https://imposter-game.site";
+
+const imposterProject = getProjectById("imposter");
+const surfaceCategories = getProjectCategories(imposterProject);
 
 const terminalLines = [
   "const imposter = {",
@@ -75,6 +83,31 @@ const Imposter = () => {
           behind RLS, while guests can still play with session-local identity.
         </p>
       </section>
+
+      <section className="project-section">
+        <h2 className="section-title">
+          <span className="code-comment">{'//'}</span> Surfaces
+        </h2>
+        <div className="project-surfaces" aria-label="Project surface types">
+          {surfaceCategories.map((categoryId) => {
+            const meta = PROJECT_CATEGORY_META[categoryId];
+            return (
+              <span
+                key={categoryId}
+                className={`surface-pill surface-pill--${categoryId}`}
+                title={meta.hint}
+              >
+                {meta.label}
+              </span>
+            );
+          })}
+        </div>
+        <p className="section-description">
+          Imposter is a realtime party game that ships as a Discord Activity in voice channels and
+          as a standalone web app / PWA—one React client and one authoritative PartyKit server.
+        </p>
+      </section>
+
       <div>
         <a
           href={WEB_APP_URL}

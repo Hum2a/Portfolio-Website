@@ -28,6 +28,7 @@ import BruteForcer from "../projects/BruteForcer";
 import Gremlins from "../projects/Gremlins";
 import FireWatch from "../projects/FireWatch";
 import FeatureCards from "../projects/FeatureCards";
+import Oche from "../projects/Oche";
 import Blitz from "../projects/Blitz";
 import Buzzer from "../projects/Buzzer";
 import BakesByOlayide from "../projects/BakesByOlayide";
@@ -87,6 +88,7 @@ const AppRoutes = () => {
       <Route path="/gremlins" element={<Gremlins />} />
       <Route path="/firewatch" element={<FireWatch />} />
       <Route path="/feature-cards" element={<FeatureCards />} />
+      <Route path="/oche" element={<Oche />} />
       <Route path="/blitz" element={<Blitz />} />
       <Route path="/buzzer" element={<Buzzer />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />

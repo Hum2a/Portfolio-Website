@@ -1,7 +1,7 @@
 import projectsData from '../config/projects.json';
 
 /** Display order for category filter chips */
-export const PROJECT_CATEGORY_ORDER = ['website', 'mobile', 'desktop', 'extension', 'library'];
+export const PROJECT_CATEGORY_ORDER = ['website', 'mobile', 'desktop', 'extension', 'library', 'game'];
 
 /** Labels and styling keys for project surfaces */
 export const PROJECT_CATEGORY_META = {
@@ -34,6 +34,12 @@ export const PROJECT_CATEGORY_META = {
     label: 'npm packages',
     shortLabel: 'npm',
     hint: 'Published libraries, Web Components & npm packages',
+  },
+  game: {
+    id: 'game',
+    label: 'Games',
+    shortLabel: 'Game',
+    hint: 'Party games, live scoreboards & multiplayer experiences',
   },
 };
 

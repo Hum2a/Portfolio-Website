@@ -38,6 +38,45 @@
       "dateUpdated": "2026-07-11"
     },
     {
+      "id": "oche",
+      "name": "Oche",
+      "description": "Live venue scoreboard for competitive-socialising sessions: real-time scores, match history, and game video on Cloudflare.",
+      "logo": "Oche.png",
+      "gradient": "linear-gradient(135deg, #0e1116 0%, #171b22 50%, #c6f135 100%)",
+      "route": "/oche",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Hono",
+        "Cloudflare Workers",
+        "Durable Objects",
+        "WebSockets",
+        "Neon",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "R2",
+        "Zod",
+        "PWA",
+        "Realtime",
+        "Game",
+        "Dashboard",
+        "Edge",
+        "SaaS",
+        "WebApp"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "website",
+        "game"
+      ],
+      "dateAdded": "2026-07-13",
+      "dateUpdated": "2026-07-13"
+    },
+    {
       "id": "blitz",
       "name": "Blitz",
       "description": "Chrome extension that AI-tailors your CV per job (BYOK), then fills applications on major ATS boards after you review.",
@@ -295,10 +334,11 @@
       "featured": true,
       "priority": 1,
       "categories": [
-        "website"
+        "website",
+        "game"
       ],
       "dateAdded": "2023-06-07",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-07-13"
     },
     {
       "id": "breathapplyser",
