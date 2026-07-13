@@ -15,7 +15,7 @@ import {
   sumDailyBucketsInRange,
   getTimeRangeLabel,
 } from './statsHelpers';
-import { isExcludedAnalyticsPath, visitorHasNonAdminActivity } from '../../utils/analyticsPaths';
+import { isExcludedAnalyticsPath, visitorHasNonAdminActivity, getAnalyticsPathLabel, canonicalizeAnalyticsPath } from '../../utils/analyticsPaths';
 import { getTrafficSignalsForVisitor } from '../../utils/trafficSignals';
 import {
   listOwnerTags,
@@ -74,6 +74,7 @@ export function useTrafficData(role) {
   const [showUrlGenerator, setShowUrlGenerator] = useState(false);
   const [urlGeneratorData, setUrlGeneratorData] = useState({
     baseUrl: typeof window !== 'undefined' ? window.location.origin : '',
+    landingPath: '/',
     source: '',
     medium: '',
     campaign: '',
@@ -847,11 +848,15 @@ export function useTrafficData(role) {
   const pageViewsByPath = useMemo(() => {
     const pathMap = {};
     filteredPageViews.forEach((pv) => {
-      const path = pv.path || 'Unknown';
+      const path = canonicalizeAnalyticsPath(pv.path || 'Unknown');
       pathMap[path] = (pathMap[path] || 0) + 1;
     });
     return Object.entries(pathMap)
-      .map(([name, value]) => ({ name, value }))
+      .map(([path, value]) => ({
+        name: getAnalyticsPathLabel(path),
+        path,
+        value,
+      }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 10);
   }, [filteredPageViews]);
@@ -888,7 +893,7 @@ export function useTrafficData(role) {
   const averageTimeByPath = useMemo(() => {
     const pathMap = {};
     filteredPageTimes.forEach((pt) => {
-      const path = pt.path || 'Unknown';
+      const path = canonicalizeAnalyticsPath(pt.path || 'Unknown');
       if (!pathMap[path]) pathMap[path] = { total: 0, count: 0, values: [] };
       const timeSpent = pt.timeSpent || 0;
       pathMap[path].total += timeSpent;
@@ -896,8 +901,9 @@ export function useTrafficData(role) {
       pathMap[path].values.push(timeSpent);
     });
     return Object.entries(pathMap)
-      .map(([name, data]) => ({
-        name,
+      .map(([path, data]) => ({
+        name: getAnalyticsPathLabel(path),
+        path,
         average: parseFloat(data.count > 0 ? (data.total / data.count).toFixed(1) : 0),
         total: data.total,
         count: data.count,
@@ -1095,7 +1101,7 @@ export function useTrafficData(role) {
   }, []);
 
   const generateUrl = useCallback(() => {
-    const { baseUrl, source, medium, campaign, term, content } = urlGeneratorData;
+    const { baseUrl, landingPath, source, medium, campaign, term, content } = urlGeneratorData;
     if (!source) {
       setGeneratedUrl('');
       return;
@@ -1106,7 +1112,9 @@ export function useTrafficData(role) {
     if (campaign) params.append('utm_campaign', campaign);
     if (term) params.append('utm_term', term);
     if (content) params.append('utm_content', content);
-    setGeneratedUrl(`${baseUrl}?${params.toString()}`);
+    const origin = (baseUrl || '').replace(/\/$/, '');
+    const path = landingPath && landingPath !== '/' ? landingPath : '';
+    setGeneratedUrl(`${origin}${path}?${params.toString()}`);
   }, [urlGeneratorData]);
 
   useEffect(() => {
@@ -1119,14 +1127,15 @@ export function useTrafficData(role) {
 
   const applyPreset = useCallback((preset) => {
     const presets = {
-      linkedin: { source: 'linkedin', medium: 'social', campaign: 'profile' },
-      discord: { source: 'discord', medium: 'chat', campaign: 'networking' },
-      whatsapp: { source: 'whatsapp', medium: 'message', campaign: 'sharing' },
-      cv: { source: 'cv', medium: 'pdf', campaign: 'applications' },
-      github: { source: 'github', medium: 'profile', campaign: 'portfolio' },
-      twitter: { source: 'twitter', medium: 'social', campaign: 'profile' },
-      email: { source: 'email-signature', medium: 'email', campaign: 'outreach' },
-      instagram: { source: 'instagram', medium: 'social', campaign: 'bio' },
+      linkedin: { source: 'linkedin', medium: 'social', campaign: 'profile', landingPath: '/career' },
+      discord: { source: 'discord', medium: 'chat', campaign: 'networking', landingPath: '/' },
+      whatsapp: { source: 'whatsapp', medium: 'message', campaign: 'sharing', landingPath: '/' },
+      cv: { source: 'cv', medium: 'pdf', campaign: 'applications', landingPath: '/career' },
+      github: { source: 'github', medium: 'profile', campaign: 'portfolio', landingPath: '/github' },
+      twitter: { source: 'twitter', medium: 'social', campaign: 'profile', landingPath: '/' },
+      email: { source: 'email-signature', medium: 'email', campaign: 'outreach', landingPath: '/contact' },
+      instagram: { source: 'instagram', medium: 'social', campaign: 'bio', landingPath: '/' },
+      career: { source: 'career', medium: 'site', campaign: 'portfolio', landingPath: '/career' },
     };
     const presetData = presets[preset];
     if (presetData) setUrlGeneratorData((prev) => ({ ...prev, ...presetData }));
@@ -1149,8 +1158,12 @@ export function useTrafficData(role) {
         campaign: campaign?.trim() || null,
       });
       const baseUrl = urlGeneratorData.baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
-      const url = `${baseUrl.replace(/\/$/, '')}/?ref=${token}`;
-      setGeneratedRefUrl(url);
+      const origin = baseUrl.replace(/\/$/, '');
+      const pathPart =
+        !urlGeneratorData.landingPath || urlGeneratorData.landingPath === '/'
+          ? ''
+          : urlGeneratorData.landingPath;
+      setGeneratedRefUrl(`${origin}${pathPart}?ref=${token}`);
       loadTrackingTokens();
     } catch (err) {
       setRefUrlError(err?.message || 'Failed to create link');
@@ -1196,6 +1209,7 @@ export function useTrafficData(role) {
   const resetUrlGenerator = useCallback(() => {
     setUrlGeneratorData({
       baseUrl: typeof window !== 'undefined' ? window.location.origin : '',
+      landingPath: '/',
       source: '',
       medium: '',
       campaign: '',

@@ -2,6 +2,8 @@
  * Derive trend metrics from loaded Traffic data (respects environment; uses full loaded window for time buckets).
  */
 
+import { canonicalizeAnalyticsPath, getAnalyticsPathLabel } from '../../utils/analyticsPaths';
+
 const MS_DAY = 24 * 60 * 60 * 1000;
 
 function byEnv(row, environmentFilter) {
@@ -20,7 +22,7 @@ function bucketPaths(pageViews, environmentFilter, toDate, startMs, endMs) {
     if (!byEnv(pv, environmentFilter)) return;
     const t = getTs(toDate, pv.timestamp);
     if (t == null || t < startMs || t > endMs) return;
-    const p = pv.path || '(unknown)';
+    const p = canonicalizeAnalyticsPath(pv.path || '(unknown)');
     map[p] = (map[p] || 0) + 1;
   });
   return map;
@@ -90,7 +92,7 @@ function avgTimeByPath(pageTimes, environmentFilter, toDate, startMs, endMs) {
     if (!byEnv(pt, environmentFilter)) return;
     const t = getTs(toDate, pt.startTime || pt.timestamp);
     if (t == null || t < startMs || t > endMs) return;
-    const p = pt.path || '(unknown)';
+    const p = canonicalizeAnalyticsPath(pt.path || '(unknown)');
     if (!acc[p]) acc[p] = { sum: 0, count: 0 };
     acc[p].sum += pt.timeSpent || 0;
     acc[p].count += 1;
@@ -160,7 +162,14 @@ export function computeTrafficTrends({
     else if (p === 0 && r > 0) label = 'new';
     else if (delta > 15) label = 'hot';
     else if (delta < -15) label = 'cooling';
-    pathTrendRows.push({ path, recent: r, previous: p, deltaPct: Math.round(delta * 10) / 10, label });
+    pathTrendRows.push({
+      path,
+      pathLabel: getAnalyticsPathLabel(path),
+      recent: r,
+      previous: p,
+      deltaPct: Math.round(delta * 10) / 10,
+      label,
+    });
   });
   pathTrendRows.sort((a, b) => b.recent - a.recent);
 
@@ -235,8 +244,8 @@ export function computeTrafficTrends({
     insights.push(`Approx. ${enquiryRate.toFixed(1)}% of recent unique visitors (30d window, loaded data) correspond to an enquiry — a simple “intent” proxy.`);
   }
   insights.push(`Depth proxy: ~${viewsPerVisitor.toFixed(1)} page views per unique visitor in the last 30 days (industry teams often track 1.5–3+ for content sites).`);
-  if (winners.length) insights.push(`Standout pages this week: ${winners.map((w) => w.path).join(', ')}.`);
-  if (losers.length) insights.push(`Pages losing steam (were popular, now cooling): ${losers.map((w) => w.path).join(', ')}.`);
+  if (winners.length) insights.push(`Standout pages this week: ${winners.map((w) => w.pathLabel || w.path).join(', ')}.`);
+  if (losers.length) insights.push(`Pages losing steam (were popular, now cooling): ${losers.map((w) => w.pathLabel || w.path).join(', ')}.`);
 
   return {
     summary: {

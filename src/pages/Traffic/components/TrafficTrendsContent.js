@@ -129,7 +129,7 @@ export function TrafficTrendsContent() {
               <tbody>
                 {pathTrends.slice(0, 25).map((row) => (
                   <tr key={row.path}>
-                    <td className="trends-path">{row.path}</td>
+                    <td className="trends-path">{row.pathLabel || row.path}</td>
                     <td>{row.recent}</td>
                     <td>{row.previous}</td>
                     <td className={momentumClass(row.deltaPct)}>
@@ -150,11 +150,11 @@ export function TrafficTrendsContent() {
           <h3>Rising vs cooling</h3>
           <h4 className="trends-subh">Momentum winners</h4>
           <ul className="trends-mini-list">
-            {winners.length ? winners.map((w) => <li key={w.path}>{w.path}</li>) : <li>None flagged</li>}
+            {winners.length ? winners.map((w) => <li key={w.path}>{w.pathLabel || w.path}</li>) : <li>None flagged</li>}
           </ul>
           <h4 className="trends-subh">Cooling (was steady)</h4>
           <ul className="trends-mini-list">
-            {losers.length ? losers.map((w) => <li key={w.path}>{w.path}</li>) : <li>None flagged</li>}
+            {losers.length ? losers.map((w) => <li key={w.path}>{w.pathLabel || w.path}</li>) : <li>None flagged</li>}
           </ul>
 
           <h3 className="trends-mt">Event categories</h3>
@@ -187,7 +187,7 @@ export function TrafficTrendsContent() {
             <tbody>
               {engagementLeaders.slice(0, 15).map((row) => (
                 <tr key={row.path}>
-                  <td className="trends-path">{row.path}</td>
+                  <td className="trends-path">{row.pathLabel || row.path}</td>
                   <td>{row.recent}</td>
                   <td>{row.avgTimeRecent != null ? `${Math.round(row.avgTimeRecent)}s` : '—'}</td>
                 </tr>

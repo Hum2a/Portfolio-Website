@@ -18,6 +18,7 @@ import {
   getLinkedInProfileUrl,
   formatLinkedInDateRange,
 } from '../services/linkedinService';
+import firebaseAnalytics from '../services/analyticsService';
 import './LinkedInPage.css';
 
 const FILTERS = [
@@ -46,6 +47,14 @@ export default function LinkedIn() {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = 'Career | Humza Butt';
+    return () => {
+      document.title = previousTitle;
+    };
   }, []);
 
   useEffect(() => {
@@ -185,7 +194,10 @@ export default function LinkedIn() {
                     key={f.id}
                     type="button"
                     className={`linkedin-filter-btn ${filter === f.id ? 'active' : ''}`}
-                    onClick={() => setFilter(f.id)}
+                    onClick={() => {
+                      setFilter(f.id);
+                      firebaseAnalytics.trackEvent('career', 'filter', f.id);
+                    }}
                   >
                     {f.label}
                   </button>

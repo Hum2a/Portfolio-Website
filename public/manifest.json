@@ -69,6 +69,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Career",
+      "url": "/career",
+      "description": "View my career and education history",
+      "icons": [
+        {
+          "src": "logos/shortcut-projects.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    },
+    {
       "name": "Projects",
       "url": "/projects",
       "description": "View my portfolio projects",

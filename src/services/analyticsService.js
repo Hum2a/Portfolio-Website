@@ -23,11 +23,12 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
 import { featureFlags, apiKeys } from '../utils/env';
-import { isExcludedAnalyticsPath } from '../utils/analyticsPaths';
+import { isExcludedAnalyticsPath, canonicalizeAnalyticsPath } from '../utils/analyticsPaths';
 import { buildTrafficSignals } from '../utils/trafficSignals';
 import { db } from './firebase';
 
-const isCurrentPathExcluded = () => isExcludedAnalyticsPath(window.location.pathname);
+const isCurrentPathExcluded = () =>
+  isExcludedAnalyticsPath(canonicalizeAnalyticsPath(window.location.pathname));
 
 // Generate or retrieve session ID
 const getSessionId = () => {
@@ -656,7 +657,7 @@ const trackVisitor = async () => {
 
 // Track page view
 const trackPageView = async (path, title) => {
-  const currentPath = path || window.location.pathname;
+  const currentPath = canonicalizeAnalyticsPath(path || window.location.pathname);
   if (isExcludedAnalyticsPath(currentPath)) return null;
 
   try {
@@ -735,7 +736,7 @@ const trackPageView = async (path, title) => {
 
 // Track time spent on a page
 const trackPageTime = async (path, pageViewId = null) => {
-  const currentPath = path || window.location.pathname;
+  const currentPath = canonicalizeAnalyticsPath(path || window.location.pathname);
   if (isExcludedAnalyticsPath(currentPath)) return;
 
   try {
@@ -819,7 +820,7 @@ const trackEvent = async (category, action, label = null, value = null) => {
     }
     
     const timestamp = new Date();
-    const currentPath = window.location.pathname;
+    const currentPath = canonicalizeAnalyticsPath(window.location.pathname);
     
     // Detect environment
     const environment = getEnvironment();

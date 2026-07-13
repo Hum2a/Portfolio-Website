@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTraffic } from '../TrafficContext';
 import { ReferenceCodesList } from './ReferenceCodesList';
+import { ANALYTICS_LANDING_PAGES } from '../../../utils/analyticsPaths';
 
 export function UrlGeneratorSection() {
   const {
@@ -60,6 +61,7 @@ export function UrlGeneratorSection() {
             <h3>Quick Presets:</h3>
             <div className="preset-buttons">
               <button className="preset-btn linkedin" onClick={() => applyPreset('linkedin')}>LinkedIn</button>
+              <button className="preset-btn career" onClick={() => applyPreset('career')}>Career page</button>
               <button className="preset-btn discord" onClick={() => applyPreset('discord')}>Discord</button>
               <button className="preset-btn whatsapp" onClick={() => applyPreset('whatsapp')}>WhatsApp</button>
               <button className="preset-btn cv" onClick={() => applyPreset('cv')}>CV/Resume</button>
@@ -80,6 +82,20 @@ export function UrlGeneratorSection() {
                   onChange={(e) => handleUrlGeneratorChange('baseUrl', e.target.value)}
                   placeholder="https://yoursite.com"
                 />
+              </div>
+              <div className="form-field">
+                <label>Landing page</label>
+                <select
+                  value={urlGeneratorData.landingPath || '/'}
+                  onChange={(e) => handleUrlGeneratorChange('landingPath', e.target.value)}
+                >
+                  {ANALYTICS_LANDING_PAGES.map((page) => (
+                    <option key={page.path} value={page.path}>
+                      {page.label} ({page.path})
+                    </option>
+                  ))}
+                </select>
+                <span className="field-hint">Where the campaign link opens</span>
               </div>
               <div className="form-field required-field">
                 <label>Source <span className="required-star">*</span></label>

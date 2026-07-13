@@ -2412,6 +2412,10 @@
   background: #0077b5;
 }
 
+.preset-btn.career {
+  background: #0a66c2;
+}
+
 .preset-btn.discord {
   background: #5865f2;
 }
