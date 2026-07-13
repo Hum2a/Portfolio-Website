@@ -18,6 +18,9 @@ const HamburgerMenu = () => {
         <div className={`line ${isOpen ? "line-open" : ""}`}></div>
       </div>
       <div className={`menu-dropdown ${isOpen ? "menu-open" : ""}`} onClick={(e) => e.stopPropagation()}>
+        <Link to="/career" className="menu-link" onClick={() => setIsOpen(false)}>
+          Career
+        </Link>
         <Link to="/" className="menu-link" onClick={() => setIsOpen(false)}>
           Home
         </Link>
@@ -32,9 +35,6 @@ const HamburgerMenu = () => {
         </Link>
         <Link to="/github" className="menu-link" onClick={() => setIsOpen(false)}>
           GitHub
-        </Link>
-        <Link to="/linkedin" className="menu-link" onClick={() => setIsOpen(false)}>
-          LinkedIn
         </Link>
       </div>
     </div>

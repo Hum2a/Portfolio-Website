@@ -5,13 +5,14 @@ import Navbar from "../components/layout/Navbar";
 import Typewriter from "../components/animations/Typewriter";
 import Terminal from "../components/animations/Terminal";
 import { HomepageFeaturedProjects } from "../components/projects/HomepageFeaturedProjects";
+import { CareerSection } from "../components/linkedin/CareerSection";
 import { GitHubSection } from "../components/github/GitHubSection";
 import "./Homepage.css";
 
 const Homepage = () => {
   const navigate = useNavigate();
   const [showTerminal, setShowTerminal] = useState(false);
-  const featuredRef = useRef(null);
+  const careerRef = useRef(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -29,7 +30,7 @@ const Homepage = () => {
 
   const handleTerminalComplete = useCallback(() => {
     setTimeout(() => {
-      featuredRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      careerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 500);
   }, []);
 
@@ -104,7 +105,7 @@ const Homepage = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.3 }}
         >
-          <span className="scroll-hint-text">Scroll to see featured projects</span>
+          <span className="scroll-hint-text">Scroll to explore career &amp; projects</span>
           <motion.span
             className="scroll-hint-chevron"
             animate={{ y: [0, 6, 0] }}
@@ -115,9 +116,10 @@ const Homepage = () => {
         </motion.div>
       </motion.div>
 
-      <div ref={featuredRef}>
-        <HomepageFeaturedProjects />
+      <div ref={careerRef}>
+        <CareerSection />
       </div>
+      <HomepageFeaturedProjects />
       <GitHubSection />
     </div>
   );

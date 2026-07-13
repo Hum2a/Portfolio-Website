@@ -21,6 +21,12 @@ const Navbar = () => {
         </Link>
         <div className="navbar-links-container">
           <div className="navbar-links">
+            <Link
+              to="/career"
+              className={`navbar-link ${isActive('/career') || isActive('/linkedin') ? 'active' : ''}`}
+            >
+              Career
+            </Link>
             <Link 
               to="/" 
               className={`navbar-link ${isActive('/') ? 'active' : ''}`}
@@ -50,12 +56,6 @@ const Navbar = () => {
               className={`navbar-link ${isActive('/github') ? 'active' : ''}`}
             >
               GitHub
-            </Link>
-            <Link
-              to="/linkedin"
-              className={`navbar-link ${isActive('/linkedin') ? 'active' : ''}`}
-            >
-              LinkedIn
             </Link>
             {role === 'humza' && (
               <Link 

@@ -1,6 +1,6 @@
 import linkedinData from '../config/linkedin.json';
 
-const CACHE_KEY = 'linkedin_profile_cache';
+const CACHE_KEY = 'linkedin_profile_cache_v2';
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
 /**

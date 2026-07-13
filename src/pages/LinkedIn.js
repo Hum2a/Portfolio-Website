@@ -18,7 +18,6 @@ import {
   getLinkedInProfileUrl,
   formatLinkedInDateRange,
 } from '../services/linkedinService';
-import { getGitHubUsername } from '../services/githubService';
 import './LinkedInPage.css';
 
 const FILTERS = [
@@ -39,7 +38,9 @@ export default function LinkedIn() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const profileUrl = getLinkedInProfileUrl();
-  const githubAvatar = `https://github.com/${getGitHubUsername()}.png?size=240`;
+  const avatarSrc = profile?.avatar
+    ? `${process.env.PUBLIC_URL}${profile.avatar}`
+    : null;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -83,7 +84,7 @@ export default function LinkedIn() {
         {isMobile ? <HamburgerMenu /> : <Navbar />}
         <div className="linkedin-page-loading">
           <FaLinkedin className="linkedin-loading-icon" />
-          <p>Loading LinkedIn profile...</p>
+          <p>Loading career profile...</p>
         </div>
       </div>
     );
@@ -101,10 +102,10 @@ export default function LinkedIn() {
       >
         <div className="linkedin-page-header">
           <h1 className="linkedin-page-title">
-            <span className="code-comment">{'//'}</span> LinkedIn
+            <span className="code-comment">{'//'}</span> Career
           </h1>
           <p className="linkedin-page-subtitle">
-            Career &amp; education from my LinkedIn profile
+            Experience &amp; education from my LinkedIn profile
           </p>
         </div>
 
@@ -125,11 +126,17 @@ export default function LinkedIn() {
         {profile && (
           <div className="linkedin-profile-card">
             <div className="linkedin-profile-main">
-              <img
-                src={githubAvatar}
-                alt={profile.name}
-                className="linkedin-profile-avatar"
-              />
+              {avatarSrc ? (
+                <img
+                  src={avatarSrc}
+                  alt={profile.name}
+                  className="linkedin-profile-avatar"
+                />
+              ) : (
+                <div className="linkedin-profile-avatar linkedin-profile-avatar--fallback" aria-hidden="true">
+                  {profile.name?.charAt(0) || 'H'}
+                </div>
+              )}
               <div className="linkedin-profile-info">
                 <h2 className="linkedin-profile-name">{profile.name}</h2>
                 <p className="linkedin-profile-headline">{profile.headline}</p>

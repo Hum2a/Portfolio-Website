@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Homepage from "../pages/Homepage";
 import Projects from "../pages/Projects";
@@ -95,7 +95,8 @@ const AppRoutes = () => {
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
       <Route path="/humza-login" element={<HumzaLogin />} />
       <Route path="/github" element={<GitHub />} />
-      <Route path="/linkedin" element={<LinkedIn />} />
+      <Route path="/career" element={<LinkedIn />} />
+      <Route path="/linkedin" element={<Navigate to="/career" replace />} />
       <Route 
         path="/traffic" 
         element={
