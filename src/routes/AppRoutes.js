@@ -35,6 +35,7 @@ import BakesByOlayide from "../projects/BakesByOlayide";
 import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
 import GitHub from "../pages/GitHub";
+import LinkedIn from "../pages/LinkedIn";
 import NotFound from "../pages/NotFound";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 
@@ -94,6 +95,7 @@ const AppRoutes = () => {
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
       <Route path="/humza-login" element={<HumzaLogin />} />
       <Route path="/github" element={<GitHub />} />
+      <Route path="/linkedin" element={<LinkedIn />} />
       <Route 
         path="/traffic" 
         element={

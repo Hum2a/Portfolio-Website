@@ -51,6 +51,12 @@ const Navbar = () => {
             >
               GitHub
             </Link>
+            <Link
+              to="/linkedin"
+              className={`navbar-link ${isActive('/linkedin') ? 'active' : ''}`}
+            >
+              LinkedIn
+            </Link>
             {role === 'humza' && (
               <Link 
                 to="/traffic" 

@@ -1,0 +1,355 @@
+{
+  "profile": {
+    "name": "Humza Butt",
+    "headline": "Full Stack Software Developer at Bgr8 & LifeSmart Financial Education",
+    "location": "Sutton, England, United Kingdom",
+    "about": "Full Stack Software Developer building platforms across edtech, mentoring, and consumer apps — from React and Flutter frontends to Node, Firebase, and Cloudflare Workers backends.",
+    "connections": "500+",
+    "followers": 539,
+    "profileUrl": "https://www.linkedin.com/in/humza-butt-201057208/",
+    "avatarSource": "github",
+    "totalExperience": "7 years 11 months"
+  },
+  "experience": [
+    {
+      "id": "lifesmart-maintainer",
+      "title": "Software Maintainer",
+      "company": "LifeSmart Financial Literacy",
+      "companyUrl": "https://www.linkedin.com/company/lifesmart-financial-literacy",
+      "employmentType": "Part-time",
+      "location": "London, England, United Kingdom",
+      "startDate": "2026-06",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "Maintain production software each month and respond to outages"
+      ]
+    },
+    {
+      "id": "corestream",
+      "title": "Web Developer",
+      "company": "CoreStream GRC",
+      "companyUrl": null,
+      "employmentType": "Contract",
+      "location": "Westminster, London, United Kingdom",
+      "startDate": "2025-07",
+      "endDate": "2025-12",
+      "current": false,
+      "category": "software",
+      "highlights": [
+        "Built customised web applications on the CoreStream GRC platform for enterprise clients",
+        "Developed dynamic interfaces, workflows and automated processes with HTML/CSS, JSON logic, and SQL",
+        "Worked with clients including Shell, Home Office, BBC, NHS, and Homes England"
+      ]
+    },
+    {
+      "id": "bgr8",
+      "title": "Technology Lead & Full Stack Software Developer",
+      "company": "Bgr8",
+      "companyUrl": "https://www.linkedin.com/company/bgr8",
+      "employmentType": "Full-time",
+      "location": "London Area, United Kingdom",
+      "startDate": "2025-02",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "Architect and develop the Bgr8 mentoring platform (React, TypeScript, Firebase)",
+        "Built proprietary MentorAlgorithm with weighted scoring across 70+ criteria",
+        "Real-time Cal.com calendar integration, admin analytics, and multi-layered security"
+      ]
+    },
+    {
+      "id": "bakesbyolayide",
+      "title": "Web Developer",
+      "company": "Bakes By Olayide",
+      "companyUrl": null,
+      "employmentType": "Contract",
+      "location": "London Area, United Kingdom",
+      "startDate": "2025-04",
+      "endDate": "2025-06",
+      "current": false,
+      "category": "software",
+      "highlights": [
+        "Full-stack e-commerce platform with React.js and Firebase",
+        "Admin dashboard with analytics, order management, and inventory control",
+        "Stripe payments and product customisation with dynamic pricing"
+      ]
+    },
+    {
+      "id": "mentage-stripe",
+      "title": "Full Stack Software Developer",
+      "company": "Mentage",
+      "companyUrl": null,
+      "employmentType": "Contract",
+      "location": "London Area, United Kingdom",
+      "startDate": "2025-01",
+      "endDate": "2025-02",
+      "current": false,
+      "category": "software",
+      "highlights": [
+        "Integrated Stripe for secure transactions, recurring billing, and real-time analytics"
+      ]
+    },
+    {
+      "id": "therabot",
+      "title": "Full Stack Software Developer & Founder",
+      "company": "TheraBot",
+      "companyUrl": "https://www.linkedin.com/company/therabot",
+      "employmentType": "Self-employed",
+      "location": "London Area, United Kingdom",
+      "startDate": "2024-12",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "Mental health chatbot on React web and WhatsApp using GPT-4",
+        "Google and SMS authentication, session history, and custom preferences",
+        "Deployed on Render with a focus on reliability and scale"
+      ]
+    },
+    {
+      "id": "culinary",
+      "title": "Full Stack Software Developer",
+      "company": "CulinAIry",
+      "companyUrl": null,
+      "employmentType": "Self-employed",
+      "location": "London Area, United Kingdom",
+      "startDate": "2024-12",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "AI recipe generator from ingredients and dietary preferences",
+        "React frontend, Node/Express API, Firebase Firestore, OpenAI GPT-4"
+      ]
+    },
+    {
+      "id": "mentage-chatbot",
+      "title": "Full Stack Software Engineer & Chatbot Developer",
+      "company": "Mentage",
+      "companyUrl": null,
+      "employmentType": "Contract",
+      "location": "Remote",
+      "startDate": "2024-11",
+      "endDate": "2024-12",
+      "current": false,
+      "category": "software",
+      "highlights": [
+        "WhatsApp chatbot with Python/Flask and OpenAI for EdTech",
+        "React frontend for account management; Firebase auth and data"
+      ]
+    },
+    {
+      "id": "contrarian",
+      "title": "Full Stack Software Developer & Data Scientist",
+      "company": "Contrarian Ventures",
+      "companyUrl": null,
+      "employmentType": "Contract",
+      "location": "Remote",
+      "startDate": "2024-11",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "Pitch-deck classifier using ML and OpenAI for VC screening",
+        "React UI, Python/Flask backend, Firebase Storage, Render deploy"
+      ]
+    },
+    {
+      "id": "biaslens",
+      "title": "Web Developer",
+      "company": "Bias Lens",
+      "companyUrl": "https://www.linkedin.com/company/bias-lens",
+      "employmentType": "Self-employed",
+      "location": "London Area, United Kingdom",
+      "startDate": "2024-10",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "News aggregator with sentiment analysis and political bias detection",
+        "Python backend with multiple news APIs; Next.js frontend; VADER NLP"
+      ]
+    },
+    {
+      "id": "lifesmart-dev",
+      "title": "Full Stack Software Developer",
+      "company": "LifeSmart Financial Literacy",
+      "companyUrl": "https://www.linkedin.com/company/lifesmart-financial-literacy",
+      "employmentType": "Full-time",
+      "location": "London Area, United Kingdom",
+      "startDate": "2024-03",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "Led LifeSmart — financial education platform serving 10,000+ active users",
+        "React.js + Firebase; analytics, admin RBAC, stock simulators, budgeting tools",
+        "LMS with courses, quizzes, and progress tracking; Jest + RTL test suite"
+      ]
+    },
+    {
+      "id": "breathapplyser",
+      "title": "App Developer & Founder",
+      "company": "Breathapplyser",
+      "companyUrl": "https://www.linkedin.com/company/breathapplyser",
+      "employmentType": "Self-employed",
+      "location": "Remote",
+      "startDate": "2023-06",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "highlights": [
+        "Flutter iOS & Android app for alcohol/caffeine tracking with real-time BAC",
+        "Offline-first SQLite + PostgreSQL sync, AES-256 encryption, Node/Express backend",
+        "Home screen widgets, 15-language i18n, Firebase OAuth, GitHub Actions CI/CD"
+      ]
+    },
+    {
+      "id": "ldmf",
+      "title": "Web Developer",
+      "company": "Liberal Democrats",
+      "companyUrl": null,
+      "employmentType": "Volunteer",
+      "location": "Remote",
+      "startDate": "2023-11",
+      "endDate": "2023-12",
+      "current": false,
+      "category": "software",
+      "highlights": [
+        "Campaign page for LDMF community service in Vue.js",
+        "Integrated NewsAPI, MediaStack, and Google News RSS for live updates"
+      ]
+    },
+    {
+      "id": "wam-hospitality",
+      "title": "Bartender",
+      "company": "W.A.M Hospitality Limited",
+      "companyUrl": "https://www.linkedin.com/company/w.a.m-hospitality-limited",
+      "employmentType": "Part-time",
+      "location": "Stamford Bridge, England, United Kingdom",
+      "startDate": "2023-08",
+      "endDate": "2025-06",
+      "current": false,
+      "category": "other",
+      "highlights": [
+        "Luxury events: Chelsea FC, Twickenham, Goodwood Festival of Speed & Revival"
+      ]
+    },
+    {
+      "id": "uop-self-defence",
+      "title": "Social Secretary of Self Defence Society",
+      "company": "University of Portsmouth",
+      "companyUrl": "https://www.linkedin.com/school/university-of-portsmouth",
+      "employmentType": "Volunteer",
+      "location": "Portsmouth, England, United Kingdom",
+      "startDate": "2022-09",
+      "endDate": "2023-07",
+      "current": false,
+      "category": "other",
+      "highlights": [
+        "Planned weekly socials for 10 months; collaborated with 20+ societies",
+        "Mega-social involving 170+ students"
+      ]
+    },
+    {
+      "id": "uop-japanese",
+      "title": "Social Secretary of Japanese Society",
+      "company": "University of Portsmouth",
+      "companyUrl": "https://www.linkedin.com/school/university-of-portsmouth",
+      "employmentType": "Volunteer",
+      "location": "Portsmouth, England, United Kingdom",
+      "startDate": "2022-09",
+      "endDate": "2023-07",
+      "current": false,
+      "category": "other",
+      "highlights": [
+        "Weekly socials averaging 30–40 students; Japanese sports day for 100+",
+        "Society nominated for Most Improved Society of the Year"
+      ]
+    },
+    {
+      "id": "uop-rep",
+      "title": "MEng Course Representative",
+      "company": "University of Portsmouth",
+      "companyUrl": "https://www.linkedin.com/school/university-of-portsmouth",
+      "employmentType": "Volunteer",
+      "location": "Portsmouth, England, United Kingdom",
+      "startDate": "2022-09",
+      "endDate": "2023-07",
+      "current": false,
+      "category": "other",
+      "highlights": [
+        "Monthly student forums; lobbied for fairer assignment deadlines"
+      ]
+    },
+    {
+      "id": "ibm",
+      "title": "Work Placement",
+      "company": "IBM",
+      "companyUrl": "https://www.linkedin.com/company/ibm",
+      "employmentType": "Internship",
+      "location": "Greater London, England, United Kingdom",
+      "startDate": "2018-07",
+      "endDate": "2018-07",
+      "current": false,
+      "category": "software",
+      "highlights": [
+        "Early industry placement experience at IBM"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "uop-meng",
+      "school": "University of Portsmouth",
+      "schoolUrl": "https://www.linkedin.com/school/university-of-portsmouth",
+      "degree": "Master of Engineering — MEng, Computer Science",
+      "field": "Computer Science",
+      "startYear": 2019,
+      "endYear": 2023,
+      "location": "Portsmouth, Hampshire, United Kingdom",
+      "notes": [
+        "Integrated Masters — BSc and MEng in Computer Science",
+        "Social Secretary — Self Defence Society (22/23)",
+        "Social Secretary — Japanese Society (22/23)",
+        "Course Representative — MEng Computer Science (22/23)"
+      ]
+    },
+    {
+      "id": "wcgs",
+      "school": "Wallington County Grammar School",
+      "schoolUrl": "https://www.linkedin.com/school/wallington-county-grammar-school",
+      "degree": "A Level — Maths, Physics, Chemistry",
+      "field": "Maths, Physics, Chemistry",
+      "startYear": 2012,
+      "endYear": 2019,
+      "location": "United Kingdom",
+      "notes": ["Grades: AAC"]
+    }
+  ],
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Vue.js",
+    "Node.js",
+    "Python",
+    "Flutter",
+    "Dart",
+    "Firebase",
+    "PostgreSQL",
+    "Cloudflare Workers",
+    "Stripe",
+    "OpenAI",
+    "Git",
+    "CI/CD",
+    "Full Stack Development",
+    "UI/UX",
+    "System Design",
+    "SQL"
+  ]
+}

@@ -33,6 +33,9 @@ const HamburgerMenu = () => {
         <Link to="/github" className="menu-link" onClick={() => setIsOpen(false)}>
           GitHub
         </Link>
+        <Link to="/linkedin" className="menu-link" onClick={() => setIsOpen(false)}>
+          LinkedIn
+        </Link>
       </div>
     </div>
   );
