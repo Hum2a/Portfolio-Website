@@ -26,6 +26,7 @@ import { featureFlags, apiKeys } from '../utils/env';
 import { isExcludedAnalyticsPath, canonicalizeAnalyticsPath } from '../utils/analyticsPaths';
 import { buildTrafficSignals } from '../utils/trafficSignals';
 import { db } from './firebase';
+import { notifyTrafficEvent } from './trafficNotifyService';
 
 const isCurrentPathExcluded = () =>
   isExcludedAnalyticsPath(canonicalizeAnalyticsPath(window.location.pathname));
@@ -189,6 +190,7 @@ const resolveRefTokenCampaign = async (refToken, landingPage) => {
       content: null,
       landingPage,
       refToken: normalized,
+      refAttributionSource: 'url',
     };
   }
 
@@ -201,6 +203,7 @@ const resolveRefTokenCampaign = async (refToken, landingPage) => {
     content: null,
     landingPage,
     refToken: normalized,
+    refAttributionSource: 'url',
   };
 };
 
@@ -246,6 +249,7 @@ const getCampaignData = async () => {
         content: null,
         landingPage,
         refToken: cookieData.refToken || null,
+        refAttributionSource: 'cookie',
       };
     }
   } catch {
@@ -253,6 +257,19 @@ const getCampaignData = async () => {
   }
 
   return null;
+};
+
+const serializeForNotify = (value) => {
+  if (value instanceof Date) return value.toISOString();
+  if (Array.isArray(value)) return value.map(serializeForNotify);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) {
+      out[k] = serializeForNotify(v);
+    }
+    return out;
+  }
+  return value;
 };
 
 const readMediaPreference = (query) => {
@@ -530,17 +547,19 @@ const resolveVisitorIp = async () => {
 const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo, environment) => {
   let userLocation = defaultLocation(deviceInfo);
   let ipinfoData = null;
+  let trafficSignals = buildTrafficSignals({ deviceInfo, location: userLocation });
+  let resolvedIp = ipAddress || null;
 
   try {
     const ipGeo = await fetchIpGeo(deviceInfo);
     if (ipGeo?.location) userLocation = ipGeo.location;
     ipinfoData = ipGeo?.ipinfoData ?? null;
 
-    if (!ipAddress) {
-      ipAddress = await resolveVisitorIp();
+    if (!resolvedIp) {
+      resolvedIp = await resolveVisitorIp();
     }
 
-    const trafficSignals = buildTrafficSignals({
+    trafficSignals = buildTrafficSignals({
       deviceInfo,
       ipinfoData,
       location: userLocation,
@@ -548,7 +567,7 @@ const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo, enviro
 
     const visitorRef = doc(db, 'analytics_visitors', anonymizedIP);
     await updateDoc(visitorRef, {
-      ...(ipAddress ? { code: ipAddress } : {}),
+      ...(resolvedIp ? { code: resolvedIp } : {}),
       location: userLocation,
       trafficSignals,
     });
@@ -559,6 +578,8 @@ const enrichVisitorLocation = async (anonymizedIP, ipAddress, deviceInfo, enviro
     // so dim_country reflects actual locations rather than the placeholder.
     trackVisitorCountryStats({ country: userLocation.country, environment });
   }
+
+  return { location: userLocation, trafficSignals, ipAddress: resolvedIp };
 };
 
 // Track visitor — save session immediately; enrich location afterward
@@ -640,13 +661,62 @@ const trackVisitor = async () => {
         environment,
         landingPage: campaignData.landingPage,
       });
+
+      // Email only on real ?ref= landings (URL / same-origin referrer), not cookie re-attribution
+      if (campaignData.refAttributionSource === 'url') {
+        notifyTrafficEvent('ref_hit', serializeForNotify({
+          refToken: campaignData.refToken,
+          refAttributionSource: 'url',
+          source: campaignData.source,
+          medium: campaignData.medium,
+          campaignName: campaignData.campaign,
+          landingPage: campaignData.landingPage,
+          landingPath,
+          referrer: sessionData.referrer,
+          visitorId,
+          anonymizedIP,
+          code: ipAddress,
+          sessionId,
+          environment,
+          deviceInfo,
+          location: userLocation,
+          trafficSignals,
+          session: sessionData,
+          campaign: campaignData,
+          isReturning,
+          visits: isReturning ? null : 1,
+          firstVisit: isReturning ? null : timestamp,
+          lastVisit: timestamp,
+        }));
+      }
     }
 
     // Country is deferred to enrichVisitorLocation so it captures the real geo.
     trackVisitorStats({ environment, isReturning, deviceInfo, location: userLocation, includeCountry: false });
     if (campaignData) trackCampaignStats(campaignData, environment);
 
-    enrichVisitorLocation(anonymizedIP, ipAddress, deviceInfo, environment).catch(() => {});
+    enrichVisitorLocation(anonymizedIP, ipAddress, deviceInfo, environment)
+      .then((enriched) => {
+        if (isReturning) return;
+        notifyTrafficEvent('new_visitor', serializeForNotify({
+          visitorId,
+          anonymizedIP,
+          code: enriched?.ipAddress || ipAddress,
+          firstVisit: timestamp,
+          lastVisit: timestamp,
+          visits: 1,
+          deviceInfo,
+          location: enriched?.location || userLocation,
+          trafficSignals: enriched?.trafficSignals || trafficSignals,
+          environment,
+          session: sessionData,
+          campaign: campaignData,
+          landingPath,
+          referrer: sessionData.referrer,
+          sessionId,
+        }));
+      })
+      .catch(() => {});
 
     return { visitorId, sessionId, anonymizedIP, deviceInfo, location: userLocation };
   } catch (error) {

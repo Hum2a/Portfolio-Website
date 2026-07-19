@@ -28,7 +28,9 @@ export const firebaseConfig = {
  * Other API keys and configuration
  */
 export const apiKeys = {
-  ipinfoToken: getEnv('REACT_APP_IPINFO_TOKEN')
+  ipinfoToken: getEnv('REACT_APP_IPINFO_TOKEN'),
+  /** Shared with Worker NOTIFY_SECRET — soft gate only; Resend key stays server-side */
+  trafficNotifySecret: getEnv('REACT_APP_TRAFFIC_NOTIFY_SECRET'),
 };
 
 /**

@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { signOutUser } from '../../services/authService';
 import { useTraffic } from './TrafficContext';
 import { UrlGeneratorSection } from './components/UrlGeneratorSection';
+import { NotifyRecipientsSection } from './components/NotifyRecipientsSection';
 import { TrafficFilters } from './components/TrafficFilters';
 import { TrafficStats } from './components/TrafficStats';
 import { TrafficTabList } from './components/TrafficTabList';
@@ -39,6 +40,7 @@ export function TrafficDashboard() {
       </div>
 
       <UrlGeneratorSection />
+      <NotifyRecipientsSection />
       {filteredStats?.dataTruncated && (filteredStats.dataTruncated.visitors || filteredStats.dataTruncated.pageViews) && (
         <div className="traffic-truncate-notice" role="status">
           Showing the most recent loaded records only (per-collection cap). Totals in stat cards use rollups when available.
