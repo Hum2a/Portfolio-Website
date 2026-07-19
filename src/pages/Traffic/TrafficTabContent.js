@@ -28,6 +28,7 @@ import { getLocationString, hasValidCoordinates, getGoogleMapsUrl } from './util
 
 import { TrafficTrendsContent } from './components/TrafficTrendsContent';
 import { NotifyEmailsTab } from './components/NotifyEmailsTab';
+import { OWNER_TAG_MINE, isClaudeCoworkLabel } from '../../constants/ownerTags';
 
 export function TrafficTabContent() {
   const {
@@ -271,17 +272,17 @@ export function TrafficTabContent() {
                           {isOwnerVisitor(getVisitorKey(visitor)) && (
                             <span
                               className={`owner-tag-badge${
-                                ownerTags[getVisitorKey(visitor)]?.label === 'Claude Cowork'
+                                isClaudeCoworkLabel(ownerTags[getVisitorKey(visitor)]?.label)
                                   ? ' claude-cowork'
                                   : ''
                               }`}
                               title={
-                                ownerTags[getVisitorKey(visitor)]?.label === 'Claude Cowork'
+                                isClaudeCoworkLabel(ownerTags[getVisitorKey(visitor)]?.label)
                                   ? 'Tagged as a Claude Cowork visit'
                                   : 'Your device'
                               }
                             >
-                              {ownerTags[getVisitorKey(visitor)]?.label || 'Mine'}
+                              {ownerTags[getVisitorKey(visitor)]?.label || OWNER_TAG_MINE}
                             </span>
                           )}
                           <span className={`env-badge ${visitor.environment === 'localhost' ? 'localhost' : 'production'}`}>

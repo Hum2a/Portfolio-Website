@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
-import { FaTrash, FaUserTag, FaRobot } from 'react-icons/fa';
+import React, { useMemo, useState } from 'react';
+import { FaTrash, FaUserTag, FaRobot, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { useTraffic } from '../TrafficContext';
+import {
+  OWNER_TAG_CLAUDE_COWORK,
+  OWNER_TAG_MINE,
+  isClaudeCoworkLabel,
+} from '../../../constants/ownerTags';
 
 export function VisitorDataAdmin({ visitor, compact = false }) {
   const {
@@ -32,10 +37,14 @@ export function VisitorDataAdmin({ visitor, compact = false }) {
       <div className="visitor-admin-actions compact">
         {tagged && (
           <span
-            className={`owner-tag-badge${tag?.label === 'Claude Cowork' ? ' claude-cowork' : ''}`}
-            title={tag?.label === 'Claude Cowork' ? 'Tagged as a Claude Cowork visit' : 'Tagged as your device'}
+            className={`owner-tag-badge${isClaudeCoworkLabel(tag?.label) ? ' claude-cowork' : ''}`}
+            title={
+              isClaudeCoworkLabel(tag?.label)
+                ? 'Tagged as a Claude Cowork visit'
+                : 'Tagged as your device'
+            }
           >
-            {tag?.label || 'Mine'}
+            {tag?.label || OWNER_TAG_MINE}
           </span>
         )}
         {!tagged && (
@@ -51,7 +60,7 @@ export function VisitorDataAdmin({ visitor, compact = false }) {
             <button
               type="button"
               className="visitor-admin-btn tag-btn claude-tag-btn"
-              onClick={() => tagVisitorAsOwner(key, 'Claude Cowork')}
+              onClick={() => tagVisitorAsOwner(key, OWNER_TAG_CLAUDE_COWORK)}
               title="Tag as a Claude Cowork visit"
             >
               <FaRobot />
@@ -76,8 +85,8 @@ export function VisitorDataAdmin({ visitor, compact = false }) {
     <div className="visitor-admin-actions">
       {tagged ? (
         <>
-          <span className={`owner-tag-badge${tag?.label === 'Claude Cowork' ? ' claude-cowork' : ''}`}>
-            {tag?.label || 'Mine'}
+          <span className={`owner-tag-badge${isClaudeCoworkLabel(tag?.label) ? ' claude-cowork' : ''}`}>
+            {tag?.label || OWNER_TAG_MINE}
           </span>
           <button type="button" className="visitor-admin-btn" onClick={() => untagVisitorAsOwner(key)}>
             Remove tag
@@ -91,7 +100,7 @@ export function VisitorDataAdmin({ visitor, compact = false }) {
           <button
             type="button"
             className="visitor-admin-btn tag-btn claude-tag-btn"
-            onClick={() => tagVisitorAsOwner(key, 'Claude Cowork')}
+            onClick={() => tagVisitorAsOwner(key, OWNER_TAG_CLAUDE_COWORK)}
           >
             <FaRobot /> Tag as Claude Cowork
           </button>
@@ -109,6 +118,50 @@ export function VisitorDataAdmin({ visitor, compact = false }) {
   );
 }
 
+function OwnerTagGroup({ label, items, deleteVisitorAnalytics, deleteAnalyticsLoading, untagVisitorAsOwner }) {
+  const [expanded, setExpanded] = useState(false);
+  const isClaude = isClaudeCoworkLabel(label);
+
+  return (
+    <div className="owner-tag-group">
+      <button
+        type="button"
+        className={`owner-tag-group-toggle${isClaude ? ' claude-cowork' : ''}`}
+        onClick={() => setExpanded((prev) => !prev)}
+        aria-expanded={expanded}
+      >
+        <span className="owner-tag-group-toggle-main">
+          {expanded ? <FaChevronDown /> : <FaChevronRight />}
+          <span className={`owner-tag-badge${isClaude ? ' claude-cowork' : ''}`}>{label}</span>
+          <span className="owner-tag-group-count">{items.length}</span>
+        </span>
+        <span className="owner-tag-group-hint">{expanded ? 'Hide' : 'Show'}</span>
+      </button>
+
+      {expanded && (
+        <ul className="owner-tags-list">
+          {items.map((t) => (
+            <li key={t.id}>
+              <code>{t.id}</code>
+              <button
+                type="button"
+                className="visitor-admin-btn delete-btn"
+                disabled={deleteAnalyticsLoading === t.id}
+                onClick={() => deleteVisitorAnalytics(t.id)}
+              >
+                <FaTrash /> Delete all data
+              </button>
+              <button type="button" className="visitor-admin-btn" onClick={() => untagVisitorAsOwner(t.id)}>
+                Untag
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export function OwnerDevicesPanel() {
   const {
     ownerTags,
@@ -119,7 +172,26 @@ export function OwnerDevicesPanel() {
     untagVisitorAsOwner,
   } = useTraffic();
 
-  const taggedList = Object.values(ownerTags || {});
+  const taggedGroups = useMemo(() => {
+    const map = new Map();
+    Object.values(ownerTags || {}).forEach((t) => {
+      const label = t.label || OWNER_TAG_MINE;
+      if (!map.has(label)) map.set(label, []);
+      map.get(label).push(t);
+    });
+
+    // Prefer Claude Cowork first (usually the large group), then Mine, then others
+    const order = [OWNER_TAG_CLAUDE_COWORK, OWNER_TAG_MINE];
+    return [...map.entries()].sort(([a], [b]) => {
+      const ai = order.indexOf(a);
+      const bi = order.indexOf(b);
+      if (ai === -1 && bi === -1) return a.localeCompare(b);
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+  }, [ownerTags]);
+
   const browserTagged = browserAnonymizedIP && ownerTags[browserAnonymizedIP];
 
   return (
@@ -132,7 +204,13 @@ export function OwnerDevicesPanel() {
       {browserAnonymizedIP ? (
         <p className="owner-browser-ip">
           This browser: <code>{browserAnonymizedIP}</code>
-          {browserTagged && <span className="owner-tag-badge">{browserTagged.label || 'Mine'}</span>}
+          {browserTagged && (
+            <span
+              className={`owner-tag-badge${isClaudeCoworkLabel(browserTagged.label) ? ' claude-cowork' : ''}`}
+            >
+              {browserTagged.label || OWNER_TAG_MINE}
+            </span>
+          )}
         </p>
       ) : (
         <p className="owner-browser-ip muted">Visit the public site once so this browser gets an analytics ID.</p>
@@ -149,28 +227,19 @@ export function OwnerDevicesPanel() {
         </button>
       </div>
 
-      {taggedList.length > 0 && (
-        <ul className="owner-tags-list">
-          {taggedList.map((t) => (
-            <li key={t.id}>
-              <code>{t.id}</code>
-              <span className={`owner-tag-badge${t.label === 'Claude Cowork' ? ' claude-cowork' : ''}`}>
-                {t.label || 'Mine'}
-              </span>
-              <button
-                type="button"
-                className="visitor-admin-btn delete-btn"
-                disabled={deleteAnalyticsLoading === t.id}
-                onClick={() => deleteVisitorAnalytics(t.id)}
-              >
-                <FaTrash /> Delete all data
-              </button>
-              <button type="button" className="visitor-admin-btn" onClick={() => untagVisitorAsOwner(t.id)}>
-                Untag
-              </button>
-            </li>
+      {taggedGroups.length > 0 && (
+        <div className="owner-tag-groups">
+          {taggedGroups.map(([label, items]) => (
+            <OwnerTagGroup
+              key={label}
+              label={label}
+              items={items}
+              deleteVisitorAnalytics={deleteVisitorAnalytics}
+              deleteAnalyticsLoading={deleteAnalyticsLoading}
+              untagVisitorAsOwner={untagVisitorAsOwner}
+            />
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

@@ -12,6 +12,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { OWNER_TAG_MINE } from '../constants/ownerTags';
 
 const OWNER_TAGS_COLLECTION = 'analytics_owner_tags';
 const BATCH_SIZE = 400;
@@ -40,18 +41,50 @@ export async function listOwnerTags() {
   return map;
 }
 
-export async function setOwnerTag(anonymizedIP, label = 'Mine') {
+function getLocalVisitorId() {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('analytics_visitor_id') || localStorage.getItem('visitorId');
+}
+
+export async function setOwnerTag(anonymizedIP, label = OWNER_TAG_MINE) {
   const key = (anonymizedIP || '').trim();
   if (!key) throw new Error('Invalid visitor key');
 
   await setDoc(doc(db, OWNER_TAGS_COLLECTION, key), {
-    label: label || 'Mine',
+    label: label || OWNER_TAG_MINE,
     taggedAt: serverTimestamp(),
-    visitorId:
-      typeof window !== 'undefined'
-        ? localStorage.getItem('analytics_visitor_id') || localStorage.getItem('visitorId')
-        : null,
+    visitorId: getLocalVisitorId(),
   });
+}
+
+/** Batch-tag many visitor keys (e.g. auto-tag anon_* as Claude Cowork). */
+export async function setOwnerTagsBatch(keys, label = OWNER_TAG_MINE) {
+  const unique = [
+    ...new Set(
+      (keys || [])
+        .map((k) => (k || '').trim())
+        .filter(Boolean)
+    ),
+  ];
+  if (!unique.length) return 0;
+
+  const visitorId = getLocalVisitorId();
+  const resolvedLabel = label || OWNER_TAG_MINE;
+
+  for (let i = 0; i < unique.length; i += BATCH_SIZE) {
+    const batch = writeBatch(db);
+    const chunk = unique.slice(i, i + BATCH_SIZE);
+    chunk.forEach((key) => {
+      batch.set(doc(db, OWNER_TAGS_COLLECTION, key), {
+        label: resolvedLabel,
+        taggedAt: serverTimestamp(),
+        visitorId,
+      });
+    });
+    await batch.commit();
+  }
+
+  return unique.length;
 }
 
 export async function removeOwnerTag(anonymizedIP) {

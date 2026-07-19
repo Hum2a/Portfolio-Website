@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { loadTrafficData as fetchTrafficData } from './loadTrafficData';
 import { formatDate, formatDuration, getLocationString } from './utils';
 import { buildRefDrillData, buildRefTokenAnalytics } from './refTokenAnalytics';
@@ -20,10 +20,16 @@ import { getTrafficSignalsForVisitor } from '../../utils/trafficSignals';
 import {
   listOwnerTags,
   setOwnerTag,
+  setOwnerTagsBatch,
   removeOwnerTag,
   deleteAnalyticsForIP,
   getBrowserAnonymizedIP,
 } from '../../services/analyticsAdminService';
+import {
+  OWNER_TAG_MINE,
+  OWNER_TAG_CLAUDE_COWORK,
+  isAnonVisitorKey,
+} from '../../constants/ownerTags';
 
 function getDateFilter(timeRange, dateRange) {
   if (timeRange === 'custom' && (dateRange.start || dateRange.end)) {
@@ -105,8 +111,10 @@ export function useTrafficData(role) {
   const [enquirySortBy, setEnquirySortBy] = useState('timestamp');
   const [enquirySortDirection, setEnquirySortDirection] = useState('desc');
   const [ownerTags, setOwnerTags] = useState({});
+  const [ownerTagsReady, setOwnerTagsReady] = useState(false);
   const [deleteAnalyticsLoading, setDeleteAnalyticsLoading] = useState(null);
   const [adminMessage, setAdminMessage] = useState(null);
+  const autoTaggedAnonsRef = useRef(new Set());
 
   const loadData = useCallback(async () => {
     try {
@@ -139,6 +147,8 @@ export function useTrafficData(role) {
       setOwnerTags(tags);
     } catch (error) {
       console.error('Failed to load owner tags:', error);
+    } finally {
+      setOwnerTagsReady(true);
     }
   }, []);
 
@@ -156,14 +166,51 @@ export function useTrafficData(role) {
     [ownerTags]
   );
 
+  // anon_* keys mean public IP lookup failed — treat as Claude Cowork and tag automatically
+  useEffect(() => {
+    if (role !== 'humza' || loading || !ownerTagsReady) return;
+
+    const keysToTag = [];
+    for (const visitor of visitors) {
+      const key = visitor?.anonymizedIP || visitor?.id || '';
+      if (!isAnonVisitorKey(key)) continue;
+      if (ownerTags[key]) continue;
+      if (autoTaggedAnonsRef.current.has(key)) continue;
+      keysToTag.push(key);
+    }
+
+    if (!keysToTag.length) return;
+
+    keysToTag.forEach((key) => autoTaggedAnonsRef.current.add(key));
+
+    let cancelled = false;
+    (async () => {
+      try {
+        await setOwnerTagsBatch(keysToTag, OWNER_TAG_CLAUDE_COWORK);
+        if (!cancelled) await loadOwnerTags();
+      } catch (error) {
+        console.error('Failed to auto-tag anon visitors as Claude Cowork:', error);
+        keysToTag.forEach((key) => autoTaggedAnonsRef.current.delete(key));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role, loading, ownerTagsReady, visitors, ownerTags, loadOwnerTags]);
+
   const browserAnonymizedIP =
     typeof window !== 'undefined' ? getBrowserAnonymizedIP() : null;
 
   const tagVisitorAsOwner = useCallback(
-    async (key, label = 'Mine') => {
+    async (key, label = OWNER_TAG_MINE) => {
       await setOwnerTag(key, label);
       await loadOwnerTags();
-      setAdminMessage(`Tagged ${key} as yours.`);
+      setAdminMessage(
+        label === OWNER_TAG_CLAUDE_COWORK
+          ? `Tagged ${key} as Claude Cowork.`
+          : `Tagged ${key} as yours.`
+      );
     },
     [loadOwnerTags]
   );
