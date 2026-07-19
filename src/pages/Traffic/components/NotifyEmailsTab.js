@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTraffic } from '../TrafficContext';
 import { formatDate } from '../utils';
+import { sendTestNotifyEmail } from '../../../services/trafficNotifyService';
 
 function toDate(value) {
   if (!value) return null;
@@ -21,14 +22,22 @@ function sortIndicator(active, direction) {
   return direction === 'asc' ? ' ↑' : ' ↓';
 }
 
+function typeLabel(type) {
+  if (type === 'ref_hit') return 'Ref hit';
+  if (type === 'test') return 'Test';
+  return 'New visitor';
+}
+
 export function NotifyEmailsTab() {
-  const { emailLogs } = useTraffic();
+  const { emailLogs, loadData } = useTraffic();
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortDirection, setSortDirection] = useState('desc');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [query, setQuery] = useState('');
   const [expandedId, setExpandedId] = useState(null);
+  const [testSending, setTestSending] = useState(false);
+  const [testFeedback, setTestFeedback] = useState(null);
 
   const setSort = (field) => {
     if (sortBy === field) {
@@ -122,26 +131,62 @@ export function NotifyEmailsTab() {
       failed: all.filter((e) => e.status === 'failed').length,
       newVisitor: all.filter((e) => e.type === 'new_visitor').length,
       refHit: all.filter((e) => e.type === 'ref_hit').length,
+      test: all.filter((e) => e.type === 'test').length,
     };
   }, [emailLogs, sorted.length]);
+
+  const handleSendTest = async () => {
+    setTestFeedback(null);
+    setTestSending(true);
+    try {
+      const result = await sendTestNotifyEmail();
+      const to = Array.isArray(result?.to) ? result.to.join(', ') : 'recipients';
+      setTestFeedback({ ok: true, message: `Test email sent to ${to}.` });
+      if (typeof loadData === 'function') {
+        await loadData();
+      }
+    } catch (err) {
+      setTestFeedback({ ok: false, message: err?.message || 'Failed to send test email' });
+    } finally {
+      setTestSending(false);
+    }
+  };
 
   return (
     <div className="traffic-tab-content">
       <div className="notify-emails-section">
         <div className="notify-emails-header-row">
-          <h3>Sent traffic emails</h3>
-          <p className="notify-emails-counts">
-            Showing {counts.shown} of {counts.total}
-            {' · '}
-            {counts.sent} sent
-            {' · '}
-            {counts.failed} failed
-            {' · '}
-            {counts.newVisitor} new visitor
-            {' · '}
-            {counts.refHit} ref hit
-          </p>
+          <div className="notify-emails-header-main">
+            <h3>Sent traffic emails</h3>
+            <p className="notify-emails-counts">
+              Showing {counts.shown} of {counts.total}
+              {' · '}
+              {counts.sent} sent
+              {' · '}
+              {counts.failed} failed
+              {' · '}
+              {counts.newVisitor} new visitor
+              {' · '}
+              {counts.refHit} ref hit
+              {' · '}
+              {counts.test} test
+            </p>
+          </div>
+          <button
+            type="button"
+            className="notify-emails-test-btn"
+            onClick={handleSendTest}
+            disabled={testSending}
+          >
+            {testSending ? 'Sending test…' : 'Send test email'}
+          </button>
         </div>
+
+        {testFeedback && (
+          <p className={`notify-emails-test-feedback ${testFeedback.ok ? 'ok' : 'error'}`}>
+            {testFeedback.message}
+          </p>
+        )}
 
         <div className="notify-emails-filters">
           <label className="notify-emails-filter">
@@ -159,6 +204,7 @@ export function NotifyEmailsTab() {
               <option value="all">All types</option>
               <option value="new_visitor">New visitor</option>
               <option value="ref_hit">Ref hit</option>
+              <option value="test">Test</option>
             </select>
           </label>
           <label className="notify-emails-filter">
@@ -198,7 +244,7 @@ export function NotifyEmailsTab() {
           <div className="no-data-message">
             <p>
               {(emailLogs || []).length === 0
-                ? 'No traffic emails logged yet. They appear here after a new visitor or ref-link notification is sent.'
+                ? 'No traffic emails logged yet. They appear here after a new visitor, ref-link, or test notification is sent.'
                 : 'No emails match the current filters.'}
             </p>
           </div>
@@ -220,8 +266,8 @@ export function NotifyEmailsTab() {
                   >
                     <div className="notify-email-card-main">
                       <div className="notify-email-badges">
-                        <span className={`notify-email-type type-${row.type}`}>
-                          {row.type === 'ref_hit' ? 'Ref hit' : 'New visitor'}
+                        <span className={`notify-email-type type-${row.type || 'new_visitor'}`}>
+                          {typeLabel(row.type)}
                         </span>
                         <span className={`notify-email-status status-${status}`}>{status}</span>
                       </div>

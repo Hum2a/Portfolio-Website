@@ -5,7 +5,7 @@
  *   RESEND_API_KEY, NOTIFY_SECRET
  */
 
-const ALLOWED_TYPES = new Set(['new_visitor', 'ref_hit']);
+const ALLOWED_TYPES = new Set(['new_visitor', 'ref_hit', 'test']);
 const RESEND_FROM_EMAIL = 'traffic@humza-butt.space';
 const DEFAULT_NOTIFY_TO_EMAIL = 'humzab1711@hotmail.com';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -109,7 +109,45 @@ function sectionText(title, data) {
   return `${title}\n${lines.length ? lines.join('\n') : '  (empty)'}\n`;
 }
 
+function buildTestEmail(payload) {
+  const subject = 'Test email: portfolio traffic notifications';
+  const sentAt = new Date().toISOString();
+  const note =
+    payload?.note ||
+    'This is a manual test from the Traffic dashboard. Delivery and recipients look correct if you received this.';
+
+  const summary = {
+    type: 'test',
+    sentAt,
+    environment: payload?.environment || 'test',
+    triggeredBy: payload?.triggeredBy || 'traffic-dashboard',
+    note,
+  };
+
+  const html = `<!DOCTYPE html>
+<html><body style="font-family:system-ui,sans-serif;line-height:1.45;color:#111;max-width:720px;margin:0 auto;padding:16px">
+  <h1 style="margin:0 0 8px">${escapeHtml(subject)}</h1>
+  <p style="margin:0 0 16px;color:#555">Portfolio traffic notification (test)</p>
+  <p style="margin:0 0 16px">${escapeHtml(note)}</p>
+  ${sectionHtml('Summary', summary)}
+</body></html>`;
+
+  const text = [
+    subject,
+    '',
+    note,
+    '',
+    sectionText('Summary', summary),
+  ].join('\n');
+
+  return { subject, html, text };
+}
+
 function buildEmail(type, payload) {
+  if (type === 'test') {
+    return buildTestEmail(payload);
+  }
+
   const location = payload?.location || {};
   const campaign = payload?.campaign || payload?.campaignData || {};
   const city = location.city || 'Unknown';
@@ -254,10 +292,13 @@ async function handleTrafficNotify(request, env) {
   const type = body?.type;
   const payload = body?.payload;
   if (!ALLOWED_TYPES.has(type) || !payload || typeof payload !== 'object') {
-    return json(400, { error: 'Expected { type: "new_visitor"|"ref_hit", payload: object }' });
+    return json(400, {
+      error: 'Expected { type: "new_visitor"|"ref_hit"|"test", payload: object }',
+    });
   }
 
-  if (payload.environment === 'localhost') {
+  // Real traffic emails skip localhost; test emails always send.
+  if (type !== 'test' && payload.environment === 'localhost') {
     return json(200, { ok: true, skipped: 'localhost' });
   }
 

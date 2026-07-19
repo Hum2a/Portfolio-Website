@@ -8,6 +8,7 @@ import {
   listExtraNotifyRecipients,
   removeNotifyRecipient,
 } from '../../../services/trafficNotifyRecipientsService';
+import { sendTestNotifyEmail } from '../../../services/trafficNotifyService';
 
 export function NotifyRecipientsSection() {
   const [open, setOpen] = useState(false);
@@ -16,6 +17,8 @@ export function NotifyRecipientsSection() {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [testSending, setTestSending] = useState(false);
+  const [testMessage, setTestMessage] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -57,6 +60,21 @@ export function NotifyRecipientsSection() {
       setError(err?.message || 'Failed to remove email');
     } finally {
       setBusy(false);
+    }
+  };
+
+  const handleSendTest = async () => {
+    setError('');
+    setTestMessage('');
+    setTestSending(true);
+    try {
+      const result = await sendTestNotifyEmail();
+      const to = Array.isArray(result?.to) ? result.to.join(', ') : 'configured recipients';
+      setTestMessage(`Test email sent to ${to}. Check the Emails tab for the log.`);
+    } catch (err) {
+      setError(err?.message || 'Failed to send test email');
+    } finally {
+      setTestSending(false);
     }
   };
 
@@ -112,14 +130,29 @@ export function NotifyRecipientsSection() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Add email address"
-              disabled={busy}
+              disabled={busy || testSending}
               required
             />
-            <button type="submit" disabled={busy || !input.trim()}>
+            <button type="submit" disabled={busy || testSending || !input.trim()}>
               {busy ? 'Saving…' : 'Add'}
             </button>
           </form>
 
+          <div className="notify-recipients-test">
+            <button
+              type="button"
+              className="notify-recipients-test-btn"
+              onClick={handleSendTest}
+              disabled={busy || testSending}
+            >
+              {testSending ? 'Sending test…' : 'Send test email'}
+            </button>
+            <p className="notify-recipients-test-hint">
+              Sends a sample alert to every recipient above (including the default).
+            </p>
+          </div>
+
+          {testMessage && <p className="notify-recipients-success">{testMessage}</p>}
           {error && <p className="notify-recipients-error">{error}</p>}
         </div>
       )}

@@ -5,6 +5,10 @@ import { RESEND_FROM_EMAIL } from '../constants/trafficNotify';
 export const EMAIL_LOG_COLLECTION = 'analytics_email_log';
 
 export function buildNotifySubject(type, payload) {
+  if (type === 'test') {
+    return 'Test email: portfolio traffic notifications';
+  }
+
   const location = payload?.location || {};
   const campaign = payload?.campaign || payload?.campaignData || {};
   const city = location.city || 'Unknown';
