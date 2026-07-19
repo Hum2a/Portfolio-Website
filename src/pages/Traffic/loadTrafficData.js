@@ -17,6 +17,7 @@ export async function loadTrafficData() {
     enquiriesSnapshot,
     statsSnapshot,
     refHitsSnapshot,
+    emailLogsResult,
   ] = await Promise.all([
     getDocs(query(collection(db, 'analytics_visitors'), orderBy('lastVisit', 'desc'), limit(TRAFFIC_LOAD_LIMIT))),
     getDocs(query(collection(db, 'analytics_pageviews'), orderBy('timestamp', 'desc'), limit(TRAFFIC_LOAD_LIMIT))),
@@ -26,6 +27,10 @@ export async function loadTrafficData() {
     getDocs(query(collection(db, 'enquiries'), orderBy('timestamp', 'desc'), limit(TRAFFIC_LOAD_LIMIT))),
     getDocs(collection(db, 'analytics_stats')),
     getDocs(query(collection(db, 'analytics_ref_hits'), orderBy('timestamp', 'desc'), limit(TRAFFIC_LOAD_LIMIT))),
+    getDocs(query(collection(db, 'analytics_email_log'), orderBy('createdAt', 'desc'), limit(TRAFFIC_LOAD_LIMIT))).catch((err) => {
+      console.warn('Failed to load analytics_email_log:', err);
+      return null;
+    }),
   ]);
 
   const visitors = visitorsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -35,6 +40,9 @@ export async function loadTrafficData() {
   const mediaClicks = mediaClicksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const enquiries = enquiriesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const refHits = refHitsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  const emailLogs = emailLogsResult
+    ? emailLogsResult.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+    : [];
 
   const stats = {};
   statsSnapshot.forEach((doc) => {
@@ -49,12 +57,14 @@ export async function loadTrafficData() {
     mediaClicks,
     enquiries,
     refHits,
+    emailLogs,
     stats,
     loadLimit: TRAFFIC_LOAD_LIMIT,
     truncated: {
       visitors: visitors.length >= TRAFFIC_LOAD_LIMIT,
       pageViews: pageViews.length >= TRAFFIC_LOAD_LIMIT,
       events: events.length >= TRAFFIC_LOAD_LIMIT,
+      emailLogs: emailLogs.length >= TRAFFIC_LOAD_LIMIT,
     },
   };
 }

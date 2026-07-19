@@ -12,6 +12,7 @@ export function TrafficTabList() {
     filteredPageTimes,
     filteredMediaClicks,
     enquiries,
+    emailLogs,
     selectedCountry,
   } = useTraffic();
 
@@ -43,6 +44,9 @@ export function TrafficTabList() {
       </button>
       <button className={`traffic-tab ${activeTab === 'enquiries' ? 'active' : ''}`} onClick={() => setActiveTab('enquiries')}>
         Enquiries ({enquiries.length})
+      </button>
+      <button className={`traffic-tab ${activeTab === 'emails' ? 'active' : ''}`} onClick={() => setActiveTab('emails')}>
+        Emails ({emailLogs?.length || 0})
       </button>
       <button className={`traffic-tab ${activeTab === 'visitor-activity' ? 'active' : ''}`} onClick={() => setActiveTab('visitor-activity')}>
         <FaEye /> Watch visitor

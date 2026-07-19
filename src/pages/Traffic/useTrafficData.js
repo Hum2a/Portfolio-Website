@@ -57,6 +57,7 @@ export function useTrafficData(role) {
   const [mediaClicks, setMediaClicks] = useState([]);
   const [enquiries, setEnquiries] = useState([]);
   const [refHits, setRefHits] = useState([]);
+  const [emailLogs, setEmailLogs] = useState([]);
   const [stats, setStats] = useState(null);
   const [dataTruncated, setDataTruncated] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -118,6 +119,7 @@ export function useTrafficData(role) {
       setMediaClicks(data.mediaClicks);
       setEnquiries(data.enquiries);
       setRefHits(data.refHits || []);
+      setEmailLogs(data.emailLogs || []);
       setStats(data.stats);
       setDataTruncated(data.truncated || null);
     } catch (error) {
@@ -1281,6 +1283,7 @@ export function useTrafficData(role) {
     pageTimes,
     mediaClicks,
     enquiries,
+    emailLogs,
     stats,
     loading,
     loadData,

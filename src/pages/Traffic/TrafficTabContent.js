@@ -27,6 +27,7 @@ import { COLORS } from './constants';
 import { getLocationString, hasValidCoordinates, getGoogleMapsUrl } from './utils';
 
 import { TrafficTrendsContent } from './components/TrafficTrendsContent';
+import { NotifyEmailsTab } from './components/NotifyEmailsTab';
 
 export function TrafficTabContent() {
   const {
@@ -1115,6 +1116,8 @@ export function TrafficTabContent() {
           )}
         </div>
       )}
+
+      {activeTab === 'emails' && <NotifyEmailsTab />}
 
       {activeTab === 'enquiries' && (
         <div className="traffic-tab-content">

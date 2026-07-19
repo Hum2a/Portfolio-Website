@@ -4127,3 +4127,258 @@
   margin: 0.5rem 0 0;
   line-height: 1.4;
 }
+
+/* Sent traffic emails tab */
+.notify-emails-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.notify-emails-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.notify-emails-header-row h3 {
+  margin: 0;
+}
+
+.notify-emails-counts {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.notify-emails-filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 720px) {
+  .notify-emails-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notify-emails-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.notify-emails-filter input,
+.notify-emails-filter select {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.notify-emails-sort-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.notify-emails-sort-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.notify-emails-sort-btn {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.notify-emails-sort-btn.active {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #fff;
+}
+
+.notify-emails-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notify-email-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.notify-email-card.status-failed {
+  border-color: #fecaca;
+}
+
+.notify-email-card-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.notify-email-card-header:hover {
+  background: #f8fafc;
+}
+
+.notify-email-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.notify-email-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.notify-email-type,
+.notify-email-status {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.notify-email-type.type-new_visitor {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.notify-email-type.type-ref_hit {
+  background: #ccfbf1;
+  color: #115e59;
+}
+
+.notify-email-status.status-sent {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.notify-email-status.status-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.notify-email-status.status-sending {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.notify-email-subject {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.notify-email-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.notify-email-expand {
+  color: #94a3b8;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.notify-email-card-body {
+  padding: 0 16px 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.notify-email-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.notify-email-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notify-email-field label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+}
+
+.notify-email-field span {
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.notify-email-field.error span {
+  color: #b91c1c;
+}
+
+.notify-email-field .mono,
+.notify-email-payload pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+}
+
+.notify-email-payload {
+  margin-top: 14px;
+}
+
+.notify-email-payload summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #0f766e;
+  margin-bottom: 8px;
+}
+
+.notify-email-payload pre {
+  margin: 0;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 360px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
