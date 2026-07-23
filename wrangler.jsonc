@@ -3,6 +3,8 @@
   "name": "humza-butt-portfolio",
   "compatibility_date": "2026-04-07",
   "main": "worker/index.js",
+  // Keep dashboard plain-text vars across deploys (secrets are already preserved).
+  "keep_vars": true,
   "observability": {
     "enabled": true
   },

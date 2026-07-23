@@ -21,7 +21,7 @@
     "build": "cross-env CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "npm run build && wrangler deploy --keep-vars",
     "preview": "npm run build && wrangler dev",
     "secrets:sync": "node scripts/sync-cloudflare-secrets.mjs",
     "secrets:sync:deploy": "node scripts/sync-cloudflare-secrets.mjs --deploy",

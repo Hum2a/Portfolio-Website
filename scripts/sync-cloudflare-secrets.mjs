@@ -1,45 +1,80 @@
 #!/usr/bin/env node
 /**
- * Sync local .env secrets to the Cloudflare Worker.
+ * Upsert every non-empty .env value onto the Cloudflare Worker as secrets.
+ * Never deletes secrets that aren't in the upload set.
  *
- * Worker secrets (runtime):
+ * Also ensures Worker runtime keys exist:
  *   NOTIFY_SECRET  ← NOTIFY_SECRET || REACT_APP_TRAFFIC_NOTIFY_SECRET
  *   RESEND_API_KEY ← RESEND_API_KEY
  *
- * Client secret (build-time CRA):
- *   REACT_APP_TRAFFIC_NOTIFY_SECRET must be present when you `npm run build`.
- *   Syncing Worker secrets alone does NOT inject it into the production JS bundle.
+ * REACT_APP_* still must be present at `npm run build` to appear in the client bundle.
+ * Uploading them to the Worker is a backup / dashboard mirror only.
  *
  * Usage:
  *   npm run secrets:sync
  *   npm run secrets:sync -- --dry-run
- *   npm run secrets:sync -- --deploy   # sync, then build + wrangler deploy
- *   npm run secrets:sync -- --dev-vars # also write .dev.vars for wrangler dev
+ *   npm run secrets:sync -- --deploy
+ *   npm run secrets:sync -- --dev-vars
+ *   npm run secrets:sync -- --worker-only   # only NOTIFY_SECRET + RESEND_API_KEY
  */
 
 import { spawnSync } from 'node:child_process';
-import {
-  existsSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
 const ENV_FILES = ['.env.local', '.env.production.local', '.env.production', '.env'];
-const WORKER_SECRET_KEYS = ['NOTIFY_SECRET', 'RESEND_API_KEY'];
+const REQUIRED_WORKER_KEYS = ['NOTIFY_SECRET', 'RESEND_API_KEY'];
+
+/** Build/tooling keys — never upload these as Worker secrets. */
+const SKIP_KEYS = new Set([
+  'DISABLE_ESLINT_PLUGIN',
+  'ESLINT_NO_DEV_ERRORS',
+  'TSC_COMPILE_ON_ERROR',
+  'GENERATE_SOURCEMAP',
+  'INLINE_RUNTIME_CHUNK',
+  'IMAGE_INLINE_SIZE_LIMIT',
+  'CI',
+  'PUBLIC_URL',
+  'NODE_ENV',
+  'BABEL_ENV',
+  'BROWSER',
+  'HOST',
+  'PORT',
+  'HTTPS',
+  'SSL_CRT_FILE',
+  'SSL_KEY_FILE',
+  'FAST_REFRESH',
+  'WDS_SOCKET_HOST',
+  'WDS_SOCKET_PATH',
+  'WDS_SOCKET_PORT',
+]);
+
+/** Skip empty / obvious placeholder values from .env.example-style files. */
+const PLACEHOLDER_VALUES = new Set([
+  'your_firebase_api_key',
+  'your_project_id.firebaseapp.com',
+  'your_project_id',
+  'your_project_id.firebasestorage.app',
+  'your_messaging_sender_id',
+  'your_app_id',
+  'your_ipinfo_token',
+  'YOUR_IPINFO_TOKEN',
+  'changeme',
+  'replace_me',
+  'todo',
+  'xxx',
+]);
 
 function parseArgs(argv) {
   return {
     dryRun: argv.includes('--dry-run'),
     deploy: argv.includes('--deploy'),
     writeDevVars: argv.includes('--dev-vars'),
+    workerOnly: argv.includes('--worker-only'),
     help: argv.includes('--help') || argv.includes('-h'),
   };
 }
@@ -69,7 +104,6 @@ function parseEnvFile(filePath) {
 function loadEnv() {
   const merged = {};
   const loaded = [];
-  // Later files in ENV_FILES are lower priority; earlier override.
   for (const name of [...ENV_FILES].reverse()) {
     const path = join(ROOT, name);
     if (!existsSync(path)) continue;
@@ -79,15 +113,45 @@ function loadEnv() {
   return { env: merged, loaded };
 }
 
-function resolveWorkerSecrets(env) {
-  const notify =
-    (env.NOTIFY_SECRET || '').trim() ||
-    (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim();
-  const resend = (env.RESEND_API_KEY || '').trim();
+function isUsableSecretValue(value) {
+  const trimmed = (value || '').trim();
+  if (!trimmed) return false;
+  if (PLACEHOLDER_VALUES.has(trimmed)) return false;
+  if (/^your[_-]/i.test(trimmed)) return false;
+  return true;
+}
 
+/**
+ * Build the full upsert map from .env.
+ * - Default: every non-empty, non-placeholder key
+ * - --worker-only: NOTIFY_SECRET + RESEND_API_KEY only
+ * Always mirrors notify token into NOTIFY_SECRET when possible.
+ */
+function resolveSecretsToSync(env, { workerOnly }) {
   const secrets = {};
-  if (notify) secrets.NOTIFY_SECRET = notify;
-  if (resend) secrets.RESEND_API_KEY = resend;
+
+  if (workerOnly) {
+    const notify =
+      (env.NOTIFY_SECRET || '').trim() ||
+      (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim();
+    const resend = (env.RESEND_API_KEY || '').trim();
+    if (isUsableSecretValue(notify)) secrets.NOTIFY_SECRET = notify;
+    if (isUsableSecretValue(resend)) secrets.RESEND_API_KEY = resend;
+    return secrets;
+  }
+
+  for (const [key, raw] of Object.entries(env)) {
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) continue;
+    if (SKIP_KEYS.has(key)) continue;
+    if (!isUsableSecretValue(raw)) continue;
+    secrets[key] = raw.trim();
+  }
+
+  // Worker auth token fallback if only the CRA-prefixed copy is set
+  if (!secrets.NOTIFY_SECRET && isUsableSecretValue(env.REACT_APP_TRAFFIC_NOTIFY_SECRET)) {
+    secrets.NOTIFY_SECRET = env.REACT_APP_TRAFFIC_NOTIFY_SECRET.trim();
+  }
+
   return secrets;
 }
 
@@ -98,24 +162,30 @@ function mask(value) {
 }
 
 function printHelp() {
-  console.log(`Sync local .env secrets to Cloudflare Worker secrets.
+  console.log(`Upsert .env values to Cloudflare Worker secrets (never deletes others).
 
 Reads: ${ENV_FILES.join(', ')}
-Uploads Worker secrets: ${WORKER_SECRET_KEYS.join(', ')}
+Default: uploads every non-empty, non-placeholder key from .env
+Required for email notify: ${REQUIRED_WORKER_KEYS.join(', ')}
 
 Options:
-  --dry-run     Show what would be uploaded (values masked)
-  --deploy      After sync, run npm run deploy (bakes REACT_APP_* into the bundle)
-  --dev-vars    Also write .dev.vars for local wrangler dev
-  --help        Show this help
+  --dry-run       Show what would be uploaded (values masked)
+  --deploy        After sync, run npm run deploy (bakes REACT_APP_* into the bundle)
+  --dev-vars      Also write .dev.vars for local wrangler dev
+  --worker-only   Only upload NOTIFY_SECRET + RESEND_API_KEY
+  --help          Show this help
+
+Security:
+  NOTIFY_SECRET must NOT be your Resend API key. Use a separate random string for
+  NOTIFY_SECRET / REACT_APP_TRAFFIC_NOTIFY_SECRET, and keep RESEND_API_KEY Worker-only.
 `);
 }
 
-function run(command, args, { inherit = true } = {}) {
+function run(command, args) {
   const result = spawnSync(command, args, {
     cwd: ROOT,
     shell: true,
-    stdio: inherit ? 'inherit' : 'pipe',
+    stdio: 'inherit',
     encoding: 'utf8',
   });
   if (result.status !== 0) {
@@ -125,15 +195,75 @@ function run(command, args, { inherit = true } = {}) {
   return result;
 }
 
+function listRemoteSecretNames() {
+  const result = spawnSync('npx', ['wrangler', 'secret', 'list', '--format', 'json'], {
+    cwd: ROOT,
+    shell: true,
+    encoding: 'utf8',
+  });
+  if (result.status !== 0) return null;
+  try {
+    const parsed = JSON.parse(result.stdout || '[]');
+    if (!Array.isArray(parsed)) return null;
+    return parsed
+      .map((item) => item?.name || item?.binding || item)
+      .filter((name) => typeof name === 'string');
+  } catch {
+    return null;
+  }
+}
+
+function putSecret(name, value) {
+  // Feed the value via stdin — avoids fragile Windows cmd file redirection.
+  // shell:true helps resolve npx.cmd on Windows PATH.
+  const result = spawnSync('npx', ['wrangler', 'secret', 'put', name], {
+    cwd: ROOT,
+    shell: true,
+    stdio: ['pipe', 'inherit', 'inherit'],
+    encoding: 'utf8',
+    input: `${value}\n`,
+  });
+
+  if (result.status !== 0) {
+    throw new Error(`Failed to put secret ${name}`);
+  }
+}
+
 function writeDevVars(secrets) {
   const path = join(ROOT, '.dev.vars');
   const lines = [
     '# Generated by scripts/sync-cloudflare-secrets.mjs — do not commit',
-    ...Object.entries(secrets).map(([k, v]) => `${k}=${v}`),
+    ...Object.entries(secrets)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([k, v]) => `${k}=${v}`),
     '',
   ];
   writeFileSync(path, lines.join('\n'), 'utf8');
-  console.log(`Wrote ${path.replace(`${ROOT}\\`, '').replace(`${ROOT}/`, '')}`);
+  console.log('Wrote .dev.vars');
+}
+
+function warnSecurity(secrets, env) {
+  const notify = (secrets.NOTIFY_SECRET || '').trim();
+  const resend = (secrets.RESEND_API_KEY || '').trim();
+  const clientNotify = (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim();
+
+  if (notify && resend && notify === resend) {
+    console.warn(
+      '\nSECURITY: NOTIFY_SECRET is identical to RESEND_API_KEY.\n' +
+        '  REACT_APP_TRAFFIC_NOTIFY_SECRET is shipped in the browser bundle, so this\n' +
+        '  exposes your Resend API key publicly. Generate a separate random notify token:\n' +
+        '    NOTIFY_SECRET=<random>\n' +
+        '    REACT_APP_TRAFFIC_NOTIFY_SECRET=<same random>\n' +
+        '    RESEND_API_KEY=<resend key, Worker only>\n' +
+        '  Then rotate the Resend key in the Resend dashboard.'
+    );
+  }
+
+  if (clientNotify && resend && clientNotify === resend) {
+    console.warn(
+      '\nSECURITY: REACT_APP_TRAFFIC_NOTIFY_SECRET matches RESEND_API_KEY — same leak risk.'
+    );
+  }
 }
 
 function main() {
@@ -151,88 +281,96 @@ function main() {
 
   console.log(`Loaded env from: ${loaded.join(', ')}`);
 
-  const secrets = resolveWorkerSecrets(env);
-  const missingWorker = WORKER_SECRET_KEYS.filter((k) => !secrets[k]);
+  const secrets = resolveSecretsToSync(env, { workerOnly: opts.workerOnly });
+  const keys = Object.keys(secrets).sort();
+  const missingRequired = REQUIRED_WORKER_KEYS.filter((k) => !secrets[k]);
   const clientSecret = (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim();
-  const notifySource = (env.NOTIFY_SECRET || '').trim()
-    ? 'NOTIFY_SECRET'
-    : (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim()
-      ? 'REACT_APP_TRAFFIC_NOTIFY_SECRET'
-      : null;
 
-  console.log('\nResolved Worker secrets:');
-  for (const key of WORKER_SECRET_KEYS) {
-    console.log(`  ${key}: ${secrets[key] ? mask(secrets[key]) : 'MISSING'}`);
-  }
-  if (notifySource) {
-    console.log(`  NOTIFY_SECRET source: ${notifySource}`);
-  }
-
-  console.log('\nClient build-time secret:');
   console.log(
-    `  REACT_APP_TRAFFIC_NOTIFY_SECRET: ${clientSecret ? mask(clientSecret) : 'MISSING'}`
+    `\nSecrets to upsert (${keys.length}${opts.workerOnly ? ', worker-only mode' : ''}):`
   );
+  for (const key of keys) {
+    const tag = key.startsWith('REACT_APP_') ? ' [CRA / backup]' : '';
+    console.log(`  ${key}: ${mask(secrets[key])}${tag}`);
+  }
 
-  if (missingWorker.length) {
+  const skipped = Object.entries(env)
+    .filter(([key, value]) => {
+      if (secrets[key]) return false;
+      if (SKIP_KEYS.has(key)) return true;
+      const trimmed = (value || '').trim();
+      return !trimmed || PLACEHOLDER_VALUES.has(trimmed) || /^your[_-]/i.test(trimmed);
+    })
+    .map(([key]) => key);
+  if (skipped.length) {
+    console.log(`\nSkipped empty/placeholder/build keys: ${skipped.join(', ')}`);
+  }
+
+  const remoteNames = listRemoteSecretNames();
+  if (remoteNames) {
+    console.log(
+      `\nExisting Worker secrets (${remoteNames.length}): ${remoteNames.join(', ') || '(none)'}`
+    );
+    const remoteOnly = remoteNames.filter((name) => !secrets[name]);
+    if (remoteOnly.length) {
+      console.log(
+        `Remote-only secrets (left untouched): ${remoteOnly.join(', ')}`
+      );
+    }
+  }
+
+  if (missingRequired.length) {
     console.error(
-      `\nMissing required values for: ${missingWorker.join(', ')}\n` +
+      `\nMissing required Worker secrets: ${missingRequired.join(', ')}\n` +
         'Add them to .env (see .env.example), then re-run.'
     );
     process.exit(1);
   }
 
-  if (!clientSecret) {
+  if (!isUsableSecretValue(clientSecret)) {
     console.warn(
-      '\nWarning: REACT_APP_TRAFFIC_NOTIFY_SECRET is empty.\n' +
-        '  Production test emails will keep failing until you set it in .env\n' +
-        '  (same value as NOTIFY_SECRET) and rebuild/deploy the site.\n' +
-        '  Tip: npm run secrets:sync -- --deploy'
+      '\nWarning: REACT_APP_TRAFFIC_NOTIFY_SECRET is empty/placeholder.\n' +
+        '  Production notify/test emails need it at build time. Set it to the same\n' +
+        '  value as NOTIFY_SECRET, then: npm run secrets:sync -- --deploy'
     );
-  } else if (
-    secrets.NOTIFY_SECRET &&
-    clientSecret &&
-    secrets.NOTIFY_SECRET !== clientSecret
-  ) {
+  } else if (secrets.NOTIFY_SECRET && secrets.NOTIFY_SECRET !== clientSecret.trim()) {
     console.warn(
       '\nWarning: NOTIFY_SECRET and REACT_APP_TRAFFIC_NOTIFY_SECRET differ.\n' +
         '  They must match or the Worker will reject notify requests with 401.'
     );
   }
 
+  warnSecurity(secrets, env);
+
   if (opts.dryRun) {
     console.log('\nDry run — nothing uploaded.');
     return;
   }
 
-  const dir = mkdtempSync(join(tmpdir(), 'portfolio-secrets-'));
-  const secretsFile = join(dir, 'secrets.json');
-  try {
-    writeFileSync(secretsFile, JSON.stringify(secrets, null, 2), 'utf8');
-    console.log('\nUploading secrets with wrangler secret bulk…');
-    run('npx', ['wrangler', 'secret', 'bulk', secretsFile]);
-    console.log('Worker secrets synced.');
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
+  console.log('\nUpserting with wrangler secret put (other remote secrets are left alone)…');
+  for (const key of keys) {
+    console.log(`  → ${key}`);
+    putSecret(key, secrets[key]);
   }
+  console.log(`Done. Upserted ${keys.length} secret(s).`);
 
   if (opts.writeDevVars) {
     writeDevVars(secrets);
   }
 
   if (opts.deploy) {
-    if (!clientSecret) {
+    if (!isUsableSecretValue(clientSecret)) {
       console.error(
-        '\nCannot --deploy: REACT_APP_TRAFFIC_NOTIFY_SECRET is missing from .env.\n' +
-          'Set it to the same value as NOTIFY_SECRET, then re-run with --deploy.'
+        '\nCannot --deploy: REACT_APP_TRAFFIC_NOTIFY_SECRET is missing from .env.'
       );
       process.exit(1);
     }
-    console.log('\nBuilding and deploying so the client secret is baked into production…');
+    console.log('\nBuilding and deploying so REACT_APP_* values are baked into production…');
     run('npm', ['run', 'deploy']);
     console.log('Deploy complete.');
-  } else if (clientSecret) {
+  } else if (isUsableSecretValue(clientSecret)) {
     console.log(
-      '\nNext: rebuild production so the client picks up REACT_APP_TRAFFIC_NOTIFY_SECRET:\n' +
+      '\nNext: rebuild production so the client picks up REACT_APP_* values:\n' +
         '  npm run deploy\n' +
         'or:\n' +
         '  npm run secrets:sync -- --deploy'
