@@ -23,6 +23,8 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build && wrangler deploy",
     "preview": "npm run build && wrangler dev",
+    "secrets:sync": "node scripts/sync-cloudflare-secrets.mjs",
+    "secrets:sync:deploy": "node scripts/sync-cloudflare-secrets.mjs --deploy",
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,jsx}\" --fix",
     "lint:strict": "eslint \"src/**/*.{js,jsx}\" --max-warnings 0",
