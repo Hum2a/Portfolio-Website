@@ -77,6 +77,42 @@
       "dateUpdated": "2026-07-25"
     },
     {
+      "id": "docket",
+      "name": "Docket",
+      "description": "Personal job-application tracker with kanban, list tools, docs, stats, and Resend alerts—built for a single owner, no login.",
+      "logo": "Docket.png",
+      "gradient": "linear-gradient(135deg, #1a2332 0%, #0f6e56 55%, #d8f3e7 100%)",
+      "route": "/docket",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Hono",
+        "Cloudflare Workers",
+        "Cloudflare Pages",
+        "Neon",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "R2",
+        "Resend",
+        "Tailwind CSS",
+        "Kanban",
+        "CareerTech",
+        "WebApp",
+        "Zod",
+        "Recharts",
+        "Turborepo"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 2,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-07-25",
+      "dateUpdated": "2026-07-25"
+    },
+    {
       "id": "buzzer",
       "name": "Buzzer",
       "description": "LifeSmart’s teacher-led live financial literacy game for schools — anonymous pupil teams, front screen, real-time play.",
