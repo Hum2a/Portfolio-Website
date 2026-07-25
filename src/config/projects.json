@@ -79,10 +79,44 @@
     {
       "id": "docket",
       "name": "Docket",
-      "description": "Personal job-application tracker with kanban, list tools, docs, stats, and Resend alerts—built for a single owner, no login.",
-      "logo": "Docket.png",
-      "gradient": "linear-gradient(135deg, #1a2332 0%, #0f6e56 55%, #d8f3e7 100%)",
+      "description": "Personal job-application tracker with Kanban, list, stats, docs, reminders, and email alerts—built for a single owner, no login.",
+      "logo": "Docket.svg",
+      "gradient": "linear-gradient(135deg, #0f6e56 0%, #1a2332 55%, #3d4a5c 100%)",
       "route": "/docket",
+      "tags": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Hono",
+        "Cloudflare Workers",
+        "Neon",
+        "PostgreSQL",
+        "R2",
+        "Resend",
+        "Zod",
+        "Recharts",
+        "SPA",
+        "WebApp",
+        "Productivity",
+        "Kanban",
+        "CareerTech"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 2,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-07-25",
+      "dateUpdated": "2026-07-25"
+    },
+    {
+      "id": "docket-baseer",
+      "name": "Docket (Baseer)",
+      "description": "Baseer's job-application tracker with kanban, list tools, docs, stats, and Resend alerts—single owner, no login.",
+      "logo": "DocketBaseer.png",
+      "gradient": "linear-gradient(135deg, #1a2332 0%, #0f6e56 55%, #d8f3e7 100%)",
+      "route": "/docket-baseer",
       "tags": [
         "TypeScript",
         "React",

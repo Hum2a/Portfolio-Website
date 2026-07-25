@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import ProjectLayout from "../components/projects/ProjectLayout";
 import {
   getProjectById,
@@ -6,82 +7,78 @@ import {
   PROJECT_CATEGORY_META,
 } from "../data/projects";
 
-const PRODUCTION_URL = "https://docket.baseer.co.uk";
-const REPO_URL = "https://github.com/Hum2a/Docket--Baseer";
+const PRODUCTION_URL = "https://jobtracker.humza-butt.space";
+const REPO_URL = "https://github.com/Hum2a/jobtracker";
 
 const docketProject = getProjectById("docket");
 const surfaceCategories = getProjectCategories(docketProject);
 
 const terminalLines = [
-  "boot docket — personal job pipeline",
-  "mount apps/web (React 19 + Vite)",
-  "mount apps/api (Hono → Workers)",
-  "connect Neon + R2 + Resend",
-  "kanban · list · stats · reminders",
-  "notify on apply + status change",
-  "owner mode: no login (OWNER_ID)",
-  "ready → https://docket.baseer.co.uk",
+  "boot Docket — personal job pipeline",
+  "mount Worker + Neon + R2",
+  "stages: wishlist → applied → interview → offer → rejected",
+  "board: drag status · list: filter & sort",
+  "notify: Resend on create / status change",
+  "digest: cron reminders due within 3 days",
+  "auth: API key writes · no multi-user login",
+  "ready on jobtracker.humza-butt.space",
 ];
 
 const projectInfo = `const project = {
   name: "Docket",
-  type: "Personal job application tracker",
+  type: "Full-stack WebApp",
   description:
-    "Kanban + list + docs + stats for a single-owner search, with Resend alerts when roles are logged or statuses move.",
+    "Single-owner job application tracker with Kanban, docs, and email alerts.",
   stack: [
-    "React 19",
+    "React",
     "Vite",
     "Hono",
-    "Cloudflare Workers/Pages",
-    "Neon Postgres",
-    "Drizzle",
+    "Cloudflare Workers",
+    "Neon",
     "R2",
     "Resend",
+    "Zod",
   ],
   features: [
-    "Drag-and-drop kanban pipeline",
-    "Searchable/filterable application list",
-    "Notes, reminders, resume storage",
-    "Analytics funnel and charts",
-    "Email digests and status notifications",
+    "Kanban board with drag-and-drop",
+    "List, detail, stats, settings",
+    "Reminders & due-soon digests",
+    "R2 document storage",
+    "Resend event emails",
   ],
 };`;
 
 const features = [
-  "Five-column kanban with drag-and-drop status updates (@dnd-kit)",
-  "List view with multi-field search, industry/position/status filters, and sorting",
-  "Full application model: company, role, industry, salary, location, source, job URL",
-  "Per-application notes and reminders (due-soon / overdue UX)",
-  "Document vault for resumes and cover letters on R2",
-  "Stats dashboard: funnel %, status pie, industry/source bars, time series",
-  "Resend emails on new application and status change, plus daily reminder digest",
-  "Settings for notification email list and send-test-email",
-  "JSON bulk import for applications, notes, and reminders",
-  "Single-owner, no-login architecture (fixed OWNER_ID) for agent-friendly updates",
-  "Motion system with page entrances and stagger (respects prefers-reduced-motion)",
+  "Five-column Kanban board with drag-and-drop status updates",
+  "Quick create (company / position / industry required)",
+  "Sortable, filterable application list with inline status select",
+  "Application detail: fields, notes thread, reminders, per-app documents",
+  "Stats dashboard: tiles, funnel %, Recharts (status, industry, source, time)",
+  "Settings: global resume/cover templates, JSON bulk import, notify recipients",
+  "Due-soon reminders (within 3 days) on board, detail, and digests",
+  "Private R2 storage with short-lived HMAC download URLs",
+  "Resend alerts on create + status change; daily reminder digest",
+  "Shared Zod domain model between Worker and SPA",
+  "Single-owner model: API-key writes, no accounts or multi-user CRM",
 ];
 
 const techStack = [
-  "TypeScript",
   "React",
+  "TypeScript",
   "Vite",
-  "TanStack Router",
-  "Tailwind CSS",
   "Hono",
   "Cloudflare Workers",
-  "Cloudflare Pages",
   "Neon",
   "PostgreSQL",
-  "Drizzle ORM",
   "R2",
   "Resend",
   "Zod",
   "Recharts",
+  "React Router",
   "dnd-kit",
-  "Vitest",
-  "Playwright",
   "Kanban",
-  "CareerTech",
+  "SPA",
+  "WebApp",
 ];
 
 const Docket = () => {
@@ -90,10 +87,14 @@ const Docket = () => {
       title="Docket"
       terminalLines={terminalLines}
       terminalPrompt="$"
-      terminalTitle="docket.deploy.sh"
+      terminalTitle="docket.sh"
       terminalSpeed={32}
-      logo={`${process.env.PUBLIC_URL}/logos/Docket.png`}
+      logo={`${process.env.PUBLIC_URL}/logos/Docket.svg`}
       codeSnippet={projectInfo}
+      embedUrl={PRODUCTION_URL}
+      embedTitle="Docket"
+      embedSandbox
+      embedNewTabLabel="Open Docket →"
       features={features}
       techStack={techStack}
     >
@@ -102,17 +103,16 @@ const Docket = () => {
           <span className="code-comment">{'//'}</span> Overview
         </h2>
         <p className="section-description">
-          Docket replaces spreadsheet chaos for a job search: applications move through wishlist →
-          applied → interview → offer → rejected on a drag-and-drop board, with list search/filters,
-          notes, reminders, and resume/cover storage. A Hono API on Cloudflare Workers backs a React
-          SPA, with Neon Postgres (RLS-ready), R2 for private files, and Resend emails when roles are
-          logged or status changes. Built as a single-owner instance for{" "}
-          <strong>Baseer</strong> (fixed <code>OWNER_ID</code>) so the pipeline can be updated
-          without accounts.
+          Docket replaces spreadsheet-style job hunting with a focused pipeline: wishlist → applied
+          → interview → offer → rejected. A React SPA (Board, List, Detail, Stats, Settings) talks
+          to a Hono API on Cloudflare Workers, backed by Neon Postgres and R2 for resumes/cover
+          letters. Status changes and new applications can trigger Resend emails; a daily cron
+          digests due-soon reminders. Writes are gated by a browser-stored API key rather than
+          multi-user auth.
         </p>
         <p className="section-description">
-          The live site holds real application data, so this page links out rather than embedding a
-          public iframe.
+          This is Humza&apos;s personal instance. A related build for Baseer lives at{" "}
+          <Link to="/docket-baseer">/docket-baseer</Link>.
         </p>
       </section>
 
@@ -135,8 +135,9 @@ const Docket = () => {
           })}
         </div>
         <p className="section-description">
-          Web app on Cloudflare Pages plus a separate Workers API. Kanban, list, stats, document
-          vault, and settings share one TanStack Router SPA; email digests run on a Worker cron.
+          Single Worker serves the SPA assets and <code>/api</code> on one origin (
+          <code>jobtracker.humza-butt.space</code>). Public UI is readable without login; writes
+          prompt for an API key.
         </p>
       </section>
 
@@ -151,7 +152,7 @@ const Docket = () => {
             rel="noopener noreferrer"
             className="external-link-button"
           >
-            Open Docket →
+            Visit Docket →
           </a>
           <a
             href={REPO_URL}

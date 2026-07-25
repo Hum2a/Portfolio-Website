@@ -34,6 +34,7 @@ import Buzzer from "../projects/Buzzer";
 import Encore from "../projects/Encore";
 import BaseerPortfolio from "../projects/BaseerPortfolio";
 import Docket from "../projects/Docket";
+import DocketBaseer from "../projects/DocketBaseer";
 import BakesByOlayide from "../projects/BakesByOlayide";
 import HumzaLogin from "../pages/HumzaLogin";
 import Traffic from "../pages/Traffic";
@@ -98,6 +99,7 @@ const AppRoutes = () => {
       <Route path="/encore" element={<Encore />} />
       <Route path="/baseer-portfolio" element={<BaseerPortfolio />} />
       <Route path="/docket" element={<Docket />} />
+      <Route path="/docket-baseer" element={<DocketBaseer />} />
       <Route path="/bakesbyolayide" element={<BakesByOlayide />} />
       <Route path="/humza-login" element={<HumzaLogin />} />
       <Route path="/github" element={<GitHub />} />
