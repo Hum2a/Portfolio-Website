@@ -1,6 +1,46 @@
 {
   "projects": [
     {
+      "id": "encore",
+      "name": "Encore",
+      "description": "Daily grid logic puzzles with infinite practice, curated catalogues, and replay-any-day seeds.",
+      "logo": "Encore.png",
+      "gradient": "linear-gradient(135deg, #191140 0%, #2563eb 55%, #FFB43C 100%)",
+      "route": "/encore",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Hono",
+        "Cloudflare Workers",
+        "PostgreSQL",
+        "Neon",
+        "Drizzle",
+        "Better Auth",
+        "Stripe",
+        "PWA",
+        "Game",
+        "Puzzle",
+        "SaaS",
+        "WebApp",
+        "Turborepo",
+        "Vitest",
+        "Playwright",
+        "EdTech",
+        "Monorepo"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "website",
+        "game"
+      ],
+      "dateAdded": "2026-07-25",
+      "dateUpdated": "2026-07-25"
+    },
+    {
       "id": "buzzer",
       "name": "Buzzer",
       "description": "LifeSmart’s teacher-led live financial literacy game for schools — anonymous pupil teams, front screen, real-time play.",
