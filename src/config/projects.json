@@ -41,6 +41,42 @@
       "dateUpdated": "2026-07-25"
     },
     {
+      "id": "baseer-portfolio",
+      "name": "Baseer Portfolio",
+      "description": "Marketing CV site for Baseer with a freeform visual CMS, first-party analytics, and sector case studies.",
+      "logo": "BaseerPortfolio.svg",
+      "gradient": "linear-gradient(135deg, #F1F0EC 0%, #35526E 55%, #C97D3D 100%)",
+      "route": "/baseer-portfolio",
+      "tags": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Hono",
+        "Cloudflare Workers",
+        "Neon",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "Better Auth",
+        "CMS",
+        "Tailwind CSS",
+        "WebApp",
+        "Portfolio",
+        "Analytics",
+        "R2",
+        "Turborepo",
+        "Motion",
+        "Marketing"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 2,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-07-25",
+      "dateUpdated": "2026-07-25"
+    },
+    {
       "id": "buzzer",
       "name": "Buzzer",
       "description": "LifeSmart’s teacher-led live financial literacy game for schools — anonymous pupil teams, front screen, real-time play.",
