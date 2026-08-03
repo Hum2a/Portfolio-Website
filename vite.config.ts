@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import compression from 'vite-plugin-compression';
 import path from 'node:path';
 
@@ -13,6 +14,7 @@ function isPathSegment(id: string, name: string): boolean {
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     compression({ algorithm: 'brotliCompress' }),
   ],
   resolve: {

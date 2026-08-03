@@ -95,7 +95,7 @@ const Homepage = () => {
           <motion.button
             whileHover={{
               scale: 1.05,
-              boxShadow: "var(--shadow-glow-strong)",
+              boxShadow: "var(--shadow-lift-strong)",
             }}
             whileTap={{ scale: 0.98 }}
             className="homepage-button"
