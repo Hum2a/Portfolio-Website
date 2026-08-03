@@ -1,14 +1,13 @@
 import React from 'react';
-import Navbar from './Navbar';
 import './RouteFallback.css';
 
 /**
- * Suspense fallback for lazy routes — header + content skeleton, never a spinner.
+ * Suspense fallback for lazy routes — content skeleton only.
+ * SiteHeader is mounted once in App.tsx.
  */
 const RouteFallback = () => {
   return (
     <div className="route-fallback" aria-busy="true" aria-live="polite">
-      <Navbar />
       <main className="route-fallback-main" id="main-content">
         <div className="route-fallback-skeleton">
           <div className="route-fallback-title" />

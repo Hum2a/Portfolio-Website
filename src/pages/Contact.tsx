@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/layout/Navbar";
-import HamburgerMenu from "../components/layout/HamburgerMenu";
 import { FaEnvelope, FaLinkedin, FaGithub } from "react-icons/fa";
 import Terminal from "../components/animations/Terminal";
 import { db } from "../services/firebase";
@@ -11,7 +9,6 @@ import Seo from "../components/seo/Seo";
 import "./Contact.css";
 
 const Contact = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,17 +18,6 @@ const Contact = () => {
   const [formErrors, setFormErrors] = useState({});
   const [submitStatus, setSubmitStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const validateForm = () => {
     const errors = {};
@@ -209,7 +195,6 @@ const Contact = () => {
         description="Get in touch with Humza Butt for contract work, collaborations, or questions about shipped projects."
         path="/contact"
       />
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
         className="contact-container"

@@ -8,8 +8,6 @@ import {
   FaGraduationCap,
   FaExternalLinkAlt,
 } from 'react-icons/fa';
-import HamburgerMenu from '../components/layout/HamburgerMenu';
-import Navbar from '../components/layout/Navbar';
 import {
   fetchLinkedInProfile,
   fetchLinkedInExperience,
@@ -37,18 +35,11 @@ export default function LinkedIn() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const profileUrl = getLinkedInProfileUrl();
   const avatarSrc = profile?.avatar
     ? `${profile.avatar}`
     : null;
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -91,7 +82,6 @@ export default function LinkedIn() {
   if (loading && !profile) {
     return (
       <div className="linkedin-page">
-        {isMobile ? <HamburgerMenu /> : <Navbar />}
         <div className="linkedin-page-loading">
           <FaLinkedin className="linkedin-loading-icon" />
           <p>Loading career profile...</p>
@@ -107,7 +97,6 @@ export default function LinkedIn() {
         description="Career timeline for Humza Butt — CoreStream GRC (Shell, BBC, NHS, Home Office), LifeSmart, Bgr8 and education."
         path="/career"
       />
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
         className="linkedin-page-container"

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/layout/Navbar";
-import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
 import Seo from "../components/seo/Seo";
@@ -71,21 +69,9 @@ function shuffleCopy(arr) {
 }
 
 const About = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [journeySpotlights] = useState(() =>
     shuffleCopy(PROFESSIONAL_JOURNEY_SPOTLIGHTS).slice(0, JOURNEY_VISIBLE_COUNT)
   );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -118,7 +104,6 @@ const About = () => {
         description="About Humza Butt — Software Engineer, Full Stack & Platform Configuration. Background, skills and approach."
         path="/about"
       />
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
         className="about-container"

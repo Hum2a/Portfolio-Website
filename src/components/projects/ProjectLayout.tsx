@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import Navbar from "../layout/Navbar";
-import HamburgerMenu from "../layout/HamburgerMenu";
 import Terminal from "../animations/Terminal";
 import CodeBlock from "../animations/CodeBlock";
 import ProjectSiteEmbed from "./ProjectSiteEmbed";
@@ -63,7 +61,6 @@ const ProjectLayout = ({
   children,
 }) => {
   const location = useLocation();
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
@@ -78,12 +75,6 @@ const ProjectLayout = ({
     ? `/og/${projectMeta.id}.png`
     : undefined;
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
     <div className="project-page">
       <Seo
@@ -92,7 +83,6 @@ const ProjectLayout = ({
         path={location.pathname}
         image={seoImage}
       />
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
         className="project-container"

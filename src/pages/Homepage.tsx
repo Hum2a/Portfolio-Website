@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/layout/Navbar";
 import Typewriter from "../components/animations/Typewriter";
 import Terminal from "../components/animations/Terminal";
 import { HomepageFeaturedProjects } from "../components/projects/HomepageFeaturedProjects";
@@ -43,7 +42,6 @@ const Homepage = () => {
         description={DEFAULT_DESCRIPTION}
         path="/"
       />
-      <Navbar />
       <motion.div
         className="homepage-container"
         variants={containerVariants}

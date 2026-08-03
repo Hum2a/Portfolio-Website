@@ -35,7 +35,7 @@ export function HomepageFeaturedProjects() {
   if (featuredProjects.length === 0) return null;
 
   return (
-    <section className="homepage-featured" ref={ref}>
+    <section id="work" className="homepage-featured" ref={ref}>
       <motion.div
         className="featured-inner"
         variants={sectionVariants}

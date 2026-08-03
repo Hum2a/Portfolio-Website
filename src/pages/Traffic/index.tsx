@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import Navbar from '../../components/layout/Navbar';
 import { TrafficProvider } from './TrafficContext';
 import { TrafficDashboard } from './TrafficDashboard';
 import Seo from '../../components/seo/Seo';
@@ -24,7 +23,6 @@ function Traffic() {
   return (
     <div className="traffic-container">
       <Seo title="Traffic" path="/traffic" noindex />
-      <Navbar />
       <TrafficProvider role={role}>
         <TrafficDashboard />
       </TrafficProvider>

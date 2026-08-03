@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import HamburgerMenu from "../components/layout/HamburgerMenu";
-import Navbar from "../components/layout/Navbar";
 import {
   getAllTags,
   filterProjectsCombined,
@@ -18,7 +16,6 @@ import "./Projects.css";
 const Projects = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [techFilterExpanded, setTechFilterExpanded] = useState(false);
 
   const filteredProjects = useMemo(
@@ -27,17 +24,6 @@ const Projects = () => {
   );
 
   const visibleCount = getVisibleProjects().length;
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const handleTagClick = (tag) => {
     setSelectedTags((prevTags) =>
@@ -68,7 +54,6 @@ const Projects = () => {
         description="29 shipped projects by Humza Butt across web, mobile, desktop, extensions and games. Filter by surface and stack."
         path="/projects"
       />
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
         className="projects-shell"

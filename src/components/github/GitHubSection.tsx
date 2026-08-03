@@ -67,7 +67,7 @@ export function GitHubSection() {
 
   if (loading) {
     return (
-      <section className="github-section" ref={ref}>
+      <section id="github" className="github-section" ref={ref}>
         <div className="github-inner">
           <div className="github-loading">
             <FaGithub className="github-loading-icon" />
@@ -83,7 +83,7 @@ export function GitHubSection() {
   }
 
   return (
-    <section className="github-section" ref={ref}>
+    <section id="github" className="github-section" ref={ref}>
       <motion.div
         className="github-inner"
         initial={{ opacity: 0 }}

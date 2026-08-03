@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/layout/Navbar";
 import Seo from "../components/seo/Seo";
 
 const NotFound = () => {
@@ -12,7 +11,6 @@ const NotFound = () => {
         path="/404"
         noindex
       />
-      <Navbar />
       <main
         style={{
           minHeight: "70vh",

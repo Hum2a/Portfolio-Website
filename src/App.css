@@ -1,5 +1,14 @@
 .App {
   min-height: 100vh;
-  background: var(--bg-primary);
+  background: var(--bg-void);
   color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
 }
+
+.app-main {
+  flex: 1 0 auto;
+  /* Clear fixed floating header (16px top + ~56px pill + breathing room) */
+  padding-top: 5.5rem;
+}
+

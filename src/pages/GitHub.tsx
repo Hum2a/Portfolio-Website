@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaStar, FaCodeBranch, FaUsers, FaFolderOpen } from 'react-icons/fa';
-import HamburgerMenu from '../components/layout/HamburgerMenu';
-import Navbar from '../components/layout/Navbar';
 import ContributionCalendar from '../components/github/ContributionCalendar';
 import {
   fetchGitHubRepos,
@@ -41,16 +39,9 @@ export default function GitHub() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [sortBy, setSortBy] = useState('updated');
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const username = getGitHubUsername();
   const profileUrl = `https://github.com/${username}`;
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,7 +101,6 @@ export default function GitHub() {
   if (loading && !profile) {
     return (
       <div className="github-page">
-        {isMobile ? <HamburgerMenu /> : <Navbar />}
         <div className="github-page-loading">
           <FaGithub className="github-loading-icon" />
           <p>Loading GitHub profile...</p>
@@ -126,7 +116,6 @@ export default function GitHub() {
         description="Open-source work and recent GitHub activity from Humza Butt — repositories, contributions and stack."
         path="/github"
       />
-      {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
         className="github-page-container"

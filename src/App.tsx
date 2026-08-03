@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import './App.css';
-import AppRoutes from "./routes/AppRoutes";
+import AppRoutes from './routes/AppRoutes';
 import firebaseAnalytics from './services/analyticsService';
 import { AuthProvider } from './contexts/AuthContext';
 import PageTimeTracker from './components/tracking/PageTimeTracker';
+import SiteHeader from './components/layout/SiteHeader';
+import SiteFooter from './components/layout/SiteFooter';
 
 function App() {
   useEffect(() => {
-    // Initialize analytics when app loads
     firebaseAnalytics.initAnalytics();
   }, []);
 
@@ -19,7 +20,11 @@ function App() {
         <AuthProvider>
           <div className="App">
             <PageTimeTracker />
-            <AppRoutes />
+            <SiteHeader />
+            <div className="app-main">
+              <AppRoutes />
+            </div>
+            <SiteFooter />
           </div>
         </AuthProvider>
       </Router>

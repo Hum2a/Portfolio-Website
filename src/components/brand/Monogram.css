@@ -1,0 +1,28 @@
+.monogram {
+  display: block;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.monogram .hb-bar-t {
+  fill: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .monogram--animated .hb-bar-t,
+  .monogram--animated .hb-bar-b {
+    transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .monogram--animated:hover .hb-bar-t,
+  a:hover .monogram--animated .hb-bar-t,
+  a:focus-visible .monogram--animated .hb-bar-t {
+    transform: translateX(2px);
+  }
+
+  .monogram--animated:hover .hb-bar-b,
+  a:hover .monogram--animated .hb-bar-b,
+  a:focus-visible .monogram--animated .hb-bar-b {
+    transform: translateX(-2px);
+  }
+}

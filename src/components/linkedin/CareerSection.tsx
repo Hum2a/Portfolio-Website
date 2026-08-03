@@ -63,7 +63,7 @@ export function CareerSection() {
 
   if (loading) {
     return (
-      <section className="career-section" ref={ref}>
+      <section id="career" className="career-section" ref={ref}>
         <div className="career-inner">
           <div className="career-loading">
             <FaBriefcase className="career-loading-icon" />
@@ -81,7 +81,7 @@ export function CareerSection() {
     : null;
 
   return (
-    <section className="career-section" ref={ref}>
+    <section id="career" className="career-section" ref={ref}>
       <motion.div
         className="career-inner"
         initial={{ opacity: 0 }}
