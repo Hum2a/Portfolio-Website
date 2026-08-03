@@ -40,3 +40,9 @@ yarn-error.log*
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# Generated image variants (rebuild with npm run images)
+/public/images/**/*.webp
+/public/images/**/*.avif
+/public/images/_blur/
+/public/images/manifest.json

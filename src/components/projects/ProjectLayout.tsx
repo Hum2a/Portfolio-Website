@@ -5,6 +5,7 @@ import HamburgerMenu from "../layout/HamburgerMenu";
 import Terminal from "../animations/Terminal";
 import CodeBlock from "../animations/CodeBlock";
 import ProjectSiteEmbed from "./ProjectSiteEmbed";
+import Img from "../media/Img";
 import "./ProjectLayout.css";
 
 const containerVariants = {
@@ -168,7 +169,7 @@ const ProjectLayout = ({
                       setSelectedImage(image);
                     }}
                   >
-                    <img
+                    <Img
                       src={image.src}
                       alt={image.alt || image.caption || ""}
                       className="gallery-image"
@@ -275,10 +276,11 @@ const ProjectLayout = ({
             <button className="modal-close" onClick={() => setSelectedImage(null)}>
               ×
             </button>
-            <img
+            <Img
               src={selectedImage.src}
               alt={selectedImage.alt || selectedImage.caption || ""}
               className="modal-image"
+              priority
             />
             {selectedImage.caption && (
               <p className="modal-caption">{selectedImage.caption}</p>
