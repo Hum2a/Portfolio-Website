@@ -19,6 +19,7 @@ import {
   formatLinkedInDateRange,
 } from '../services/linkedinService';
 import firebaseAnalytics from '../services/analyticsService';
+import Seo from '../components/seo/Seo';
 import './LinkedInPage.css';
 
 const FILTERS = [
@@ -101,6 +102,11 @@ export default function LinkedIn() {
 
   return (
     <div className="linkedin-page">
+      <Seo
+        title="Career"
+        description="Career timeline for Humza Butt — CoreStream GRC (Shell, BBC, NHS, Home Office), LifeSmart, Bgr8 and education."
+        path="/career"
+      />
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div

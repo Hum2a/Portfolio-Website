@@ -8,6 +8,7 @@ import { HomepageFeaturedProjects } from "../components/projects/HomepageFeature
 import { CareerSection } from "../components/linkedin/CareerSection";
 import { GitHubSection } from "../components/github/GitHubSection";
 import { prefetchProjects } from "../utils/prefetchRoute";
+import Seo, { DEFAULT_DESCRIPTION } from "../components/seo/Seo";
 import "./Homepage.css";
 
 const Homepage = () => {
@@ -37,6 +38,11 @@ const Homepage = () => {
 
   return (
     <div className="homepage">
+      <Seo
+        title="Humza Butt — Software Engineer, Full Stack & Platform Configuration"
+        description={DEFAULT_DESCRIPTION}
+        path="/"
+      />
       <Navbar />
       <motion.div
         className="homepage-container"

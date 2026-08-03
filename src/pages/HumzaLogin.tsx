@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithGoogle } from '../services/authService';
 import { useAuth } from '../contexts/AuthContext';
+import Seo from '../components/seo/Seo';
 import './HumzaLogin.css';
 
 const HumzaLogin = () => {
@@ -38,6 +39,7 @@ const HumzaLogin = () => {
 
   return (
     <div className="humza-login-container">
+      <Seo title="Login" path="/humza-login" noindex />
       <div className="humza-login-card">
         <h1 className="humza-login-title">Admin Login</h1>
         <p className="humza-login-subtitle">Sign in with Google to access admin features</p>

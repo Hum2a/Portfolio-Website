@@ -4,6 +4,7 @@ import Navbar from "../components/layout/Navbar";
 import HamburgerMenu from "../components/layout/HamburgerMenu";
 import Terminal from "../components/animations/Terminal";
 import CodeBlock from "../components/animations/CodeBlock";
+import Seo from "../components/seo/Seo";
 import "./About.css";
 
 /** Narrative blurbs; six are chosen at random per visit (see {@link JOURNEY_VISIBLE_COUNT}). */
@@ -112,6 +113,11 @@ const About = () => {
 
   return (
     <div className="about-page">
+      <Seo
+        title="About"
+        description="About Humza Butt — Software Engineer, Full Stack & Platform Configuration. Background, skills and approach."
+        path="/about"
+      />
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div

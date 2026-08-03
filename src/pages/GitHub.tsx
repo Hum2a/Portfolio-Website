@@ -12,6 +12,7 @@ import {
 } from '../services/githubService';
 import '../components/github/GitHubSection.css';
 import './GitHubPage.css';
+import Seo from '../components/seo/Seo';
 
 const LANGUAGE_COLORS = {
   JavaScript: '#f7df1e',
@@ -120,6 +121,11 @@ export default function GitHub() {
 
   return (
     <div className="github-page">
+      <Seo
+        title="GitHub"
+        description="Open-source work and recent GitHub activity from Humza Butt — repositories, contributions and stack."
+        path="/github"
+      />
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div

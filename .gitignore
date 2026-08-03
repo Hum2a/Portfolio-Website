@@ -46,3 +46,6 @@ yarn-error.log*
 /public/images/**/*.avif
 /public/images/_blur/
 /public/images/manifest.json
+
+# Generated OG images (rebuild with npm run og)
+/public/og/

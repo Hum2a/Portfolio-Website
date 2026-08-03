@@ -1,10 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
+import Seo from "../components/seo/Seo";
 
 const NotFound = () => {
   return (
     <>
+      <Seo
+        title="Page not found"
+        description="The page you requested does not exist on humza-butt.space."
+        path="/404"
+        noindex
+      />
       <Navbar />
       <main
         style={{

@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import { TrafficProvider } from './TrafficContext';
 import { TrafficDashboard } from './TrafficDashboard';
+import Seo from '../../components/seo/Seo';
 import './Traffic.css';
 
 function Traffic() {
@@ -11,6 +12,7 @@ function Traffic() {
   if (role !== 'humza') {
     return (
       <div className="traffic-container">
+        <Seo title="Traffic" path="/traffic" noindex />
         <div className="traffic-error">
           <h2>Access Denied</h2>
           <p>You do not have permission to view this page.</p>
@@ -21,6 +23,7 @@ function Traffic() {
 
   return (
     <div className="traffic-container">
+      <Seo title="Traffic" path="/traffic" noindex />
       <Navbar />
       <TrafficProvider role={role}>
         <TrafficDashboard />

@@ -7,6 +7,7 @@ import Terminal from "../components/animations/Terminal";
 import { db } from "../services/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { trackContactSubmit } from "../services/analyticsService";
+import Seo from "../components/seo/Seo";
 import "./Contact.css";
 
 const Contact = () => {
@@ -203,6 +204,11 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
+      <Seo
+        title="Contact"
+        description="Get in touch with Humza Butt for contract work, collaborations, or questions about shipped projects."
+        path="/contact"
+      />
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div

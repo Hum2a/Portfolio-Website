@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import Navbar from "../layout/Navbar";
 import HamburgerMenu from "../layout/HamburgerMenu";
 import Terminal from "../animations/Terminal";
 import CodeBlock from "../animations/CodeBlock";
 import ProjectSiteEmbed from "./ProjectSiteEmbed";
 import Img from "../media/Img";
+import Seo, { DEFAULT_DESCRIPTION } from "../seo/Seo";
+import { getProjectByRoute } from "../../data/projects";
 import "./ProjectLayout.css";
 
 const containerVariants = {
@@ -59,9 +62,21 @@ const ProjectLayout = ({
   // Free-form slot
   children,
 }) => {
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
+
+  const routeForMeta =
+    location.pathname === '/breathapplyser-v2'
+      ? '/breathapplyser'
+      : location.pathname;
+  const projectMeta = getProjectByRoute(routeForMeta);
+  const seoDescription =
+    projectMeta?.description || DEFAULT_DESCRIPTION;
+  const seoImage = projectMeta?.id
+    ? `/og/${projectMeta.id}.png`
+    : undefined;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -71,6 +86,12 @@ const ProjectLayout = ({
 
   return (
     <div className="project-page">
+      <Seo
+        title={title}
+        description={seoDescription}
+        path={location.pathname}
+        image={seoImage}
+      />
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div

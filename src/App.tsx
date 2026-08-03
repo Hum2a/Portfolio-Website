@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import './App.css';
 import AppRoutes from "./routes/AppRoutes";
 import firebaseAnalytics from './services/analyticsService';
@@ -13,14 +14,16 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <AuthProvider>
-        <div className="App">
-          <PageTimeTracker />
-          <AppRoutes />
-        </div>
-      </AuthProvider>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <AuthProvider>
+          <div className="App">
+            <PageTimeTracker />
+            <AppRoutes />
+          </div>
+        </AuthProvider>
+      </Router>
+    </HelmetProvider>
   );
 }
 

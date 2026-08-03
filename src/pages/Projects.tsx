@@ -12,6 +12,7 @@ import {
   getVisibleProjects,
   formatProjectDate,
 } from "../data/projects";
+import Seo from "../components/seo/Seo";
 import "./Projects.css";
 
 const Projects = () => {
@@ -62,6 +63,11 @@ const Projects = () => {
 
   return (
     <div className="projects-page">
+      <Seo
+        title="Projects"
+        description="29 shipped projects by Humza Butt across web, mobile, desktop, extensions and games. Filter by surface and stack."
+        path="/projects"
+      />
       {isMobile ? <HamburgerMenu /> : <Navbar />}
 
       <motion.div
