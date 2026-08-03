@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "homepage": ".",
   "private": true,
+  "type": "module",
   "dependencies": {
     "crypto-js": "^4.2.0",
     "firebase": "^11.4.0",
@@ -11,36 +12,29 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-router-dom": "^7.1.1",
-    "react-scripts": "5.0.1",
     "recharts": "^3.6.0",
     "uuid": "^11.1.0",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "cross-env CI=false react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "preview:cf": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy --keep-vars",
-    "preview": "npm run build && wrangler dev",
     "secrets:sync": "node scripts/sync-cloudflare-secrets.mjs",
     "secrets:sync:deploy": "node scripts/sync-cloudflare-secrets.mjs --deploy",
-    "lint": "eslint \"src/**/*.{js,jsx}\"",
-    "lint:fix": "eslint \"src/**/*.{js,jsx}\" --fix",
-    "lint:strict": "eslint \"src/**/*.{js,jsx}\" --max-warnings 0",
-    "lint:projects": "eslint \"src/projects/**/*.{js,jsx}\"",
-    "lint:pages": "eslint \"src/pages/**/*.{js,jsx}\"",
-    "lint:components": "eslint \"src/components/**/*.{js,jsx}\"",
-    "lint:traffic": "eslint \"src/pages/Traffic/**/*.{js,jsx}\" \"src/services/analyticsStatsUpdater.js\"",
-    "lint:services": "eslint \"src/services/**/*.{js,jsx}\"",
-    "lint:report": "eslint \"src/**/*.{js,jsx}\" -f unix",
-    "lint:ci": "cross-env CI=true eslint \"src/**/*.{js,jsx}\" --max-warnings 0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
+    "lint:strict": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --max-warnings 0",
+    "lint:projects": "eslint \"src/projects/**/*.{js,jsx,ts,tsx}\"",
+    "lint:pages": "eslint \"src/pages/**/*.{js,jsx,ts,tsx}\"",
+    "lint:components": "eslint \"src/components/**/*.{js,jsx,ts,tsx}\"",
+    "lint:traffic": "eslint \"src/pages/Traffic/**/*.{js,jsx,ts,tsx}\" \"src/services/analyticsStatsUpdater.ts\"",
+    "lint:services": "eslint \"src/services/**/*.{js,jsx,ts,tsx}\"",
+    "lint:report": "eslint \"src/**/*.{js,jsx,ts,tsx}\" -f unix",
+    "lint:ci": "cross-env CI=true eslint \"src/**/*.{js,jsx,ts,tsx}\" --max-warnings 0"
   },
   "browserslist": {
     "production": [
@@ -55,8 +49,20 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^4.7.0",
     "cross-env": "^10.1.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.9.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.65.0",
+    "vite": "^6.4.3",
+    "vite-plugin-compression": "^0.5.1",
     "wrangler": "^4.80.0"
   }
 }

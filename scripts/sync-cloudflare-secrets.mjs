@@ -4,10 +4,10 @@
  * Never deletes secrets that aren't in the upload set.
  *
  * Also ensures Worker runtime keys exist:
- *   NOTIFY_SECRET  ← NOTIFY_SECRET || REACT_APP_TRAFFIC_NOTIFY_SECRET
+ *   NOTIFY_SECRET  ← NOTIFY_SECRET || VITE_TRAFFIC_NOTIFY_SECRET
  *   RESEND_API_KEY ← RESEND_API_KEY
  *
- * REACT_APP_* still must be present at `npm run build` to appear in the client bundle.
+ * VITE_* still must be present at `npm run build` to appear in the client bundle.
  * Uploading them to the Worker is a backup / dashboard mirror only.
  *
  * Usage:
@@ -133,6 +133,7 @@ function resolveSecretsToSync(env, { workerOnly }) {
   if (workerOnly) {
     const notify =
       (env.NOTIFY_SECRET || '').trim() ||
+      (env.VITE_TRAFFIC_NOTIFY_SECRET || '').trim() ||
       (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim();
     const resend = (env.RESEND_API_KEY || '').trim();
     if (isUsableSecretValue(notify)) secrets.NOTIFY_SECRET = notify;
@@ -147,8 +148,10 @@ function resolveSecretsToSync(env, { workerOnly }) {
     secrets[key] = raw.trim();
   }
 
-  // Worker auth token fallback if only the CRA-prefixed copy is set
-  if (!secrets.NOTIFY_SECRET && isUsableSecretValue(env.REACT_APP_TRAFFIC_NOTIFY_SECRET)) {
+  // Worker auth token fallback if only the Vite (or legacy CRA) client copy is set
+  if (!secrets.NOTIFY_SECRET && isUsableSecretValue(env.VITE_TRAFFIC_NOTIFY_SECRET)) {
+    secrets.NOTIFY_SECRET = env.VITE_TRAFFIC_NOTIFY_SECRET.trim();
+  } else if (!secrets.NOTIFY_SECRET && isUsableSecretValue(env.REACT_APP_TRAFFIC_NOTIFY_SECRET)) {
     secrets.NOTIFY_SECRET = env.REACT_APP_TRAFFIC_NOTIFY_SECRET.trim();
   }
 
@@ -170,14 +173,14 @@ Required for email notify: ${REQUIRED_WORKER_KEYS.join(', ')}
 
 Options:
   --dry-run       Show what would be uploaded (values masked)
-  --deploy        After sync, run npm run deploy (bakes REACT_APP_* into the bundle)
+  --deploy        After sync, run npm run deploy (bakes VITE_* into the bundle)
   --dev-vars      Also write .dev.vars for local wrangler dev
   --worker-only   Only upload NOTIFY_SECRET + RESEND_API_KEY
   --help          Show this help
 
 Security:
   NOTIFY_SECRET must NOT be your Resend API key. Use a separate random string for
-  NOTIFY_SECRET / REACT_APP_TRAFFIC_NOTIFY_SECRET, and keep RESEND_API_KEY Worker-only.
+  NOTIFY_SECRET / VITE_TRAFFIC_NOTIFY_SECRET, and keep RESEND_API_KEY Worker-only.
 `);
 }
 
@@ -245,15 +248,19 @@ function writeDevVars(secrets) {
 function warnSecurity(secrets, env) {
   const notify = (secrets.NOTIFY_SECRET || '').trim();
   const resend = (secrets.RESEND_API_KEY || '').trim();
-  const clientNotify = (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim();
+  const clientNotify = (
+    env.VITE_TRAFFIC_NOTIFY_SECRET ||
+    env.REACT_APP_TRAFFIC_NOTIFY_SECRET ||
+    ''
+  ).trim();
 
   if (notify && resend && notify === resend) {
     console.warn(
       '\nSECURITY: NOTIFY_SECRET is identical to RESEND_API_KEY.\n' +
-        '  REACT_APP_TRAFFIC_NOTIFY_SECRET is shipped in the browser bundle, so this\n' +
+        '  VITE_TRAFFIC_NOTIFY_SECRET is shipped in the browser bundle, so this\n' +
         '  exposes your Resend API key publicly. Generate a separate random notify token:\n' +
         '    NOTIFY_SECRET=<random>\n' +
-        '    REACT_APP_TRAFFIC_NOTIFY_SECRET=<same random>\n' +
+        '    VITE_TRAFFIC_NOTIFY_SECRET=<same random>\n' +
         '    RESEND_API_KEY=<resend key, Worker only>\n' +
         '  Then rotate the Resend key in the Resend dashboard.'
     );
@@ -261,7 +268,7 @@ function warnSecurity(secrets, env) {
 
   if (clientNotify && resend && clientNotify === resend) {
     console.warn(
-      '\nSECURITY: REACT_APP_TRAFFIC_NOTIFY_SECRET matches RESEND_API_KEY — same leak risk.'
+      '\nSECURITY: VITE_TRAFFIC_NOTIFY_SECRET matches RESEND_API_KEY — same leak risk.'
     );
   }
 }
@@ -284,13 +291,21 @@ function main() {
   const secrets = resolveSecretsToSync(env, { workerOnly: opts.workerOnly });
   const keys = Object.keys(secrets).sort();
   const missingRequired = REQUIRED_WORKER_KEYS.filter((k) => !secrets[k]);
-  const clientSecret = (env.REACT_APP_TRAFFIC_NOTIFY_SECRET || '').trim();
+  const clientSecret = (
+    env.VITE_TRAFFIC_NOTIFY_SECRET ||
+    env.REACT_APP_TRAFFIC_NOTIFY_SECRET ||
+    ''
+  ).trim();
 
   console.log(
     `\nSecrets to upsert (${keys.length}${opts.workerOnly ? ', worker-only mode' : ''}):`
   );
   for (const key of keys) {
-    const tag = key.startsWith('REACT_APP_') ? ' [CRA / backup]' : '';
+    const tag = key.startsWith('VITE_')
+      ? ' [Vite / backup]'
+      : key.startsWith('REACT_APP_')
+        ? ' [CRA legacy]'
+        : '';
     console.log(`  ${key}: ${mask(secrets[key])}${tag}`);
   }
 
@@ -329,13 +344,13 @@ function main() {
 
   if (!isUsableSecretValue(clientSecret)) {
     console.warn(
-      '\nWarning: REACT_APP_TRAFFIC_NOTIFY_SECRET is empty/placeholder.\n' +
+      '\nWarning: VITE_TRAFFIC_NOTIFY_SECRET is empty/placeholder.\n' +
         '  Production notify/test emails need it at build time. Set it to the same\n' +
         '  value as NOTIFY_SECRET, then: npm run secrets:sync -- --deploy'
     );
   } else if (secrets.NOTIFY_SECRET && secrets.NOTIFY_SECRET !== clientSecret.trim()) {
     console.warn(
-      '\nWarning: NOTIFY_SECRET and REACT_APP_TRAFFIC_NOTIFY_SECRET differ.\n' +
+      '\nWarning: NOTIFY_SECRET and VITE_TRAFFIC_NOTIFY_SECRET differ.\n' +
         '  They must match or the Worker will reject notify requests with 401.'
     );
   }
@@ -361,16 +376,16 @@ function main() {
   if (opts.deploy) {
     if (!isUsableSecretValue(clientSecret)) {
       console.error(
-        '\nCannot --deploy: REACT_APP_TRAFFIC_NOTIFY_SECRET is missing from .env.'
+        '\nCannot --deploy: VITE_TRAFFIC_NOTIFY_SECRET is missing from .env.'
       );
       process.exit(1);
     }
-    console.log('\nBuilding and deploying so REACT_APP_* values are baked into production…');
+    console.log('\nBuilding and deploying so VITE_* values are baked into production…');
     run('npm', ['run', 'deploy']);
     console.log('Deploy complete.');
   } else if (isUsableSecretValue(clientSecret)) {
     console.log(
-      '\nNext: rebuild production so the client picks up REACT_APP_* values:\n' +
+      '\nNext: rebuild production so the client picks up VITE_* values:\n' +
         '  npm run deploy\n' +
         'or:\n' +
         '  npm run secrets:sync -- --deploy'
