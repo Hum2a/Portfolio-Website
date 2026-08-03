@@ -3,6 +3,15 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useTraffic } from '../TrafficContext';
 import { RefCodeRowDetails } from './RefCodeRowDetails';
 import { RefCodeCompare } from './RefCodeCompare';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 function formatTokenDate(timestamp) {
   if (!timestamp) return '—';
@@ -338,43 +347,49 @@ export function ReferenceCodesList() {
           </tbody>
         </table>
       </div>
-      {deleteConfirmToken && (
-        <div className="delete-confirm-overlay" onClick={closeDeleteConfirm}>
-          <div className="delete-confirm-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="delete-confirm-header">
-              <h3>Delete reference code?</h3>
-              <button type="button" className="delete-confirm-close" onClick={closeDeleteConfirm} aria-label="Close" disabled={!!deletingId}>×</button>
-            </div>
-            <div className="delete-confirm-body">
-              <p>
-                Delete <code>{deleteConfirmToken.id}</code> (source: <strong>{deleteConfirmToken.source}</strong>)?
-              </p>
-              <p className="delete-confirm-warning">
-                Links using this code will stop working.
-              </p>
-              {deleteError && <p className="delete-confirm-error">{deleteError}</p>}
-            </div>
-            <div className="delete-confirm-actions">
-              <button
-                type="button"
-                className="delete-confirm-cancel"
-                onClick={closeDeleteConfirm}
-                disabled={!!deletingId}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="delete-confirm-delete"
-                onClick={confirmDelete}
-                disabled={!!deletingId}
-              >
-                {deletingId ? 'Deleting...' : 'Delete'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Dialog
+        open={!!deleteConfirmToken}
+        onOpenChange={(open) => {
+          if (!open) closeDeleteConfirm();
+        }}
+      >
+        <DialogContent showCloseButton={!deletingId}>
+          <DialogHeader>
+            <DialogTitle>Delete reference code?</DialogTitle>
+            <DialogDescription>
+              Delete <code className="text-text-primary">{deleteConfirmToken?.id}</code>
+              {deleteConfirmToken?.source ? (
+                <>
+                  {' '}
+                  (source: <strong>{deleteConfirmToken.source}</strong>)
+                </>
+              ) : null}
+              ? Links using this code will stop working.
+            </DialogDescription>
+          </DialogHeader>
+          {deleteError ? (
+            <p className="text-sm text-destructive">{deleteError}</p>
+          ) : null}
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={closeDeleteConfirm}
+              disabled={!!deletingId}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={!!deletingId}
+            >
+              {deletingId ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

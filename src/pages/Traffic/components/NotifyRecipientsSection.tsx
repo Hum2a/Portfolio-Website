@@ -9,6 +9,8 @@ import {
   removeNotifyRecipient,
 } from '../../../services/trafficNotifyRecipientsService';
 import { sendTestNotifyEmail } from '../../../services/trafficNotifyService';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export function NotifyRecipientsSection() {
   const [open, setOpen] = useState(false);
@@ -103,7 +105,7 @@ export function NotifyRecipientsSection() {
           <ul className="notify-recipients-list">
             <li className="notify-recipients-item default">
               <span>{DEFAULT_NOTIFY_TO_EMAIL}</span>
-              <span className="notify-recipients-badge">Default</span>
+              <Badge variant="secondary">Default</Badge>
             </li>
             {loading ? (
               <li className="notify-recipients-item muted">Loading…</li>
@@ -111,14 +113,15 @@ export function NotifyRecipientsSection() {
               extras.map((email) => (
                 <li key={email} className="notify-recipients-item">
                   <span>{email}</span>
-                  <button
+                  <Button
                     type="button"
-                    className="notify-recipients-remove"
+                    variant="ghost"
+                    size="xs"
                     onClick={() => handleRemove(email)}
                     disabled={busy}
                   >
                     Remove
-                  </button>
+                  </Button>
                 </li>
               ))
             )}
@@ -133,20 +136,20 @@ export function NotifyRecipientsSection() {
               disabled={busy || testSending}
               required
             />
-            <button type="submit" disabled={busy || testSending || !input.trim()}>
+            <Button type="submit" size="sm" disabled={busy || testSending || !input.trim()}>
               {busy ? 'Saving…' : 'Add'}
-            </button>
+            </Button>
           </form>
 
           <div className="notify-recipients-test">
-            <button
+            <Button
               type="button"
-              className="notify-recipients-test-btn"
+              variant="secondary"
               onClick={handleSendTest}
               disabled={busy || testSending}
             >
               {testSending ? 'Sending test…' : 'Send test email'}
-            </button>
+            </Button>
             <p className="notify-recipients-test-hint">
               Sends a sample alert to every recipient above (including the default).
             </p>

@@ -13,6 +13,15 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { useTraffic } from '../TrafficContext';
+import {
+  CHART_ACCENT,
+  CHART_ACCENT_SOFT,
+  CHART_GRID,
+  chartGridProps,
+  chartAxisProps,
+  chartTooltipStyle,
+} from '../constants';
+import { Badge } from '@/components/ui/badge';
 
 function momentumClass(v) {
   if (v > 5) return 'trend-pos';
@@ -20,10 +29,18 @@ function momentumClass(v) {
   return 'trend-flat';
 }
 
-function badgeClass(label) {
-  if (label === 'hot' || label === 'new') return 'trend-badge hot';
-  if (label === 'cooling') return 'trend-badge cool';
-  return 'trend-badge';
+function TrendLabelBadge({ label }: { label: string }) {
+  const variant =
+    label === 'hot' || label === 'new'
+      ? 'default'
+      : label === 'cooling'
+        ? 'secondary'
+        : 'outline';
+  return (
+    <Badge variant={variant} className="capitalize">
+      {label}
+    </Badge>
+  );
 }
 
 export function TrafficTrendsContent() {
@@ -100,12 +117,12 @@ export function TrafficTrendsContent() {
           <h3>Daily page views (30 days)</h3>
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={dailyPageViews30}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
-              <ReferenceLine y={0} stroke="#ccc" />
-              <Area type="monotone" dataKey="views" stroke="#667eea" fill="#667eea" fillOpacity={0.25} />
+              <CartesianGrid {...chartGridProps} />
+              <XAxis dataKey="name" tick={{ ...chartAxisProps.tick, fontSize: 10 }} stroke={chartAxisProps.stroke} />
+              <YAxis allowDecimals={false} tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+              <Tooltip {...chartTooltipStyle} />
+              <ReferenceLine y={0} stroke={CHART_GRID} />
+              <Area type="monotone" dataKey="views" stroke={CHART_ACCENT} fill={CHART_ACCENT} fillOpacity={0.25} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -137,7 +154,7 @@ export function TrafficTrendsContent() {
                       {row.deltaPct}%
                     </td>
                     <td>
-                      <span className={badgeClass(row.label)}>{row.label}</span>
+                      <TrendLabelBadge label={row.label} />
                     </td>
                   </tr>
                 ))}
@@ -160,13 +177,13 @@ export function TrafficTrendsContent() {
           <h3 className="trends-mt">Event categories</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={eventTrends.slice(0, 10)}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
+              <CartesianGrid {...chartGridProps} />
+              <XAxis dataKey="name" tick={{ ...chartAxisProps.tick, fontSize: 10 }} stroke={chartAxisProps.stroke} />
+              <YAxis allowDecimals={false} tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+              <Tooltip {...chartTooltipStyle} />
               <Legend />
-              <Bar dataKey="recent" name="Last 7d" fill="#667eea" />
-              <Bar dataKey="previous" name="Prior 7d" fill="#b4c0ff" />
+              <Bar dataKey="recent" name="Last 7d" fill={CHART_ACCENT} />
+              <Bar dataKey="previous" name="Prior 7d" fill={CHART_ACCENT_SOFT} />
             </BarChart>
           </ResponsiveContainer>
         </div>

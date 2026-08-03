@@ -1,6 +1,8 @@
 import React from 'react';
 import { FaEye } from 'react-icons/fa';
 import { useTraffic } from '../TrafficContext';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
 export function TrafficTabList() {
   const {
@@ -17,40 +19,49 @@ export function TrafficTabList() {
   } = useTraffic();
 
   return (
-    <div className="traffic-tabs">
-      <button
-        className={`traffic-tab traffic-tab-primary ${activeTab === 'trends' ? 'active' : ''}`}
-        onClick={() => setActiveTab('trends')}
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="traffic-tabs w-full"
+    >
+      <TabsList
+        variant="default"
+        className="flex h-auto w-full flex-wrap justify-start gap-1 p-1"
       >
-        Trends
-      </button>
-      <button className={`traffic-tab ${activeTab === 'visitors' ? 'active' : ''}`} onClick={() => setActiveTab('visitors')}>
-        <span>Visitors ({filteredVisitors.length})</span>
-        {selectedCountry && (
-          <span className="filter-badge country-badge" title={`Filtered by: ${selectedCountry}`}>{selectedCountry}</span>
-        )}
-      </button>
-      <button className={`traffic-tab ${activeTab === 'pageviews' ? 'active' : ''}`} onClick={() => setActiveTab('pageviews')}>
-        Page Views ({filteredPageViews.length})
-      </button>
-      <button className={`traffic-tab ${activeTab === 'events' ? 'active' : ''}`} onClick={() => setActiveTab('events')}>
-        Events ({filteredEvents.length})
-      </button>
-      <button className={`traffic-tab ${activeTab === 'pagetimes' ? 'active' : ''}`} onClick={() => setActiveTab('pagetimes')}>
-        Page Times ({filteredPageTimes.length})
-      </button>
-      <button className={`traffic-tab ${activeTab === 'mediaclicks' ? 'active' : ''}`} onClick={() => setActiveTab('mediaclicks')}>
-        Media Clicks ({filteredMediaClicks.length})
-      </button>
-      <button className={`traffic-tab ${activeTab === 'enquiries' ? 'active' : ''}`} onClick={() => setActiveTab('enquiries')}>
-        Enquiries ({enquiries.length})
-      </button>
-      <button className={`traffic-tab ${activeTab === 'emails' ? 'active' : ''}`} onClick={() => setActiveTab('emails')}>
-        Emails ({emailLogs?.length || 0})
-      </button>
-      <button className={`traffic-tab ${activeTab === 'visitor-activity' ? 'active' : ''}`} onClick={() => setActiveTab('visitor-activity')}>
-        <FaEye /> Watch visitor
-      </button>
-    </div>
+        <TabsTrigger value="trends" className="px-3">
+          Trends
+        </TabsTrigger>
+        <TabsTrigger value="visitors" className="gap-1.5 px-3">
+          Visitors ({filteredVisitors.length})
+          {selectedCountry ? (
+            <Badge variant="secondary" className="max-w-[8rem] truncate" title={`Filtered by: ${selectedCountry}`}>
+              {selectedCountry}
+            </Badge>
+          ) : null}
+        </TabsTrigger>
+        <TabsTrigger value="pageviews" className="px-3">
+          Page Views ({filteredPageViews.length})
+        </TabsTrigger>
+        <TabsTrigger value="events" className="px-3">
+          Events ({filteredEvents.length})
+        </TabsTrigger>
+        <TabsTrigger value="pagetimes" className="px-3">
+          Page Times ({filteredPageTimes.length})
+        </TabsTrigger>
+        <TabsTrigger value="mediaclicks" className="px-3">
+          Media Clicks ({filteredMediaClicks.length})
+        </TabsTrigger>
+        <TabsTrigger value="enquiries" className="px-3">
+          Enquiries ({enquiries.length})
+        </TabsTrigger>
+        <TabsTrigger value="emails" className="px-3">
+          Emails ({emailLogs?.length || 0})
+        </TabsTrigger>
+        <TabsTrigger value="visitor-activity" className="gap-1.5 px-3">
+          <FaEye className="size-3.5" />
+          Watch visitor
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
   );
 }

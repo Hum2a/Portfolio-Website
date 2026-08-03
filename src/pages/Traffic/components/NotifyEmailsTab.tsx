@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTraffic } from '../TrafficContext';
 import { formatDate } from '../utils';
 import { sendTestNotifyEmail } from '../../../services/trafficNotifyService';
+import { Button } from '@/components/ui/button';
 
 function toDate(value) {
   if (!value) return null;
@@ -172,14 +173,14 @@ export function NotifyEmailsTab() {
               {counts.test} test
             </p>
           </div>
-          <button
+          <Button
             type="button"
-            className="notify-emails-test-btn"
+            variant="secondary"
             onClick={handleSendTest}
             disabled={testSending}
           >
             {testSending ? 'Sending test…' : 'Send test email'}
-          </button>
+          </Button>
         </div>
 
         {testFeedback && (

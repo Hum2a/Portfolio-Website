@@ -14,8 +14,16 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useTraffic } from '../TrafficContext';
-import { COLORS } from '../constants';
+import {
+  COLORS,
+  CHART_ACCENT,
+  CHART_ACCENT_WARM,
+  chartGridProps,
+  chartAxisProps,
+  chartTooltipStyle,
+} from '../constants';
 import { getLocationString } from '../utils';
+import { EnvBadge } from './EnvBadge';
 import { toJsDate } from '../refTokenAnalytics';
 
 function formatSessionDate(timestamp) {
@@ -71,11 +79,11 @@ export function RefCodeRowDetails({ token }) {
           {hasChartData ? (
             <ResponsiveContainer width="100%" height={220}>
               <AreaChart data={visitsOverTime}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Area type="monotone" dataKey="visits" stroke="#667eea" fill="#667eea" fillOpacity={0.35} />
+                <CartesianGrid {...chartGridProps} />
+                <XAxis dataKey="name" tick={{ ...chartAxisProps.tick, fontSize: 11 }} stroke={chartAxisProps.stroke} />
+                <YAxis allowDecimals={false} tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                <Tooltip {...chartTooltipStyle} />
+                <Area type="monotone" dataKey="visits" stroke={CHART_ACCENT} fill={CHART_ACCENT} fillOpacity={0.35} />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
@@ -103,7 +111,7 @@ export function RefCodeRowDetails({ token }) {
                     <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip {...chartTooltipStyle} />
               </PieChart>
             </ResponsiveContainer>
           ) : (
@@ -116,11 +124,11 @@ export function RefCodeRowDetails({ token }) {
           {visitorsByDevice.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={visitorsByDevice}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="value" fill="#764ba2" radius={[4, 4, 0, 0]} />
+                <CartesianGrid {...chartGridProps} />
+                <XAxis dataKey="name" tick={{ ...chartAxisProps.tick, fontSize: 11 }} stroke={chartAxisProps.stroke} />
+                <YAxis allowDecimals={false} tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                <Tooltip {...chartTooltipStyle} />
+                <Bar dataKey="value" fill={CHART_ACCENT_WARM} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
@@ -161,11 +169,7 @@ export function RefCodeRowDetails({ token }) {
                     {row.browser ? ` · ${row.browser}` : ''}
                   </td>
                   <td>
-                    {row.environment ? (
-                      <span className={`env-badge ${row.environment}`}>{row.environment}</span>
-                    ) : (
-                      '—'
-                    )}
+                    {row.environment ? <EnvBadge environment={row.environment} /> : "—"}
                   </td>
                   <td className="ref-visit-referrer" title={row.referrer || 'direct'}>
                     {row.referrer === 'direct' ? 'direct' : (row.referrer || '—').slice(0, 48)}

@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "humza-butt-portfolio",
   "compatibility_date": "2026-04-07",
-  "main": "worker/index.js",
+  "main": "worker/index.ts",
   // Keep dashboard plain-text vars across deploys (secrets are already preserved).
   "keep_vars": true,
   "observability": {

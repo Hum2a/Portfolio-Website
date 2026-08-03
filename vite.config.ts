@@ -44,6 +44,16 @@ export default defineConfig({
 
           if (isPathSegment(id, 'framer-motion')) return 'framer-motion';
 
+          // Keep utility packages out of the recharts chunk so the homepage
+          // (cn/cva) does not statically import recharts.
+          if (
+            isPathSegment(id, 'clsx') ||
+            isPathSegment(id, 'class-variance-authority') ||
+            isPathSegment(id, 'tailwind-merge')
+          ) {
+            return 'react-vendor';
+          }
+
           if (isPathSegment(id, 'recharts') || isPathSegment(id, 'victory-vendor')) {
             return 'recharts';
           }

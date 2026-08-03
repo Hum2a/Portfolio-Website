@@ -23,12 +23,21 @@ import {
 } from 'recharts';
 import { FaMapMarkerAlt, FaChevronDown, FaChevronUp, FaGlobe, FaEye } from 'react-icons/fa';
 import { useTraffic } from './TrafficContext';
-import { COLORS } from './constants';
+import {
+  COLORS,
+  CHART_ACCENT,
+  CHART_ACCENT_WARM,
+  CHART_ACCENT_SOFT,
+  chartGridProps,
+  chartAxisProps,
+  chartTooltipStyle,
+} from './constants';
 import { getLocationString, hasValidCoordinates, getGoogleMapsUrl } from './utils';
 
 import { TrafficTrendsContent } from './components/TrafficTrendsContent';
 import { NotifyEmailsTab } from './components/NotifyEmailsTab';
 import { OWNER_TAG_MINE, isClaudeCoworkLabel } from '../../constants/ownerTags';
+import { EnvBadge } from './components/EnvBadge';
 
 export function TrafficTabContent() {
   const {
@@ -107,15 +116,15 @@ export function TrafficTabContent() {
                     labelLine={false}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
-                    fill="#8884d8"
+                    fill={CHART_ACCENT}
                     dataKey="value"
                   >
                     {visitorsByCountry.slice(0, 10).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
-                  <Legend />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -123,12 +132,12 @@ export function TrafficTabContent() {
               <h3>Visitors by Device Type</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={visitorsByDevice}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="value" fill="#667eea" />
+                  <CartesianGrid {...chartGridProps} />
+                  <XAxis dataKey="name" tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <YAxis tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Bar dataKey="value" fill={CHART_ACCENT} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -136,12 +145,12 @@ export function TrafficTabContent() {
               <h3>Visits Over Time</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={visitsOverTime}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid {...chartGridProps} />
                   <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Area type="monotone" dataKey="value" stroke="#667eea" fill="#667eea" fillOpacity={0.6} />
+                  <YAxis tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Area type="monotone" dataKey="value" stroke={CHART_ACCENT} fill={CHART_ACCENT} fillOpacity={0.6} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -285,9 +294,7 @@ export function TrafficTabContent() {
                               {ownerTags[getVisitorKey(visitor)]?.label || OWNER_TAG_MINE}
                             </span>
                           )}
-                          <span className={`env-badge ${visitor.environment === 'localhost' ? 'localhost' : 'production'}`}>
-                            {visitor.environment || 'unknown'}
-                          </span>
+                          <EnvBadge environment={visitor.environment} />
                         </div>
                       </td>
                       <td>{visitor.visits || 0}</td>
@@ -396,9 +403,7 @@ export function TrafficTabContent() {
                                           <span className="session-number">Session #{idx + 1}</span>
                                           <span className="session-id">{session.sessionId || 'N/A'}</span>
                                           {(session.environment || visitor.environment) && (
-                                            <span className={`env-badge ${(session.environment || visitor.environment) === 'localhost' ? 'localhost' : 'production'}`}>
-                                              {session.environment || visitor.environment}
-                                            </span>
+                                            <EnvBadge environment={session.environment || visitor.environment} />
                                           )}
                                         </div>
                                         <div className="session-details">
@@ -447,9 +452,7 @@ export function TrafficTabContent() {
                                           {(session.environment || visitor.environment) && (
                                             <div className="detail-row">
                                               <span className="detail-label">Environment:</span>
-                                              <span className={`detail-value env-badge ${(session.environment || visitor.environment) === 'localhost' ? 'localhost' : 'production'}`}>
-                                                {session.environment || visitor.environment}
-                                              </span>
+                                              <EnvBadge environment={session.environment || visitor.environment} />
                                             </div>
                                           )}
                                         </div>
@@ -555,9 +558,7 @@ export function TrafficTabContent() {
                                   </div>
                                   <div className="summary-item">
                                     <span className="summary-label">Environment:</span>
-                                    <span className={`summary-value env-badge ${visitor.environment === 'localhost' ? 'localhost' : 'production'}`}>
-                                      {visitor.environment || 'unknown'}
-                                    </span>
+                                    <EnvBadge environment={visitor.environment} />
                                   </div>
                                   <div className="summary-item">
                                     <span className="summary-label">Total Visits:</span>
@@ -625,12 +626,12 @@ export function TrafficTabContent() {
               <h3>Page Views Over Time</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={pageViewsOverTime}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid {...chartGridProps} />
                   <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="value" stroke="#764ba2" strokeWidth={2} />
+                  <YAxis tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Line type="monotone" dataKey="value" stroke={CHART_ACCENT_WARM} strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -638,12 +639,12 @@ export function TrafficTabContent() {
               <h3>Top 10 Pages</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={pageViewsByPath} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" />
+                  <CartesianGrid {...chartGridProps} />
+                  <XAxis type="number" tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
                   <YAxis dataKey="name" type="category" width={200} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="value" fill="#f093fb" />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Bar dataKey="value" fill={COLORS[2]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -688,9 +689,7 @@ export function TrafficTabContent() {
                     <td>
                       <div className="path-cell">
                         {pageView.path || 'N/A'}
-                        <span className={`env-badge ${pageView.environment === 'localhost' ? 'localhost' : 'production'}`}>
-                          {pageView.environment || 'unknown'}
-                        </span>
+                        <EnvBadge environment={pageView.environment} />
                       </div>
                     </td>
                     <td>{pageView.title || 'N/A'}</td>
@@ -711,12 +710,12 @@ export function TrafficTabContent() {
               <h3>Events by Category</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={eventsByCategory}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="value" fill="#4facfe" />
+                  <CartesianGrid {...chartGridProps} />
+                  <XAxis dataKey="name" tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <YAxis tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Bar dataKey="value" fill={COLORS[3]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -768,9 +767,7 @@ export function TrafficTabContent() {
                     <td>
                       <div className="category-cell">
                         {event.category || 'N/A'}
-                        <span className={`env-badge ${event.environment === 'localhost' ? 'localhost' : 'production'}`}>
-                          {event.environment || 'unknown'}
-                        </span>
+                        <EnvBadge environment={event.environment} />
                       </div>
                     </td>
                     <td>{event.action || 'N/A'}</td>
@@ -840,11 +837,11 @@ export function TrafficTabContent() {
               <h3>Total time spent by page (top 15)</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={averageTimeByPath.slice(0, 15)} layout="vertical" margin={{ left: 20, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid {...chartGridProps} />
                   <XAxis type="number" tickFormatter={(v) => formatDuration(v)} />
                   <YAxis dataKey="name" type="category" width={180} tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value) => [formatDuration(value), 'Total time']} />
-                  <Bar dataKey="total" name="Total time" fill="#43e97b">
+                  <Tooltip {...chartTooltipStyle} formatter={(value) => [formatDuration(value), 'Total time']} />
+                  <Bar dataKey="total" name="Total time" fill={COLORS[5]}>
                     {averageTimeByPath.slice(0, 15).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -856,11 +853,11 @@ export function TrafficTabContent() {
               <h3>Average time per visit by page (top 15)</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={averageTimeByPath.slice(0, 15)} layout="vertical" margin={{ left: 20, right: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid {...chartGridProps} />
                   <XAxis type="number" tickFormatter={(v) => formatDuration(v)} />
                   <YAxis dataKey="name" type="category" width={180} tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value) => [formatDuration(value), 'Average']} />
-                  <Bar dataKey="average" name="Average per visit" fill="#38f9d7">
+                  <Tooltip {...chartTooltipStyle} formatter={(value) => [formatDuration(value), 'Average']} />
+                  <Bar dataKey="average" name="Average per visit" fill={CHART_ACCENT_SOFT}>
                     {averageTimeByPath.slice(0, 15).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -872,19 +869,20 @@ export function TrafficTabContent() {
               <h3>Time spent over time (last 30 days)</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={timeSpentOverTime}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid {...chartGridProps} />
                   <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
                   <YAxis tickFormatter={(v) => formatDuration(v)} />
                   <Tooltip
+                    {...chartTooltipStyle}
                     formatter={(value, name) => {
                       if (name === 'average') return [formatDuration(value), 'Avg per day'];
                       if (name === 'total') return [formatDuration(value), 'Total that day'];
                       return [value, name];
                     }}
                   />
-                  <Legend />
-                  <Area type="monotone" dataKey="average" stroke="#43e97b" fill="#43e97b" fillOpacity={0.6} name="Avg per day" />
-                  <Area type="monotone" dataKey="total" stroke="#38f9d7" fill="#38f9d7" fillOpacity={0.4} name="Total per day" />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Area type="monotone" dataKey="average" stroke={COLORS[5]} fill={COLORS[5]} fillOpacity={0.6} name="Avg per day" />
+                  <Area type="monotone" dataKey="total" stroke={CHART_ACCENT_SOFT} fill={CHART_ACCENT_SOFT} fillOpacity={0.4} name="Total per day" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -949,9 +947,7 @@ export function TrafficTabContent() {
                     <td className="date-cell">{formatDate(pageTime.endTime)}</td>
                     <td className="visitor-id-cell">{(pageTime.anonymizedIP || pageTime.visitorId || 'N/A').slice(0, 12)}…</td>
                     <td>
-                      <span className={`env-badge ${pageTime.environment === 'localhost' ? 'localhost' : 'production'}`}>
-                        {pageTime.environment || '—'}
-                      </span>
+                      <EnvBadge environment={pageTime.environment} />
                     </td>
                   </tr>
                 ))}
@@ -978,15 +974,15 @@ export function TrafficTabContent() {
                     labelLine={false}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
-                    fill="#8884d8"
+                    fill={CHART_ACCENT}
                     dataKey="value"
                   >
                     {mediaClicksByType.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
-                  <Legend />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -994,12 +990,12 @@ export function TrafficTabContent() {
               <h3>Media Clicks by Project</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={mediaClicksByProject}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid {...chartGridProps} />
                   <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="value" fill="#fa709a">
+                  <YAxis tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Bar dataKey="value" fill={COLORS[6]}>
                     {mediaClicksByProject.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -1011,12 +1007,12 @@ export function TrafficTabContent() {
               <h3>Media Clicks Over Time</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={mediaClicksOverTime}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid {...chartGridProps} />
                   <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="value" stroke="#fa709a" strokeWidth={2} />
+                  <YAxis tick={chartAxisProps.tick} stroke={chartAxisProps.stroke} />
+                  <Tooltip {...chartTooltipStyle} />
+                  <Legend wrapperStyle={{ color: 'var(--text-secondary)' }} />
+                  <Line type="monotone" dataKey="value" stroke={COLORS[6]} strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -1084,9 +1080,7 @@ export function TrafficTabContent() {
                     </td>
                     <td>{formatDate(mediaClick.timestamp)}</td>
                     <td>
-                      <span className={`env-badge ${mediaClick.environment === 'localhost' ? 'localhost' : 'production'}`}>
-                        {mediaClick.environment || 'unknown'}
-                      </span>
+                      <EnvBadge environment={mediaClick.environment} />
                     </td>
                   </tr>
                 ))}

@@ -1,20 +1,32 @@
 import React from 'react';
 import { trafficSignalBadges } from '../../../utils/trafficSignals';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 const formatBool = (v) => {
   if (v === null || v === undefined) return 'Unknown';
   return v ? 'Yes' : 'No';
 };
 
+function signalVariant(className = '') {
+  if (className.includes('bot') || className.includes('danger') || className.includes('high')) {
+    return 'destructive';
+  }
+  if (className.includes('vpn') || className.includes('warn')) {
+    return 'secondary';
+  }
+  return 'outline';
+}
+
 export function TrafficSignalBadges({ signals, className = '' }) {
   const badges = trafficSignalBadges(signals);
   if (!badges.length) return null;
   return (
-    <span className={`traffic-signal-badges ${className}`.trim()}>
+    <span className={cn('traffic-signal-badges inline-flex flex-wrap gap-1', className)}>
       {badges.map((b) => (
-        <span key={b.key} className={`traffic-signal-badge ${b.className}`}>
+        <Badge key={b.key} variant={signalVariant(b.className)} className="uppercase tracking-wide">
           {b.label}
-        </span>
+        </Badge>
       ))}
     </span>
   );
