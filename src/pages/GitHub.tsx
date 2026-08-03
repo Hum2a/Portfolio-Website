@@ -124,13 +124,23 @@ export default function GitHub() {
         transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       >
         <div className="github-page-header">
-          <h1 className="github-page-title">
-            <span className="code-comment">{'//'}</span> GitHub
-          </h1>
+          <h1 className="github-page-title">GitHub</h1>
           <p className="github-page-subtitle">
             Live data from my GitHub profile
           </p>
         </div>
+
+        {username && (
+          <div className="github-contribution-section github-contribution-section--hero surface-2">
+            <h2 className="github-contribution-title">Contribution activity</h2>
+            <ContributionCalendar
+              calendar={contributions}
+              loading={contributionsLoading}
+              error={contributionsError}
+              username={username}
+            />
+          </div>
+        )}
 
         {error && !profile && (
           <div className="github-page-error">
@@ -142,7 +152,7 @@ export default function GitHub() {
         )}
 
         {profile && (
-          <div className="github-profile-card">
+          <div className="github-profile-card surface-2">
             <div className="github-profile-main">
               <img
                 src={profile.avatar_url}
@@ -176,18 +186,6 @@ export default function GitHub() {
                 </a>
               </div>
             </div>
-
-            {username && (
-              <div className="github-contribution-section">
-                <h3 className="github-contribution-title">Contribution activity</h3>
-                <ContributionCalendar
-                  calendar={contributions}
-                  loading={contributionsLoading}
-                  error={contributionsError}
-                  username={username}
-                />
-              </div>
-            )}
           </div>
         )}
 
@@ -216,7 +214,7 @@ export default function GitHub() {
                   href={repo.html_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="github-repo-card"
+                  className="github-repo-card surface-2"
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{

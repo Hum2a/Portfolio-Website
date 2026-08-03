@@ -1,34 +1,37 @@
 {
   "profile": {
     "name": "Humza Butt",
-    "headline": "Full Stack Software Developer at Bgr8 & LifeSmart Financial Education",
+    "headline": "Software Engineer, Full Stack & Platform Configuration",
     "location": "Sutton, England, United Kingdom",
-    "about": "Full Stack Software Developer building platforms across edtech, mentoring, and consumer apps — from React and Flutter frontends to Node, Firebase, and Cloudflare Workers backends.",
+    "about": "I build SaaS platforms, APIs and real-time systems — and configure enterprise platforms for Shell, the BBC, the NHS and the Home Office.",
     "connections": "500+",
     "followers": 539,
     "profileUrl": "https://www.linkedin.com/in/humza-butt-201057208/",
-    "avatar": "/images/linkedin/avatar.jpg",
-    "totalExperience": "7 years 11 months"
+    "avatar": "/images/linkedin/avatar.jpg"
   },
   "experience": [
     {
-      "id": "lifesmart-maintainer",
-      "title": "Software Maintainer",
+      "id": "lifesmart",
+      "title": "Full Stack Software Engineer",
       "company": "LifeSmart Financial Literacy",
       "companyUrl": "https://www.linkedin.com/company/lifesmart-financial-literacy",
       "employmentType": "Part-time",
       "location": "London, England, United Kingdom",
-      "startDate": "2026-06",
+      "startDate": "2024-03",
       "endDate": null,
       "current": true,
       "category": "software",
+      "clients": [],
+      "tech": ["TypeScript", "React", "Vite", "Hono", "Cloudflare", "PostgreSQL"],
       "highlights": [
-        "Maintain production software each month and respond to outages"
+        "Built and maintain a suite of 7 production SaaS tools for financial education",
+        "Sub-second global load times on Cloudflare Workers + Pages",
+        "Interactive learning modules, calculators, quizzes, and admin analytics"
       ]
     },
     {
       "id": "corestream",
-      "title": "Web Developer",
+      "title": "Configuration Analyst & Web Developer",
       "company": "CoreStream GRC",
       "companyUrl": null,
       "employmentType": "Contract",
@@ -37,15 +40,17 @@
       "endDate": "2025-12",
       "current": false,
       "category": "software",
+      "clients": ["Shell", "BBC", "NHS", "Home Office"],
+      "tech": ["HTML/CSS", "JSON", "SQL", "GRC platforms"],
       "highlights": [
-        "Built customised web applications on the CoreStream GRC platform for enterprise clients",
+        "Configured enterprise GRC and reporting platforms for Tier 1 clients including Shell, the BBC, the NHS and the Home Office",
         "Developed dynamic interfaces, workflows and automated processes with HTML/CSS, JSON logic, and SQL",
-        "Worked with clients including Shell, Home Office, BBC, NHS, and Homes England"
+        "Delivered customised web applications on the CoreStream GRC platform for enterprise stakeholders"
       ]
     },
     {
       "id": "bgr8",
-      "title": "Technology Lead & Full Stack Software Developer",
+      "title": "Lead Full Stack Engineer & Tech Founder",
       "company": "Bgr8",
       "companyUrl": "https://www.linkedin.com/company/bgr8",
       "employmentType": "Full-time",
@@ -54,9 +59,11 @@
       "endDate": null,
       "current": true,
       "category": "software",
+      "clients": [],
+      "tech": ["TypeScript", "React", "Firebase", "Cal.com"],
       "highlights": [
         "Architect and develop the Bgr8 mentoring platform (React, TypeScript, Firebase)",
-        "Built proprietary MentorAlgorithm with weighted scoring across 70+ criteria",
+        "Built proprietary MentorAlgorithm with weighted scoring across 70+ criteria — 95% match accuracy in production",
         "Real-time Cal.com calendar integration, admin analytics, and multi-layered security"
       ]
     },
@@ -171,23 +178,6 @@
       "highlights": [
         "News aggregator with sentiment analysis and political bias detection",
         "Python backend with multiple news APIs; Next.js frontend; VADER NLP"
-      ]
-    },
-    {
-      "id": "lifesmart-dev",
-      "title": "Full Stack Software Developer",
-      "company": "LifeSmart Financial Literacy",
-      "companyUrl": "https://www.linkedin.com/company/lifesmart-financial-literacy",
-      "employmentType": "Full-time",
-      "location": "London Area, United Kingdom",
-      "startDate": "2024-03",
-      "endDate": null,
-      "current": true,
-      "category": "software",
-      "highlights": [
-        "Led LifeSmart — financial education platform serving 10,000+ active users",
-        "React.js + Firebase; analytics, admin RBAC, stock simulators, budgeting tools",
-        "LMS with courses, quizzes, and progress tracking; Jest + RTL test suite"
       ]
     },
     {
@@ -312,10 +302,22 @@
       "endYear": 2023,
       "location": "Portsmouth, Hampshire, United Kingdom",
       "notes": [
-        "Integrated Masters — BSc and MEng in Computer Science",
         "Social Secretary — Self Defence Society (22/23)",
         "Social Secretary — Japanese Society (22/23)",
         "Course Representative — MEng Computer Science (22/23)"
+      ]
+    },
+    {
+      "id": "uop-bsc",
+      "school": "University of Portsmouth",
+      "schoolUrl": "https://www.linkedin.com/school/university-of-portsmouth",
+      "degree": "Bachelor of Science — BSc, Computer Science, 1st Class Honours",
+      "field": "Computer Science",
+      "startYear": 2019,
+      "endYear": 2022,
+      "location": "Portsmouth, Hampshire, United Kingdom",
+      "notes": [
+        "1st Class Honours"
       ]
     },
     {
@@ -331,25 +333,35 @@
     }
   ],
   "skills": [
-    "JavaScript",
     "TypeScript",
+    "JavaScript",
     "React",
-    "Next.js",
-    "Vue.js",
+    "React Native",
+    "Vue",
+    "Vite",
+    "Tailwind",
     "Node.js",
+    "Express",
+    "Hono",
     "Python",
-    "Flutter",
-    "Dart",
-    "Firebase",
+    "Flask",
+    "C#",
+    "REST APIs",
     "PostgreSQL",
+    "SQL",
+    "SQLite",
+    "Firebase",
+    "Firestore",
+    "ETL pipelines",
+    "AWS",
+    "Azure",
     "Cloudflare Workers",
-    "Stripe",
-    "OpenAI",
-    "Git",
+    "Docker",
     "CI/CD",
-    "Full Stack Development",
-    "UI/UX",
-    "System Design",
-    "SQL"
+    "GitHub Actions",
+    "Agile/Scrum",
+    "unit & integration testing",
+    "code review",
+    "documentation"
   ]
 }

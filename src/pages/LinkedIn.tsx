@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   FaLinkedin,
   FaMapMarkerAlt,
   FaUsers,
   FaBriefcase,
   FaGraduationCap,
-  FaExternalLinkAlt,
 } from 'react-icons/fa';
 import {
   fetchLinkedInProfile,
@@ -14,10 +13,11 @@ import {
   fetchLinkedInEducation,
   fetchLinkedInSkills,
   getLinkedInProfileUrl,
-  formatLinkedInDateRange,
 } from '../services/linkedinService';
 import firebaseAnalytics from '../services/analyticsService';
 import Seo from '../components/seo/Seo';
+import CareerTimeline from '../components/linkedin/CareerTimeline';
+import SectionBackdrop from '../components/media/SectionBackdrop';
 import './LinkedInPage.css';
 
 const FILTERS = [
@@ -34,7 +34,6 @@ export default function LinkedIn() {
   const [filter, setFilter] = useState('software');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [expandedId, setExpandedId] = useState(null);
 
   const profileUrl = getLinkedInProfileUrl();
   const avatarSrc = profile?.avatar
@@ -103,7 +102,14 @@ export default function LinkedIn() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        style={{ position: 'relative' }}
       >
+        <SectionBackdrop
+          src="/images/linkedin/avatar.jpg"
+          placement="right"
+          intensity={0.11}
+          tint="accent"
+        />
         <div className="linkedin-page-header">
           <h1 className="linkedin-page-title">
             <span className="code-comment">{'//'}</span> Career
@@ -159,9 +165,6 @@ export default function LinkedIn() {
                   <span className="linkedin-profile-stat">
                     {profile.followers} followers
                   </span>
-                  <span className="linkedin-profile-stat">
-                    <FaBriefcase /> {profile.totalExperience}
-                  </span>
                 </div>
                 <a
                   href={profileUrl}
@@ -201,92 +204,10 @@ export default function LinkedIn() {
             </div>
           </div>
 
-          <div className="linkedin-timeline">
-            <AnimatePresence mode="popLayout">
-              {experience.map((role, index) => {
-                const isExpanded = expandedId === role.id;
-                const hasMore = role.highlights?.length > 2;
-                const visibleHighlights = isExpanded
-                  ? role.highlights
-                  : role.highlights?.slice(0, 2);
-
-                return (
-                  <motion.article
-                    key={role.id}
-                    className="linkedin-exp-card"
-                    layout
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{
-                      duration: 0.35,
-                      delay: Math.min(index * 0.03, 0.25),
-                      ease: [0.4, 0, 0.2, 1],
-                    }}
-                  >
-                    <div className="linkedin-exp-marker" aria-hidden="true" />
-                    <div className="linkedin-exp-body">
-                      <div className="linkedin-exp-top">
-                        <h3 className="linkedin-exp-title">{role.title}</h3>
-                        {role.current && (
-                          <span className="linkedin-exp-badge">Current</span>
-                        )}
-                      </div>
-                      <p className="linkedin-exp-company">
-                        {role.companyUrl ? (
-                          <a
-                            href={role.companyUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {role.company}
-                            <FaExternalLinkAlt className="linkedin-ext-icon" />
-                          </a>
-                        ) : (
-                          role.company
-                        )}
-                        {role.employmentType && (
-                          <span className="linkedin-exp-type">
-                            {' · '}
-                            {role.employmentType}
-                          </span>
-                        )}
-                      </p>
-                      <p className="linkedin-exp-dates">
-                        {formatLinkedInDateRange(
-                          role.startDate,
-                          role.endDate,
-                          role.current
-                        )}
-                        {role.location ? ` · ${role.location}` : ''}
-                      </p>
-                      {visibleHighlights?.length > 0 && (
-                        <ul className="linkedin-exp-highlights">
-                          {visibleHighlights.map((h) => (
-                            <li key={h}>{h}</li>
-                          ))}
-                        </ul>
-                      )}
-                      {hasMore && (
-                        <button
-                          type="button"
-                          className="linkedin-exp-toggle"
-                          onClick={() =>
-                            setExpandedId(isExpanded ? null : role.id)
-                          }
-                        >
-                          {isExpanded ? 'Show less' : 'Show more'}
-                        </button>
-                      )}
-                    </div>
-                  </motion.article>
-                );
-              })}
-            </AnimatePresence>
-            {!loading && experience.length === 0 && (
-              <p className="linkedin-empty">No roles in this filter.</p>
-            )}
-          </div>
+          <CareerTimeline roles={experience} />
+          {!loading && experience.length === 0 && (
+            <p className="linkedin-empty">No roles in this filter.</p>
+          )}
         </section>
 
         {education.length > 0 && (

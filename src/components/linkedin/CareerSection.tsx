@@ -1,28 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import {
-  FaBriefcase,
-  FaGraduationCap,
-  FaMapMarkerAlt,
-  FaArrowRight,
-} from 'react-icons/fa';
+import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
 import {
   fetchLinkedInProfile,
   fetchLinkedInExperience,
   fetchLinkedInEducation,
-  formatLinkedInDateRange,
 } from '../../services/linkedinService';
+import SectionBackdrop from '../media/SectionBackdrop';
+import CareerTimeline from './CareerTimeline';
 import './CareerSection.css';
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.32, delay: 0.08 + i * 0.05, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
+/** Homepage: CoreStream + current software roles, CoreStream first if not current */
+function pickHomepageRoles(list) {
+  const software = Array.isArray(list) ? list : [];
+  const corestream = software.find((r) => r.id === 'corestream');
+  const current = software.filter((r) => r.current && r.id !== 'corestream');
+  const picked = [];
+  if (corestream) picked.push(corestream);
+  for (const r of current) {
+    if (picked.length >= 4) break;
+    picked.push(r);
+  }
+  // Prefer LifeSmart + Bgr8 if we still have room and they weren't included
+  return picked.slice(0, 4);
+}
 
 export function CareerSection() {
   const [profile, setProfile] = useState(null);
@@ -43,11 +45,12 @@ export function CareerSection() {
         ]);
         if (!cancelled) {
           setProfile(profileData);
-          const current = (Array.isArray(expData) ? expData : [])
-            .filter((r) => r.current)
-            .slice(0, 4);
-          setRoles(current);
-          setEducation(Array.isArray(eduData) ? eduData.slice(0, 2) : []);
+          setRoles(pickHomepageRoles(expData));
+          setEducation(
+            Array.isArray(eduData)
+              ? eduData.filter((e) => e.id !== 'wcgs').slice(0, 2)
+              : []
+          );
         }
       } catch {
         // hide section on failure
@@ -66,7 +69,6 @@ export function CareerSection() {
       <section id="career" className="career-section" ref={ref}>
         <div className="career-inner">
           <div className="career-loading">
-            <FaBriefcase className="career-loading-icon" />
             <p>Loading career...</p>
           </div>
         </div>
@@ -76,12 +78,14 @@ export function CareerSection() {
 
   if (!profile) return null;
 
-  const avatarSrc = profile.avatar
-    ? `${profile.avatar}`
-    : null;
-
   return (
     <section id="career" className="career-section" ref={ref}>
+      <SectionBackdrop
+        src="/images/linkedin/avatar.jpg"
+        placement="right"
+        intensity={0.12}
+        tint="accent"
+      />
       <motion.div
         className="career-inner"
         initial={{ opacity: 0 }}
@@ -89,103 +93,43 @@ export function CareerSection() {
         transition={{ duration: 0.35 }}
       >
         <div className="career-header">
-          <div className="career-header-main">
-            {avatarSrc && (
-              <img
-                src={avatarSrc}
-                alt={profile.name}
-                className="career-avatar"
-              />
-            )}
-            <div className="career-header-text">
-              <span className="career-label">{'// Career'}</span>
-              <h2 className="career-title">Experience &amp; education</h2>
-              <p className="career-headline">{profile.headline}</p>
-              {profile.location && (
-                <p className="career-location">
-                  <FaMapMarkerAlt /> {profile.location}
-                </p>
-              )}
-              <p className="career-about">
-                {profile.about ||
-                  'Full stack roles across edtech, mentoring, and product — plus an MEng in Computer Science.'}
+          <div className="career-header-text">
+            <span className="career-label">Career</span>
+            <h2 className="career-title">Experience &amp; education</h2>
+            <p className="career-headline">{profile.headline}</p>
+            {profile.location && (
+              <p className="career-location">
+                <FaMapMarkerAlt aria-hidden="true" /> {profile.location}
               </p>
-              <div className="career-stats">
-                <span>{profile.totalExperience} experience</span>
-                <span>{roles.length} current roles</span>
-                <span>{education.length} education</span>
-              </div>
-            </div>
+            )}
+            <p className="career-about">{profile.about}</p>
           </div>
           <Link to="/career" className="career-cta">
-            View full career <FaArrowRight />
+            View full career <FaArrowRight aria-hidden="true" />
           </Link>
         </div>
 
-        <div className="career-grid">
-          <div className="career-col">
-            <h3 className="career-col-title">
-              <FaBriefcase /> Current roles
-            </h3>
-            <div className="career-role-list">
-              {roles.map((role, index) => (
-                <motion.article
-                  key={role.id}
-                  className="career-role-card"
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate={isInView ? 'visible' : 'hidden'}
-                  custom={index}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                >
-                  <div className="career-role-top">
-                    <h4 className="career-role-title">{role.title}</h4>
-                    <span className="career-role-badge">Current</span>
-                  </div>
-                  <p className="career-role-company">{role.company}</p>
-                  <p className="career-role-dates">
-                    {formatLinkedInDateRange(
-                      role.startDate,
-                      role.endDate,
-                      role.current
-                    )}
-                  </p>
-                  {role.highlights?.[0] && (
-                    <p className="career-role-blurb">{role.highlights[0]}</p>
-                  )}
-                </motion.article>
-              ))}
-            </div>
-          </div>
+        <CareerTimeline roles={roles} />
 
-          <div className="career-col career-col--edu">
-            <h3 className="career-col-title">
-              <FaGraduationCap /> Education
-            </h3>
-            <div className="career-edu-list">
-              {education.map((edu, index) => (
-                <motion.article
-                  key={edu.id}
-                  className="career-edu-card"
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate={isInView ? 'visible' : 'hidden'}
-                  custom={index + roles.length}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                >
-                  <h4 className="career-edu-degree">{edu.degree}</h4>
-                  <p className="career-edu-school">{edu.school}</p>
-                  <p className="career-edu-dates">
-                    {edu.startYear} – {edu.endYear}
-                  </p>
-                </motion.article>
+        {education.length > 0 && (
+          <div className="career-edu-strip">
+            <h3 className="career-edu-heading">Education</h3>
+            <ul className="career-edu-list">
+              {education.map((edu) => (
+                <li key={edu.id}>
+                  <span className="career-edu-degree">{edu.degree}</span>
+                  <span className="career-edu-meta">
+                    {edu.school} · {edu.startYear}–{edu.endYear}
+                  </span>
+                </li>
               ))}
-            </div>
-            <Link to="/career" className="career-cta career-cta--secondary">
-              Full timeline on Career page <FaArrowRight />
-            </Link>
+            </ul>
           </div>
-        </div>
+        )}
+
+        <Link to="/career" className="career-cta career-cta--secondary">
+          Full timeline on Career page <FaArrowRight aria-hidden="true" />
+        </Link>
       </motion.div>
     </section>
   );

@@ -228,7 +228,7 @@ const SiteHeader: React.FC = () => {
 
           <div className="site-header-actions">
             <a
-              href="/Humza-Butt-CV.pdf"
+              href="/Humza-Butt-CV.pdf?v=2026-08"
               className="site-header-cv"
               download
               onClick={handleCvClick}
@@ -307,7 +307,7 @@ const SiteHeader: React.FC = () => {
                     </Button>
                   </SheetClose>
                   <a
-                    href="/Humza-Butt-CV.pdf"
+                    href="/Humza-Butt-CV.pdf?v=2026-08"
                     className="site-header-sheet-cv"
                     download
                     onClick={handleCvClick}

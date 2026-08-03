@@ -1,63 +1,120 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import Terminal from "../components/animations/Terminal";
-import CodeBlock from "../components/animations/CodeBlock";
-import Seo from "../components/seo/Seo";
-import "./About.css";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import Seo from '../components/seo/Seo';
+import './About.css';
 
-/** Narrative blurbs; six are chosen at random per visit (see {@link JOURNEY_VISIBLE_COUNT}). */
+/** Narrative blurbs; six are chosen at random per visit. */
 const PROFESSIONAL_JOURNEY_SPOTLIGHTS = [
   {
-    name: "Breathapplyser",
-    description: "Android and iOS app tracking alcohol intake",
-    metaLabel: "features",
-    metaItems: ["Real-time BAC calculation", "Drink tracking"],
+    name: 'Breathapplyser',
+    description: 'Android and iOS app tracking alcohol intake',
+    metaLabel: 'features',
+    metaItems: ['Real-time BAC calculation', 'Drink tracking'],
   },
   {
-    name: "TheraBot",
-    description: "Conversational AI mental health support chatbot",
-    metaLabel: "platforms",
-    metaItems: ["WhatsApp", "React Web"],
+    name: 'TheraBot',
+    description: 'Conversational AI mental health support chatbot',
+    metaLabel: 'platforms',
+    metaItems: ['WhatsApp', 'React Web'],
   },
   {
-    name: "CulinAIry",
-    description: "AI-powered recipe generator for personalized meals",
-    metaLabel: "tech",
-    metaItems: ["AI", "React", "Firebase"],
+    name: 'CulinAIry',
+    description: 'AI-powered recipe generator for personalized meals',
+    metaLabel: 'tech',
+    metaItems: ['AI', 'React', 'Firebase'],
   },
   {
-    name: "BiasLens",
-    description: "News aggregator analyzing sentiment and political bias",
-    metaLabel: "tech",
-    metaItems: ["NLP", "Next.js", "Python"],
+    name: 'BiasLens',
+    description: 'News aggregator analyzing sentiment and political bias',
+    metaLabel: 'tech',
+    metaItems: ['NLP', 'Next.js', 'Python'],
   },
   {
-    name: "LifeSmart",
-    description: "Financial literacy tools with stock market simulators",
-    metaLabel: "features",
-    metaItems: ["Asset simulators", "Educational tools"],
+    name: 'LifeSmart',
+    description: 'Financial literacy tools with stock market simulators',
+    metaLabel: 'features',
+    metaItems: ['Asset simulators', 'Educational tools'],
   },
   {
-    name: "Gremlins",
-    description: "Playful Windows tray companion with configurable gremlins and quiet hours",
-    metaLabel: "tech",
-    metaItems: ["C#", ".NET", "WPF", "React"],
+    name: 'Gremlins',
+    description:
+      'Playful Windows tray companion with configurable gremlins and quiet hours',
+    metaLabel: 'tech',
+    metaItems: ['C#', '.NET', 'WPF', 'React'],
   },
   {
-    name: "Recount",
-    description: "Productivity suite: extension and dashboard for time and focus",
-    metaLabel: "tech",
-    metaItems: ["Chrome MV3", "Next.js", "Supabase"],
+    name: 'Recount',
+    description: 'Productivity suite: extension and dashboard for time and focus',
+    metaLabel: 'tech',
+    metaItems: ['Chrome MV3', 'Next.js', 'Supabase'],
   },
   {
-    name: "Brute-forcer",
-    description: "Client-side password entropy and crack-time estimator",
-    metaLabel: "features",
-    metaItems: ["Privacy-first", "Live demo"],
+    name: 'Brute-forcer',
+    description: 'Client-side password entropy and crack-time estimator',
+    metaLabel: 'features',
+    metaItems: ['Privacy-first', 'Live demo'],
   },
 ];
 
 const JOURNEY_VISIBLE_COUNT = 6;
+
+/** CV stack list verbatim (audit §7.3) */
+const SKILL_GROUPS = [
+  {
+    label: 'Frontend',
+    items: [
+      'TypeScript',
+      'JavaScript',
+      'React',
+      'React Native',
+      'Vue',
+      'Vite',
+      'Tailwind',
+    ],
+  },
+  {
+    label: 'Backend',
+    items: [
+      'Node.js',
+      'Express',
+      'Hono',
+      'Python',
+      'Flask',
+      'C#',
+      'REST APIs',
+    ],
+  },
+  {
+    label: 'Data',
+    items: [
+      'PostgreSQL',
+      'SQL',
+      'SQLite',
+      'Firebase/Firestore',
+      'ETL pipelines',
+    ],
+  },
+  {
+    label: 'Cloud',
+    items: [
+      'AWS',
+      'Azure',
+      'Cloudflare Workers',
+      'Docker',
+      'CI/CD',
+      'GitHub Actions',
+    ],
+  },
+  {
+    label: 'Practices',
+    items: [
+      'Agile/Scrum',
+      'unit & integration testing',
+      'code review',
+      'documentation',
+    ],
+  },
+];
 
 function shuffleCopy(arr) {
   const copy = [...arr];
@@ -77,10 +134,7 @@ const About = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.2,
-      },
+      transition: { duration: 0.6, staggerChildren: 0.15 },
     },
   };
 
@@ -88,14 +142,6 @@ const About = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
-
-  const skillsCode = `const skills = {
-  frontend: ['React.js', 'Vue.js', 'Angular', 'Ember.js', 'Next.js', 'Nuxt.js'],
-  backend: ['Node.js', 'Python', '.NET', 'C#'],
-  databases: ['Firebase', 'MongoDB', 'PostgreSQL'],
-  apis: ['OpenAI API', 'Twilio', 'WhatsApp API', 'FinHub'],
-  deployment: ['Render', 'Vercel', 'CI/CD', 'HostPresto']
-};`;
 
   return (
     <div className="about-page">
@@ -111,112 +157,72 @@ const About = () => {
         initial="hidden"
         animate="visible"
       >
-        <motion.div className="about-header" variants={itemVariants}>
-          <h1 className="about-title">
-            <span className="code-comment">{'//'}</span> About Me
-          </h1>
-          <Terminal
-            lines={[
-              "const developer = {",
-              "  name: 'Humza Butt',",
-              "  role: 'Full Stack Software Developer',",
-              "  passion: 'Creating technology that improves lives'",
-              "};"
-            ]}
-            prompt=">"
-            typingSpeed={22}
-            autoStart={true}
-            className="about-terminal"
-            title="about.js"
-          />
-        </motion.div>
-
-        <motion.div className="about-section" variants={itemVariants}>
-          <h2 className="section-title">
-            <span className="code-comment">{'//'}</span> Professional Journey
-          </h2>
-          <p className="section-description">
-            Here are some of the innovative projects I've worked on — this section shows six at
-            a time, picked at random (refresh to reshuffle):
+        <motion.header className="about-header" variants={itemVariants}>
+          <h1 className="about-title">About</h1>
+          <p className="about-lede">
+            Software Engineer, Full Stack &amp; Platform Configuration. I build
+            SaaS platforms, APIs and real-time systems — and configure enterprise
+            platforms for Shell, the BBC, the NHS and the Home Office.
           </p>
-          <div className="projects-list">
+        </motion.header>
+
+        <motion.section className="about-section" variants={itemVariants}>
+          <h2 className="section-title">Professional journey</h2>
+          <p className="section-description">
+            A rotating sample of shipped work — six at a time (refresh to
+            reshuffle):
+          </p>
+          <ul className="about-spotlight-list">
             {journeySpotlights.map((spotlight) => (
-              <div className="project-item" key={spotlight.name}>
-                <span className="project-keyword">const</span>{" "}
-                <span className="project-name">{spotlight.name}</span> = {"{"}
-                <br />
-                <span className="project-property">  description</span>: "{spotlight.description}",
-                <br />
-                <span className="project-property">
-                  {"  "}
-                  {spotlight.metaLabel}
-                </span>
-                :{" "}
-                {JSON.stringify(spotlight.metaItems).replace(/","/g, '", "')}
-                ,
-                <br />
-                {"}"};
+              <li key={spotlight.name} className="about-spotlight surface-1">
+                <h3 className="about-spotlight-name">{spotlight.name}</h3>
+                <p className="about-spotlight-desc">{spotlight.description}</p>
+                <ul className="about-spotlight-meta">
+                  {spotlight.metaItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </motion.section>
+
+        <motion.section className="about-section" variants={itemVariants}>
+          <h2 className="section-title">Technical expertise</h2>
+          <div className="about-skills">
+            {SKILL_GROUPS.map((group) => (
+              <div key={group.label} className="about-skill-group">
+                <h3 className="about-skill-label">{group.label}</h3>
+                <ul className="about-skill-pills">
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
-        </motion.div>
+        </motion.section>
 
-        <motion.div className="about-section" variants={itemVariants}>
-          <h2 className="section-title">
-            <span className="code-comment">{'//'}</span> Technical Expertise
-          </h2>
-          <CodeBlock
-            code={skillsCode}
-            language="javascript"
-            showLineNumbers={true}
-            copyable={false}
-            className="skills-codeblock"
-          />
-        </motion.div>
-
-        <motion.div className="about-section" variants={itemVariants}>
-          <h2 className="section-title">
-            <span className="code-comment">{'//'}</span> Beyond Coding
-          </h2>
+        <motion.section className="about-section" variants={itemVariants}>
+          <h2 className="section-title">Beyond coding</h2>
           <div className="beyond-coding">
-            <div className="activity-item">
-              <span className="activity-keyword">{'//'}</span> Leadership
-              <br />
-              <span className="activity-code">
-                Social Secretary for Japanese & Self Defence Societies at University of Portsmouth
-                <br />
-                <span className="code-comment">{'// Result: Nominated for "Most Improved Society of the Year"'}</span>
-              </span>
+            <div className="activity-item surface-1">
+              <h3 className="activity-heading">Leadership</h3>
+              <p>
+                Social Secretary for Japanese &amp; Self Defence Societies at
+                University of Portsmouth — nominated for Most Improved Society of
+                the Year.
+              </p>
             </div>
-            <div className="activity-item">
-              <span className="activity-keyword">{'//'}</span> Sports
-              <br />
-              <span className="activity-code">
-                Badminton: Competing since age 7, multiple trophies
-                <br />
-                Kickboxing: 2 years (2021-2023), multiple interclubs
-                <br />
-                Dodgeball: BUCS 22/23 Champions with UoP Dodgeball
-              </span>
+            <div className="activity-item surface-1">
+              <h3 className="activity-heading">Sports</h3>
+              <p>
+                Badminton since age 7; kickboxing 2021–2023; BUCS 22/23 Champions
+                with UoP Dodgeball.
+              </p>
             </div>
           </div>
-        </motion.div>
-
-        <motion.div className="about-footer" variants={itemVariants}>
-          <Terminal
-            lines={[
-              "console.log('Let\\'s connect and create something amazing together!');",
-              "",
-              "// Whether it's crafting innovative software or empowering others",
-              "// through technology, I strive to make a difference."
-            ]}
-            prompt=">"
-            typingSpeed={22}
-            autoStart={true}
-            className="about-footer-terminal"
-            title="connect.js"
-          />
-        </motion.div>
+        </motion.section>
       </motion.div>
     </div>
   );

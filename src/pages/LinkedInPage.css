@@ -22,6 +22,8 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 3rem 1.5rem 4rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .linkedin-page-header {

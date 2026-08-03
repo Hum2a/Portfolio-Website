@@ -581,3 +581,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+.github-contribution-section--hero {
+  padding: 1.25rem 1.35rem;
+  margin-bottom: 1.75rem;
+}
+
+.github-contribution-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}

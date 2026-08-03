@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { FaGithub, FaStar, FaCodeBranch } from 'react-icons/fa';
 import { fetchGitHubRepos, fetchGitHubProfile, getGitHubUsername } from '../../services/githubService';
+import SectionBackdrop from '../media/SectionBackdrop';
 import './GitHubSection.css';
 
 const cardVariants = {
@@ -84,6 +85,12 @@ export function GitHubSection() {
 
   return (
     <section id="github" className="github-section" ref={ref}>
+      <SectionBackdrop
+        src="/images/Bgr8/Matching Algorithm.png"
+        placement="right"
+        intensity={0.12}
+        tint="accent"
+      />
       <motion.div
         className="github-inner"
         initial={{ opacity: 0 }}
@@ -125,7 +132,7 @@ export function GitHubSection() {
                 href={repo.html_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="github-card"
+                className="github-card surface-2"
                 variants={cardVariants}
                 initial="hidden"
                 animate={isInView ? 'visible' : 'hidden'}

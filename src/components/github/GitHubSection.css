@@ -2,6 +2,7 @@
   padding: 5rem 1.5rem 5rem;
   background: var(--bg-primary);
   position: relative;
+  overflow: hidden;
 }
 
 .github-section::before {
@@ -23,6 +24,8 @@
 }
 
 .github-inner {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
 }

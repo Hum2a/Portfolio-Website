@@ -1,4 +1,4 @@
-const CACHE_KEY = 'github_repos_cache';
+const CACHE_KEY = 'github_repos_cache_v2';
 const CONTRIBUTIONS_CACHE_KEY = 'github_contributions_cache';
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
@@ -63,8 +63,14 @@ export async function fetchGitHubRepos(options = {}) {
     }
 
     const data = await res.json();
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
-    return data;
+    const filtered = (Array.isArray(data) ? data : []).filter(
+      (repo) => repo?.name !== 'Portfolio-Website'
+    );
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({ data: filtered, timestamp: Date.now() })
+    );
+    return filtered;
   } catch (err) {
     console.warn('GitHub fetch failed:', err);
     const cached = localStorage.getItem(CACHE_KEY);

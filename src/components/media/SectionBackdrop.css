@@ -1,0 +1,105 @@
+.section-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.section-backdrop-layer {
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Placement: sit behind the side text does not occupy */
+.section-backdrop--right .section-backdrop-layer {
+  top: -8%;
+  right: -4%;
+  bottom: -12%;
+  width: min(58%, 640px);
+  left: auto;
+}
+
+.section-backdrop--left .section-backdrop-layer {
+  top: -8%;
+  left: -4%;
+  bottom: -12%;
+  width: min(58%, 640px);
+  right: auto;
+}
+
+.section-backdrop--center .section-backdrop-layer {
+  inset: -10% -5%;
+  width: auto;
+}
+
+/* Dual masks: radial edge fade + linear fade toward text side */
+.section-backdrop--right .section-backdrop-layer {
+  -webkit-mask-image:
+    radial-gradient(ellipse 70% 70% at 70% 45%, #000 15%, transparent 72%),
+    linear-gradient(to left, #000 20%, transparent 85%);
+  mask-image:
+    radial-gradient(ellipse 70% 70% at 70% 45%, #000 15%, transparent 72%),
+    linear-gradient(to left, #000 20%, transparent 85%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.section-backdrop--left .section-backdrop-layer {
+  -webkit-mask-image:
+    radial-gradient(ellipse 70% 70% at 30% 45%, #000 15%, transparent 72%),
+    linear-gradient(to right, #000 20%, transparent 85%);
+  mask-image:
+    radial-gradient(ellipse 70% 70% at 30% 45%, #000 15%, transparent 72%),
+    linear-gradient(to right, #000 20%, transparent 85%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.section-backdrop--center .section-backdrop-layer {
+  -webkit-mask-image:
+    radial-gradient(ellipse 65% 60% at 50% 50%, #000 10%, transparent 70%),
+    linear-gradient(to bottom, transparent 0%, #000 35%, #000 65%, transparent 100%);
+  mask-image:
+    radial-gradient(ellipse 65% 60% at 50% 50%, #000 10%, transparent 70%),
+    linear-gradient(to bottom, transparent 0%, #000 35%, #000 65%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/* Duotone toward accent / navy without runtime backdrop-filter */
+.section-backdrop--tint .section-backdrop-layer {
+  filter: saturate(0.55) contrast(1.05) brightness(0.85)
+    sepia(0.35) hue-rotate(175deg);
+}
+
+.section-backdrop--tint .section-backdrop-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--bg-primary) 65%, transparent),
+    color-mix(in srgb, var(--accent) 40%, transparent)
+  );
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-backdrop-layer {
+    transition: none;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .section-backdrop--right .section-backdrop-layer,
+  .section-backdrop--left .section-backdrop-layer {
+    width: min(90%, 480px);
+    opacity: 0.85;
+  }
+}
