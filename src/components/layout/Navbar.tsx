@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { prefetchProjects } from "../../utils/prefetchRoute";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -39,9 +40,11 @@ const Navbar = () => {
             >
               About
             </Link>
-            <Link 
-              to="/projects" 
+            <Link
+              to="/projects"
               className={`navbar-link ${isActive('/projects') ? 'active' : ''}`}
+              onMouseEnter={prefetchProjects}
+              onFocus={prefetchProjects}
             >
               Projects
             </Link>

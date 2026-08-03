@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { prefetchProjects } from "../../utils/prefetchRoute";
 import "./HamburgerMenu.css";
 
 const HamburgerMenu = () => {
@@ -27,7 +28,13 @@ const HamburgerMenu = () => {
         <Link to="/about" className="menu-link" onClick={() => setIsOpen(false)}>
           About
         </Link>
-        <Link to="/projects" className="menu-link" onClick={() => setIsOpen(false)}>
+        <Link
+          to="/projects"
+          className="menu-link"
+          onClick={() => setIsOpen(false)}
+          onMouseEnter={prefetchProjects}
+          onFocus={prefetchProjects}
+        >
           Projects
         </Link>
         <Link to="/contact" className="menu-link" onClick={() => setIsOpen(false)}>

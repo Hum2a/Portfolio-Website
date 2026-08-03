@@ -7,6 +7,7 @@ import Terminal from "../components/animations/Terminal";
 import { HomepageFeaturedProjects } from "../components/projects/HomepageFeaturedProjects";
 import { CareerSection } from "../components/linkedin/CareerSection";
 import { GitHubSection } from "../components/github/GitHubSection";
+import { prefetchProjects } from "../utils/prefetchRoute";
 import "./Homepage.css";
 
 const Homepage = () => {
@@ -92,6 +93,8 @@ const Homepage = () => {
             }}
             whileTap={{ scale: 0.98 }}
             className="homepage-button"
+            onMouseEnter={prefetchProjects}
+            onFocus={prefetchProjects}
             onClick={() => navigate("/projects")}
           >
             <span className="button-text">Explore My Work</span>

@@ -7,6 +7,7 @@ import {
   getProjectCategories,
   formatProjectDate,
 } from '../../data/projects';
+import { prefetchProjects } from '../../utils/prefetchRoute';
 import './HomepageFeaturedProjects.css';
 
 const cardVariants = {
@@ -127,7 +128,12 @@ export function HomepageFeaturedProjects() {
         </div>
 
         <motion.div className="featured-footer" variants={cardVariants} custom={featuredProjects.length + 1}>
-          <Link to="/projects" className="featured-view-all">
+          <Link
+            to="/projects"
+            className="featured-view-all"
+            onMouseEnter={prefetchProjects}
+            onFocus={prefetchProjects}
+          >
             Browse all projects & filters
           </Link>
         </motion.div>
