@@ -193,18 +193,19 @@ export default function GitHub() {
           <>
             <div className="github-repos-header">
               <h2 className="github-repos-title">Repositories</h2>
-              <div className="github-sort">
-                <span className="github-sort-label">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="github-sort-select"
-                >
-                  <option value="updated">Last updated</option>
-                  <option value="stars">Stars</option>
-                  <option value="name">Name</option>
-                </select>
-              </div>
+                <label className="github-sort">
+                  <span className="github-sort-label">Sort by</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="github-sort-select"
+                    aria-label="Sort repositories"
+                  >
+                    <option value="updated">Last updated</option>
+                    <option value="stars">Stars</option>
+                    <option value="name">Name</option>
+                  </select>
+                </label>
             </div>
 
             <div className="github-repos-grid">

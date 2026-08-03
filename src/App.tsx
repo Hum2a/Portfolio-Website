@@ -21,7 +21,7 @@ function App() {
           <div className="App">
             <PageTimeTracker />
             <SiteHeader />
-            <div className="app-main">
+            <div className="app-main" id="main-content">
               <AppRoutes />
             </div>
             <SiteFooter />

@@ -466,13 +466,25 @@
 
 .github-repo-language {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.75rem;
   font-family: var(--font-code);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--lang-color, var(--accent-primary));
-  border: 1px solid var(--border-primary);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-glass);
+}
+
+.github-repo-language::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--lang-color, var(--accent));
+  flex-shrink: 0;
 }
 
 .github-repo-desc {

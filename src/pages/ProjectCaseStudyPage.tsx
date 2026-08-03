@@ -12,7 +12,7 @@ const ProjectCaseStudyPage: React.FC = () => {
   const { pathname } = useLocation();
   const project = getProjectByRoute(pathname);
 
-  if (!project || project.visible === false || !project.caseStudy) {
+  if (!project || !project.caseStudy) {
     return <NotFound />;
   }
 

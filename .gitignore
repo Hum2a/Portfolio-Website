@@ -49,3 +49,6 @@ yarn-error.log*
 
 # Generated OG images (rebuild with npm run og)
 /public/og/
+
+# Phase 7 verification artifacts
+/tmp/verify/

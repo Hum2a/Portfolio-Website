@@ -206,7 +206,7 @@ const About = () => {
         <motion.section className="about-section" variants={itemVariants}>
           <h2 className="section-title">Beyond coding</h2>
           <div className="beyond-coding">
-            <div className="activity-item surface-1">
+            <div className="activity-item">
               <h3 className="activity-heading">Leadership</h3>
               <p>
                 Social Secretary for Japanese &amp; Self Defence Societies at
@@ -214,7 +214,7 @@ const About = () => {
                 the Year.
               </p>
             </div>
-            <div className="activity-item surface-1">
+            <div className="activity-item">
               <h3 className="activity-heading">Sports</h3>
               <p>
                 Badminton since age 7; kickboxing 2021–2023; BUCS 22/23 Champions

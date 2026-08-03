@@ -4,14 +4,9 @@
 
 :root,
 .dark {
-  /* Synced contrast fixes — source of truth is globals.css */
-  --text-secondary: #a8b0c4;
-  --text-tertiary: #8792a8;
-  --text-on-accent: #04122b;
+  /* Alias only — do not override globals values */
   --text-inverse: var(--text-on-accent);
-  --accent: #4a9eff;
   --accent-primary: var(--accent);
-  --accent-warm: #f0883e;
 
   /* Retired: --shadow-glow / --shadow-glow-strong — use lift hover */
   --shadow-lift: 0 8px 24px -8px rgba(0, 0, 0, 0.55);

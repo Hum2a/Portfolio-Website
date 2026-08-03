@@ -2,7 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import compression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
 import path from 'node:path';
+import fs from 'node:fs';
 
 function isPathSegment(id: string, name: string): boolean {
   return (
@@ -11,11 +13,33 @@ function isPathSegment(id: string, name: string): boolean {
   );
 }
 
+const verifyBundle = process.env.VERIFY_BUNDLE === '1';
+if (verifyBundle) {
+  fs.mkdirSync(path.resolve(__dirname, 'tmp/verify'), { recursive: true });
+}
+
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
     compression({ algorithm: 'brotliCompress' }),
+    ...(verifyBundle
+      ? [
+          visualizer({
+            filename: path.resolve(__dirname, 'tmp/verify/stats.html'),
+            template: 'treemap',
+            gzipSize: true,
+            brotliSize: true,
+            open: false,
+          }),
+          visualizer({
+            filename: path.resolve(__dirname, 'tmp/verify/stats.json'),
+            template: 'raw-data',
+            gzipSize: true,
+            open: false,
+          }),
+        ]
+      : []),
   ],
   resolve: {
     alias: {
@@ -63,5 +87,9 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+  },
+  preview: {
+    port: 4173,
+    strictPort: true,
   },
 });

@@ -3,15 +3,18 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent),
+    var(--bg-primary);
   padding: 20px;
 }
 
 .humza-login-card {
-  background: white;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   max-width: 400px;
   width: 100%;
   text-align: center;
@@ -20,20 +23,20 @@
 .humza-login-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 10px;
 }
 
 .humza-login-subtitle {
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 30px;
   font-size: 1rem;
 }
 
 .humza-login-error {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  color: #c33;
+  background-color: color-mix(in srgb, var(--error) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error) 40%, transparent);
+  color: var(--error);
   padding: 12px;
   border-radius: 6px;
   margin-bottom: 20px;
@@ -43,23 +46,23 @@
 .humza-login-button {
   width: 100%;
   padding: 12px 24px;
-  background-color: #4285f4;
-  color: white;
+  background-color: var(--accent);
+  color: var(--text-on-accent);
   border: none;
   border-radius: 6px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  transition: background-color 0.3s ease;
+  transition: filter 0.2s ease;
   margin-bottom: 20px;
 }
 
 .humza-login-button:hover:not(:disabled) {
-  background-color: #357ae8;
+  filter: brightness(1.08);
 }
 
 .humza-login-button:disabled {
@@ -73,7 +76,7 @@
 }
 
 .humza-login-note {
-  color: #999;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   margin-top: 20px;
 }

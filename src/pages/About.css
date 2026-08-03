@@ -217,7 +217,7 @@
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
   border: 1px solid var(--border-glass);
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
 }
 
 .about-skills {
@@ -256,11 +256,14 @@
 .activity-heading {
   margin: 0 0 0.5rem;
   font-size: 1rem;
+  color: var(--text-primary);
 }
 
 .activity-item {
   padding: 1.15rem 1.25rem;
   margin-bottom: 0.75rem;
+  background: var(--bg-secondary);
+  border-color: var(--border-glass);
 }
 
 .activity-item p {

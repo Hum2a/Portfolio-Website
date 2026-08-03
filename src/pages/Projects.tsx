@@ -12,7 +12,7 @@ import {
   type Project,
 } from '../data/projects';
 import Seo from '../components/seo/Seo';
-import { Command, CommandInput } from '@/components/ui/command';
+import { Input } from '@/components/ui/input';
 import './Projects.css';
 
 type SortMode = 'recent' | 'surface' | 'tech';
@@ -125,16 +125,18 @@ const Projects = () => {
         </header>
 
         <div className="projects-toolbar">
-          <Command
-            shouldFilter={false}
-            className="projects-search border-glass bg-elevated"
-          >
-            <CommandInput
-              value={query}
-              onValueChange={setQuery}
-              placeholder="Search projects by name, stack, or description…"
-            />
-          </Command>
+          <label className="projects-search-label sr-only" htmlFor="projects-search">
+            Search projects
+          </label>
+          <Input
+            id="projects-search"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search projects by name, stack, or description…"
+            className="projects-search h-11 border-glass bg-elevated"
+            aria-label="Search projects by name, stack, or description"
+          />
 
           <div className="projects-sort" role="group" aria-label="Sort projects">
             <span className="projects-toolbar__label">Sort</span>
