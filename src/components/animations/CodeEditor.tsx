@@ -180,18 +180,50 @@ const BACKDROP_BLUR = '/images/_blur/Bgr8/Matching Algorithm.blur.webp';
 const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
   const reducedMotion = usePrefersReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
   const [typedLen, setTypedLen] = useState(0);
   const [complete, setComplete] = useState(false);
   const [userPaused, setUserPaused] = useState(false);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const rafRef = useRef<number | null>(null);
+  const tiltRafRef = useRef<number | null>(null);
+  const tiltTarget = useRef({ x: 0, y: 0 });
+  const tiltCurrent = useRef({ x: 0, y: 0 });
   const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeFile = FILES[activeIdx];
   const fullLen = activeFile.source.length;
+
+  const applyTiltFrame = useCallback(() => {
+    const el = editorRef.current;
+    const cur = tiltCurrent.current;
+    const tgt = tiltTarget.current;
+    // High lerp = snappy follow without feeling locked
+    const ease = 0.32;
+    cur.x += (tgt.x - cur.x) * ease;
+    cur.y += (tgt.y - cur.y) * ease;
+    if (el) {
+      el.style.transform = `perspective(900px) rotateX(${cur.x.toFixed(2)}deg) rotateY(${cur.y.toFixed(2)}deg)`;
+    }
+    if (Math.abs(tgt.x - cur.x) > 0.02 || Math.abs(tgt.y - cur.y) > 0.02) {
+      tiltRafRef.current = requestAnimationFrame(applyTiltFrame);
+    } else {
+      cur.x = tgt.x;
+      cur.y = tgt.y;
+      if (el) {
+        el.style.transform = `perspective(900px) rotateX(${cur.x}deg) rotateY(${cur.y}deg)`;
+      }
+      tiltRafRef.current = null;
+    }
+  }, []);
+
+  const queueTilt = useCallback(() => {
+    if (tiltRafRef.current == null) {
+      tiltRafRef.current = requestAnimationFrame(applyTiltFrame);
+    }
+  }, [applyTiltFrame]);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -279,6 +311,7 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
   useEffect(() => {
     return () => {
       if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+      if (tiltRafRef.current != null) cancelAnimationFrame(tiltRafRef.current);
     };
   }, []);
 
@@ -291,14 +324,16 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
       const rect = el.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width - 0.5;
       const py = (e.clientY - rect.top) / rect.height - 0.5;
-      setTilt({ x: py * -6, y: px * 8 });
+      tiltTarget.current = { x: py * -9, y: px * 11 };
+      queueTilt();
     },
-    [reducedMotion]
+    [reducedMotion, queueTilt]
   );
 
   const onPointerLeave = useCallback(() => {
-    setTilt({ x: 0, y: 0 });
-  }, []);
+    tiltTarget.current = { x: 0, y: 0 };
+    queueTilt();
+  }, [queueTilt]);
 
   const displayLen = reducedMotion ? fullLen : typedLen;
   const lines = useMemo(
@@ -323,16 +358,7 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
         aria-hidden="true"
         style={{ backgroundImage: `url("${BACKDROP_BLUR}")` }}
       />
-      <div
-        className="code-editor surface-3"
-        style={
-          reducedMotion
-            ? undefined
-            : {
-                transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-              }
-        }
-      >
+      <div ref={editorRef} className="code-editor surface-3">
         <div
           className="code-editor-tabs"
           role="tablist"

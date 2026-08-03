@@ -41,8 +41,8 @@
   z-index: 1;
   overflow: hidden;
   border-radius: 16px;
-  transition: transform 180ms ease-out;
   will-change: transform;
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg);
   min-height: 340px;
   display: flex;
   flex-direction: column;

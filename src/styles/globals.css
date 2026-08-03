@@ -265,6 +265,14 @@
 /* Glass surfaces + lift hover                                                */
 /* -------------------------------------------------------------------------- */
 
+/* Tailwind v4 can miss hyphenated *-foreground text utilities in CVA strings;
+   keep an explicit fallback so primary buttons never inherit link-blue. */
+@layer utilities {
+  .text-primary-foreground {
+    color: var(--primary-foreground);
+  }
+}
+
 @layer components {
   .surface-1 {
     background: var(--bg-elevated);

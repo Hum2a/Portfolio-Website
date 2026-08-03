@@ -8,6 +8,30 @@ export type ProjectCategoryId =
   | 'library'
   | 'game';
 
+export type CaseStudyMetric = { value: string; label: string };
+export type CaseStudySection = {
+  title: string;
+  body: string;
+  image: string;
+  imageAlt: string;
+};
+export type CaseStudyDecision = {
+  choice: string;
+  why: string;
+  tradeoff: string;
+};
+
+export type ProjectCaseStudy = {
+  claim: string;
+  role: string;
+  timeline: string;
+  metrics: CaseStudyMetric[];
+  problem: string;
+  sections: CaseStudySection[];
+  decisions: CaseStudyDecision[];
+  outcome: string;
+};
+
 export interface Project {
   id: string;
   name: string;
@@ -16,12 +40,18 @@ export interface Project {
   tags: string[];
   categories?: ProjectCategoryId[];
   logo?: string;
+  gradient?: string;
   visible?: boolean;
   featured?: boolean;
   priority?: number;
   date?: string;
+  dateAdded?: string;
+  dateUpdated?: string;
   liveUrl?: string;
   repoUrl?: string;
+  /** When true, attempt iframe embed; default false — never ship a failing iframe */
+  embeddable?: boolean;
+  caseStudy?: ProjectCaseStudy;
   [key: string]: unknown;
 }
 
@@ -92,9 +122,6 @@ export const formatProjectDate = (isoDate?: string | null): string | null => {
   });
 };
 
-/**
- * Categories for a project (defaults for legacy entries)
- */
 export const getProjectCategories = (project: Project): ProjectCategoryId[] => {
   if (project.categories && project.categories.length > 0) {
     return project.categories;
@@ -102,23 +129,14 @@ export const getProjectCategories = (project: Project): ProjectCategoryId[] => {
   return ['website'];
 };
 
-/**
- * Get all projects
- */
 export const getAllProjects = (): Project[] => {
   return projectsData.projects as Project[];
 };
 
-/**
- * Get visible projects only
- */
 export const getVisibleProjects = (): Project[] => {
   return getAllProjects().filter((project) => project.visible);
 };
 
-/**
- * Get featured projects
- */
 export const getFeaturedProjects = (): Project[] => {
   return getAllProjects()
     .filter((project) => project.featured && project.visible)
@@ -130,31 +148,71 @@ export const getFeaturedProjects = (): Project[] => {
     });
 };
 
-/**
- * Get project by ID
- */
 export const getProjectById = (id: string): Project | null => {
   return getAllProjects().find((project) => project.id === id) || null;
 };
 
-/**
- * Get project by route
- */
-export const getProjectByRoute = (route: string): Project | null => {
-  return getAllProjects().find((project) => project.route === route) || null;
+/** Alias routes that should resolve to another project's canonical route */
+const ROUTE_ALIASES: Record<string, string> = {
+  '/breathapplyser-v2': '/breathapplyser',
+};
+
+export const normalizeProjectRoute = (route: string): string => {
+  return ROUTE_ALIASES[route] || route;
 };
 
 /**
- * Get all unique tags from visible projects
+ * Get project by route (supports aliases like /breathapplyser-v2).
  */
+export const getProjectByRoute = (route: string): Project | null => {
+  const normalised = normalizeProjectRoute(route);
+  return (
+    getAllProjects().find((project) => project.route === normalised) || null
+  );
+};
+
+/** Visible projects sorted for prev/next navigation */
+export const getOrderedVisibleProjects = (): Project[] => {
+  return [...getVisibleProjects()].sort((a, b) => {
+    const pa = a.priority ?? 99;
+    const pb = b.priority ?? 99;
+    if (pa !== pb) return pa - pb;
+    return a.name.localeCompare(b.name);
+  });
+};
+
+export const getAdjacentProjects = (
+  route: string
+): { prev: Project | null; next: Project | null } => {
+  const list = getOrderedVisibleProjects();
+  const normalised = normalizeProjectRoute(route);
+  const idx = list.findIndex((p) => p.route === normalised);
+  if (idx < 0) return { prev: null, next: null };
+  return {
+    prev: idx > 0 ? list[idx - 1] : null,
+    next: idx < list.length - 1 ? list[idx + 1] : null,
+  };
+};
+
+/** Logo public path helper */
+export const getProjectLogoSrc = (project: Project): string | null => {
+  if (!project.logo) return null;
+  if (project.logo.startsWith('/')) return project.logo;
+  return `/logos/${project.logo}`;
+};
+
+/** Preview image for embeds: first case-study section image, else logo */
+export const getProjectPreviewSrc = (project: Project): string | null => {
+  const sectionImg = project.caseStudy?.sections?.[0]?.image;
+  if (sectionImg) return sectionImg;
+  return getProjectLogoSrc(project);
+};
+
 export const getAllTags = (): string[] => {
   const tags = getVisibleProjects().flatMap((project) => project.tags);
   return [...new Set(tags)].sort();
 };
 
-/**
- * Filter projects by tags
- */
 export const filterProjectsByTags = (selectedTags: string[]): Project[] => {
   if (selectedTags.length === 0) {
     return getVisibleProjects();
@@ -165,9 +223,6 @@ export const filterProjectsByTags = (selectedTags: string[]): Project[] => {
   );
 };
 
-/**
- * Filter by surface types (OR). Empty selection = no category filter.
- */
 export const filterProjectsByCategories = (
   projects: Project[],
   selectedCategoryIds?: string[]
@@ -177,13 +232,12 @@ export const filterProjectsByCategories = (
   }
   return projects.filter((project) => {
     const cats = getProjectCategories(project);
-    return selectedCategoryIds.some((id) => cats.includes(id as ProjectCategoryId));
+    return selectedCategoryIds.some((id) =>
+      cats.includes(id as ProjectCategoryId)
+    );
   });
 };
 
-/**
- * Visible projects filtered by category chips (OR) and tech tags (AND across selected tags).
- */
 export const filterProjectsCombined = (
   selectedCategoryIds?: string[],
   selectedTags?: string[]
@@ -196,6 +250,12 @@ export const filterProjectsCombined = (
   return list.filter((project) =>
     selectedTags.every((tag) => project.tags.includes(tag))
   );
+};
+
+/** All project route paths including aliases — for AppRoutes */
+export const getProjectRoutePaths = (): string[] => {
+  const routes = getAllProjects().map((p) => p.route);
+  return [...routes, ...Object.keys(ROUTE_ALIASES)];
 };
 
 export default projectsData;

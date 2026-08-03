@@ -38,7 +38,48 @@
         "game"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://encore.casa",
+      "caseStudy": {
+        "claim": "Daily grid logic puzzles (Stitch, Quilt, Weave) with deterministic seeds on a Cloudflare Worker + Neon stack.",
+        "role": "TODO(verify): Sole / lead engineer",
+        "timeline": "TODO(verify): Public cut targeting v0.1.0",
+        "metrics": [],
+        "problem": "Most daily games hide their generators; players cannot trust practice boards or replay a past day fairly.\n\nEncore needed a deterministic engine and one Worker for SPA + API.",
+        "sections": [
+          {
+            "title": "Deterministic puzzle engine",
+            "body": "TODO(verify): Product UI screenshot pending — using brand mark until a live capture is added under public/images/Encore/.\n\nSame (seed, version) yields identical boards for daily, practice, catalogue, and archive modes.",
+            "image": "/logos/Encore.png",
+            "imageAlt": "Encore logo — TODO(verify) replace with product screenshot"
+          },
+          {
+            "title": "Shared Cloudflare Worker",
+            "body": "SPA and /v1 API share one Worker with Neon Postgres (FORCE RLS), Better Auth, and first-party analytics.\n\nKeeps game surfaces and account sync on one deploy unit.",
+            "image": "/logos/Encore.png",
+            "imageAlt": "Encore logo — TODO(verify) replace with architecture or UI shot"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Deterministic seeded generation",
+            "why": "Fair daily + replayable practice without storing every board bitmap.",
+            "tradeoff": "Engine versioning must stay explicit when generators change."
+          },
+          {
+            "choice": "Postgres FORCE RLS with CI proofs",
+            "why": "Guest and account data must not leak across tenants.",
+            "tradeoff": "More migration and policy discipline."
+          },
+          {
+            "choice": "No iframe embed of encore.casa",
+            "why": "Production CSP uses frame-ancestors none.",
+            "tradeoff": "Case study uses screenshot/CTA overlay instead of live embed."
+          }
+        ],
+        "outcome": "Live at encore.casa with Stitch, Quilt, Weave (Lattice beta), catalogues, guest/account progress, soft leaderboards, and PWA install — Premium Stripe path wired but flagged off."
+      }
     },
     {
       "id": "baseer-portfolio",
@@ -74,7 +115,33 @@
         "website"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://baseer.co.uk",
+      "repoUrl": "https://github.com/Hum2a/Baseer-Portfolio",
+      "caseStudy": {
+        "claim": "Marketing CV site for Baseer with a freeform visual CMS, first-party analytics, and sector case studies.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Baseer Portfolio.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Baseer Portfolio",
+            "body": "Marketing CV site for Baseer with a freeform visual CMS, first-party analytics, and sector case studies.",
+            "image": "/logos/BaseerPortfolio.svg",
+            "imageAlt": "Baseer Portfolio preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Baseer Portfolio."
+      }
     },
     {
       "id": "docket",
@@ -108,7 +175,33 @@
         "website"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://jobtracker.humza-butt.space",
+      "repoUrl": "https://github.com/Hum2a/jobtracker",
+      "caseStudy": {
+        "claim": "Personal job-application tracker with Kanban, list, stats, docs, reminders, and email alerts—built for a single owner, no login.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Docket.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Docket",
+            "body": "Personal job-application tracker with Kanban, list, stats, docs, reminders, and email alerts—built for a single owner, no login.",
+            "image": "/logos/Docket.svg",
+            "imageAlt": "Docket preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Docket."
+      }
     },
     {
       "id": "docket-baseer",
@@ -144,7 +237,33 @@
         "website"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://docket.baseer.co.uk",
+      "repoUrl": "https://github.com/Hum2a/Docket--Baseer",
+      "caseStudy": {
+        "claim": "Baseer's job-application tracker with kanban, list tools, docs, stats, and Resend alerts—single owner, no login.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Docket (Baseer).\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Docket (Baseer)",
+            "body": "Baseer's job-application tracker with kanban, list tools, docs, stats, and Resend alerts—single owner, no login.",
+            "image": "/logos/DocketBaseer.png",
+            "imageAlt": "Docket (Baseer) preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Docket (Baseer)."
+      }
     },
     {
       "id": "buzzer",
@@ -181,7 +300,33 @@
         "website"
       ],
       "dateAdded": "2026-07-11",
-      "dateUpdated": "2026-07-11"
+      "dateUpdated": "2026-07-11",
+      "embeddable": false,
+      "liveUrl": "https://buzzer.lifesmartfinance.com",
+      "repoUrl": "https://github.com/lifesmart-financial-literacy/Buzzer",
+      "caseStudy": {
+        "claim": "LifeSmart’s teacher-led live financial literacy game for schools — anonymous pupil teams, front screen, real-time play.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Buzzer.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Buzzer",
+            "body": "LifeSmart’s teacher-led live financial literacy game for schools — anonymous pupil teams, front screen, real-time play.",
+            "image": "/logos/Buzzer.png",
+            "imageAlt": "Buzzer preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Buzzer."
+      }
     },
     {
       "id": "oche",
@@ -220,7 +365,33 @@
         "game"
       ],
       "dateAdded": "2026-07-13",
-      "dateUpdated": "2026-07-13"
+      "dateUpdated": "2026-07-13",
+      "embeddable": false,
+      "liveUrl": "https://oche.humza-butt.space",
+      "repoUrl": "https://github.com/Hum2a/oche",
+      "caseStudy": {
+        "claim": "Live venue scoreboard for competitive-socialising sessions: real-time scores, match history, and game video on Cloudflare.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Oche.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Oche",
+            "body": "Live venue scoreboard for competitive-socialising sessions: real-time scores, match history, and game video on Cloudflare.",
+            "image": "/logos/Oche.png",
+            "imageAlt": "Oche preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Oche."
+      }
     },
     {
       "id": "blitz",
@@ -251,7 +422,33 @@
         "website"
       ],
       "dateAdded": "2026-06-18",
-      "dateUpdated": "2026-06-18"
+      "dateUpdated": "2026-06-18",
+      "embeddable": false,
+      "liveUrl": "https://blitzai.online",
+      "repoUrl": "https://github.com/Hum2a/blitz-extension",
+      "caseStudy": {
+        "claim": "Chrome extension that AI-tailors your CV per job (BYOK), then fills applications on major ATS boards after you review.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Blitz.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Blitz",
+            "body": "Chrome extension that AI-tailors your CV per job (BYOK), then fills applications on major ATS boards after you review.",
+            "image": "/logos/blitz.svg",
+            "imageAlt": "Blitz preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Blitz."
+      }
     },
     {
       "id": "feature-cards",
@@ -285,7 +482,33 @@
         "library"
       ],
       "dateAdded": "2026-06-18",
-      "dateUpdated": "2026-06-18"
+      "dateUpdated": "2026-06-18",
+      "embeddable": false,
+      "liveUrl": "https://501fun.humza-butt.space",
+      "repoUrl": "https://github.com/Hum2a/feature-cards",
+      "caseStudy": {
+        "claim": "Accessible, CMS-agnostic Web Component replacing hard-coded landing-page stat cards—vanilla JS, Shadow DOM, live editor demo.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for 501 Feature Cards.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "501 Feature Cards",
+            "body": "Accessible, CMS-agnostic Web Component replacing hard-coded landing-page stat cards—vanilla JS, Shadow DOM, live editor demo.",
+            "image": "/logos/feature-cards.svg",
+            "imageAlt": "501 Feature Cards preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for 501 Feature Cards."
+      }
     },
     {
       "id": "monzo1pchallenge",
@@ -321,7 +544,32 @@
         "website"
       ],
       "dateAdded": "2023-02-15",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://monzo-1p-challenge-calculator.online",
+      "caseStudy": {
+        "claim": "Savings calculator inspired by the Monzo 1p challenge with 3 modes (Next N days, Month, Custom range), magic link auth, and PWA support",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Monzo 1p Challenge Calculator.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Monzo 1p Challenge Calculator",
+            "body": "Savings calculator inspired by the Monzo 1p challenge with 3 modes (Next N days, Month, Custom range), magic link auth, and PWA support",
+            "image": "/logos/Monzo.png",
+            "imageAlt": "Monzo 1p Challenge Calculator preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Monzo 1p Challenge Calculator."
+      }
     },
     {
       "id": "brute-forcer",
@@ -348,7 +596,32 @@
         "website"
       ],
       "dateAdded": "2023-03-15",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://bruteforcer.online",
+      "caseStudy": {
+        "claim": "Privacy-focused password entropy and crack-time estimator—client-side math, no real brute forcing, embedded live demo",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Brute-forcer.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Brute-forcer",
+            "body": "Privacy-focused password entropy and crack-time estimator—client-side math, no real brute forcing, embedded live demo",
+            "image": "/logos/BruteForcer.svg",
+            "imageAlt": "Brute-forcer preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Brute-forcer."
+      }
     },
     {
       "id": "gremlins",
@@ -383,7 +656,32 @@
         "website"
       ],
       "dateAdded": "2023-04-12",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://gremlins.site",
+      "caseStudy": {
+        "claim": "Playful Windows tray companion—configurable gremlins, quiet hours, panic mode, and a local-first marketing site.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Gremlins.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Gremlins",
+            "body": "Playful Windows tray companion—configurable gremlins, quiet hours, panic mode, and a local-first marketing site.",
+            "image": "/images/Gremlins/app data.png",
+            "imageAlt": "Gremlins preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Gremlins."
+      }
     },
     {
       "id": "firewatch",
@@ -411,7 +709,32 @@
         "website"
       ],
       "dateAdded": "2026-05-08",
-      "dateUpdated": "2026-05-08"
+      "dateUpdated": "2026-05-08",
+      "embeddable": false,
+      "repoUrl": "https://github.com/Hum2a/fire-intelligence-dashboard",
+      "caseStudy": {
+        "claim": "Geospatial wildfire intelligence dashboard with map-based risk analysis and metre-accurate proximity checks for analysts.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for FireWatch - Fire Intelligence Dashboard.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "FireWatch - Fire Intelligence Dashboard",
+            "body": "Geospatial wildfire intelligence dashboard with map-based risk analysis and metre-accurate proximity checks for analysts.",
+            "image": "/logos/firewatch-logo.svg",
+            "imageAlt": "FireWatch - Fire Intelligence Dashboard preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for FireWatch - Fire Intelligence Dashboard."
+      }
     },
     {
       "id": "recount",
@@ -448,7 +771,32 @@
         "website"
       ],
       "dateAdded": "2023-05-10",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://recount.world",
+      "caseStudy": {
+        "claim": "Productivity suite: Chrome MV3 extension tracks time by domain; Next.js app for marketing, dashboard, and admin; REST API on Express and Cloudflare (Hono) with Supabase, Stripe, and AI reports",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Recount.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Recount",
+            "body": "Productivity suite: Chrome MV3 extension tracks time by domain; Next.js app for marketing, dashboard, and admin; REST API on Express and Cloudflare (Hono) with Supabase, Stripe, and AI reports",
+            "image": "/logos/Recount.svg",
+            "imageAlt": "Recount preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Recount."
+      }
     },
     {
       "id": "imposter",
@@ -484,7 +832,32 @@
         "game"
       ],
       "dateAdded": "2023-06-07",
-      "dateUpdated": "2026-07-13"
+      "dateUpdated": "2026-07-13",
+      "embeddable": false,
+      "liveUrl": "https://imposter-game.site",
+      "caseStudy": {
+        "claim": "Real-time multiplayer word imposter party game: Discord Activity (voice-channel embedded) and standalone web/PWA, one React client and authoritative PartyKit server",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Imposter.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Imposter",
+            "body": "Real-time multiplayer word imposter party game: Discord Activity (voice-channel embedded) and standalone web/PWA, one React client and authoritative PartyKit server",
+            "image": "/logos/Imposter.svg",
+            "imageAlt": "Imposter preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Imposter."
+      }
     },
     {
       "id": "breathapplyser",
@@ -521,7 +894,61 @@
         "website"
       ],
       "dateAdded": "2023-07-05",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://breathapplyser.online",
+      "repoUrl": "https://github.com/Breathapplyser",
+      "caseStudy": {
+        "claim": "Mobile breathalyzer companion (2026 redesign) with BAC and caffeine tracking, graphs, social features, and PDF reports.",
+        "role": "TODO(verify): Product engineer / full-stack for app and web surfaces",
+        "timeline": "Legacy 2024 · Modern redesign 2026",
+        "metrics": [],
+        "problem": "Drink tracking apps are often either too simplistic or too clinical to use in social settings.\n\nBreathapplyser needed clear BAC/caffeine graphs, fast logging, and optional social accountability.",
+        "sections": [
+          {
+            "title": "Home",
+            "body": "Modern home screen for current levels and quick actions.\n\nEntry point for drinks, graphs, and history.",
+            "image": "/images/BreathapplyserV2/Home.png",
+            "imageAlt": "Breathapplyser V2 home screen"
+          },
+          {
+            "title": "BAC over time",
+            "body": "Interactive BAC graph so users see how levels change over time.\n\nPaired with drink history for context.",
+            "image": "/images/BreathapplyserV2/BAC Over time Graph.png",
+            "imageAlt": "BAC over time graph"
+          },
+          {
+            "title": "Drink presets",
+            "body": "Presets speed up logging common drinks without re-entering details every time.",
+            "image": "/images/BreathapplyserV2/Drink Presets.png",
+            "imageAlt": "Drink presets screen"
+          },
+          {
+            "title": "PDF report generation",
+            "body": "PDF reports for personal tracking and health insights from logged history.",
+            "image": "/images/BreathapplyserV2/Report Generation pdf.png",
+            "imageAlt": "PDF report generation"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Dual alcohol + caffeine tracking",
+            "why": "Users often manage both stimulants and depressants in the same night.",
+            "tradeoff": "Richer data model and more graph surfaces to maintain."
+          },
+          {
+            "choice": "Full V2 redesign rather than incremental UI polish",
+            "why": "Legacy UX could not carry social features and reporting cleanly.",
+            "tradeoff": "Temporary dual narrative (legacy vs modern) on the case study."
+          },
+          {
+            "choice": "Web app + store download surfaces",
+            "why": "Reach users on both installable and browser entry points.",
+            "tradeoff": "Two distribution channels to keep aligned."
+          }
+        ],
+        "outcome": "Shipped V2 with BAC/caffeine graphs, presets, friend codes/leaderboards, and PDF reports, plus web and download.breathapplyser.online surfaces."
+      }
     },
     {
       "id": "lifesmart",
@@ -566,7 +993,60 @@
         "website"
       ],
       "dateAdded": "2023-08-02",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://home.lifesmartfinance.com",
+      "caseStudy": {
+        "claim": "Suite of financial literacy tools — education modules, calculators, quizzes, and budgeting — under one LifeSmart hub.",
+        "role": "TODO(verify): Full-stack engineer across multiple LifeSmart products",
+        "timeline": "TODO(verify): Multi-product suite in production",
+        "metrics": [],
+        "problem": "Financial literacy content is scattered, and calculators rarely connect to a coherent learning journey.\n\nLifeSmart needed modular tools that still feel like one brand.",
+        "sections": [
+          {
+            "title": "SpZero learning platform",
+            "body": "Module-based financial education with video/slide content, quizzes, and progress saving.\n\nAdmin analytics track engagement across modules and users.",
+            "image": "/images/LifeSmart/SpZero/Home Page - Overview.png",
+            "imageAlt": "SpZero homepage overview"
+          },
+          {
+            "title": "Interactive learning path",
+            "body": "Visual module progression across foundations, personal finance, credit, and investing.\n\nKeeps learners oriented without a flat content dump.",
+            "image": "/images/LifeSmart/SpZero/Module Road Layout.png",
+            "imageAlt": "SpZero module road layout"
+          },
+          {
+            "title": "Budget tool flow",
+            "body": "LifeBalance-style budgeting steps that walk users through income and spending decisions.\n\nDesigned as a guided multi-step tool rather than a blank spreadsheet.",
+            "image": "/images/LifeSmart/Budget Tool/Step1.png",
+            "imageAlt": "LifeSmart budget tool step 1"
+          },
+          {
+            "title": "Asset simulation results",
+            "body": "Asset market simulation with results visualisation for teaching investment concepts.\n\nCharts make outcomes tangible after learners run a scenario.",
+            "image": "/images/LifeSmart/Asset Simulation/Results.png",
+            "imageAlt": "Asset simulation results"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Product suite with shared hub, separate tool deploys",
+            "why": "Different tools have different stacks and release cadences.",
+            "tradeoff": "More surfaces to keep branded and linked from the hub."
+          },
+          {
+            "choice": "Cloudflare Workers + Postgres for SpZero-class apps",
+            "why": "Edge performance with durable relational data for progress and admin.",
+            "tradeoff": "More moving parts than a single Firebase app."
+          },
+          {
+            "choice": "SSO with SPZeroFinance where needed",
+            "why": "Learners should not create yet another account for partner content.",
+            "tradeoff": "Auth complexity across org boundaries."
+          }
+        ],
+        "outcome": "Delivered a hub plus specialized tools (education, calculators, quiz, budget, simulation, buzzer) used in production financial-literacy contexts."
+      }
     },
     {
       "id": "networth-tool",
@@ -606,7 +1086,32 @@
         "mobile"
       ],
       "dateAdded": "2026-05-02",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://networthtool.lifesmartfinance.com",
+      "caseStudy": {
+        "claim": "Mobile-first LifeSmart PWA for net worth, learning paths, and financial literacy—React, Workers, Neon.",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Networth Tool.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Networth Tool",
+            "body": "Mobile-first LifeSmart PWA for net worth, learning paths, and financial literacy—React, Workers, Neon.",
+            "image": "/logos/networth-tool.svg",
+            "imageAlt": "Networth Tool preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Networth Tool."
+      }
     },
     {
       "id": "bgr8",
@@ -618,19 +1123,14 @@
       "tags": [
         "TypeScript",
         "React.js",
-        "Firebase",
-        "Vite",
-        "Cal.com API",
-        "MentorAlgorithm",
-        "EdTech",
-        "WebApp",
         "React",
         "Node.js",
         "Firebase",
         "Vite",
         "Cal.com API",
         "MentorAlgorithm",
-        "EdTech"
+        "EdTech",
+        "WebApp"
       ],
       "visible": true,
       "featured": true,
@@ -639,7 +1139,65 @@
         "website"
       ],
       "dateAdded": "2023-08-30",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://bgr8.com",
+      "caseStudy": {
+        "claim": "Mentoring platform with a proprietary MentorAlgorithm scoring across 70+ criteria for mentor–mentee pairing.",
+        "role": "TODO(verify): Architect and full-stack developer",
+        "timeline": "TODO(verify): Ongoing production platform",
+        "metrics": [
+          {
+            "value": "70+",
+            "label": "matching criteria in MentorAlgorithm"
+          }
+        ],
+        "problem": "Matching mentors and mentees by hand does not scale, and shallow filters miss compatibility.\n\nBgr8 needed a weighted scoring system, real-time booking, and admin tools that operators could trust.",
+        "sections": [
+          {
+            "title": "Weighted matching algorithm",
+            "body": "The MentorAlgorithm applies weighted scoring across skills, experience, availability, location, and compatibility factors.\n\nBuilt in TypeScript with real-time data processing so recommendations stay current as profiles change.",
+            "image": "/images/Bgr8/Matching Algorithm.png",
+            "imageAlt": "Bgr8 matching algorithm visualisation"
+          },
+          {
+            "title": "Mentee dashboard",
+            "body": "Personalized dashboard with mentor recommendations and progress tracking.\n\nFirebase Firestore keeps recommendations and status in sync without full page reloads.",
+            "image": "/images/Bgr8/Mentee Dashboard.png",
+            "imageAlt": "Bgr8 mentee dashboard"
+          },
+          {
+            "title": "Live messaging",
+            "body": "Real-time messaging between mentors and mentees with delivery and presence cues.\n\nFirebase-backed so conversations stay available across sessions.",
+            "image": "/images/Bgr8/Live Messaging between mentor and mentee.png",
+            "imageAlt": "Live messaging between mentor and mentee"
+          },
+          {
+            "title": "Admin analytics",
+            "body": "Admin analytics for engagement, matching outcomes, and platform growth.\n\nOperators get live Firestore listeners and exportable reporting.",
+            "image": "/images/Bgr8/Admin Panel Analytics.png",
+            "imageAlt": "Bgr8 admin analytics dashboard"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Custom MentorAlgorithm instead of simple tag filters",
+            "why": "Mentoring quality depends on many soft signals that OR-filters cannot express.",
+            "tradeoff": "Higher implementation and tuning cost versus a simpler search UI."
+          },
+          {
+            "choice": "Firebase for realtime data and auth",
+            "why": "Needed live dashboards, messaging, and rapid iteration without running a custom socket fleet.",
+            "tradeoff": "Vendor coupling and careful rules for admin query surfaces."
+          },
+          {
+            "choice": "Cal.com for availability and booking",
+            "why": "Avoid rebuilding calendar conflict resolution and booking UX.",
+            "tradeoff": "External dependency for a core user journey."
+          }
+        ],
+        "outcome": "Shipped a production mentoring platform with matching, Cal.com booking, RBAC admin tools, and multi-layered security (CSP, XSS protections, rate limiting)."
+      }
     },
     {
       "id": "bakesbyolayide",
@@ -664,7 +1222,32 @@
         "website"
       ],
       "dateAdded": "2023-09-27",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://bakesbyolayide.co.uk",
+      "caseStudy": {
+        "claim": "E-commerce platform for custom baked goods and desserts",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for BakesByOlayide.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "BakesByOlayide",
+            "body": "E-commerce platform for custom baked goods and desserts",
+            "image": "/logos/BakesByOlayide.png",
+            "imageAlt": "BakesByOlayide preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for BakesByOlayide."
+      }
     },
     {
       "id": "biaslens",
@@ -690,7 +1273,32 @@
         "website"
       ],
       "dateAdded": "2023-10-25",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://biaslens.vercel.app",
+      "caseStudy": {
+        "claim": "Political alignment analyser for web articles",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for BiasLens.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "BiasLens",
+            "body": "Political alignment analyser for web articles",
+            "image": "/images/BiasLens/Homepage 1.png",
+            "imageAlt": "BiasLens preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for BiasLens."
+      }
     },
     {
       "id": "ministryofjustice",
@@ -713,7 +1321,31 @@
         "website"
       ],
       "dateAdded": "2023-11-22",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "caseStudy": {
+        "claim": "Task Management System for the Ministry of Justice",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Ministry of Justice.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Ministry of Justice",
+            "body": "Task Management System for the Ministry of Justice",
+            "image": "/logos/MinistryofJustice.png",
+            "imageAlt": "Ministry of Justice preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Ministry of Justice."
+      }
     },
     {
       "id": "mentage",
@@ -741,7 +1373,32 @@
         "website"
       ],
       "dateAdded": "2023-12-20",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://mentage.onrender.com",
+      "caseStudy": {
+        "claim": "WhatsApp chatbot designed to help the user learn",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Mentage.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Mentage",
+            "body": "WhatsApp chatbot designed to help the user learn",
+            "image": "/images/Mentage/conversation 1.png",
+            "imageAlt": "Mentage preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Mentage."
+      }
     },
     {
       "id": "therabot",
@@ -768,7 +1425,60 @@
         "website"
       ],
       "dateAdded": "2024-01-17",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://therabot-site.onrender.com",
+      "caseStudy": {
+        "claim": "Mental health support chatbot on web and WhatsApp, with guided sessions, tone controls, and conversation history.",
+        "role": "TODO(verify): Full-stack developer",
+        "timeline": "TODO(verify): Shipped web + WhatsApp surfaces",
+        "metrics": [],
+        "problem": "People need low-friction mental health support outside clinic hours, without a heavy app install.\n\nTherabot had to feel safe, configurable, and available on channels people already use.",
+        "sections": [
+          {
+            "title": "Dashboard",
+            "body": "Central dashboard for session status and quick access into chat.\n\nDesigned for calm, readable scanning rather than dense admin chrome.",
+            "image": "/images/Therabot/Dashboard.png",
+            "imageAlt": "Therabot dashboard"
+          },
+          {
+            "title": "Role and tone settings",
+            "body": "Operators can tune role and tone so responses stay appropriate for the support context.\n\nSettings screens keep those controls explicit instead of buried prompts.",
+            "image": "/images/Therabot/Role settings.png",
+            "imageAlt": "Therabot role settings"
+          },
+          {
+            "title": "Active web chat",
+            "body": "Web chat for anonymous or signed-in sessions with conversation continuity.\n\nHistory views let users revisit earlier guidance.",
+            "image": "/images/Therabot/ACtive webchat.png",
+            "imageAlt": "Therabot active web chat"
+          },
+          {
+            "title": "WhatsApp surface",
+            "body": "WhatsApp integration meets users in a familiar messenger.\n\nSame support model, different entry point.",
+            "image": "/images/Therabot/Whatsapp chat.png",
+            "imageAlt": "Therabot WhatsApp chat"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "OpenAI-backed conversational flows",
+            "why": "Needed flexible natural-language support rather than a rigid decision tree alone.",
+            "tradeoff": "Must constrain tone/role carefully for a mental-health context."
+          },
+          {
+            "choice": "Dual web + WhatsApp delivery",
+            "why": "Reach users where they already communicate.",
+            "tradeoff": "Two clients to keep behaviour consistent."
+          },
+          {
+            "choice": "Firebase + Render hosting stack",
+            "why": "Fast path to auth, persistence, and a deployable Node/React app.",
+            "tradeoff": "Operational split across services to monitor."
+          }
+        ],
+        "outcome": "Shipped guided meditations, personalized tips, anonymous chat, conversation history, and a WhatsApp channel alongside the web app."
+      }
     },
     {
       "id": "flashcards",
@@ -791,7 +1501,32 @@
         "website"
       ],
       "dateAdded": "2024-02-14",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://flashcards-pj01.onrender.com",
+      "caseStudy": {
+        "claim": "Interactive flashcard application for learning React concepts",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Flashcards.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Flashcards",
+            "body": "Interactive flashcard application for learning React concepts",
+            "image": "/logos/Flashcards.svg",
+            "imageAlt": "Flashcards preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Flashcards."
+      }
     },
     {
       "id": "culinary",
@@ -817,7 +1552,32 @@
         "website"
       ],
       "dateAdded": "2024-03-13",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://culinairy-239n.onrender.com",
+      "caseStudy": {
+        "claim": "An AI-powered recipe generator for personalized meals",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for CulinAIry.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "CulinAIry",
+            "body": "An AI-powered recipe generator for personalized meals",
+            "image": "/images/CulinAIry/About.png",
+            "imageAlt": "CulinAIry preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for CulinAIry."
+      }
     },
     {
       "id": "dadjokegenerator",
@@ -840,7 +1600,32 @@
         "website"
       ],
       "dateAdded": "2024-04-10",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://dad-joke-generator-68xz.onrender.com",
+      "caseStudy": {
+        "claim": "Press a button, get a dad joke",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Dad Joke Generator.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Dad Joke Generator",
+            "body": "Press a button, get a dad joke",
+            "image": "/logos/DadJokeGenerator.png",
+            "imageAlt": "Dad Joke Generator preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Dad Joke Generator."
+      }
     },
     {
       "id": "doomscroll",
@@ -863,7 +1648,32 @@
         "website"
       ],
       "dateAdded": "2024-05-08",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://infinite-useless-scroll.onrender.com",
+      "caseStudy": {
+        "claim": "Infinitely doom scroll useless facts",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for DoomScroll.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "DoomScroll",
+            "body": "Infinitely doom scroll useless facts",
+            "image": "/logos/Doomscroll.png",
+            "imageAlt": "DoomScroll preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for DoomScroll."
+      }
     },
     {
       "id": "contrarian",
@@ -891,7 +1701,31 @@
         "website"
       ],
       "dateAdded": "2024-06-05",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "caseStudy": {
+        "claim": "Pitchdeck classifier",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Contrarian.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Contrarian",
+            "body": "Pitchdeck classifier",
+            "image": "/images/Contrarian/Homepage.png",
+            "imageAlt": "Contrarian preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Contrarian."
+      }
     },
     {
       "id": "ldmf",
@@ -912,7 +1746,32 @@
         "website"
       ],
       "dateAdded": "2024-07-03",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://ldmf.onrender.com",
+      "caseStudy": {
+        "claim": "Informative Website for the LDMF",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Liberal Democrats.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Liberal Democrats",
+            "body": "Informative Website for the LDMF",
+            "image": "/images/Liberal Democrats/AboutUs.png",
+            "imageAlt": "Liberal Democrats preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Liberal Democrats."
+      }
     },
     {
       "id": "pngtosvg",
@@ -933,7 +1792,32 @@
         "website"
       ],
       "dateAdded": "2024-07-31",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://pngtosvg-ulmg.onrender.com",
+      "caseStudy": {
+        "claim": "Web tool to convert PNG's to SVG's",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for PNG to SVG.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "PNG to SVG",
+            "body": "Web tool to convert PNG's to SVG's",
+            "image": "/images/B8/Adminbgr8.png",
+            "imageAlt": "PNG to SVG preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for PNG to SVG."
+      }
     },
     {
       "id": "doppelgancar",
@@ -959,7 +1843,32 @@
         "website"
       ],
       "dateAdded": "2024-08-28",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://doppelgang-car.vercel.app",
+      "caseStudy": {
+        "claim": "AI-powered car personality matcher",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Doppelgan-Car.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Doppelgan-Car",
+            "body": "AI-powered car personality matcher",
+            "image": "/logos/Doppelgancar.png",
+            "imageAlt": "Doppelgan-Car preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Doppelgan-Car."
+      }
     },
     {
       "id": "tindev",
@@ -984,7 +1893,31 @@
         "website"
       ],
       "dateAdded": "2024-09-25",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "caseStudy": {
+        "claim": "Developer-focused networking platform for tech professionals",
+        "role": "TODO(verify): Role to confirm",
+        "timeline": "TODO(verify): Timeline to confirm",
+        "metrics": [],
+        "problem": "TODO(verify): Problem statement for Tindev.\n\nInterim stub until Phase 4b case-study pass.",
+        "sections": [
+          {
+            "title": "Tindev",
+            "body": "Developer-focused networking platform for tech professionals",
+            "image": "/logos/Tindev.png",
+            "imageAlt": "Tindev preview"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "TODO(verify): Key technical choice",
+            "why": "TODO(verify): Why this approach",
+            "tradeoff": "TODO(verify): Trade-off"
+          }
+        ],
+        "outcome": "TODO(verify): Outcome for Tindev."
+      }
     }
   ]
 }

@@ -38,14 +38,15 @@
   --tracking-widest: 0.1em;
 }
 
-/* Legacy helpers that page CSS still relies on (globals owns base type scale) */
-a {
+/* Legacy helpers that page CSS still relies on (globals owns base type scale).
+   Skip shadcn Button links — those set their own text color via data-slot. */
+a:not([data-slot='button']) {
   color: var(--accent-primary);
   text-decoration: none;
   transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-a:hover {
+a:not([data-slot='button']):hover {
   color: var(--accent-hover);
 }
 
