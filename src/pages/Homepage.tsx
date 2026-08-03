@@ -1,40 +1,15 @@
-import React, { useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import Typewriter from "../components/animations/Typewriter";
-import Terminal from "../components/animations/Terminal";
-import { HomepageFeaturedProjects } from "../components/projects/HomepageFeaturedProjects";
-import { CareerSection } from "../components/linkedin/CareerSection";
-import { GitHubSection } from "../components/github/GitHubSection";
-import { prefetchProjects } from "../utils/prefetchRoute";
-import Seo, { DEFAULT_DESCRIPTION } from "../components/seo/Seo";
-import "./Homepage.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import CodeEditor from '../components/animations/CodeEditor';
+import { HomepageFeaturedProjects } from '../components/projects/HomepageFeaturedProjects';
+import { CareerSection } from '../components/linkedin/CareerSection';
+import { GitHubSection } from '../components/github/GitHubSection';
+import { Button } from '../components/ui/button';
+import { prefetchProjects } from '../utils/prefetchRoute';
+import Seo, { DEFAULT_DESCRIPTION } from '../components/seo/Seo';
+import './Homepage.css';
 
 const Homepage = () => {
-  const navigate = useNavigate();
-  const [showTerminal, setShowTerminal] = useState(false);
-  const careerRef = useRef(null);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.35, ease: "easeOut" },
-    },
-  };
-
-  const handleTypewriterComplete = () => {
-    setTimeout(() => {
-      setShowTerminal(true);
-    }, 150);
-  };
-
-  const handleTerminalComplete = useCallback(() => {
-    setTimeout(() => {
-      careerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 500);
-  }, []);
-
   return (
     <div className="homepage">
       <Seo
@@ -42,90 +17,65 @@ const Homepage = () => {
         description={DEFAULT_DESCRIPTION}
         path="/"
       />
-      <motion.div
-        className="homepage-container"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="homepage-hero">
-          <div className="homepage-intro">
-            <span className="homepage-greeting">{"// Hello, I'm"}</span>
-            <h1 className="homepage-title">
-              <Typewriter
-                text="Humza Butt"
-                speed={45}
-                showCursor={true}
-                onComplete={handleTypewriterComplete}
-                codeStyle={false}
-                className="homepage-name"
-              />
-            </h1>
-            <div className="homepage-subtitle-container">
-              {showTerminal && (
-                <Terminal
-                  lines={[
-                    "const developer = {",
-                    "  name: 'Humza Butt',",
-                    "  role: 'Full Stack Developer',",
-                    "  passion: 'Crafting solutions with code',",
-                    "  skills: ['React', 'Node.js', 'TypeScript', '...']",
-                    "};"
-                  ]}
-                  prompt=">"
-                  typingSpeed={22}
-                  autoStart={true}
-                  className="homepage-terminal"
-                  title="about.js"
-                  onComplete={handleTerminalComplete}
-                />
-              )}
+
+      <section className="homepage-hero" aria-label="Introduction">
+        <div className="homepage-hero-grid">
+          <div className="homepage-hero-copy">
+            <p className="homepage-availability">
+              <span className="homepage-availability-dot" aria-hidden="true" />
+              Available for contract
+            </p>
+
+            <h1 className="homepage-title">Humza Butt</h1>
+
+            <p className="homepage-role">
+              Software Engineer, Full Stack &amp; Platform Configuration
+            </p>
+
+            <p className="homepage-lede">
+              I build SaaS platforms, APIs and real-time systems — and configure
+              enterprise platforms for Shell, the BBC, the NHS and the Home
+              Office.
+            </p>
+
+            <div className="homepage-cta-row">
+              <Button asChild size="lg" className="rounded-full">
+                <Link
+                  to="/projects"
+                  onMouseEnter={prefetchProjects}
+                  onFocus={prefetchProjects}
+                >
+                  View work
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" size="lg" className="rounded-full">
+                <Link to="/contact">Get in touch</Link>
+              </Button>
             </div>
+
+            <ul className="homepage-stats" aria-label="Highlights">
+              <li>
+                <span className="homepage-stat-value">29</span>
+                <span className="homepage-stat-label">shipped</span>
+              </li>
+              <li>
+                <span className="homepage-stat-value">6</span>
+                <span className="homepage-stat-label">surfaces</span>
+              </li>
+              <li>
+                <span className="homepage-stat-value">4</span>
+                <span className="homepage-stat-label">Tier 1 clients</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="homepage-hero-editor">
+            <CodeEditor />
           </div>
         </div>
+      </section>
 
-        <motion.div
-          className="homepage-cta"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.3 }}
-        >
-          <motion.button
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "var(--shadow-lift-strong)",
-            }}
-            whileTap={{ scale: 0.98 }}
-            className="homepage-button"
-            onMouseEnter={prefetchProjects}
-            onFocus={prefetchProjects}
-            onClick={() => navigate("/projects")}
-          >
-            <span className="button-text">Explore My Work</span>
-            <span className="button-arrow">→</span>
-          </motion.button>
-        </motion.div>
-
-        <motion.div
-          className="homepage-scroll-hint"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.3 }}
-        >
-          <span className="scroll-hint-text">Scroll to explore career &amp; projects</span>
-          <motion.span
-            className="scroll-hint-chevron"
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            ↓
-          </motion.span>
-        </motion.div>
-      </motion.div>
-
-      <div ref={careerRef}>
-        <CareerSection />
-      </div>
+      <CareerSection />
       <HomepageFeaturedProjects />
       <GitHubSection />
     </div>
