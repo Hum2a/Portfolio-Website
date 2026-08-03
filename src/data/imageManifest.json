@@ -215,6 +215,42 @@
     "height": 4581,
     "dominantColor": "#181818"
   },
+  "/images/BakesByOlayide/detail.png": {
+    "src": "/images/BakesByOlayide/detail.png",
+    "webp": "/images/BakesByOlayide/detail.webp",
+    "avif": "/images/BakesByOlayide/detail.avif",
+    "blur": "/images/_blur/BakesByOlayide/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BakesByOlayide/hero.png": {
+    "src": "/images/BakesByOlayide/hero.png",
+    "webp": "/images/BakesByOlayide/hero.webp",
+    "avif": "/images/BakesByOlayide/hero.avif",
+    "blur": "/images/_blur/BakesByOlayide/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/BaseerPortfolio/detail.png": {
+    "src": "/images/BaseerPortfolio/detail.png",
+    "webp": "/images/BaseerPortfolio/detail.webp",
+    "avif": "/images/BaseerPortfolio/detail.avif",
+    "blur": "/images/_blur/BaseerPortfolio/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#e8e8e8"
+  },
+  "/images/BaseerPortfolio/hero.png": {
+    "src": "/images/BaseerPortfolio/hero.png",
+    "webp": "/images/BaseerPortfolio/hero.webp",
+    "avif": "/images/BaseerPortfolio/hero.avif",
+    "blur": "/images/_blur/BaseerPortfolio/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#e8e8e8"
+  },
   "/images/Bgr8/Admin Email Drafter.png": {
     "src": "/images/Bgr8/Admin Email Drafter.png",
     "webp": "/images/Bgr8/Admin Email Drafter.webp",
@@ -349,6 +385,24 @@
     "width": 1280,
     "height": 631,
     "dominantColor": "#282828"
+  },
+  "/images/Blitz/detail.png": {
+    "src": "/images/Blitz/detail.png",
+    "webp": "/images/Blitz/detail.webp",
+    "avif": "/images/Blitz/detail.avif",
+    "blur": "/images/_blur/Blitz/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Blitz/hero.png": {
+    "src": "/images/Blitz/hero.png",
+    "webp": "/images/Blitz/hero.webp",
+    "avif": "/images/Blitz/hero.avif",
+    "blur": "/images/_blur/Blitz/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
   },
   "/images/Breathapplyser/breathapp.png": {
     "src": "/images/Breathapplyser/breathapp.png",
@@ -539,6 +593,24 @@
     "height": 2856,
     "dominantColor": "#f8f8f8"
   },
+  "/images/BruteForcer/hero.png": {
+    "src": "/images/BruteForcer/hero.png",
+    "webp": "/images/BruteForcer/hero.webp",
+    "avif": "/images/BruteForcer/hero.avif",
+    "blur": "/images/_blur/BruteForcer/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Buzzer/hero.png": {
+    "src": "/images/Buzzer/hero.png",
+    "webp": "/images/Buzzer/hero.webp",
+    "avif": "/images/Buzzer/hero.avif",
+    "blur": "/images/_blur/Buzzer/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
   "/images/Contrarian/Homepage.png": {
     "src": "/images/Contrarian/Homepage.png",
     "webp": "/images/Contrarian/Homepage.webp",
@@ -665,6 +737,132 @@
     "height": 1916,
     "dominantColor": "#282838"
   },
+  "/images/DadJokeGenerator/hero.png": {
+    "src": "/images/DadJokeGenerator/hero.png",
+    "webp": "/images/DadJokeGenerator/hero.webp",
+    "avif": "/images/DadJokeGenerator/hero.avif",
+    "blur": "/images/_blur/DadJokeGenerator/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f86868"
+  },
+  "/images/Docket/detail.png": {
+    "src": "/images/Docket/detail.png",
+    "webp": "/images/Docket/detail.webp",
+    "avif": "/images/Docket/detail.avif",
+    "blur": "/images/_blur/Docket/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Docket/hero.png": {
+    "src": "/images/Docket/hero.png",
+    "webp": "/images/Docket/hero.webp",
+    "avif": "/images/Docket/hero.avif",
+    "blur": "/images/_blur/Docket/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/DocketBaseer/detail.png": {
+    "src": "/images/DocketBaseer/detail.png",
+    "webp": "/images/DocketBaseer/detail.webp",
+    "avif": "/images/DocketBaseer/detail.avif",
+    "blur": "/images/_blur/DocketBaseer/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#e8e8f8"
+  },
+  "/images/DocketBaseer/hero.png": {
+    "src": "/images/DocketBaseer/hero.png",
+    "webp": "/images/DocketBaseer/hero.webp",
+    "avif": "/images/DocketBaseer/hero.avif",
+    "blur": "/images/_blur/DocketBaseer/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/DoomScroll/hero.png": {
+    "src": "/images/DoomScroll/hero.png",
+    "webp": "/images/DoomScroll/hero.webp",
+    "avif": "/images/DoomScroll/hero.avif",
+    "blur": "/images/_blur/DoomScroll/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Doppelgancar/hero.png": {
+    "src": "/images/Doppelgancar/hero.png",
+    "webp": "/images/Doppelgancar/hero.webp",
+    "avif": "/images/Doppelgancar/hero.avif",
+    "blur": "/images/_blur/Doppelgancar/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#081828"
+  },
+  "/images/Encore/detail.png": {
+    "src": "/images/Encore/detail.png",
+    "webp": "/images/Encore/detail.webp",
+    "avif": "/images/Encore/detail.avif",
+    "blur": "/images/_blur/Encore/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Encore/hero.png": {
+    "src": "/images/Encore/hero.png",
+    "webp": "/images/Encore/hero.webp",
+    "avif": "/images/Encore/hero.avif",
+    "blur": "/images/_blur/Encore/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/FeatureCards/detail.png": {
+    "src": "/images/FeatureCards/detail.png",
+    "webp": "/images/FeatureCards/detail.webp",
+    "avif": "/images/FeatureCards/detail.avif",
+    "blur": "/images/_blur/FeatureCards/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/FeatureCards/hero.png": {
+    "src": "/images/FeatureCards/hero.png",
+    "webp": "/images/FeatureCards/hero.webp",
+    "avif": "/images/FeatureCards/hero.avif",
+    "blur": "/images/_blur/FeatureCards/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/FireWatch/hero.png": {
+    "src": "/images/FireWatch/hero.png",
+    "webp": "/images/FireWatch/hero.webp",
+    "avif": "/images/FireWatch/hero.avif",
+    "blur": "/images/_blur/FireWatch/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#281828"
+  },
+  "/images/Flashcards/detail.png": {
+    "src": "/images/Flashcards/detail.png",
+    "webp": "/images/Flashcards/detail.webp",
+    "avif": "/images/Flashcards/detail.avif",
+    "blur": "/images/_blur/Flashcards/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#c8d8e8"
+  },
+  "/images/Flashcards/hero.png": {
+    "src": "/images/Flashcards/hero.png",
+    "webp": "/images/Flashcards/hero.webp",
+    "avif": "/images/Flashcards/hero.avif",
+    "blur": "/images/_blur/Flashcards/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#c8d8e8"
+  },
   "/images/Gremlins/app data.png": {
     "src": "/images/Gremlins/app data.png",
     "webp": "/images/Gremlins/app data.webp",
@@ -673,6 +871,15 @@
     "width": 557,
     "height": 882,
     "dominantColor": "#181828"
+  },
+  "/images/Gremlins/detail.png": {
+    "src": "/images/Gremlins/detail.png",
+    "webp": "/images/Gremlins/detail.webp",
+    "avif": "/images/Gremlins/detail.avif",
+    "blur": "/images/_blur/Gremlins/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
   },
   "/images/Gremlins/Gremlins 1.png": {
     "src": "/images/Gremlins/Gremlins 1.png",
@@ -692,6 +899,15 @@
     "height": 1029,
     "dominantColor": "#282838"
   },
+  "/images/Gremlins/hero.png": {
+    "src": "/images/Gremlins/hero.png",
+    "webp": "/images/Gremlins/hero.webp",
+    "avif": "/images/Gremlins/hero.avif",
+    "blur": "/images/_blur/Gremlins/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
   "/images/Gremlins/rules n timing.png": {
     "src": "/images/Gremlins/rules n timing.png",
     "webp": "/images/Gremlins/rules n timing.webp",
@@ -709,6 +925,24 @@
     "width": 565,
     "height": 881,
     "dominantColor": "#181828"
+  },
+  "/images/Imposter/detail.png": {
+    "src": "/images/Imposter/detail.png",
+    "webp": "/images/Imposter/detail.webp",
+    "avif": "/images/Imposter/detail.avif",
+    "blur": "/images/_blur/Imposter/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Imposter/hero.png": {
+    "src": "/images/Imposter/hero.png",
+    "webp": "/images/Imposter/hero.webp",
+    "avif": "/images/Imposter/hero.avif",
+    "blur": "/images/_blur/Imposter/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
   },
   "/images/Liberal Democrats/AboutUs.png": {
     "src": "/images/Liberal Democrats/AboutUs.png",
@@ -1232,6 +1466,15 @@
     "height": 697,
     "dominantColor": "#f8f8f8"
   },
+  "/images/LifeSmartHub/hero.png": {
+    "src": "/images/LifeSmartHub/hero.png",
+    "webp": "/images/LifeSmartHub/hero.webp",
+    "avif": "/images/LifeSmartHub/hero.avif",
+    "blur": "/images/_blur/LifeSmartHub/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#081828"
+  },
   "/images/linkedin/avatar.jpg": {
     "src": "/images/linkedin/avatar.jpg",
     "webp": "/images/linkedin/avatar.webp",
@@ -1303,6 +1546,78 @@
     "width": 384,
     "height": 828,
     "dominantColor": "#f8f8f8"
+  },
+  "/images/MinistryOfJustice/hero.png": {
+    "src": "/images/MinistryOfJustice/hero.png",
+    "webp": "/images/MinistryOfJustice/hero.webp",
+    "avif": "/images/MinistryOfJustice/hero.avif",
+    "blur": "/images/_blur/MinistryOfJustice/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#081828"
+  },
+  "/images/Monzo/hero.png": {
+    "src": "/images/Monzo/hero.png",
+    "webp": "/images/Monzo/hero.webp",
+    "avif": "/images/Monzo/hero.avif",
+    "blur": "/images/_blur/Monzo/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/NetworthTool/hero.png": {
+    "src": "/images/NetworthTool/hero.png",
+    "webp": "/images/NetworthTool/hero.webp",
+    "avif": "/images/NetworthTool/hero.avif",
+    "blur": "/images/_blur/NetworthTool/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Oche/detail.png": {
+    "src": "/images/Oche/detail.png",
+    "webp": "/images/Oche/detail.webp",
+    "avif": "/images/Oche/detail.avif",
+    "blur": "/images/_blur/Oche/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#181828"
+  },
+  "/images/Oche/hero.png": {
+    "src": "/images/Oche/hero.png",
+    "webp": "/images/Oche/hero.webp",
+    "avif": "/images/Oche/hero.avif",
+    "blur": "/images/_blur/Oche/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#081818"
+  },
+  "/images/PngToSvg/hero.png": {
+    "src": "/images/PngToSvg/hero.png",
+    "webp": "/images/PngToSvg/hero.webp",
+    "avif": "/images/PngToSvg/hero.avif",
+    "blur": "/images/_blur/PngToSvg/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#081828"
+  },
+  "/images/portfolio-preview.jpg": {
+    "src": "/images/portfolio-preview.jpg",
+    "webp": "/images/portfolio-preview.webp",
+    "avif": "/images/portfolio-preview.avif",
+    "blur": "/images/_blur/portfolio-preview.blur.webp",
+    "width": 1200,
+    "height": 630,
+    "dominantColor": "#080828"
+  },
+  "/images/Recount/hero.png": {
+    "src": "/images/Recount/hero.png",
+    "webp": "/images/Recount/hero.webp",
+    "avif": "/images/Recount/hero.avif",
+    "blur": "/images/_blur/Recount/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
   },
   "/images/Therabot/ACtive webchat.png": {
     "src": "/images/Therabot/ACtive webchat.png",
@@ -1411,5 +1726,14 @@
     "width": 1077,
     "height": 802,
     "dominantColor": "#282828"
+  },
+  "/images/Tindev/hero.png": {
+    "src": "/images/Tindev/hero.png",
+    "webp": "/images/Tindev/hero.webp",
+    "avif": "/images/Tindev/hero.avif",
+    "blur": "/images/_blur/Tindev/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#281838"
   }
 }

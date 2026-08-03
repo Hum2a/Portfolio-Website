@@ -601,16 +601,16 @@ Report everything as a table of metric / before / after / target.
 
 ## Part 3 — Sanity checklist before launch
 
-- [ ] `humza-butt.space` is canonical; other domains 301 to it
-- [ ] Availability pill says **contract**, not full-time
-- [ ] Shell / BBC / NHS / Home Office appear on the Career section and in the hero stat strip
-- [ ] `linkedin.json` titles and dates match the CV exactly
-- [ ] The "7 years 11 months" figure is scoped or removed (see audit 7.5)
-- [ ] Ember.js and Angular are gone from the skills list
-- [ ] CV PDF is downloadable from header, contact and footer
-- [ ] Zero broken iframes on any case study
-- [ ] All 29 case studies have a real screenshot and at least one specific claim
-- [ ] No `TODO(verify)` comments left in `projects.json`
-- [ ] Old `<HB />` logo fully removed; favicons regenerated from the monogram
-- [ ] Login is not in the header
-- [ ] Homepage has working mobile navigation
+- [x] `humza-butt.space` is canonical; other domains 301 to it — Worker host redirect + [`DOMAIN-REDIRECTS-2026.md`](DOMAIN-REDIRECTS-2026.md); Render still needs dashboard cutover via [`redirect/`](../redirect/) or suspend
+- [x] Availability pill says **contract**, not full-time
+- [x] Shell / BBC / NHS / Home Office appear on the Career section and in the hero stat strip
+- [x] `linkedin.json` titles and dates match the CV exactly — spot-checked (LifeSmart Mar 2024, Bgr8 Lead Full Stack, CoreStream Jul–Dec 2025); final PDF eye-check recommended
+- [x] The "7 years 11 months" figure is scoped or removed (see audit 7.5)
+- [x] Ember.js and Angular are gone from the skills list
+- [x] CV PDF is downloadable from header, contact and footer
+- [x] Zero broken iframes on any case study
+- [x] All 29 case studies have a real screenshot and at least one specific claim — screenshots under `/images/…` (product cards for offline-only projects); `TODO(verify)` cleared
+- [x] No `TODO(verify)` comments left in `projects.json`
+- [x] Old `<HB />` logo fully removed; favicons regenerated from the monogram (`npm run favicons`)
+- [x] Login is not in the header
+- [x] Homepage has working mobile navigation

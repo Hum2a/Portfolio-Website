@@ -174,8 +174,8 @@ Remediation rule satisfied without further blur removal (header already solid tr
 
 ## Follow-ups (LH targets)
 
-1. Defer Firebase analytics until after first paint / idle.
-2. Prerender or inject critical meta description for SEO 100 on first HTML.
-3. Re-run career LH after ensuring a stable LCP element (hero image/text).
-4. Set `RESEND_API_KEY` in `.dev.vars` and re-run Traffic “Send test email”.
+1. ~~Defer Firebase analytics until after first paint / idle.~~ Done 2026-08-03 (`App` + `PageTimeTracker` idle dynamic import).
+2. ~~Prerender or inject critical meta description for SEO 100 on first HTML.~~ Done via `npm run shells` post-build.
+3. ~~Career stable LCP element.~~ Loading state now renders an `h1` immediately (no opacity-0 wrapper). Re-run LH when convenient.
+4. Paste a valid `RESEND_API_KEY` into `.dev.vars` / Worker (see `.cursor/OPS-TRAFFIC-NOTIFY-2026.md`) and re-run Traffic test email.
 5. Manual login as `humza` → `/traffic` filters + token create + notify UI.

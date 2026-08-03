@@ -1,0 +1,10 @@
+# Redirect-only Render service
+# Point the old humza-butt.onrender.com service at this static site,
+# OR replace the Render web service build with a static redirect.
+
+services:
+  - type: web
+    name: humza-butt-redirect
+    runtime: static
+    buildCommand: "mkdir -p public && cp redirect/index.html public/index.html && cp redirect/_redirects public/_redirects"
+    staticPublishPath: public

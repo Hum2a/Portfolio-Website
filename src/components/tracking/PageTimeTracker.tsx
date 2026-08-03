@@ -1,52 +1,82 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import firebaseAnalytics from '../../services/analyticsService';
 
 /**
- * PageTimeTracker component tracks time spent on each page
- * and automatically records it when the page is left or component unmounts
+ * Tracks time spent on each page. Loads analytics only after idle so Firebase
+ * stays off the critical first-paint path.
  */
 const PageTimeTracker = () => {
   const location = useLocation();
   const pageViewIdRef = useRef(null);
+  const analyticsRef = useRef(null);
 
   useEffect(() => {
-    // Track page view when route changes
-    const trackPage = async () => {
-      pageViewIdRef.current = await firebaseAnalytics.trackPageView();
-    };
-    
-    trackPage();
+    let cancelled = false;
+    let idleId;
+    let timeoutId;
 
-    // Track time spent when leaving the page
+    const load = () => {
+      void import('../../services/analyticsService').then((mod) => {
+        if (!cancelled) analyticsRef.current = mod.default;
+      });
+    };
+
+    if (typeof window.requestIdleCallback === 'function') {
+      idleId = window.requestIdleCallback(load, { timeout: 4000 });
+    } else {
+      timeoutId = window.setTimeout(load, 2000);
+    }
+
     return () => {
+      cancelled = true;
+      if (idleId != null) window.cancelIdleCallback?.(idleId);
+      if (timeoutId != null) window.clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const trackPage = async () => {
+      const analytics = analyticsRef.current;
+      if (!analytics) {
+        // Wait briefly for deferred load
+        await new Promise((r) => setTimeout(r, 500));
+      }
+      const api = analyticsRef.current;
+      if (!api || cancelled) return;
+      pageViewIdRef.current = await api.trackPageView();
+    };
+
+    void trackPage();
+
+    return () => {
+      cancelled = true;
+      const api = analyticsRef.current;
+      if (!api) return;
       if (pageViewIdRef.current) {
-        firebaseAnalytics.trackPageTime(location.pathname, pageViewIdRef.current);
+        api.trackPageTime(location.pathname, pageViewIdRef.current);
       } else {
-        // Fallback: try to track anyway (will use session storage)
-        firebaseAnalytics.trackPageTime(location.pathname);
+        api.trackPageTime(location.pathname);
       }
     };
   }, [location.pathname]);
 
-  // Also track time spent when page is being unloaded (beforeunload)
   useEffect(() => {
     const handleBeforeUnload = () => {
+      const api = analyticsRef.current;
+      if (!api) return;
       if (pageViewIdRef.current) {
-        firebaseAnalytics.trackPageTime(location.pathname, pageViewIdRef.current);
+        api.trackPageTime(location.pathname, pageViewIdRef.current);
       } else {
-        firebaseAnalytics.trackPageTime(location.pathname);
+        api.trackPageTime(location.pathname);
       }
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [location.pathname]);
 
-  return null; // This component doesn't render anything
+  return null;
 };
 
 export default PageTimeTracker;

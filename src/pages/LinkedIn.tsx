@@ -81,9 +81,24 @@ export default function LinkedIn() {
   if (loading && !profile) {
     return (
       <div className="linkedin-page">
-        <div className="linkedin-page-loading">
-          <FaLinkedin className="linkedin-loading-icon" />
-          <p>Loading career profile...</p>
+        <Seo
+          title="Career"
+          description="Career timeline for Humza Butt — CoreStream GRC (Shell, BBC, NHS, Home Office), LifeSmart, Bgr8 and education."
+          path="/career"
+        />
+        <div className="linkedin-page-container">
+          <div className="linkedin-page-header">
+            <h1 className="linkedin-page-title">
+              <span className="code-comment">{'//'}</span> Career
+            </h1>
+            <p className="linkedin-page-subtitle">
+              Experience &amp; education from my LinkedIn profile
+            </p>
+          </div>
+          <div className="linkedin-page-loading" aria-live="polite">
+            <FaLinkedin className="linkedin-loading-icon" />
+            <p>Loading career profile...</p>
+          </div>
         </div>
       </div>
     );
@@ -97,11 +112,8 @@ export default function LinkedIn() {
         path="/career"
       />
 
-      <motion.div
+      <div
         className="linkedin-page-container"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
         style={{ position: 'relative' }}
       >
         <SectionBackdrop
@@ -299,7 +311,7 @@ export default function LinkedIn() {
             </a>
           </div>
         )}
-      </motion.div>
+      </div>
     </div>
   );
 }
