@@ -1,0 +1,210 @@
+.code-editor-wrap {
+  position: relative;
+  width: 100%;
+  max-width: min(40rem, 100%);
+  margin-inline: auto;
+  perspective: 900px;
+}
+
+.code-editor-backdrop {
+  position: absolute;
+  inset: -12% -8% -18% -4%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.14;
+  filter: blur(0px) saturate(120%) hue-rotate(190deg);
+  mask-image: radial-gradient(ellipse 70% 65% at 60% 45%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 65% at 60% 45%,
+    #000 20%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Duotone toward navy / accent */
+.code-editor-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--bg-primary) 70%, transparent),
+    color-mix(in srgb, var(--accent) 35%, transparent)
+  );
+  mix-blend-mode: multiply;
+}
+
+.code-editor {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 16px;
+  will-change: transform;
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg);
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-editor-tabs {
+  display: flex;
+  gap: 0.15rem;
+  padding: 0.55rem 0.65rem 0;
+  border-bottom: 1px solid var(--border-glass);
+  background: color-mix(in srgb, var(--bg-primary) 55%, transparent);
+  overflow-x: auto;
+}
+
+.code-editor-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-editor-tab:hover {
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+}
+
+.code-editor-tab--active {
+  color: var(--text-primary);
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border-glass);
+  border-bottom-color: transparent;
+}
+
+.code-editor-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.code-editor-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 0.85rem 0.5rem 1rem 0;
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  scrollbar-width: thin;
+}
+
+.code-editor-line {
+  display: flex;
+  align-items: flex-start;
+  min-height: 1.55em;
+  padding-right: 0.5rem;
+}
+
+.code-editor-line--active {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.code-editor-gutter {
+  flex: 0 0 2.4rem;
+  text-align: right;
+  padding-right: 0.85rem;
+  color: var(--text-tertiary);
+  user-select: none;
+}
+
+.code-editor-code {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-primary);
+}
+
+.code-editor-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: code-editor-blink 1s steps(1) infinite;
+}
+
+@keyframes code-editor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.tok-keyword {
+  color: var(--code-purple);
+}
+
+.tok-string {
+  color: var(--code-green);
+}
+
+.tok-number {
+  color: var(--code-orange);
+}
+
+.tok-comment {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.tok-punct {
+  color: var(--code-cyan);
+}
+
+.tok-plain {
+  color: var(--text-primary);
+}
+
+.code-editor-minimap {
+  flex: 0 0 28px;
+  margin: 0.75rem 0.5rem 0.75rem 0;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-glass);
+  position: relative;
+  overflow: hidden;
+}
+
+.code-editor-minimap-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 40%, transparent),
+    color-mix(in srgb, var(--accent) 15%, transparent)
+  );
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .code-editor {
+    transition: none;
+  }
+
+  .code-editor-cursor {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 899px) {
+  .code-editor-wrap {
+    max-width: 100%;
+  }
+
+  .code-editor {
+    min-height: 280px;
+  }
+}

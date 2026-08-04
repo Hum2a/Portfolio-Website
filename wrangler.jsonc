@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "humza-butt-portfolio",
   "compatibility_date": "2026-04-07",
-  "main": "worker/index.js",
+  "main": "worker/index.ts",
   // Keep dashboard plain-text vars across deploys (secrets are already preserved).
   "keep_vars": true,
   "observability": {
@@ -12,9 +12,29 @@
     "directory": "build",
     "not_found_handling": "single-page-application",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": true
   },
   "compatibility_flags": [
     "nodejs_compat"
-  ]
+  ],
+  "env": {
+    "staging": {
+      "name": "humza-butt-portfolio-staging",
+      "routes": [
+        {
+          "pattern": "portfolio-staging.humza-butt.space",
+          "custom_domain": true
+        }
+      ],
+      // Bindings / assets are not inherited from top-level.
+      "assets": {
+        "directory": "build",
+        "not_found_handling": "single-page-application",
+        "binding": "ASSETS",
+        "run_worker_first": true
+      },
+      "compatibility_flags": ["nodejs_compat"],
+      "observability": { "enabled": true }
+    }
+  }
 }

@@ -1,0 +1,103 @@
+.route-fallback {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.route-fallback-main {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 1.5rem var(--page-gutter) 3rem;
+}
+
+.route-fallback-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.route-fallback-title,
+.route-fallback-line,
+.route-fallback-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+}
+
+.route-fallback-title {
+  width: min(280px, 55%);
+  height: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.route-fallback-line {
+  height: 0.875rem;
+}
+
+.route-fallback-line--lg {
+  width: 92%;
+}
+
+.route-fallback-line--md {
+  width: 78%;
+}
+
+.route-fallback-line--sm {
+  width: 58%;
+}
+
+.route-fallback-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.route-fallback-card {
+  height: 140px;
+}
+
+@media (max-width: 720px) {
+  .route-fallback-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .route-fallback-card {
+    height: 100px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .route-fallback-title,
+  .route-fallback-line,
+  .route-fallback-card {
+    background: linear-gradient(
+      90deg,
+      var(--bg-secondary) 0%,
+      var(--bg-hover, var(--bg-tertiary)) 50%,
+      var(--bg-secondary) 100%
+    );
+    background-size: 200% 100%;
+    animation: route-fallback-shimmer 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes route-fallback-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

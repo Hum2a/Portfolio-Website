@@ -38,7 +38,57 @@
         "game"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://encore.casa",
+      "caseStudy": {
+        "claim": "Daily grid logic puzzles (Stitch, Quilt, Weave) with deterministic seeds on a Cloudflare Worker + Neon stack.",
+        "role": "Sole engineer — puzzle engine, API, web client, and deploy",
+        "timeline": "2026 · live at encore.casa",
+        "metrics": [
+          {
+            "value": "3",
+            "label": "puzzle families live (Stitch, Quilt, Weave)"
+          },
+          {
+            "value": "1",
+            "label": "Worker serving both the SPA and /v1 API"
+          }
+        ],
+        "problem": "Most daily games hide their generators; players cannot trust practice boards or replay a past day fairly. Encore needed a deterministic engine and one Worker for SPA + API.",
+        "sections": [
+          {
+            "title": "Deterministic puzzle engine",
+            "body": "Players land on the current day’s board with practice, catalogue, and archive modes one tap away.\n\nThe same (seed, version) pair yields identical boards in every mode, so a practice run is the same puzzle someone else replays from the archive.",
+            "image": "/images/Encore/hero.png",
+            "imageAlt": "Encore home screen showing the daily grid puzzle and the Stitch, Quilt, and Weave modes"
+          },
+          {
+            "title": "Shared Cloudflare Worker",
+            "body": "SPA and /v1 API share one Worker with Neon Postgres (FORCE RLS), Better Auth, and first-party analytics.\n\nKeeps game surfaces and account sync on one deploy unit.",
+            "image": "/images/Encore/detail.png",
+            "imageAlt": "Encore catalogue and progress surfaces below the fold on encore.casa"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Deterministic seeded generation",
+            "why": "Fair daily + replayable practice without storing every board bitmap.",
+            "tradeoff": "Engine versioning must stay explicit when generators change."
+          },
+          {
+            "choice": "Postgres FORCE RLS with CI proofs",
+            "why": "Guest and account data must not leak across tenants.",
+            "tradeoff": "More migration and policy discipline."
+          },
+          {
+            "choice": "No iframe embed of encore.casa",
+            "why": "Production CSP uses frame-ancestors none.",
+            "tradeoff": "Case study uses screenshot/CTA overlay instead of live embed."
+          }
+        ],
+        "outcome": "Live at encore.casa with Stitch, Quilt, Weave (Lattice beta), catalogues, guest/account progress, soft leaderboards, and PWA install — Premium Stripe path wired but flagged off."
+      }
     },
     {
       "id": "baseer-portfolio",
@@ -74,7 +124,58 @@
         "website"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://baseer.co.uk",
+      "repoUrl": "https://github.com/Hum2a/Baseer-Portfolio",
+      "caseStudy": {
+        "claim": "Marketing CV site for Baseer with a freeform visual CMS, first-party analytics, and sector case studies.",
+        "role": "Sole engineer — CMS, Worker API, analytics, and marketing surfaces",
+        "timeline": "2026 · live at baseer.co.uk",
+        "metrics": [
+          {
+            "value": "1",
+            "label": "Worker hosting site, CMS, and analytics"
+          },
+          {
+            "value": "0",
+            "label": "third-party analytics scripts"
+          }
+        ],
+        "problem": "A CV site is only useful if its owner can restyle it without a developer, and template builders lock content into fixed slots.\n\nBaseer needed sector case studies he could rearrange freely, plus visitor insight without handing traffic data to a third-party tracker.",
+        "sections": [
+          {
+            "title": "Marketing site and sector case studies",
+            "body": "A CV-led landing page with sector case studies, each editable as freeform content rather than a fixed template field.\n\nMotion and layout are tuned for a marketing read rather than a document dump.",
+            "image": "/images/BaseerPortfolio/hero.png",
+            "imageAlt": "Baseer portfolio landing page with headline and sector navigation"
+          },
+          {
+            "title": "Freeform CMS and first-party analytics",
+            "body": "Better Auth gates a visual CMS that writes to Neon Postgres through Drizzle, with media on R2.\n\nAnalytics are collected by the same Worker, so visitor data never leaves the site’s own domain.",
+            "image": "/images/BaseerPortfolio/detail.png",
+            "imageAlt": "Baseer portfolio case-study content section further down the page"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Freeform visual CMS over a fixed template",
+            "why": "The owner edits layout and copy directly instead of filing change requests.",
+            "tradeoff": "More validation and migration work than a fixed set of content fields."
+          },
+          {
+            "choice": "First-party analytics inside the same Worker",
+            "why": "Keeps visitor data on the site’s own domain and avoids loading a third-party tracker.",
+            "tradeoff": "Reporting, retention, and dashboards are ours to build and maintain."
+          },
+          {
+            "choice": "Neon Postgres with Drizzle behind Hono",
+            "why": "Content and analytics share one typed relational schema with cheap edge reads.",
+            "tradeoff": "Connection handling from Workers needs deliberate pooling."
+          }
+        ],
+        "outcome": "Live at baseer.co.uk: marketing site, sector case studies, R2-backed media, a Better Auth-protected visual CMS, and first-party analytics on a single Cloudflare deploy."
+      }
     },
     {
       "id": "docket",
@@ -108,7 +209,58 @@
         "website"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://jobtracker.humza-butt.space",
+      "repoUrl": "https://github.com/Hum2a/jobtracker",
+      "caseStudy": {
+        "claim": "Personal job-application tracker with Kanban, list, stats, docs, reminders, and email alerts—built for a single owner, no login.",
+        "role": "Sole engineer — product, API, and infrastructure",
+        "timeline": "2026 · in daily use, live at jobtracker.humza-butt.space",
+        "metrics": [
+          {
+            "value": "5",
+            "label": "tracker surfaces: Kanban, list, stats, docs, reminders"
+          },
+          {
+            "value": "0",
+            "label": "login screens — single-owner by design"
+          }
+        ],
+        "problem": "A spreadsheet of applications loses the timeline: which stage each role is at, which CV version was sent, and when a follow-up is due.\n\nDocket has exactly one user, so accounts, tenancy, and onboarding would have been pure overhead on top of the tracking itself.",
+        "sections": [
+          {
+            "title": "Kanban and list tracking",
+            "body": "Applications move across stages on a Kanban board, with a dense list view for bulk edits and search.\n\nBoth views read the same Neon Postgres records, so state never diverges between them.",
+            "image": "/images/Docket/hero.png",
+            "imageAlt": "Docket job application Kanban board with applications grouped by stage"
+          },
+          {
+            "title": "Stats, documents, and reminders",
+            "body": "Recharts dashboards summarise pipeline health, while CVs and cover letters live on R2 against each application.\n\nResend sends reminder emails so follow-up dates do not depend on remembering to open the app.",
+            "image": "/images/Docket/detail.png",
+            "imageAlt": "Docket dashboard showing application statistics and document tools"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "No login — single-owner access model",
+            "why": "With one user, auth would add friction and attack surface without protecting anything extra.",
+            "tradeoff": "Access control lives at the deployment edge rather than in application code."
+          },
+          {
+            "choice": "R2 for CV and cover-letter storage",
+            "why": "Documents belong next to the application record, not in a folder on one laptop.",
+            "tradeoff": "Object lifecycle and orphan cleanup become the app’s responsibility."
+          },
+          {
+            "choice": "Resend for reminder email",
+            "why": "Deadline nudges have to land reliably without running a mail server.",
+            "tradeoff": "An external dependency sits on the critical reminder path."
+          }
+        ],
+        "outcome": "Live at jobtracker.humza-butt.space with Kanban and list tracking, Zod-validated writes, Recharts stats, R2 document storage, reminders, and Resend email alerts."
+      }
     },
     {
       "id": "docket-baseer",
@@ -144,7 +296,58 @@
         "website"
       ],
       "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25"
+      "dateUpdated": "2026-07-25",
+      "embeddable": false,
+      "liveUrl": "https://docket.baseer.co.uk",
+      "repoUrl": "https://github.com/Hum2a/Docket--Baseer",
+      "caseStudy": {
+        "claim": "Baseer's job-application tracker with kanban, list tools, docs, stats, and Resend alerts—single owner, no login.",
+        "role": "Sole engineer — rebuilt Docket as a second single-owner instance",
+        "timeline": "2026 · live at docket.baseer.co.uk",
+        "metrics": [
+          {
+            "value": "2",
+            "label": "independent single-owner deploys from one codebase"
+          },
+          {
+            "value": "0",
+            "label": "shared user data between instances"
+          }
+        ],
+        "problem": "Baseer wanted the same application tracking as Docket, but on his own domain, with his own data and branding.\n\nTurning a single-owner tool into a multi-tenant product would have introduced accounts and permissions that neither owner asked for.",
+        "sections": [
+          {
+            "title": "Owner’s pipeline on its own domain",
+            "body": "A dedicated deploy at docket.baseer.co.uk with Baseer’s branding, kanban stages, and list tools.\n\nNo sign-in, no tenant switcher — the instance belongs to one person.",
+            "image": "/images/DocketBaseer/hero.png",
+            "imageAlt": "Docket (Baseer) application board on docket.baseer.co.uk"
+          },
+          {
+            "title": "Documents, stats, and alerts",
+            "body": "R2 stores CVs and letters per application, Recharts renders pipeline stats, and Resend handles reminder mail.\n\nDrizzle schemas are shared with the original Docket so features port cleanly between instances.",
+            "image": "/images/DocketBaseer/detail.png",
+            "imageAlt": "Docket (Baseer) statistics and document management view"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "A separate deploy per owner instead of multi-tenancy",
+            "why": "Two single-owner instances keep data physically separated with no permission model to get wrong.",
+            "tradeoff": "Feature work has to be ported between deploys rather than shipped once."
+          },
+          {
+            "choice": "Turborepo with shared packages",
+            "why": "Keeps the two Docket surfaces from drifting apart as either one changes.",
+            "tradeoff": "Monorepo tooling overhead on a deliberately small product."
+          },
+          {
+            "choice": "Cloudflare Pages and Workers over Neon",
+            "why": "Static client, edge API, and durable Postgres with no servers to operate.",
+            "tradeoff": "Edge database connections need pooling care under bursty use."
+          }
+        ],
+        "outcome": "Live at docket.baseer.co.uk with kanban and list tools, R2 document storage, Recharts stats, and Resend alerts running on Baseer’s own domain and data."
+      }
     },
     {
       "id": "buzzer",
@@ -181,7 +384,52 @@
         "website"
       ],
       "dateAdded": "2026-07-11",
-      "dateUpdated": "2026-07-11"
+      "dateUpdated": "2026-07-11",
+      "embeddable": false,
+      "liveUrl": "https://buzzer.lifesmartfinance.com",
+      "repoUrl": "https://github.com/lifesmart-financial-literacy/Buzzer",
+      "caseStudy": {
+        "claim": "LifeSmart’s teacher-led live financial literacy game for schools — anonymous pupil teams, front screen, real-time play.",
+        "role": "Full-stack engineer — realtime server, teacher console, and pupil client",
+        "timeline": "2026 · LifeSmart product, live at buzzer.lifesmartfinance.com",
+        "metrics": [
+          {
+            "value": "3",
+            "label": "synchronised surfaces: teacher, front screen, pupil"
+          },
+          {
+            "value": "0",
+            "label": "pupil accounts or personal data collected"
+          }
+        ],
+        "problem": "Classroom quiz tools usually make every pupil sign in, which burns lesson time and creates pupil data a school then has to safeguard.\n\nBuzzer had to keep a teacher console, a projected front screen, and a room full of pupil devices in lockstep using anonymous teams only.",
+        "sections": [
+          {
+            "title": "Anonymous team join and live play",
+            "body": "Pupils join a room code as a team — no account, no email — while the teacher drives the round from their own console and the front screen projects state to the class.\n\nBuzz order, scoring, and round transitions are resolved by the server so no device can win by having a faster clock.",
+            "image": "/images/Buzzer/hero.png",
+            "imageAlt": "Buzzer join screen for LifeSmart’s classroom financial literacy game"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "A Durable Object per game room",
+            "why": "One object owns each room’s state, giving a single authority for buzz order and scores over WebSockets.",
+            "tradeoff": "Room lifetime and hibernation have to be handled explicitly."
+          },
+          {
+            "choice": "Anonymous pupil teams",
+            "why": "Schools avoid collecting pupil identities, and a team is in the game within seconds.",
+            "tradeoff": "No cross-session pupil history to build progression on."
+          },
+          {
+            "choice": "Distinct teacher, front-screen, and pupil views",
+            "why": "Each audience needs different information from the same underlying game state.",
+            "tradeoff": "Three surfaces to keep correct on every state transition."
+          }
+        ],
+        "outcome": "Live at buzzer.lifesmartfinance.com as LifeSmart’s teacher-led classroom game: anonymous team join, server-ordered buzz-in, projected front screen, and live scoring on Cloudflare Durable Objects."
+      }
     },
     {
       "id": "oche",
@@ -220,7 +468,58 @@
         "game"
       ],
       "dateAdded": "2026-07-13",
-      "dateUpdated": "2026-07-13"
+      "dateUpdated": "2026-07-13",
+      "embeddable": false,
+      "liveUrl": "https://oche.humza-butt.space",
+      "repoUrl": "https://github.com/Hum2a/oche",
+      "caseStudy": {
+        "claim": "Live venue scoreboard for competitive-socialising sessions: real-time scores, match history, and game video on Cloudflare.",
+        "role": "Sole engineer — realtime scoreboard, venue dashboard, and media pipeline",
+        "timeline": "2026 · live at oche.humza-butt.space",
+        "metrics": [
+          {
+            "value": "1",
+            "label": "Durable Object owning each live venue session"
+          },
+          {
+            "value": "3",
+            "label": "surfaces: big screen, player device, venue dashboard"
+          }
+        ],
+        "problem": "Competitive-socialising venues score sessions on paper or one person’s phone, so nobody else at the table can see the running state and nothing survives the night.\n\nOche needed a shared live scoreboard, durable match history, and clip playback a venue could run on a big screen.",
+        "sections": [
+          {
+            "title": "Live session scoreboard",
+            "body": "Scores update over WebSockets from a Durable Object that owns the session, so every screen in the venue shows the same state without polling.\n\nBuilt to be readable across a room, not just on a phone.",
+            "image": "/images/Oche/hero.png",
+            "imageAlt": "Oche live venue scoreboard showing an in-progress session"
+          },
+          {
+            "title": "Match history and game video",
+            "body": "Completed sessions are written to Neon Postgres so history outlives the room object, with game video stored on R2 and played back against each match.\n\nZod validates every write on the way in.",
+            "image": "/images/Oche/detail.png",
+            "imageAlt": "Oche match history and session detail view"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Durable Objects and WebSockets per session",
+            "why": "Everyone at the oche sees the same score at the same time without clients polling an API.",
+            "tradeoff": "Session state must be flushed to Postgres to survive the object’s lifetime."
+          },
+          {
+            "choice": "R2 for game video",
+            "why": "Clips live next to the match record and stream out without egress charges.",
+            "tradeoff": "Media lifecycle and storage growth need active management."
+          },
+          {
+            "choice": "PWA install for venue screens",
+            "why": "Venue tablets and TVs run it full-screen without going through an app store.",
+            "tradeoff": "Offline and stale-cache behaviour has to be handled deliberately."
+          }
+        ],
+        "outcome": "Live at oche.humza-butt.space with real-time session scoring on Durable Objects, match history persisted to Neon Postgres, game video on R2, and an installable PWA for venue screens."
+      }
     },
     {
       "id": "blitz",
@@ -251,7 +550,58 @@
         "website"
       ],
       "dateAdded": "2026-06-18",
-      "dateUpdated": "2026-06-18"
+      "dateUpdated": "2026-06-18",
+      "embeddable": false,
+      "liveUrl": "https://blitzai.online",
+      "repoUrl": "https://github.com/Hum2a/blitz-extension",
+      "caseStudy": {
+        "claim": "Chrome extension that AI-tailors your CV per job (BYOK), then fills applications on major ATS boards after you review.",
+        "role": "Sole engineer — extension, ATS adapters, and BYOK key handling",
+        "timeline": "2026 · live at blitzai.online",
+        "metrics": [
+          {
+            "value": "BYOK",
+            "label": "users supply their own model API key"
+          },
+          {
+            "value": "0",
+            "label": "applications submitted without human review"
+          }
+        ],
+        "problem": "Tailoring a CV to each posting is the slowest part of applying, but tools that auto-submit on your behalf are a liability you cannot undo.\n\nBlitz had to do the rewriting and the form filling while leaving the final submit to the human — and without holding anyone’s model API key on a server.",
+        "sections": [
+          {
+            "title": "Tailor, review, then fill",
+            "body": "The extension reads the posting, rewrites the CV against it with the user’s own model key, and shows the result for approval.\n\nOnly after review does it populate the application form on the job board.",
+            "image": "/images/Blitz/hero.png",
+            "imageAlt": "Blitz landing page explaining AI CV tailoring for job applications"
+          },
+          {
+            "title": "Supported boards and account surface",
+            "body": "Per-board content scripts handle the field structures of the major ATS providers, with a Supabase-backed account and a Cloudflare Worker for the hosted pieces.\n\nVitest and Playwright cover the adapters, which are the parts most likely to break when a board changes.",
+            "image": "/images/Blitz/detail.png",
+            "imageAlt": "Blitz marketing site section covering supported job boards and workflow"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Bring-your-own-key for the AI model",
+            "why": "Users keep control and cost of their own model usage, and no shared key sits on our infrastructure.",
+            "tradeoff": "Onboarding asks for an API key before the user sees any value."
+          },
+          {
+            "choice": "A review gate before any form is filled",
+            "why": "An automated submission to a real employer cannot be taken back.",
+            "tradeoff": "Slower than tools that promise fully automatic applying."
+          },
+          {
+            "choice": "Per-board content-script adapters",
+            "why": "Major ATS boards each expose different field names and DOM structures.",
+            "tradeoff": "Adapters break whenever a board ships a redesign."
+          }
+        ],
+        "outcome": "Shipped a Chrome extension that tailors a CV per posting using the user’s own key and fills applications on major ATS boards after review, with the marketing and account site live at blitzai.online."
+      }
     },
     {
       "id": "feature-cards",
@@ -285,7 +635,58 @@
         "library"
       ],
       "dateAdded": "2026-06-18",
-      "dateUpdated": "2026-06-18"
+      "dateUpdated": "2026-06-18",
+      "embeddable": false,
+      "liveUrl": "https://501fun.humza-butt.space",
+      "repoUrl": "https://github.com/Hum2a/feature-cards",
+      "caseStudy": {
+        "claim": "Accessible, CMS-agnostic Web Component replacing hard-coded landing-page stat cards—vanilla JS, Shadow DOM, live editor demo.",
+        "role": "Sole engineer and maintainer of the open-source component",
+        "timeline": "2026 · published to npm, demo at 501fun.humza-butt.space",
+        "metrics": [
+          {
+            "value": "0",
+            "label": "framework dependencies — vanilla Web Component"
+          },
+          {
+            "value": "1",
+            "label": "custom element tag to drop into any CMS"
+          }
+        ],
+        "problem": "501’s landing-page stat cards were hard-coded, so every copy change needed a developer and a deploy.\n\nThe replacement had to work inside whatever CMS or framework a page already used, stay accessible, and be safe for non-developers to edit.",
+        "sections": [
+          {
+            "title": "Live editor demo",
+            "body": "The demo site lets you edit card configuration and see the component re-render immediately, which is how non-developers verify content before publishing.\n\nDeployed on Cloudflare Pages with a Worker for the demo endpoints.",
+            "image": "/images/FeatureCards/hero.png",
+            "imageAlt": "501 Feature Cards demo page showing configurable stat cards"
+          },
+          {
+            "title": "Shadow DOM isolation and accessibility",
+            "body": "Shadow DOM keeps host page styles from leaking in and component styles from leaking out, with theming exposed through explicit custom properties.\n\nZod validates configuration, and Vitest plus Playwright guard the accessible markup on every release.",
+            "image": "/images/FeatureCards/detail.png",
+            "imageAlt": "501 Feature Cards documentation and configuration section"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "A Web Component instead of a React package",
+            "why": "One tag drops into any CMS or framework without shipping a framework runtime with it.",
+            "tradeoff": "Theming must be exposed deliberately through custom properties and parts."
+          },
+          {
+            "choice": "Zod-validated configuration",
+            "why": "Bad CMS input fails loudly in development rather than rendering a broken card in production.",
+            "tradeoff": "The schema ships as part of the bundle."
+          },
+          {
+            "choice": "Vitest and Playwright against the published package",
+            "why": "A component edited by non-developers must not regress silently.",
+            "tradeoff": "A slower release loop than a small library would otherwise need."
+          }
+        ],
+        "outcome": "Published as an installable npm Web Component with a live editor demo at 501fun.humza-butt.space, replacing hard-coded stat cards with accessible, CMS-editable ones."
+      }
     },
     {
       "id": "monzo1pchallenge",
@@ -321,7 +722,51 @@
         "website"
       ],
       "dateAdded": "2023-02-15",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://monzo-1p-challenge-calculator.online",
+      "caseStudy": {
+        "claim": "Savings calculator inspired by the Monzo 1p challenge with 3 modes (Next N days, Month, Custom range), magic link auth, and PWA support",
+        "role": "Sole engineer — calculator, accounts, and deploy",
+        "timeline": "Shipped 2023 · rebuilt on Next.js and Cloudflare in 2026",
+        "metrics": [
+          {
+            "value": "3",
+            "label": "calculation modes: next N days, month, custom range"
+          },
+          {
+            "value": "£667.95",
+            "label": "total saved over a full 365-day challenge"
+          }
+        ],
+        "problem": "The 1p challenge is simple arithmetic nobody wants to do by hand, and most online versions only compute the standard full year.\n\nPeople join mid-year or want a specific window, so the calculator had to handle arbitrary ranges and remember the plan afterwards.",
+        "sections": [
+          {
+            "title": "Three calculation modes",
+            "body": "Next N days, a calendar month, or a custom date range — each producing the daily schedule and running total.\n\nSigned-in users keep their plan; everyone else can still run the numbers immediately.",
+            "image": "/images/Monzo/hero.png",
+            "imageAlt": "Monzo 1p challenge calculator with savings mode selection and totals"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Magic-link auth instead of passwords",
+            "why": "Saving a plan should not require inventing and remembering another password.",
+            "tradeoff": "Every sign-in depends on email delivery."
+          },
+          {
+            "choice": "Next.js on Cloudflare Workers via OpenNext",
+            "why": "Server rendering and edge delivery without leaving the Workers platform.",
+            "tradeoff": "An adapter sits between the framework and the runtime."
+          },
+          {
+            "choice": "PWA install",
+            "why": "A savings tracker gets reopened from a phone home screen, not bookmarked.",
+            "tradeoff": "Service-worker caching must never serve stale figures."
+          }
+        ],
+        "outcome": "Live at monzo-1p-challenge-calculator.online with three calculation modes, magic-link accounts, saved plans, Vitest and Playwright coverage, and offline-capable PWA install."
+      }
     },
     {
       "id": "brute-forcer",
@@ -348,7 +793,47 @@
         "website"
       ],
       "dateAdded": "2023-03-15",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://bruteforcer.online",
+      "caseStudy": {
+        "claim": "Privacy-focused password entropy and crack-time estimator—client-side math, no real brute forcing, embedded live demo",
+        "role": "Sole engineer",
+        "timeline": "Shipped 2023 · rebuilt on Next.js and Cloudflare in 2026",
+        "metrics": [
+          {
+            "value": "0",
+            "label": "passwords sent to a server — all maths client-side"
+          }
+        ],
+        "problem": "Password strength meters either ask you to type a real password into someone else’s server, or reduce strength to a vague colour bar.\n\nThe honest version has to run entirely in the browser and show the entropy behind the estimate.",
+        "sections": [
+          {
+            "title": "Entropy and crack-time estimates",
+            "body": "Character-set and length analysis produce an entropy figure, which is turned into crack-time estimates across attacker profiles.\n\nEverything runs in the page, and the live demo is embedded directly in the case study.",
+            "image": "/images/BruteForcer/hero.png",
+            "imageAlt": "Brute-forcer password entropy and crack-time estimation interface"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "All calculation client-side",
+            "why": "A password strength tool that transmits the password defeats its own purpose.",
+            "tradeoff": "No server-side analytics on what people test."
+          },
+          {
+            "choice": "Estimate crack time rather than actually brute forcing",
+            "why": "Entropy maths answers the question instantly; real cracking would be slow and prove nothing.",
+            "tradeoff": "Results are model-based rather than empirical."
+          },
+          {
+            "choice": "Next.js on Workers via OpenNext",
+            "why": "Static-fast delivery with room for server features later.",
+            "tradeoff": "More build machinery than a plain static page needs."
+          }
+        ],
+        "outcome": "Live at bruteforcer.online: client-side entropy and crack-time estimation with an embedded live demo, and no password ever leaving the browser."
+      }
     },
     {
       "id": "gremlins",
@@ -383,7 +868,69 @@
         "website"
       ],
       "dateAdded": "2023-04-12",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://gremlins.site",
+      "caseStudy": {
+        "claim": "Playful Windows tray companion—configurable gremlins, quiet hours, panic mode, and a local-first marketing site.",
+        "role": "Sole engineer — WPF tray app and marketing site",
+        "timeline": "Shipped 2023 · Microsoft Store release maintained through 2026",
+        "metrics": [
+          {
+            "value": "0",
+            "label": "data leaving the machine — local-first by design"
+          },
+          {
+            "value": "1",
+            "label": "panic key to stop everything instantly"
+          }
+        ],
+        "problem": "Desktop prank apps are all-or-nothing: funny for a minute, then genuinely disruptive during a meeting or a screen share.\n\nGremlins needed a mischief engine with real guardrails — scheduling, quiet hours, safety profiles, and an instant off switch.",
+        "sections": [
+          {
+            "title": "Configurable gremlins",
+            "body": "Each gremlin is an individually toggled behaviour with its own settings, so users assemble the mischief they actually want.\n\nA native WPF tray app keeps it out of the way until it fires.",
+            "image": "/images/Gremlins/Gremlins 1.png",
+            "imageAlt": "Gremlins app window listing configurable gremlin behaviours"
+          },
+          {
+            "title": "Rules, timing, and quiet hours",
+            "body": "Frequency, timing windows, and quiet hours decide when anything is allowed to happen.\n\nThis is the difference between a joke and an app people uninstall after one meeting.",
+            "image": "/images/Gremlins/rules n timing.png",
+            "imageAlt": "Gremlins rules and timing configuration with quiet hours"
+          },
+          {
+            "title": "Safety profiles and panic mode",
+            "body": "Safety profiles cap what gremlins may do, and panic mode stops everything immediately from the tray.\n\nThe rules engine behind both is covered by xUnit tests.",
+            "image": "/images/Gremlins/Safety profiles.png",
+            "imageAlt": "Gremlins safety profile settings and panic mode controls"
+          },
+          {
+            "title": "Local-first marketing site",
+            "body": "gremlins.site explains the app and links the Microsoft Store listing, built with React and Vite on Cloudflare Workers.\n\nIt matches the app’s local-first stance: nothing about your gremlins is reported back.",
+            "image": "/images/Gremlins/hero.png",
+            "imageAlt": "Gremlins marketing site landing page at gremlins.site"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "WPF and Win32 rather than Electron",
+            "why": "A background companion has to be light on memory and native to Windows tray and notification behaviour.",
+            "tradeoff": "Windows-only, with no code shared with the web surface."
+          },
+          {
+            "choice": "Quiet hours, safety profiles, and a panic key",
+            "why": "The joke stops being funny during a screen share; users need an off switch they trust.",
+            "tradeoff": "Far more configuration surface than a one-button prank."
+          },
+          {
+            "choice": "Local-first — settings and data stay on the device",
+            "why": "A prank app that phones home is an instant no from users and from IT.",
+            "tradeoff": "No telemetry to diagnose problems in the wild."
+          }
+        ],
+        "outcome": "Shipped on the Microsoft Store with configurable gremlins, scheduling and quiet hours, safety profiles, panic mode, xUnit-tested rules, and a marketing site at gremlins.site."
+      }
     },
     {
       "id": "firewatch",
@@ -411,7 +958,47 @@
         "website"
       ],
       "dateAdded": "2026-05-08",
-      "dateUpdated": "2026-05-08"
+      "dateUpdated": "2026-05-08",
+      "embeddable": false,
+      "repoUrl": "https://github.com/Hum2a/fire-intelligence-dashboard",
+      "caseStudy": {
+        "claim": "Geospatial wildfire intelligence dashboard with map-based risk analysis and metre-accurate proximity checks for analysts.",
+        "role": "Full-stack engineer — Angular client, Express/PostGIS API, and Docker deploy",
+        "timeline": "2026 · source public on GitHub, no public deployment",
+        "metrics": [
+          {
+            "value": "PostGIS",
+            "label": "metre-accurate proximity and containment queries"
+          }
+        ],
+        "problem": "Wildfire analysts need to know what a fire is actually near — homes, roads, protected land — not just where the hotspot sits on a basemap.\n\nApproximate distance maths over latitude and longitude breaks down at exactly the scale that matters, so proximity had to be computed with real geospatial types.",
+        "sections": [
+          {
+            "title": "Map-based risk analysis",
+            "body": "An Angular and OpenLayers client for inspecting hotspots, toggling layers, and running proximity queries against analyst-supplied assets, backed by an Express API over PostGIS.\n\nThere is no public deployment to screenshot, so this case study leads with a product card rather than a live capture.",
+            "image": "/images/FireWatch/hero.png",
+            "imageAlt": "FireWatch product card — geospatial wildfire intelligence dashboard for risk and proximity analysis"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "PostGIS for spatial queries instead of app-side distance maths",
+            "why": "Metre-accurate proximity and containment need real geography types and a spatial index.",
+            "tradeoff": "A Postgres extension and spatial migrations become part of the deploy."
+          },
+          {
+            "choice": "OpenLayers over a hosted map SDK",
+            "why": "Full control of layers and projections without per-tile vendor billing.",
+            "tradeoff": "Considerably more map plumbing written by hand."
+          },
+          {
+            "choice": "Dockerised API and database",
+            "why": "Geospatial stacks are painful to reproduce; the container pins the whole environment.",
+            "tradeoff": "Heavier local setup than a serverless API would need."
+          }
+        ],
+        "outcome": "A working analyst dashboard — Angular and OpenLayers client, Express API, PostGIS proximity queries — running from Docker with the source public on GitHub."
+      }
     },
     {
       "id": "recount",
@@ -448,7 +1035,51 @@
         "website"
       ],
       "dateAdded": "2023-05-10",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://recount.world",
+      "caseStudy": {
+        "claim": "Productivity suite: Chrome MV3 extension tracks time by domain; Next.js app for marketing, dashboard, and admin; REST API on Express and Cloudflare (Hono) with Supabase, Stripe, and AI reports",
+        "role": "Sole engineer — extension, web app, and API",
+        "timeline": "Shipped 2023 · Cloudflare API and AI reporting added 2026",
+        "metrics": [
+          {
+            "value": "3",
+            "label": "surfaces: MV3 extension, Next.js app, REST API"
+          },
+          {
+            "value": "0",
+            "label": "timers to start or stop — capture is passive"
+          }
+        ],
+        "problem": "Time-tracking tools ask you to start and stop timers, so the data is only ever as honest as your memory.\n\nRecount captures time by domain automatically in the browser, which then leaves the harder problem: turning a raw domain log into something worth reading.",
+        "sections": [
+          {
+            "title": "Marketing site, dashboard, and reports",
+            "body": "A Chrome MV3 extension records time per domain and syncs to a Next.js dashboard with Recharts breakdowns and an admin surface.\n\nOpenAI turns the raw log into a written activity report, with Stripe handling subscriptions and Resend the transactional mail.",
+            "image": "/images/Recount/hero.png",
+            "imageAlt": "Recount marketing site introducing browser time tracking by domain"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "A Chrome MV3 extension for passive capture",
+            "why": "Automatic per-domain timing is more accurate than any manual timer.",
+            "tradeoff": "The MV3 service-worker lifecycle makes long-running background timing fiddly."
+          },
+          {
+            "choice": "An Express API alongside a Hono Worker",
+            "why": "Kept the existing Node API while moving latency-sensitive routes to the edge.",
+            "tradeoff": "Two runtimes to deploy and keep behaviourally identical."
+          },
+          {
+            "choice": "AI summaries rather than charts alone",
+            "why": "A short weekly narrative gets read; a bar chart of domains usually does not.",
+            "tradeoff": "Per-report model cost and prompt maintenance."
+          }
+        ],
+        "outcome": "Live at recount.world: an MV3 extension capturing time by domain, a Next.js dashboard and admin, a Supabase-backed API on Express and Hono, Stripe billing, and AI-written activity reports."
+      }
     },
     {
       "id": "imposter",
@@ -484,7 +1115,57 @@
         "game"
       ],
       "dateAdded": "2023-06-07",
-      "dateUpdated": "2026-07-13"
+      "dateUpdated": "2026-07-13",
+      "embeddable": false,
+      "liveUrl": "https://imposter-game.site",
+      "caseStudy": {
+        "claim": "Server-authoritative PartyKit multiplayer word-imposter game with Discord Activity support.",
+        "role": "Sole engineer — React client, PartyKit server, and Discord Activity integration",
+        "timeline": "Shipped 2023 · Discord Activity and PWA surfaces added 2026",
+        "metrics": [
+          {
+            "value": "2",
+            "label": "surfaces from one client: Discord Activity and web/PWA"
+          },
+          {
+            "value": "1",
+            "label": "authoritative PartyKit server owning every room"
+          }
+        ],
+        "problem": "A word imposter game only works if nobody can peek, so the secret word and role assignment cannot live in the client.\n\nIt also had to run where people already talk — inside a Discord voice channel — without maintaining a second codebase for the web version.",
+        "sections": [
+          {
+            "title": "One client, two surfaces",
+            "body": "The same React client runs standalone as an installable PWA and embedded in a Discord voice channel through the Embedded App SDK.\n\nOnly the auth and context shim differs between them.",
+            "image": "/images/Imposter/hero.png",
+            "imageAlt": "Imposter game lobby with room join options in the web client"
+          },
+          {
+            "title": "Server-authoritative rounds",
+            "body": "PartyKit holds room state over WebSockets: role assignment, the secret word, turn order, and voting all resolve on the server.\n\nSupabase persists results, and i18next keeps the game playable beyond English.",
+            "image": "/images/Imposter/detail.png",
+            "imageAlt": "Imposter web client showing game setup options further down the page"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Server-authoritative PartyKit rooms",
+            "why": "The imposter’s role and the secret word must never be inferable from the client bundle or the network tab.",
+            "tradeoff": "Every state change is a round trip; the client cannot resolve rounds optimistically."
+          },
+          {
+            "choice": "One React client for Discord and the web",
+            "why": "Discord’s Embedded App SDK renders a normal web app, so both surfaces share everything but the auth shim.",
+            "tradeoff": "Discord’s iframe sandbox and CSP constrain what the web build can assume."
+          },
+          {
+            "choice": "i18next from the start",
+            "why": "Party games spread by word of mouth, which crosses languages quickly.",
+            "tradeoff": "Every copy change becomes a translation change."
+          }
+        ],
+        "outcome": "Playable at imposter-game.site and as a Discord Activity inside voice channels, with server-authoritative rounds on PartyKit, Supabase persistence, PWA install, and Playwright coverage."
+      }
     },
     {
       "id": "breathapplyser",
@@ -521,7 +1202,70 @@
         "website"
       ],
       "dateAdded": "2023-07-05",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://breathapplyser.online",
+      "repoUrl": "https://github.com/Breathapplyser",
+      "caseStudy": {
+        "claim": "Breathalyzer companion with tracking, caffeine monitoring, and social features — owned backend end-to-end.",
+        "role": "Founder and sole developer — Flutter app, Node API, and web surfaces",
+        "timeline": "Shipped production breathalyzer companion app",
+        "metrics": [
+          {
+            "value": "15",
+            "label": "languages supported in-app"
+          },
+          {
+            "value": "2",
+            "label": "app stores shipped to (Google Play, App Store)"
+          }
+        ],
+        "problem": "Drink tracking apps are often either too simplistic or too clinical to use in social settings. Breathapplyser needed clear BAC/caffeine graphs, fast logging, and optional social accountability.",
+        "sections": [
+          {
+            "title": "Home",
+            "body": "Modern home screen for current levels and quick actions. Entry point for drinks, graphs, and history.",
+            "image": "/images/BreathapplyserV2/Home.png",
+            "imageAlt": "Breathapplyser V2 home screen"
+          },
+          {
+            "title": "BAC over time",
+            "body": "Interactive BAC graph so users see how levels change over time. Paired with drink history for context.",
+            "image": "/images/BreathapplyserV2/BAC Over time Graph.png",
+            "imageAlt": "BAC over time graph"
+          },
+          {
+            "title": "Drink presets",
+            "body": "Presets speed up logging common drinks without re-entering details every time.",
+            "image": "/images/BreathapplyserV2/Drink Presets.png",
+            "imageAlt": "Drink presets screen"
+          },
+          {
+            "title": "PDF report generation",
+            "body": "PDF reports for personal tracking and health insights from logged history.",
+            "image": "/images/BreathapplyserV2/Report Generation pdf.png",
+            "imageAlt": "PDF report generation"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Dual alcohol + caffeine tracking",
+            "why": "Users often manage both stimulants and depressants in the same night.",
+            "tradeoff": "Richer data model and more graph surfaces to maintain."
+          },
+          {
+            "choice": "Full V2 redesign rather than incremental UI polish",
+            "why": "Legacy UX could not carry social features and reporting cleanly.",
+            "tradeoff": "Temporary dual narrative (legacy vs modern) on the case study."
+          },
+          {
+            "choice": "Web app + store download surfaces",
+            "why": "Reach users on both installable and browser entry points.",
+            "tradeoff": "Two distribution channels to keep aligned."
+          }
+        ],
+        "outcome": "Shipped V2 with BAC/caffeine graphs, presets, friend codes/leaderboards, and PDF reports, plus web and download.breathapplyser.online surfaces."
+      }
     },
     {
       "id": "lifesmart",
@@ -566,7 +1310,75 @@
         "website"
       ],
       "dateAdded": "2023-08-02",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://home.lifesmartfinance.com",
+      "caseStudy": {
+        "claim": "Enterprise financial-education platform — 7 production SaaS tools with sub-second global loads.",
+        "role": "Full-stack engineer across the LifeSmart product suite",
+        "timeline": "2024–present · seven production tools in the suite",
+        "metrics": [
+          {
+            "value": "7",
+            "label": "production SaaS tools shipped in the suite"
+          },
+          {
+            "value": "Sub-second",
+            "label": "global load times on Cloudflare Workers and Pages"
+          }
+        ],
+        "problem": "Financial literacy content is scattered, and calculators rarely connect to a coherent learning journey. LifeSmart needed modular tools that still feel like one brand.",
+        "sections": [
+          {
+            "title": "LifeSmart hub",
+            "body": "home.lifesmartfinance.com is the entry point that ties seven separately deployed tools into one brand and one journey.\n\nCloudflare Pages and Workers keep first loads sub-second wherever learners open it.",
+            "image": "/images/LifeSmartHub/hero.png",
+            "imageAlt": "LifeSmart hub homepage linking the financial literacy tool suite"
+          },
+          {
+            "title": "SpZero learning platform",
+            "body": "Module-based financial education with video/slide content, quizzes, and progress saving.\n\nAdmin analytics track engagement across modules and users.",
+            "image": "/images/LifeSmart/SpZero/Home Page - Overview.png",
+            "imageAlt": "SpZero homepage overview"
+          },
+          {
+            "title": "Interactive learning path",
+            "body": "Visual module progression across foundations, personal finance, credit, and investing.\n\nKeeps learners oriented without a flat content dump.",
+            "image": "/images/LifeSmart/SpZero/Module Road Layout.png",
+            "imageAlt": "SpZero module road layout"
+          },
+          {
+            "title": "Budget tool flow",
+            "body": "LifeBalance-style budgeting steps that walk users through income and spending decisions.\n\nDesigned as a guided multi-step tool rather than a blank spreadsheet.",
+            "image": "/images/LifeSmart/Budget Tool/Step1.png",
+            "imageAlt": "LifeSmart budget tool step 1"
+          },
+          {
+            "title": "Asset simulation results",
+            "body": "Asset market simulation with results visualisation for teaching investment concepts.\n\nCharts make outcomes tangible after learners run a scenario.",
+            "image": "/images/LifeSmart/Asset Simulation/Results.png",
+            "imageAlt": "Asset simulation results"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Product suite with shared hub, separate tool deploys",
+            "why": "Different tools have different stacks and release cadences.",
+            "tradeoff": "More surfaces to keep branded and linked from the hub."
+          },
+          {
+            "choice": "Cloudflare Workers + Postgres for SpZero-class apps",
+            "why": "Edge performance with durable relational data for progress and admin.",
+            "tradeoff": "More moving parts than a single Firebase app."
+          },
+          {
+            "choice": "SSO with SPZeroFinance where needed",
+            "why": "Learners should not create yet another account for partner content.",
+            "tradeoff": "Auth complexity across org boundaries."
+          }
+        ],
+        "outcome": "Delivered a hub plus specialized tools (education, calculators, quiz, budget, simulation, buzzer) used in production financial-literacy contexts."
+      }
     },
     {
       "id": "networth-tool",
@@ -606,7 +1418,51 @@
         "mobile"
       ],
       "dateAdded": "2026-05-02",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://networthtool.lifesmartfinance.com",
+      "caseStudy": {
+        "claim": "Mobile-first LifeSmart PWA for net worth, learning paths, and financial literacy—React, Workers, Neon.",
+        "role": "Sole engineer — PWA client, Worker API, and Neon schema",
+        "timeline": "2026 · LifeSmart B2C tool, live at networthtool.lifesmartfinance.com",
+        "metrics": [
+          {
+            "value": "RLS",
+            "label": "row-level security isolating every user’s figures"
+          },
+          {
+            "value": "1",
+            "label": "Worker serving the app and its API"
+          }
+        ],
+        "problem": "Net worth is the number that actually tracks financial progress, but most people either never work it out or bury it in a spreadsheet they stop updating.\n\nLifeSmart needed a phone-first tool that makes logging assets and debts quick, then connects that number back to learning content.",
+        "sections": [
+          {
+            "title": "Mobile-first net worth tracking",
+            "body": "Assets and liabilities are logged in a layout designed for a phone first, with learning paths sitting alongside the figure rather than in a separate app.\n\nWorkbox makes it installable and usable on a poor connection.",
+            "image": "/images/NetworthTool/hero.png",
+            "imageAlt": "Networth Tool mobile-first interface for tracking assets and liabilities"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "A mobile-first PWA instead of native apps",
+            "why": "Reaches iOS and Android from one codebase and installs without an app store review.",
+            "tradeoff": "Limited to the integrations the web platform exposes."
+          },
+          {
+            "choice": "Row-level security in Postgres",
+            "why": "Financial records must be isolated at the database, not only in application code.",
+            "tradeoff": "Policies and migrations need discipline and CI enforcement."
+          },
+          {
+            "choice": "Learning paths beside the calculator",
+            "why": "A number on its own does not change behaviour; context does.",
+            "tradeoff": "Content upkeep on top of product work."
+          }
+        ],
+        "outcome": "Live at networthtool.lifesmartfinance.com: an installable PWA for net worth tracking with learning paths, Better Auth accounts, Stripe wiring, GitHub Actions CI, and RLS-isolated data on Neon."
+      }
     },
     {
       "id": "bgr8",
@@ -618,19 +1474,14 @@
       "tags": [
         "TypeScript",
         "React.js",
-        "Firebase",
-        "Vite",
-        "Cal.com API",
-        "MentorAlgorithm",
-        "EdTech",
-        "WebApp",
         "React",
         "Node.js",
         "Firebase",
         "Vite",
         "Cal.com API",
         "MentorAlgorithm",
-        "EdTech"
+        "EdTech",
+        "WebApp"
       ],
       "visible": true,
       "featured": true,
@@ -639,7 +1490,69 @@
         "website"
       ],
       "dateAdded": "2023-08-30",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://bgr8.com",
+      "caseStudy": {
+        "claim": "Mentoring platform with MentorAlgorithm scoring across 70+ criteria — 95% match accuracy in production.",
+        "role": "Architect and lead full-stack engineer",
+        "timeline": "2025–present · production mentoring platform",
+        "metrics": [
+          {
+            "value": "95%",
+            "label": "Match accuracy"
+          },
+          {
+            "value": "70+",
+            "label": "matching criteria in MentorAlgorithm"
+          }
+        ],
+        "problem": "Matching mentors and mentees by hand does not scale, and shallow filters miss compatibility. Bgr8 needed a weighted scoring system, real-time booking, and admin tools that operators could trust.",
+        "sections": [
+          {
+            "title": "Weighted matching algorithm",
+            "body": "The MentorAlgorithm applies weighted scoring across skills, experience, availability, location, and compatibility factors. Built in TypeScript with real-time data processing so recommendations stay current as profiles change.",
+            "image": "/images/Bgr8/Matching Algorithm.png",
+            "imageAlt": "Bgr8 matching algorithm visualisation"
+          },
+          {
+            "title": "Mentee dashboard",
+            "body": "Personalized dashboard with mentor recommendations and progress tracking. Firebase Firestore keeps recommendations and status in sync without full page reloads.",
+            "image": "/images/Bgr8/Mentee Dashboard.png",
+            "imageAlt": "Bgr8 mentee dashboard"
+          },
+          {
+            "title": "Live messaging",
+            "body": "Real-time messaging between mentors and mentees with delivery and presence cues. Firebase-backed so conversations stay available across sessions.",
+            "image": "/images/Bgr8/Live Messaging between mentor and mentee.png",
+            "imageAlt": "Live messaging between mentor and mentee"
+          },
+          {
+            "title": "Admin analytics",
+            "body": "Admin analytics for engagement, matching outcomes, and platform growth. Operators get live Firestore listeners and exportable reporting.",
+            "image": "/images/Bgr8/Admin Panel Analytics.png",
+            "imageAlt": "Bgr8 admin analytics dashboard"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Custom MentorAlgorithm instead of simple tag filters",
+            "why": "Mentoring quality depends on many soft signals that OR-filters cannot express.",
+            "tradeoff": "Higher implementation and tuning cost versus a simpler search UI."
+          },
+          {
+            "choice": "Firebase for realtime data and auth",
+            "why": "Needed live dashboards, messaging, and rapid iteration without running a custom socket fleet.",
+            "tradeoff": "Vendor coupling and careful rules for admin query surfaces."
+          },
+          {
+            "choice": "Cal.com for availability and booking",
+            "why": "Avoid rebuilding calendar conflict resolution and booking UX.",
+            "tradeoff": "External dependency for a core user journey."
+          }
+        ],
+        "outcome": "Shipped a production mentoring platform with matching, Cal.com booking, RBAC admin tools, and multi-layered security (CSP, XSS protections, rate limiting)."
+      }
     },
     {
       "id": "bakesbyolayide",
@@ -664,7 +1577,53 @@
         "website"
       ],
       "dateAdded": "2023-09-27",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://bakesbyolayide.co.uk",
+      "caseStudy": {
+        "claim": "Custom-bake e-commerce with option-driven dynamic pricing, Stripe checkout, and an owner dashboard for orders and inventory.",
+        "role": "Web developer — storefront, admin dashboard, and payments",
+        "timeline": "Contract, 2025 · live at bakesbyolayide.co.uk",
+        "metrics": [
+          {
+            "value": "1",
+            "label": "dashboard covering orders, inventory, and analytics"
+          }
+        ],
+        "problem": "Custom bake orders arrive as messages, so pricing, options, and order status live in one person’s head and get lost between conversations.\n\nThe shop needed online ordering with genuine customisation, card payments, and a single view of what is due when.",
+        "sections": [
+          {
+            "title": "Storefront and product customisation",
+            "body": "Products are configured rather than picked off a shelf: size, tiers, and extras change the price as the customer builds the order.\n\nReact and Firebase keep the catalogue and pricing rules in one place.",
+            "image": "/images/BakesByOlayide/hero.png",
+            "imageAlt": "BakesByOlayide storefront homepage with custom cake products"
+          },
+          {
+            "title": "Ordering and checkout",
+            "body": "Stripe handles card payments so no card data touches the shop’s own systems.\n\nOrders land in an owner dashboard alongside inventory and simple sales analytics.",
+            "image": "/images/BakesByOlayide/detail.png",
+            "imageAlt": "BakesByOlayide product listings and ordering section"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Dynamic pricing driven by customisation options",
+            "why": "A custom cake’s price depends on size, tiers, and extras, so a fixed catalogue price would always be wrong.",
+            "tradeoff": "Pricing rules must stay consistent between storefront and admin."
+          },
+          {
+            "choice": "Stripe for payments",
+            "why": "Card handling and PCI burden stay with Stripe rather than a small shop.",
+            "tradeoff": "Checkout UX is partly bound to Stripe’s flows."
+          },
+          {
+            "choice": "Firebase for data, auth, and the admin surface",
+            "why": "One backend for catalogue reads, order writes, and the owner dashboard with no server to run.",
+            "tradeoff": "Query and security-rule limits shape the data model."
+          }
+        ],
+        "outcome": "Live at bakesbyolayide.co.uk with a customisable product catalogue, dynamic pricing, Stripe checkout, and an owner dashboard for orders, inventory, and analytics."
+      }
     },
     {
       "id": "biaslens",
@@ -690,7 +1649,53 @@
         "website"
       ],
       "dateAdded": "2023-10-25",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://biaslens.vercel.app",
+      "caseStudy": {
+        "claim": "Political alignment and sentiment analysis for web articles, scoring aggregated coverage through a Python NLP service.",
+        "role": "Web developer — Next.js front end and Python analysis backend",
+        "timeline": "2024–present · live at biaslens.vercel.app",
+        "metrics": [
+          {
+            "value": "VADER",
+            "label": "lexicon-based sentiment scoring per article"
+          }
+        ],
+        "problem": "Readers rarely see where an article sits politically until they have read several outlets on the same story.\n\nBiasLens had to score alignment and sentiment on arbitrary web articles and present the result plainly enough to be useful mid-read.",
+        "sections": [
+          {
+            "title": "Article alignment analysis",
+            "body": "Articles are scored for political alignment and sentiment, then surfaced with the reasoning visible rather than as a bare label.\n\nA Django service does the NLP work behind the Next.js reader UI.",
+            "image": "/images/BiasLens/Homepage 1.png",
+            "imageAlt": "BiasLens homepage showing political alignment analysis of an article"
+          },
+          {
+            "title": "Aggregated coverage",
+            "body": "Multiple news APIs feed the same story from different outlets so the spread of framing is visible side by side.\n\nVADER scoring makes the sentiment comparison consistent across sources.",
+            "image": "/images/BiasLens/Homepage 2.png",
+            "imageAlt": "BiasLens aggregated news coverage with per-source analysis"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "A Python/Django service for the NLP work",
+            "why": "The strongest sentiment and text-processing libraries live in Python.",
+            "tradeoff": "Two runtimes and a network hop between the UI and the analysis."
+          },
+          {
+            "choice": "VADER for sentiment scoring",
+            "why": "Lexicon-based scoring is fast, explainable, and needs no training data.",
+            "tradeoff": "Weaker on sarcasm and domain-specific framing than a trained model."
+          },
+          {
+            "choice": "Next.js on Vercel for the reader-facing app",
+            "why": "Fast page loads and simple preview deploys for a content-heavy UI.",
+            "tradeoff": "Hosting is split between Vercel and the Python backend."
+          }
+        ],
+        "outcome": "Live at biaslens.vercel.app: political alignment and sentiment analysis over aggregated news coverage, with a Next.js reader UI over a Python analysis service."
+      }
     },
     {
       "id": "ministryofjustice",
@@ -713,7 +1718,41 @@
         "website"
       ],
       "dateAdded": "2023-11-22",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "caseStudy": {
+        "claim": "Task management system for the Ministry of Justice brief — React client, Node API, and Firebase-backed shared task state.",
+        "role": "Full-stack developer — React client and Node API",
+        "timeline": "2023 · delivered project, never publicly hosted",
+        "metrics": [],
+        "problem": "Task tracking spread across email and spreadsheets makes it unclear who owns what and what is already overdue.\n\nThe brief was a straightforward task management system with shared visibility and no additional tooling for teams to learn.",
+        "sections": [
+          {
+            "title": "Task management system",
+            "body": "A React client over a Node API with Firebase for shared, realtime task state and a Render deployment.\n\nThe project is not publicly hosted, so this case study uses a product card rather than a live capture.",
+            "image": "/images/MinistryofJustice/hero.png",
+            "imageAlt": "Ministry of Justice product card — task management system built with React, Node, and Firebase"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Firebase for data and auth",
+            "why": "Shared task state with realtime reads and no backend to operate.",
+            "tradeoff": "Reporting queries are constrained by the document model."
+          },
+          {
+            "choice": "A React SPA over server-rendered pages",
+            "why": "Task boards are interaction-heavy and benefit from client-held state.",
+            "tradeoff": "A larger initial bundle on first load."
+          },
+          {
+            "choice": "Render for the Node service",
+            "why": "Git-push deploys were the right weight for an internal-scale service.",
+            "tradeoff": "Cold starts on the free tier."
+          }
+        ],
+        "outcome": "Delivered a working task management system — React client, Node API, Firebase-backed state — kept as an unhosted archive project rather than a live site."
+      }
     },
     {
       "id": "mentage",
@@ -741,7 +1780,59 @@
         "website"
       ],
       "dateAdded": "2023-12-20",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://mentage.onrender.com",
+      "caseStudy": {
+        "claim": "WhatsApp learning chatbot with Flask and OpenAI conversations, plus a React app for topic and account control.",
+        "role": "Full-stack engineer — WhatsApp chatbot, Flask backend, and React account app",
+        "timeline": "Contract, 2024–2025 · live at mentage.onrender.com",
+        "metrics": [
+          {
+            "value": "0",
+            "label": "app installs required — learning happens in WhatsApp"
+          }
+        ],
+        "problem": "Learners quietly drop out of study apps they have to remember to open.\n\nMentage delivers prompts and questions through WhatsApp, where the conversation already sits near the top of the phone, and keeps configuration in a small web app instead of in chat.",
+        "sections": [
+          {
+            "title": "Conversational learning in WhatsApp",
+            "body": "The bot asks, marks, and explains inside a normal WhatsApp thread, so studying costs no more effort than replying to a message.\n\nA Python/Flask service handles webhooks and the OpenAI calls behind it.",
+            "image": "/images/Mentage/conversation 1.png",
+            "imageAlt": "Mentage WhatsApp conversation with the learning chatbot"
+          },
+          {
+            "title": "Topic control from the web app",
+            "body": "Learners choose and edit the topics the bot covers from a React app rather than trying to configure anything over chat.\n\nChanges take effect on the next message.",
+            "image": "/images/Mentage/Edit topics.png",
+            "imageAlt": "Mentage web app screen for editing learning topics"
+          },
+          {
+            "title": "Account and profile",
+            "body": "Firebase handles authentication and stores profile and progress data shared by both surfaces.\n\nOne account, whichever surface the learner is using.",
+            "image": "/images/Mentage/Profile.png",
+            "imageAlt": "Mentage user profile and account management screen"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "WhatsApp as the primary surface",
+            "why": "Learners answer messages they already receive; a new app is one more thing to remember to open.",
+            "tradeoff": "Message formatting and rate limits are dictated by the platform."
+          },
+          {
+            "choice": "Python and Flask for the chatbot backend",
+            "why": "Direct webhook handling and OpenAI access in one small service.",
+            "tradeoff": "A separate runtime from the React account app."
+          },
+          {
+            "choice": "A React web app for topics and account",
+            "why": "Configuration is painful over chat and trivial in a form.",
+            "tradeoff": "Two surfaces to keep consistent."
+          }
+        ],
+        "outcome": "Live at mentage.onrender.com: a WhatsApp learning chatbot backed by Flask and OpenAI, with a React app for topics, profile, and account management."
+      }
     },
     {
       "id": "therabot",
@@ -768,7 +1859,69 @@
         "website"
       ],
       "dateAdded": "2024-01-17",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://therabot-site.onrender.com",
+      "caseStudy": {
+        "claim": "GPT-4 mental health support chatbot on web and WhatsApp with guided sessions and tone controls.",
+        "role": "Founder and full-stack developer",
+        "timeline": "2024–present · web and WhatsApp surfaces live",
+        "metrics": [
+          {
+            "value": "2",
+            "label": "channels: web chat and WhatsApp"
+          },
+          {
+            "value": "GPT-4",
+            "label": "model behind guided support sessions"
+          }
+        ],
+        "problem": "People need low-friction mental health support outside clinic hours, without a heavy app install. Therabot had to feel safe, configurable, and available on channels people already use.",
+        "sections": [
+          {
+            "title": "Dashboard",
+            "body": "Central dashboard for session status and quick access into chat. Designed for calm, readable scanning rather than dense admin chrome.",
+            "image": "/images/Therabot/Dashboard.png",
+            "imageAlt": "Therabot dashboard"
+          },
+          {
+            "title": "Role and tone settings",
+            "body": "Operators can tune role and tone so responses stay appropriate for the support context. Settings screens keep those controls explicit instead of buried prompts.",
+            "image": "/images/Therabot/Role settings.png",
+            "imageAlt": "Therabot role settings"
+          },
+          {
+            "title": "Active web chat",
+            "body": "Web chat for anonymous or signed-in sessions with conversation continuity. History views let users revisit earlier guidance.",
+            "image": "/images/Therabot/ACtive webchat.png",
+            "imageAlt": "Therabot active web chat"
+          },
+          {
+            "title": "WhatsApp surface",
+            "body": "WhatsApp integration meets users in a familiar messenger. Same support model, different entry point.",
+            "image": "/images/Therabot/Whatsapp chat.png",
+            "imageAlt": "Therabot WhatsApp chat"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "OpenAI-backed conversational flows",
+            "why": "Needed flexible natural-language support rather than a rigid decision tree alone.",
+            "tradeoff": "Must constrain tone/role carefully for a mental-health context."
+          },
+          {
+            "choice": "Dual web + WhatsApp delivery",
+            "why": "Reach users where they already communicate.",
+            "tradeoff": "Two clients to keep behaviour consistent."
+          },
+          {
+            "choice": "Firebase + Render hosting stack",
+            "why": "Fast path to auth, persistence, and a deployable Node/React app.",
+            "tradeoff": "Operational split across services to monitor."
+          }
+        ],
+        "outcome": "Shipped guided meditations, personalized tips, anonymous chat, conversation history, and a WhatsApp channel alongside the web app."
+      }
     },
     {
       "id": "flashcards",
@@ -791,7 +1944,53 @@
         "website"
       ],
       "dateAdded": "2024-02-14",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://flashcards-pj01.onrender.com",
+      "caseStudy": {
+        "claim": "Zero-setup React concept drill — flip, shuffle, and self-mark cards in the browser with no account and nothing to install.",
+        "role": "Sole developer",
+        "timeline": "2024 · live at flashcards-pj01.onrender.com",
+        "metrics": [
+          {
+            "value": "0",
+            "label": "sign-up steps — open the URL and start drilling"
+          }
+        ],
+        "problem": "Reading React documentation is passive: you cannot tell what you would actually recall under pressure.\n\nA flashcard drill had to open instantly and skip the accounts and sync that stop people using study tools in the first place.",
+        "sections": [
+          {
+            "title": "Card deck and flip interaction",
+            "body": "Cards flip on click to reveal the answer, with shuffling so the order never becomes the memory aid.\n\nEverything is client-side React with plain CSS transitions.",
+            "image": "/images/Flashcards/hero.png",
+            "imageAlt": "Flashcards app showing a React concept card ready to flip"
+          },
+          {
+            "title": "Working through the deck",
+            "body": "The deck covers core React concepts, curated rather than generated, and is worked through in a single session.\n\nNo backend means no progress sync — and no reason not to open it.",
+            "image": "/images/Flashcards/detail.png",
+            "imageAlt": "Flashcards deck view scrolled to show further React concept cards"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Client-only, with no backend",
+            "why": "A study drill should load instantly and work without signing in.",
+            "tradeoff": "No progress sync between devices."
+          },
+          {
+            "choice": "Hand-written deck content over an API",
+            "why": "The React concepts being drilled change slowly and needed curation, not volume.",
+            "tradeoff": "Content updates require a deploy."
+          },
+          {
+            "choice": "Plain CSS transitions for the flip",
+            "why": "The entire interaction is one animation; a library would outweigh the feature.",
+            "tradeoff": "Cross-browser tuning done by hand."
+          }
+        ],
+        "outcome": "Live at flashcards-pj01.onrender.com as a zero-setup React concept drill — open, flip, shuffle, and work through the deck in the browser."
+      }
     },
     {
       "id": "culinary",
@@ -817,7 +2016,65 @@
         "website"
       ],
       "dateAdded": "2024-03-13",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://culinairy-239n.onrender.com",
+      "caseStudy": {
+        "claim": "AI recipe generator that builds meals and weekly plans from the ingredients you already have and the diet you actually follow.",
+        "role": "Founder and full-stack developer",
+        "timeline": "2024–present · live at culinairy-239n.onrender.com",
+        "metrics": [
+          {
+            "value": "GPT-4",
+            "label": "recipe generation from pantry and diet input"
+          }
+        ],
+        "problem": "Recipe sites assume you will shop to their ingredient list, which is the opposite of how most weeknight cooking works.\n\nCulinAIry starts from what is already in the kitchen and the constraints the eater actually has, then produces something cookable tonight.",
+        "sections": [
+          {
+            "title": "Ingredient-first input",
+            "body": "You list what you have rather than searching for a dish, which is the input people can actually supply at 6pm.\n\nThe ingredient set drives generation instead of filtering a fixed catalogue.",
+            "image": "/images/CulinAIry/Ingredients.png",
+            "imageAlt": "CulinAIry ingredient entry screen for recipe generation"
+          },
+          {
+            "title": "Dietary preferences as constraints",
+            "body": "Allergies and dietary rules are applied as generation constraints, not as a filter run afterwards.\n\nThat matters when the wrong result is a safety issue rather than a bad suggestion.",
+            "image": "/images/CulinAIry/Dietary Pref.png",
+            "imageAlt": "CulinAIry dietary preference and restriction settings"
+          },
+          {
+            "title": "Generated recipe",
+            "body": "Output is a full recipe with method and quantities, not a list of dish names to go and look up.\n\nRecipes can be saved to the account for reuse.",
+            "image": "/images/CulinAIry/Recipe Generated.png",
+            "imageAlt": "CulinAIry generated recipe with ingredients and method"
+          },
+          {
+            "title": "Meal planning",
+            "body": "Generated and saved recipes are placed into a weekly plan so the tool covers the whole week, not just one meal.\n\nFirebase persists plans and saved recipes per user.",
+            "image": "/images/CulinAIry/Meal planner.png",
+            "imageAlt": "CulinAIry weekly meal planner view"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Generate from pantry input rather than search a recipe database",
+            "why": "Matching a fixed database against arbitrary ingredient sets returns almost nothing usable.",
+            "tradeoff": "Output has to be validated for plausibility instead of curated up front."
+          },
+          {
+            "choice": "Dietary preferences as first-class constraints",
+            "why": "Allergies are a safety concern, not a filter to apply after the fact.",
+            "tradeoff": "Prompt and validation complexity grows with every constraint."
+          },
+          {
+            "choice": "Firebase for accounts, saved recipes, and plans",
+            "why": "Per-user persistence with minimal backend for a small product.",
+            "tradeoff": "Vendor coupling on a core feature."
+          }
+        ],
+        "outcome": "Live at culinairy-239n.onrender.com: ingredient- and diet-aware recipe generation with full methods, saved recipes, weekly meal planning, and Firebase accounts."
+      }
     },
     {
       "id": "dadjokegenerator",
@@ -840,7 +2097,47 @@
         "website"
       ],
       "dateAdded": "2024-04-10",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://dad-joke-generator-68xz.onrender.com",
+      "caseStudy": {
+        "claim": "One-button dad joke generator — a deliberately tiny Ember.js app built to learn the framework end to end.",
+        "role": "Sole developer",
+        "timeline": "2024 · live at dad-joke-generator-68xz.onrender.com",
+        "metrics": [
+          {
+            "value": "1",
+            "label": "button — the entire interface"
+          }
+        ],
+        "problem": "This one does not solve a serious problem: it is a small, finished toy.\n\nThe actual goal was learning Ember.js properly by shipping something end to end instead of abandoning another tutorial halfway.",
+        "sections": [
+          {
+            "title": "One button, one joke",
+            "body": "Press the button, get a dad joke — the whole interface, deliberately.\n\nAn Ember front end over a small Node service that fetches and returns the joke.",
+            "image": "/images/DadJokeGenerator/hero.png",
+            "imageAlt": "Dad Joke Generator single-button interface displaying a joke"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Ember.js for a deliberately small app",
+            "why": "The point was learning a convention-heavy framework on a project small enough to actually finish.",
+            "tradeoff": "Framework weight far exceeds what the feature needs."
+          },
+          {
+            "choice": "Fetching jokes through a Node layer",
+            "why": "Keeps the joke source swappable and avoids CORS handling in the client.",
+            "tradeoff": "A backend for something that could have been a static page."
+          },
+          {
+            "choice": "Render free tier hosting",
+            "why": "Zero cost is the right budget for a toy with occasional traffic.",
+            "tradeoff": "Cold start on the first request after it goes idle."
+          }
+        ],
+        "outcome": "Live at dad-joke-generator-68xz.onrender.com — a finished, single-purpose Ember app that served its real purpose of learning the framework."
+      }
     },
     {
       "id": "doomscroll",
@@ -863,7 +2160,47 @@
         "website"
       ],
       "dateAdded": "2024-05-08",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://infinite-useless-scroll.onrender.com",
+      "caseStudy": {
+        "claim": "Infinite feed of useless facts — a parody of the doomscroll loop, built to understand the mechanics that make feeds hard to leave.",
+        "role": "Sole developer",
+        "timeline": "2024 · live at infinite-useless-scroll.onrender.com",
+        "metrics": [
+          {
+            "value": "∞",
+            "label": "scroll depth — the feed never ends"
+          }
+        ],
+        "problem": "Infinite feeds are engineered to be hard to leave, and the mechanics behind that are worth building once to properly understand.\n\nDoomScroll reproduces the loop with content that cannot upset anyone: endless facts, no algorithm, no outrage.",
+        "sections": [
+          {
+            "title": "The endless feed",
+            "body": "Facts load continuously as you scroll, with no end state and nothing to complete.\n\nReact on the client with a small Node service supplying the stream.",
+            "image": "/images/DoomScroll/hero.png",
+            "imageAlt": "DoomScroll infinite feed of useless facts"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "An endless client-side feed rather than pagination",
+            "why": "Reproducing the never-ending scroll mechanic is the entire point of the project.",
+            "tradeoff": "Memory and scroll performance need attention as the list grows."
+          },
+          {
+            "choice": "Harmless fact content",
+            "why": "Parodying doomscrolling without the doom keeps it a joke rather than a habit.",
+            "tradeoff": "No emotional pull — which is precisely the intent."
+          },
+          {
+            "choice": "A Node service on Render",
+            "why": "Simple deploys for a low-traffic side project.",
+            "tradeoff": "Free-tier cold starts."
+          }
+        ],
+        "outcome": "Live at infinite-useless-scroll.onrender.com — a deliberately harmless infinite feed that never runs out of facts."
+      }
     },
     {
       "id": "contrarian",
@@ -891,7 +2228,52 @@
         "website"
       ],
       "dateAdded": "2024-06-05",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "caseStudy": {
+        "claim": "Pitch-deck classifier that turns inbound VC decks into scored, comparable screening rounds using ML and OpenAI.",
+        "role": "Full-stack developer and data scientist",
+        "timeline": "Contract, 2024–present · internal tool, not publicly hosted",
+        "metrics": [
+          {
+            "value": "PDF",
+            "label": "deck ingestion with automated classification"
+          }
+        ],
+        "problem": "A VC inbox receives far more decks than any partner can read, and the first pass is repetitive judgement work.\n\nContrarian had to turn an uploaded deck into a structured, comparable score rather than a gut reaction that varies by reviewer and by hour.",
+        "sections": [
+          {
+            "title": "Deck upload and classification",
+            "body": "Decks are uploaded, parsed, and classified, with Firebase Storage holding the confidential files behind access rules.\n\nA React UI keeps reviewers out of the Python tooling underneath.",
+            "image": "/images/Contrarian/Homepage.png",
+            "imageAlt": "Contrarian pitch-deck upload and classification homepage"
+          },
+          {
+            "title": "Screening rounds",
+            "body": "Decks progress through screening rounds so reviewers compare like with like instead of re-reading everything.\n\nFlask serves the model output that drives each round.",
+            "image": "/images/Contrarian/Round2.png",
+            "imageAlt": "Contrarian second screening round with classified pitch decks"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "ML classification plus an LLM pass",
+            "why": "Structured features catch what a language model glosses over, and the model catches what the features miss.",
+            "tradeoff": "Two systems to evaluate and keep calibrated against each other."
+          },
+          {
+            "choice": "A Python/Flask backend behind a React UI",
+            "why": "The modelling work belongs in Python; reviewers need a fast web interface.",
+            "tradeoff": "Separate deploys for the API and the client."
+          },
+          {
+            "choice": "Firebase Storage for uploaded decks",
+            "why": "Decks are confidential files that need access-controlled storage.",
+            "tradeoff": "Storage rules become part of the security surface."
+          }
+        ],
+        "outcome": "Delivered an internal screening tool that ingests pitch decks, classifies them with ML and OpenAI, and presents scored rounds to reviewers — kept private rather than publicly hosted."
+      }
     },
     {
       "id": "ldmf",
@@ -912,7 +2294,59 @@
         "website"
       ],
       "dateAdded": "2024-07-03",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://ldmf.onrender.com",
+      "caseStudy": {
+        "claim": "Campaign and policy site for the LDMF with a self-updating news feed aggregated from NewsAPI, MediaStack, and Google News.",
+        "role": "Volunteer web developer",
+        "timeline": "2023 · live at ldmf.onrender.com",
+        "metrics": [
+          {
+            "value": "3",
+            "label": "news sources aggregated: NewsAPI, MediaStack, Google News RSS"
+          }
+        ],
+        "problem": "Campaign sites go stale between elections, and volunteers rarely have time to hand-write news updates.\n\nThe LDMF site needed clear policy pages plus a feed that keeps itself current with no editor in the loop.",
+        "sections": [
+          {
+            "title": "Policy and campaign pages",
+            "body": "Positions on housing, education, equality, climate, and mental health each get a dedicated page written to be read, not skimmed past.\n\nBuilt in Vue.js as static content that does not depend on any API being up.",
+            "image": "/images/Liberal Democrats/Campaigns.png",
+            "imageAlt": "LDMF campaigns page listing policy positions"
+          },
+          {
+            "title": "Live news aggregation",
+            "body": "Three sources — NewsAPI, MediaStack, and Google News RSS — feed a news page that stays current without a volunteer editing it.\n\nUsing three providers covers the gaps any single feed leaves.",
+            "image": "/images/Liberal Democrats/News.png",
+            "imageAlt": "LDMF news page with aggregated live coverage"
+          },
+          {
+            "title": "Get involved",
+            "body": "Join and contact routes turn a reader into a volunteer without leaving the site.\n\nThe conversion path was the point of the build.",
+            "image": "/images/Liberal Democrats/JoinUs.png",
+            "imageAlt": "LDMF join us page with volunteer sign-up"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Aggregating three news sources instead of one",
+            "why": "Single-feed coverage leaves visible gaps; three keep the page genuinely current.",
+            "tradeoff": "De-duplication and inconsistent metadata across providers."
+          },
+          {
+            "choice": "Vue.js for the site",
+            "why": "A small component-driven site with straightforward reactivity needs.",
+            "tradeoff": "A different stack from the rest of the portfolio."
+          },
+          {
+            "choice": "Static policy pages alongside the dynamic feed",
+            "why": "Positions change slowly and should not go blank when an API is down.",
+            "tradeoff": "Two content models inside one site."
+          }
+        ],
+        "outcome": "Live at ldmf.onrender.com with policy and campaign pages, a self-updating news feed from three sources, and join and contact routes for volunteers."
+      }
     },
     {
       "id": "pngtosvg",
@@ -933,7 +2367,42 @@
         "website"
       ],
       "dateAdded": "2024-07-31",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://pngtosvg-ulmg.onrender.com",
+      "caseStudy": {
+        "claim": "Browser tool that traces uploaded PNGs into scalable SVG paths, with no install and no upload to a third party.",
+        "role": "Sole developer",
+        "timeline": "2024 · Angular utility deployed at pngtosvg-ulmg.onrender.com",
+        "metrics": [],
+        "problem": "Raster logos fall apart the moment they are scaled up, and desktop tracing tools are overkill for a one-off conversion.\n\nPNG to SVG does the trace in a browser tab, so a designer or developer can convert an asset without installing anything.",
+        "sections": [
+          {
+            "title": "Upload, trace, download",
+            "body": "Drop in a PNG, trace it to vector paths, and download the resulting SVG.\n\nThe hosted free-tier instance was not returning a renderable page when this case study was captured, so it leads with a product card rather than a screenshot.",
+            "image": "/images/PNGtoSVG/hero.png",
+            "imageAlt": "PNG to SVG product card — browser-based raster-to-vector conversion utility"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Tracing in the browser",
+            "why": "Uploaded artwork does not need to leave the machine for a vector trace.",
+            "tradeoff": "Large images are limited by the device’s CPU."
+          },
+          {
+            "choice": "Angular for the tool shell",
+            "why": "Built around Angular’s form and file-handling primitives for a self-contained utility.",
+            "tradeoff": "A heavy framework for a single-purpose converter."
+          },
+          {
+            "choice": "Free-tier hosting on Render",
+            "why": "The right cost for an occasional-use utility with no revenue.",
+            "tradeoff": "Cold starts, and the instance can be unavailable between uses."
+          }
+        ],
+        "outcome": "A working browser-based PNG-to-vector converter deployed at pngtosvg-ulmg.onrender.com, kept as a small utility rather than a maintained product."
+      }
     },
     {
       "id": "doppelgancar",
@@ -959,7 +2428,42 @@
         "website"
       ],
       "dateAdded": "2024-08-28",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "liveUrl": "https://doppelgang-car.vercel.app",
+      "caseStudy": {
+        "claim": "AI car matcher that reasons over a personality questionnaire instead of scoring a fixed quiz lookup table.",
+        "role": "Sole developer",
+        "timeline": "2024 · live at doppelgang-car.vercel.app",
+        "metrics": [],
+        "problem": "\"What car suits me?\" is normally answered by a magazine quiz with a hard-coded lookup table behind it.\n\nDoppelgan-Car runs a model over the answers so the match reasons about traits rather than counting quiz points.",
+        "sections": [
+          {
+            "title": "Personality questionnaire and match",
+            "body": "A Nuxt front end collects the questionnaire and a Flask service runs the matching against OpenAI.\n\nThe result is an explained pairing rather than a bare car name.",
+            "image": "/images/Doppelgancar/hero.png",
+            "imageAlt": "Doppelgan-Car landing page for the AI car personality matcher"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Model-based matching over a lookup table",
+            "why": "Nuanced and free-text answers cannot be scored by a fixed rubric.",
+            "tradeoff": "Results vary between runs and need guard-railing."
+          },
+          {
+            "choice": "Nuxt front end with a Flask API",
+            "why": "Server-rendered questionnaire UI with the model work kept in Python.",
+            "tradeoff": "Two hosting targets for a small project."
+          },
+          {
+            "choice": "Kept hidden on the portfolio",
+            "why": "It is a novelty project that does not represent current work.",
+            "tradeoff": "None — the deployment stays live for anyone with the link."
+          }
+        ],
+        "outcome": "Live at doppelgang-car.vercel.app: a personality questionnaire that returns an AI-reasoned car match, retained as an archived novelty project."
+      }
     },
     {
       "id": "tindev",
@@ -984,7 +2488,41 @@
         "website"
       ],
       "dateAdded": "2024-09-25",
-      "dateUpdated": "2026-05-02"
+      "dateUpdated": "2026-05-02",
+      "embeddable": false,
+      "caseStudy": {
+        "claim": "Developer networking prototype pairing profile-based matching with peer-to-peer WebRTC video introductions.",
+        "role": "Sole developer",
+        "timeline": "2024 · prototype, never publicly deployed",
+        "metrics": [],
+        "problem": "Developer networking happens in crowded chat servers where introductions rarely turn into an actual conversation.\n\nTindev paired profile matching with a direct video call, so a match could become a conversation in one step instead of a dead DM.",
+        "sections": [
+          {
+            "title": "Profile matching and video calls",
+            "body": "Firebase-backed profiles drive matching and double as the WebRTC signalling channel for peer-to-peer video.\n\nThe prototype was never publicly deployed, so this case study uses a product card rather than a live capture.",
+            "image": "/images/Tindev/hero.png",
+            "imageAlt": "Tindev product card — developer networking prototype with matching and WebRTC video"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Peer-to-peer WebRTC video",
+            "why": "Direct calls avoid relaying media through a server we would have to pay for and secure.",
+            "tradeoff": "NAT traversal and signalling still need infrastructure."
+          },
+          {
+            "choice": "Firebase for profiles, matching, and signalling",
+            "why": "Realtime documents double as a WebRTC signalling channel with no extra service.",
+            "tradeoff": "Matching and call setup are both tied to one vendor."
+          },
+          {
+            "choice": "Left as a prototype",
+            "why": "A matching pool is a distribution problem, not an engineering one, and the distribution was not there.",
+            "tradeoff": "Working code with no users."
+          }
+        ],
+        "outcome": "A functional prototype — profile matching plus WebRTC video introductions — shelved before public launch and kept hidden on the portfolio."
+      }
     }
   ]
 }

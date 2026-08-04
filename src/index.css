@@ -1,4 +1,2 @@
-/* Import theme system */
+@import './styles/globals.css';
 @import './styles/themes/index.css';
-
-/* Base styles are now in themes/index.css */

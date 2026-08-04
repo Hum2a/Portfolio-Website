@@ -14,9 +14,9 @@
 }
 
 .github-page-container {
-  max-width: 1200px;
+  max-width: var(--page-max-wide);
   margin: 0 auto;
-  padding: 3rem 1.5rem 4rem;
+  padding: 3rem var(--page-gutter) 4rem;
 }
 
 .github-page-header {
@@ -152,7 +152,7 @@
 
 .github-profile-cta:hover {
   background: rgba(74, 158, 255, 0.1);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-lift);
 }
 
 /* Contribution chart */
@@ -466,13 +466,25 @@
 
 .github-repo-language {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.75rem;
   font-family: var(--font-code);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--lang-color, var(--accent-primary));
-  border: 1px solid var(--border-primary);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-glass);
+}
+
+.github-repo-language::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--lang-color, var(--accent));
+  flex-shrink: 0;
 }
 
 .github-repo-desc {
@@ -545,7 +557,7 @@
 
 .github-view-all-btn:hover {
   background: rgba(74, 158, 255, 0.1);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-lift);
 }
 
 @media (max-width: 768px) {
@@ -580,4 +592,14 @@
   .github-repos-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.github-contribution-section--hero {
+  padding: 1.25rem 1.35rem;
+  margin-bottom: 1.75rem;
+}
+
+.github-contribution-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
 }

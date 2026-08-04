@@ -1,35 +1,11 @@
-# robots.txt for https://humza-butt.onrender.com
-# Updated: 2024-03-05
+﻿# robots.txt for https://humza-butt.space
 
 User-agent: *
 Allow: /
 
-# Allow all bots to access all content
-User-agent: Googlebot
-Allow: /
-User-agent: Googlebot-Image
-Allow: /
-User-agent: Googlebot-Mobile
-Allow: /
-User-agent: Bingbot
-Allow: /
-User-agent: Slurp
-Allow: /
-User-agent: DuckDuckBot
-Allow: /
-User-agent: Baiduspider
-Allow: /
-User-agent: YandexBot
-Allow: /
+# Admin / auth surfaces
+User-agent: *
+Disallow: /humza-login
+Disallow: /traffic
 
-# Block ChatGPT crawler from accessing personal information
-User-agent: GPTBot
-Disallow: /about
-Disallow: /contact
-
-# Block AI training crawlers from your private content
-User-agent: anthropic-ai
-Disallow: /
-
-# Sitemaps
-Sitemap: https://humza-butt.onrender.com/sitemap.xml
+Sitemap: https://humza-butt.space/sitemap.xml

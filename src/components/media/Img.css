@@ -1,0 +1,39 @@
+.media-img {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  line-height: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.media-img picture {
+  display: block;
+  width: 100%;
+}
+
+.media-img__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  opacity: 0;
+}
+
+.media-img--loaded .media-img__img {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .media-img__img {
+    transition: opacity 0.35s ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-img__img {
+    opacity: 1;
+  }
+}

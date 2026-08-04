@@ -1,7 +1,8 @@
 .github-section {
-  padding: 5rem 1.5rem 5rem;
+  padding: 5rem var(--page-gutter) 5rem;
   background: var(--bg-primary);
   position: relative;
+  overflow: hidden;
 }
 
 .github-section::before {
@@ -23,7 +24,9 @@
 }
 
 .github-inner {
-  max-width: 1200px;
+  position: relative;
+  z-index: 1;
+  max-width: var(--page-max-wide);
   margin: 0 auto;
 }
 
@@ -234,7 +237,7 @@
 
 .github-view-all:hover {
   background: rgba(74, 158, 255, 0.1);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-lift);
 }
 
 @media (max-width: 768px) {

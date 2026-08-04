@@ -1,0 +1,1739 @@
+{
+  "/images/B8/Adminbgr8.png": {
+    "src": "/images/B8/Adminbgr8.png",
+    "webp": "/images/B8/Adminbgr8.webp",
+    "avif": "/images/B8/Adminbgr8.avif",
+    "blur": "/images/_blur/B8/Adminbgr8.blur.webp",
+    "width": 1280,
+    "height": 912,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminCarClub.png": {
+    "src": "/images/B8/AdminCarClub.png",
+    "webp": "/images/B8/AdminCarClub.webp",
+    "avif": "/images/B8/AdminCarClub.avif",
+    "blur": "/images/_blur/B8/AdminCarClub.blur.webp",
+    "width": 1280,
+    "height": 783,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminCareers.png": {
+    "src": "/images/B8/AdminCareers.png",
+    "webp": "/images/B8/AdminCareers.webp",
+    "avif": "/images/B8/AdminCareers.avif",
+    "blur": "/images/_blur/B8/AdminCareers.blur.webp",
+    "width": 1280,
+    "height": 708,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminClothing.png": {
+    "src": "/images/B8/AdminClothing.png",
+    "webp": "/images/B8/AdminClothing.webp",
+    "avif": "/images/B8/AdminClothing.avif",
+    "blur": "/images/_blur/B8/AdminClothing.blur.webp",
+    "width": 1280,
+    "height": 849,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminGr8r.png": {
+    "src": "/images/B8/AdminGr8r.png",
+    "webp": "/images/B8/AdminGr8r.webp",
+    "avif": "/images/B8/AdminGr8r.avif",
+    "blur": "/images/_blur/B8/AdminGr8r.blur.webp",
+    "width": 1280,
+    "height": 708,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminLeague.png": {
+    "src": "/images/B8/AdminLeague.png",
+    "webp": "/images/B8/AdminLeague.webp",
+    "avif": "/images/B8/AdminLeague.avif",
+    "blur": "/images/_blur/B8/AdminLeague.blur.webp",
+    "width": 1280,
+    "height": 868,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminMarketing.png": {
+    "src": "/images/B8/AdminMarketing.png",
+    "webp": "/images/B8/AdminMarketing.webp",
+    "avif": "/images/B8/AdminMarketing.avif",
+    "blur": "/images/_blur/B8/AdminMarketing.blur.webp",
+    "width": 1280,
+    "height": 1459,
+    "dominantColor": "#282828"
+  },
+  "/images/B8/AdminModal.png": {
+    "src": "/images/B8/AdminModal.png",
+    "webp": "/images/B8/AdminModal.webp",
+    "avif": "/images/B8/AdminModal.avif",
+    "blur": "/images/_blur/B8/AdminModal.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#080808"
+  },
+  "/images/B8/AdminPortalAnalytics.png": {
+    "src": "/images/B8/AdminPortalAnalytics.png",
+    "webp": "/images/B8/AdminPortalAnalytics.webp",
+    "avif": "/images/B8/AdminPortalAnalytics.avif",
+    "blur": "/images/_blur/B8/AdminPortalAnalytics.blur.webp",
+    "width": 1280,
+    "height": 1744,
+    "dominantColor": "#080808"
+  },
+  "/images/B8/AdminPortalEnquiries.png": {
+    "src": "/images/B8/AdminPortalEnquiries.png",
+    "webp": "/images/B8/AdminPortalEnquiries.webp",
+    "avif": "/images/B8/AdminPortalEnquiries.avif",
+    "blur": "/images/_blur/B8/AdminPortalEnquiries.blur.webp",
+    "width": 1280,
+    "height": 845,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminPortalSettings.png": {
+    "src": "/images/B8/AdminPortalSettings.png",
+    "webp": "/images/B8/AdminPortalSettings.webp",
+    "avif": "/images/B8/AdminPortalSettings.avif",
+    "blur": "/images/_blur/B8/AdminPortalSettings.blur.webp",
+    "width": 1280,
+    "height": 1169,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminPortalUsers.png": {
+    "src": "/images/B8/AdminPortalUsers.png",
+    "webp": "/images/B8/AdminPortalUsers.webp",
+    "avif": "/images/B8/AdminPortalUsers.avif",
+    "blur": "/images/_blur/B8/AdminPortalUsers.blur.webp",
+    "width": 1280,
+    "height": 708,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/AdminWorld.png": {
+    "src": "/images/B8/AdminWorld.png",
+    "webp": "/images/B8/AdminWorld.webp",
+    "avif": "/images/B8/AdminWorld.avif",
+    "blur": "/images/_blur/B8/AdminWorld.blur.webp",
+    "width": 1280,
+    "height": 1555,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/Bgr8.png": {
+    "src": "/images/B8/Bgr8.png",
+    "webp": "/images/B8/Bgr8.webp",
+    "avif": "/images/B8/Bgr8.avif",
+    "blur": "/images/_blur/B8/Bgr8.blur.webp",
+    "width": 1280,
+    "height": 2572,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/Bgr8r.png": {
+    "src": "/images/B8/Bgr8r.png",
+    "webp": "/images/B8/Bgr8r.webp",
+    "avif": "/images/B8/Bgr8r.avif",
+    "blur": "/images/_blur/B8/Bgr8r.blur.webp",
+    "width": 1280,
+    "height": 2267,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/CarClub.png": {
+    "src": "/images/B8/CarClub.png",
+    "webp": "/images/B8/CarClub.webp",
+    "avif": "/images/B8/CarClub.avif",
+    "blur": "/images/_blur/B8/CarClub.blur.webp",
+    "width": 1280,
+    "height": 2771,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/Clothing.png": {
+    "src": "/images/B8/Clothing.png",
+    "webp": "/images/B8/Clothing.webp",
+    "avif": "/images/B8/Clothing.avif",
+    "blur": "/images/_blur/B8/Clothing.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#080808"
+  },
+  "/images/B8/Homepage.png": {
+    "src": "/images/B8/Homepage.png",
+    "webp": "/images/B8/Homepage.webp",
+    "avif": "/images/B8/Homepage.avif",
+    "blur": "/images/_blur/B8/Homepage.blur.webp",
+    "width": 1280,
+    "height": 3081,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/League.png": {
+    "src": "/images/B8/League.png",
+    "webp": "/images/B8/League.webp",
+    "avif": "/images/B8/League.avif",
+    "blur": "/images/_blur/B8/League.blur.webp",
+    "width": 1280,
+    "height": 5378,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/Marketing.png": {
+    "src": "/images/B8/Marketing.png",
+    "webp": "/images/B8/Marketing.webp",
+    "avif": "/images/B8/Marketing.avif",
+    "blur": "/images/_blur/B8/Marketing.blur.webp",
+    "width": 1280,
+    "height": 5121,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/Medical.png": {
+    "src": "/images/B8/Medical.png",
+    "webp": "/images/B8/Medical.webp",
+    "avif": "/images/B8/Medical.avif",
+    "blur": "/images/_blur/B8/Medical.blur.webp",
+    "width": 690,
+    "height": 945,
+    "dominantColor": "#282828"
+  },
+  "/images/B8/Password Protect.png": {
+    "src": "/images/B8/Password Protect.png",
+    "webp": "/images/B8/Password Protect.webp",
+    "avif": "/images/B8/Password Protect.avif",
+    "blur": "/images/_blur/B8/Password Protect.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#080808"
+  },
+  "/images/B8/Podcast.png": {
+    "src": "/images/B8/Podcast.png",
+    "webp": "/images/B8/Podcast.webp",
+    "avif": "/images/B8/Podcast.avif",
+    "blur": "/images/_blur/B8/Podcast.blur.webp",
+    "width": 1280,
+    "height": 1018,
+    "dominantColor": "#181818"
+  },
+  "/images/B8/World.png": {
+    "src": "/images/B8/World.png",
+    "webp": "/images/B8/World.webp",
+    "avif": "/images/B8/World.avif",
+    "blur": "/images/_blur/B8/World.blur.webp",
+    "width": 1280,
+    "height": 4581,
+    "dominantColor": "#181818"
+  },
+  "/images/BakesByOlayide/detail.png": {
+    "src": "/images/BakesByOlayide/detail.png",
+    "webp": "/images/BakesByOlayide/detail.webp",
+    "avif": "/images/BakesByOlayide/detail.avif",
+    "blur": "/images/_blur/BakesByOlayide/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BakesByOlayide/hero.png": {
+    "src": "/images/BakesByOlayide/hero.png",
+    "webp": "/images/BakesByOlayide/hero.webp",
+    "avif": "/images/BakesByOlayide/hero.avif",
+    "blur": "/images/_blur/BakesByOlayide/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/BaseerPortfolio/detail.png": {
+    "src": "/images/BaseerPortfolio/detail.png",
+    "webp": "/images/BaseerPortfolio/detail.webp",
+    "avif": "/images/BaseerPortfolio/detail.avif",
+    "blur": "/images/_blur/BaseerPortfolio/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#e8e8e8"
+  },
+  "/images/BaseerPortfolio/hero.png": {
+    "src": "/images/BaseerPortfolio/hero.png",
+    "webp": "/images/BaseerPortfolio/hero.webp",
+    "avif": "/images/BaseerPortfolio/hero.avif",
+    "blur": "/images/_blur/BaseerPortfolio/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#e8e8e8"
+  },
+  "/images/Bgr8/Admin Email Drafter.png": {
+    "src": "/images/Bgr8/Admin Email Drafter.png",
+    "webp": "/images/Bgr8/Admin Email Drafter.webp",
+    "avif": "/images/Bgr8/Admin Email Drafter.avif",
+    "blur": "/images/_blur/Bgr8/Admin Email Drafter.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#182838"
+  },
+  "/images/Bgr8/Admin Enquiries Management.png": {
+    "src": "/images/Bgr8/Admin Enquiries Management.png",
+    "webp": "/images/Bgr8/Admin Enquiries Management.webp",
+    "avif": "/images/Bgr8/Admin Enquiries Management.avif",
+    "blur": "/images/_blur/Bgr8/Admin Enquiries Management.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Bgr8/Admin Panel Analytics.png": {
+    "src": "/images/Bgr8/Admin Panel Analytics.png",
+    "webp": "/images/Bgr8/Admin Panel Analytics.webp",
+    "avif": "/images/Bgr8/Admin Panel Analytics.avif",
+    "blur": "/images/_blur/Bgr8/Admin Panel Analytics.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#081818"
+  },
+  "/images/Bgr8/Admin Panel DB Query Terminal.png": {
+    "src": "/images/Bgr8/Admin Panel DB Query Terminal.png",
+    "webp": "/images/Bgr8/Admin Panel DB Query Terminal.webp",
+    "avif": "/images/Bgr8/Admin Panel DB Query Terminal.avif",
+    "blur": "/images/_blur/Bgr8/Admin Panel DB Query Terminal.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#181828"
+  },
+  "/images/Bgr8/Admin Panel Role Cards.png": {
+    "src": "/images/Bgr8/Admin Panel Role Cards.png",
+    "webp": "/images/Bgr8/Admin Panel Role Cards.webp",
+    "avif": "/images/Bgr8/Admin Panel Role Cards.avif",
+    "blur": "/images/_blur/Bgr8/Admin Panel Role Cards.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Bgr8/Admin Panel User Management.png": {
+    "src": "/images/Bgr8/Admin Panel User Management.png",
+    "webp": "/images/Bgr8/Admin Panel User Management.webp",
+    "avif": "/images/Bgr8/Admin Panel User Management.avif",
+    "blur": "/images/_blur/Bgr8/Admin Panel User Management.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Bgr8/Admin Verification Panel.png": {
+    "src": "/images/Bgr8/Admin Verification Panel.png",
+    "webp": "/images/Bgr8/Admin Verification Panel.webp",
+    "avif": "/images/Bgr8/Admin Verification Panel.avif",
+    "blur": "/images/_blur/Bgr8/Admin Verification Panel.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#787878"
+  },
+  "/images/Bgr8/Announcement Banner Manager.png": {
+    "src": "/images/Bgr8/Announcement Banner Manager.png",
+    "webp": "/images/Bgr8/Announcement Banner Manager.webp",
+    "avif": "/images/Bgr8/Announcement Banner Manager.avif",
+    "blur": "/images/_blur/Bgr8/Announcement Banner Manager.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#484868"
+  },
+  "/images/Bgr8/Homepage CTA.png": {
+    "src": "/images/Bgr8/Homepage CTA.png",
+    "webp": "/images/Bgr8/Homepage CTA.webp",
+    "avif": "/images/Bgr8/Homepage CTA.avif",
+    "blur": "/images/_blur/Bgr8/Homepage CTA.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#3888c8"
+  },
+  "/images/Bgr8/Live Messaging between mentor and mentee.png": {
+    "src": "/images/Bgr8/Live Messaging between mentor and mentee.png",
+    "webp": "/images/Bgr8/Live Messaging between mentor and mentee.webp",
+    "avif": "/images/Bgr8/Live Messaging between mentor and mentee.avif",
+    "blur": "/images/_blur/Bgr8/Live Messaging between mentor and mentee.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Bgr8/Matching Algorithm.png": {
+    "src": "/images/Bgr8/Matching Algorithm.png",
+    "webp": "/images/Bgr8/Matching Algorithm.webp",
+    "avif": "/images/Bgr8/Matching Algorithm.avif",
+    "blur": "/images/_blur/Bgr8/Matching Algorithm.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Bgr8/Mentee Dashboard.png": {
+    "src": "/images/Bgr8/Mentee Dashboard.png",
+    "webp": "/images/Bgr8/Mentee Dashboard.webp",
+    "avif": "/images/Bgr8/Mentee Dashboard.avif",
+    "blur": "/images/_blur/Bgr8/Mentee Dashboard.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BiasLens/Homepage 1.png": {
+    "src": "/images/BiasLens/Homepage 1.png",
+    "webp": "/images/BiasLens/Homepage 1.webp",
+    "avif": "/images/BiasLens/Homepage 1.avif",
+    "blur": "/images/_blur/BiasLens/Homepage 1.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#181818"
+  },
+  "/images/BiasLens/Homepage 2.png": {
+    "src": "/images/BiasLens/Homepage 2.png",
+    "webp": "/images/BiasLens/Homepage 2.webp",
+    "avif": "/images/BiasLens/Homepage 2.avif",
+    "blur": "/images/_blur/BiasLens/Homepage 2.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#181818"
+  },
+  "/images/BiasLens/Homepage 3.png": {
+    "src": "/images/BiasLens/Homepage 3.png",
+    "webp": "/images/BiasLens/Homepage 3.webp",
+    "avif": "/images/BiasLens/Homepage 3.avif",
+    "blur": "/images/_blur/BiasLens/Homepage 3.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#282828"
+  },
+  "/images/Blitz/detail.png": {
+    "src": "/images/Blitz/detail.png",
+    "webp": "/images/Blitz/detail.webp",
+    "avif": "/images/Blitz/detail.avif",
+    "blur": "/images/_blur/Blitz/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Blitz/hero.png": {
+    "src": "/images/Blitz/hero.png",
+    "webp": "/images/Blitz/hero.webp",
+    "avif": "/images/Blitz/hero.avif",
+    "blur": "/images/_blur/Blitz/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Breathapplyser/breathapp.png": {
+    "src": "/images/Breathapplyser/breathapp.png",
+    "webp": "/images/Breathapplyser/breathapp.webp",
+    "avif": "/images/Breathapplyser/breathapp.avif",
+    "blur": "/images/_blur/Breathapplyser/breathapp.blur.webp",
+    "width": 512,
+    "height": 512,
+    "dominantColor": "#2878b8"
+  },
+  "/images/Breathapplyser/breathapplyser.png": {
+    "src": "/images/Breathapplyser/breathapplyser.png",
+    "webp": "/images/Breathapplyser/breathapplyser.webp",
+    "avif": "/images/Breathapplyser/breathapplyser.avif",
+    "blur": "/images/_blur/Breathapplyser/breathapplyser.blur.webp",
+    "width": 1280,
+    "height": 634,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/BAC Over time Graph.png": {
+    "src": "/images/BreathapplyserV2/BAC Over time Graph.png",
+    "webp": "/images/BreathapplyserV2/BAC Over time Graph.webp",
+    "avif": "/images/BreathapplyserV2/BAC Over time Graph.avif",
+    "blur": "/images/_blur/BreathapplyserV2/BAC Over time Graph.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Caffeine History.png": {
+    "src": "/images/BreathapplyserV2/Caffeine History.png",
+    "webp": "/images/BreathapplyserV2/Caffeine History.webp",
+    "avif": "/images/BreathapplyserV2/Caffeine History.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Caffeine History.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Caffeine Level History page graph.png": {
+    "src": "/images/BreathapplyserV2/Caffeine Level History page graph.png",
+    "webp": "/images/BreathapplyserV2/Caffeine Level History page graph.webp",
+    "avif": "/images/BreathapplyserV2/Caffeine Level History page graph.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Caffeine Level History page graph.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Caffeine Over time Graph.png": {
+    "src": "/images/BreathapplyserV2/Caffeine Over time Graph.png",
+    "webp": "/images/BreathapplyserV2/Caffeine Over time Graph.webp",
+    "avif": "/images/BreathapplyserV2/Caffeine Over time Graph.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Caffeine Over time Graph.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Caffeine.png": {
+    "src": "/images/BreathapplyserV2/Caffeine.png",
+    "webp": "/images/BreathapplyserV2/Caffeine.webp",
+    "avif": "/images/BreathapplyserV2/Caffeine.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Caffeine.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Drink Modal.png": {
+    "src": "/images/BreathapplyserV2/Drink Modal.png",
+    "webp": "/images/BreathapplyserV2/Drink Modal.webp",
+    "avif": "/images/BreathapplyserV2/Drink Modal.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Drink Modal.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Drink Presets.png": {
+    "src": "/images/BreathapplyserV2/Drink Presets.png",
+    "webp": "/images/BreathapplyserV2/Drink Presets.webp",
+    "avif": "/images/BreathapplyserV2/Drink Presets.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Drink Presets.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Drinks History.png": {
+    "src": "/images/BreathapplyserV2/Drinks History.png",
+    "webp": "/images/BreathapplyserV2/Drinks History.webp",
+    "avif": "/images/BreathapplyserV2/Drinks History.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Drinks History.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Drinks per day.png": {
+    "src": "/images/BreathapplyserV2/Drinks per day.png",
+    "webp": "/images/BreathapplyserV2/Drinks per day.webp",
+    "avif": "/images/BreathapplyserV2/Drinks per day.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Drinks per day.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Friend Code.png": {
+    "src": "/images/BreathapplyserV2/Friend Code.png",
+    "webp": "/images/BreathapplyserV2/Friend Code.webp",
+    "avif": "/images/BreathapplyserV2/Friend Code.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Friend Code.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/History Screen Recent Drinks.png": {
+    "src": "/images/BreathapplyserV2/History Screen Recent Drinks.png",
+    "webp": "/images/BreathapplyserV2/History Screen Recent Drinks.webp",
+    "avif": "/images/BreathapplyserV2/History Screen Recent Drinks.avif",
+    "blur": "/images/_blur/BreathapplyserV2/History Screen Recent Drinks.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Home.png": {
+    "src": "/images/BreathapplyserV2/Home.png",
+    "webp": "/images/BreathapplyserV2/Home.webp",
+    "avif": "/images/BreathapplyserV2/Home.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Home.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Leaderboard.png": {
+    "src": "/images/BreathapplyserV2/Leaderboard.png",
+    "webp": "/images/BreathapplyserV2/Leaderboard.webp",
+    "avif": "/images/BreathapplyserV2/Leaderboard.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Leaderboard.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Profile Editing.png": {
+    "src": "/images/BreathapplyserV2/Profile Editing.png",
+    "webp": "/images/BreathapplyserV2/Profile Editing.webp",
+    "avif": "/images/BreathapplyserV2/Profile Editing.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Profile Editing.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Recent Drinks.png": {
+    "src": "/images/BreathapplyserV2/Recent Drinks.png",
+    "webp": "/images/BreathapplyserV2/Recent Drinks.webp",
+    "avif": "/images/BreathapplyserV2/Recent Drinks.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Recent Drinks.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Report Generation pdf.png": {
+    "src": "/images/BreathapplyserV2/Report Generation pdf.png",
+    "webp": "/images/BreathapplyserV2/Report Generation pdf.webp",
+    "avif": "/images/BreathapplyserV2/Report Generation pdf.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Report Generation pdf.blur.webp",
+    "width": 1080,
+    "height": 2424,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Screenshot_1768155882.png": {
+    "src": "/images/BreathapplyserV2/Screenshot_1768155882.png",
+    "webp": "/images/BreathapplyserV2/Screenshot_1768155882.webp",
+    "avif": "/images/BreathapplyserV2/Screenshot_1768155882.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Screenshot_1768155882.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Settings 1.png": {
+    "src": "/images/BreathapplyserV2/Settings 1.png",
+    "webp": "/images/BreathapplyserV2/Settings 1.webp",
+    "avif": "/images/BreathapplyserV2/Settings 1.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Settings 1.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BreathapplyserV2/Settings 2.png": {
+    "src": "/images/BreathapplyserV2/Settings 2.png",
+    "webp": "/images/BreathapplyserV2/Settings 2.webp",
+    "avif": "/images/BreathapplyserV2/Settings 2.avif",
+    "blur": "/images/_blur/BreathapplyserV2/Settings 2.blur.webp",
+    "width": 1280,
+    "height": 2856,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/BruteForcer/hero.png": {
+    "src": "/images/BruteForcer/hero.png",
+    "webp": "/images/BruteForcer/hero.webp",
+    "avif": "/images/BruteForcer/hero.avif",
+    "blur": "/images/_blur/BruteForcer/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Buzzer/hero.png": {
+    "src": "/images/Buzzer/hero.png",
+    "webp": "/images/Buzzer/hero.webp",
+    "avif": "/images/Buzzer/hero.avif",
+    "blur": "/images/_blur/Buzzer/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Contrarian/Homepage.png": {
+    "src": "/images/Contrarian/Homepage.png",
+    "webp": "/images/Contrarian/Homepage.webp",
+    "avif": "/images/Contrarian/Homepage.avif",
+    "blur": "/images/_blur/Contrarian/Homepage.blur.webp",
+    "width": 1280,
+    "height": 1224,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Contrarian/Round2.png": {
+    "src": "/images/Contrarian/Round2.png",
+    "webp": "/images/Contrarian/Round2.webp",
+    "avif": "/images/Contrarian/Round2.avif",
+    "blur": "/images/_blur/Contrarian/Round2.blur.webp",
+    "width": 1280,
+    "height": 1010,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/CulinAIry/About.png": {
+    "src": "/images/CulinAIry/About.png",
+    "webp": "/images/CulinAIry/About.webp",
+    "avif": "/images/CulinAIry/About.avif",
+    "blur": "/images/_blur/CulinAIry/About.blur.webp",
+    "width": 1280,
+    "height": 838,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/CulinAIry.png": {
+    "src": "/images/CulinAIry/CulinAIry.png",
+    "webp": "/images/CulinAIry/CulinAIry.webp",
+    "avif": "/images/CulinAIry/CulinAIry.avif",
+    "blur": "/images/_blur/CulinAIry/CulinAIry.blur.webp",
+    "width": 1024,
+    "height": 1024,
+    "dominantColor": "#080808"
+  },
+  "/images/CulinAIry/Dietary Pref.png": {
+    "src": "/images/CulinAIry/Dietary Pref.png",
+    "webp": "/images/CulinAIry/Dietary Pref.webp",
+    "avif": "/images/CulinAIry/Dietary Pref.avif",
+    "blur": "/images/_blur/CulinAIry/Dietary Pref.blur.webp",
+    "width": 670,
+    "height": 232,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/CulinAIry/Homepage.png": {
+    "src": "/images/CulinAIry/Homepage.png",
+    "webp": "/images/CulinAIry/Homepage.webp",
+    "avif": "/images/CulinAIry/Homepage.avif",
+    "blur": "/images/_blur/CulinAIry/Homepage.blur.webp",
+    "width": 1280,
+    "height": 871,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/Ingredients.png": {
+    "src": "/images/CulinAIry/Ingredients.png",
+    "webp": "/images/CulinAIry/Ingredients.webp",
+    "avif": "/images/CulinAIry/Ingredients.avif",
+    "blur": "/images/_blur/CulinAIry/Ingredients.blur.webp",
+    "width": 1280,
+    "height": 634,
+    "dominantColor": "#e8f8f8"
+  },
+  "/images/CulinAIry/Login page.png": {
+    "src": "/images/CulinAIry/Login page.png",
+    "webp": "/images/CulinAIry/Login page.webp",
+    "avif": "/images/CulinAIry/Login page.avif",
+    "blur": "/images/_blur/CulinAIry/Login page.blur.webp",
+    "width": 1280,
+    "height": 838,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/Meal planner.png": {
+    "src": "/images/CulinAIry/Meal planner.png",
+    "webp": "/images/CulinAIry/Meal planner.webp",
+    "avif": "/images/CulinAIry/Meal planner.avif",
+    "blur": "/images/_blur/CulinAIry/Meal planner.blur.webp",
+    "width": 1280,
+    "height": 838,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/MealsPlaned.png": {
+    "src": "/images/CulinAIry/MealsPlaned.png",
+    "webp": "/images/CulinAIry/MealsPlaned.webp",
+    "avif": "/images/CulinAIry/MealsPlaned.avif",
+    "blur": "/images/_blur/CulinAIry/MealsPlaned.blur.webp",
+    "width": 1280,
+    "height": 1255,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/Profile.png": {
+    "src": "/images/CulinAIry/Profile.png",
+    "webp": "/images/CulinAIry/Profile.webp",
+    "avif": "/images/CulinAIry/Profile.avif",
+    "blur": "/images/_blur/CulinAIry/Profile.blur.webp",
+    "width": 1280,
+    "height": 838,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/Recipe Generated.png": {
+    "src": "/images/CulinAIry/Recipe Generated.png",
+    "webp": "/images/CulinAIry/Recipe Generated.webp",
+    "avif": "/images/CulinAIry/Recipe Generated.avif",
+    "blur": "/images/_blur/CulinAIry/Recipe Generated.blur.webp",
+    "width": 1280,
+    "height": 3259,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/Saved Recipes closed.png": {
+    "src": "/images/CulinAIry/Saved Recipes closed.png",
+    "webp": "/images/CulinAIry/Saved Recipes closed.webp",
+    "avif": "/images/CulinAIry/Saved Recipes closed.avif",
+    "blur": "/images/_blur/CulinAIry/Saved Recipes closed.blur.webp",
+    "width": 1280,
+    "height": 838,
+    "dominantColor": "#080818"
+  },
+  "/images/CulinAIry/SaveD Recipes Expanded.png": {
+    "src": "/images/CulinAIry/SaveD Recipes Expanded.png",
+    "webp": "/images/CulinAIry/SaveD Recipes Expanded.webp",
+    "avif": "/images/CulinAIry/SaveD Recipes Expanded.avif",
+    "blur": "/images/_blur/CulinAIry/SaveD Recipes Expanded.blur.webp",
+    "width": 1280,
+    "height": 1916,
+    "dominantColor": "#282838"
+  },
+  "/images/DadJokeGenerator/hero.png": {
+    "src": "/images/DadJokeGenerator/hero.png",
+    "webp": "/images/DadJokeGenerator/hero.webp",
+    "avif": "/images/DadJokeGenerator/hero.avif",
+    "blur": "/images/_blur/DadJokeGenerator/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f86868"
+  },
+  "/images/Docket/detail.png": {
+    "src": "/images/Docket/detail.png",
+    "webp": "/images/Docket/detail.webp",
+    "avif": "/images/Docket/detail.avif",
+    "blur": "/images/_blur/Docket/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Docket/hero.png": {
+    "src": "/images/Docket/hero.png",
+    "webp": "/images/Docket/hero.webp",
+    "avif": "/images/Docket/hero.avif",
+    "blur": "/images/_blur/Docket/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/DocketBaseer/detail.png": {
+    "src": "/images/DocketBaseer/detail.png",
+    "webp": "/images/DocketBaseer/detail.webp",
+    "avif": "/images/DocketBaseer/detail.avif",
+    "blur": "/images/_blur/DocketBaseer/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#e8e8f8"
+  },
+  "/images/DocketBaseer/hero.png": {
+    "src": "/images/DocketBaseer/hero.png",
+    "webp": "/images/DocketBaseer/hero.webp",
+    "avif": "/images/DocketBaseer/hero.avif",
+    "blur": "/images/_blur/DocketBaseer/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/DoomScroll/hero.png": {
+    "src": "/images/DoomScroll/hero.png",
+    "webp": "/images/DoomScroll/hero.webp",
+    "avif": "/images/DoomScroll/hero.avif",
+    "blur": "/images/_blur/DoomScroll/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Doppelgancar/hero.png": {
+    "src": "/images/Doppelgancar/hero.png",
+    "webp": "/images/Doppelgancar/hero.webp",
+    "avif": "/images/Doppelgancar/hero.avif",
+    "blur": "/images/_blur/Doppelgancar/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#081828"
+  },
+  "/images/Encore/detail.png": {
+    "src": "/images/Encore/detail.png",
+    "webp": "/images/Encore/detail.webp",
+    "avif": "/images/Encore/detail.avif",
+    "blur": "/images/_blur/Encore/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Encore/hero.png": {
+    "src": "/images/Encore/hero.png",
+    "webp": "/images/Encore/hero.webp",
+    "avif": "/images/Encore/hero.avif",
+    "blur": "/images/_blur/Encore/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/FeatureCards/detail.png": {
+    "src": "/images/FeatureCards/detail.png",
+    "webp": "/images/FeatureCards/detail.webp",
+    "avif": "/images/FeatureCards/detail.avif",
+    "blur": "/images/_blur/FeatureCards/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/FeatureCards/hero.png": {
+    "src": "/images/FeatureCards/hero.png",
+    "webp": "/images/FeatureCards/hero.webp",
+    "avif": "/images/FeatureCards/hero.avif",
+    "blur": "/images/_blur/FeatureCards/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/FireWatch/hero.png": {
+    "src": "/images/FireWatch/hero.png",
+    "webp": "/images/FireWatch/hero.webp",
+    "avif": "/images/FireWatch/hero.avif",
+    "blur": "/images/_blur/FireWatch/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#281828"
+  },
+  "/images/Flashcards/detail.png": {
+    "src": "/images/Flashcards/detail.png",
+    "webp": "/images/Flashcards/detail.webp",
+    "avif": "/images/Flashcards/detail.avif",
+    "blur": "/images/_blur/Flashcards/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#c8d8e8"
+  },
+  "/images/Flashcards/hero.png": {
+    "src": "/images/Flashcards/hero.png",
+    "webp": "/images/Flashcards/hero.webp",
+    "avif": "/images/Flashcards/hero.avif",
+    "blur": "/images/_blur/Flashcards/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#c8d8e8"
+  },
+  "/images/Gremlins/app data.png": {
+    "src": "/images/Gremlins/app data.png",
+    "webp": "/images/Gremlins/app data.webp",
+    "avif": "/images/Gremlins/app data.avif",
+    "blur": "/images/_blur/Gremlins/app data.blur.webp",
+    "width": 557,
+    "height": 882,
+    "dominantColor": "#181828"
+  },
+  "/images/Gremlins/detail.png": {
+    "src": "/images/Gremlins/detail.png",
+    "webp": "/images/Gremlins/detail.webp",
+    "avif": "/images/Gremlins/detail.avif",
+    "blur": "/images/_blur/Gremlins/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Gremlins/Gremlins 1.png": {
+    "src": "/images/Gremlins/Gremlins 1.png",
+    "webp": "/images/Gremlins/Gremlins 1.webp",
+    "avif": "/images/Gremlins/Gremlins 1.avif",
+    "blur": "/images/_blur/Gremlins/Gremlins 1.blur.webp",
+    "width": 954,
+    "height": 1029,
+    "dominantColor": "#282838"
+  },
+  "/images/Gremlins/Gremlins 2.png": {
+    "src": "/images/Gremlins/Gremlins 2.png",
+    "webp": "/images/Gremlins/Gremlins 2.webp",
+    "avif": "/images/Gremlins/Gremlins 2.avif",
+    "blur": "/images/_blur/Gremlins/Gremlins 2.blur.webp",
+    "width": 954,
+    "height": 1029,
+    "dominantColor": "#282838"
+  },
+  "/images/Gremlins/hero.png": {
+    "src": "/images/Gremlins/hero.png",
+    "webp": "/images/Gremlins/hero.webp",
+    "avif": "/images/Gremlins/hero.avif",
+    "blur": "/images/_blur/Gremlins/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Gremlins/rules n timing.png": {
+    "src": "/images/Gremlins/rules n timing.png",
+    "webp": "/images/Gremlins/rules n timing.webp",
+    "avif": "/images/Gremlins/rules n timing.avif",
+    "blur": "/images/_blur/Gremlins/rules n timing.blur.webp",
+    "width": 560,
+    "height": 880,
+    "dominantColor": "#181828"
+  },
+  "/images/Gremlins/Safety profiles.png": {
+    "src": "/images/Gremlins/Safety profiles.png",
+    "webp": "/images/Gremlins/Safety profiles.webp",
+    "avif": "/images/Gremlins/Safety profiles.avif",
+    "blur": "/images/_blur/Gremlins/Safety profiles.blur.webp",
+    "width": 565,
+    "height": 881,
+    "dominantColor": "#181828"
+  },
+  "/images/Imposter/detail.png": {
+    "src": "/images/Imposter/detail.png",
+    "webp": "/images/Imposter/detail.webp",
+    "avif": "/images/Imposter/detail.avif",
+    "blur": "/images/_blur/Imposter/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Imposter/hero.png": {
+    "src": "/images/Imposter/hero.png",
+    "webp": "/images/Imposter/hero.webp",
+    "avif": "/images/Imposter/hero.avif",
+    "blur": "/images/_blur/Imposter/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/AboutUs.png": {
+    "src": "/images/Liberal Democrats/AboutUs.png",
+    "webp": "/images/Liberal Democrats/AboutUs.webp",
+    "avif": "/images/Liberal Democrats/AboutUs.avif",
+    "blur": "/images/_blur/Liberal Democrats/AboutUs.blur.webp",
+    "width": 1280,
+    "height": 1856,
+    "dominantColor": "#080808"
+  },
+  "/images/Liberal Democrats/Brexit.png": {
+    "src": "/images/Liberal Democrats/Brexit.png",
+    "webp": "/images/Liberal Democrats/Brexit.webp",
+    "avif": "/images/Liberal Democrats/Brexit.avif",
+    "blur": "/images/_blur/Liberal Democrats/Brexit.blur.webp",
+    "width": 1280,
+    "height": 598,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/Campaigns.png": {
+    "src": "/images/Liberal Democrats/Campaigns.png",
+    "webp": "/images/Liberal Democrats/Campaigns.webp",
+    "avif": "/images/Liberal Democrats/Campaigns.avif",
+    "blur": "/images/_blur/Liberal Democrats/Campaigns.blur.webp",
+    "width": 1280,
+    "height": 387,
+    "dominantColor": "#f8c808"
+  },
+  "/images/Liberal Democrats/ClimateEmergency.png": {
+    "src": "/images/Liberal Democrats/ClimateEmergency.png",
+    "webp": "/images/Liberal Democrats/ClimateEmergency.webp",
+    "avif": "/images/Liberal Democrats/ClimateEmergency.avif",
+    "blur": "/images/_blur/Liberal Democrats/ClimateEmergency.blur.webp",
+    "width": 1280,
+    "height": 600,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/ContactUs.png": {
+    "src": "/images/Liberal Democrats/ContactUs.png",
+    "webp": "/images/Liberal Democrats/ContactUs.webp",
+    "avif": "/images/Liberal Democrats/ContactUs.avif",
+    "blur": "/images/_blur/Liberal Democrats/ContactUs.blur.webp",
+    "width": 1280,
+    "height": 367,
+    "dominantColor": "#f8c808"
+  },
+  "/images/Liberal Democrats/Education.png": {
+    "src": "/images/Liberal Democrats/Education.png",
+    "webp": "/images/Liberal Democrats/Education.webp",
+    "avif": "/images/Liberal Democrats/Education.avif",
+    "blur": "/images/_blur/Liberal Democrats/Education.blur.webp",
+    "width": 1280,
+    "height": 605,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/Equality.png": {
+    "src": "/images/Liberal Democrats/Equality.png",
+    "webp": "/images/Liberal Democrats/Equality.webp",
+    "avif": "/images/Liberal Democrats/Equality.avif",
+    "blur": "/images/_blur/Liberal Democrats/Equality.blur.webp",
+    "width": 1280,
+    "height": 600,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/Homepage.png": {
+    "src": "/images/Liberal Democrats/Homepage.png",
+    "webp": "/images/Liberal Democrats/Homepage.webp",
+    "avif": "/images/Liberal Democrats/Homepage.avif",
+    "blur": "/images/_blur/Liberal Democrats/Homepage.blur.webp",
+    "width": 1280,
+    "height": 1079,
+    "dominantColor": "#080808"
+  },
+  "/images/Liberal Democrats/Housing.png": {
+    "src": "/images/Liberal Democrats/Housing.png",
+    "webp": "/images/Liberal Democrats/Housing.webp",
+    "avif": "/images/Liberal Democrats/Housing.avif",
+    "blur": "/images/_blur/Liberal Democrats/Housing.blur.webp",
+    "width": 1280,
+    "height": 613,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/JoinUs.png": {
+    "src": "/images/Liberal Democrats/JoinUs.png",
+    "webp": "/images/Liberal Democrats/JoinUs.webp",
+    "avif": "/images/Liberal Democrats/JoinUs.avif",
+    "blur": "/images/_blur/Liberal Democrats/JoinUs.blur.webp",
+    "width": 1280,
+    "height": 668,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/MentalHealth.png": {
+    "src": "/images/Liberal Democrats/MentalHealth.png",
+    "webp": "/images/Liberal Democrats/MentalHealth.webp",
+    "avif": "/images/Liberal Democrats/MentalHealth.avif",
+    "blur": "/images/_blur/Liberal Democrats/MentalHealth.blur.webp",
+    "width": 1280,
+    "height": 597,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Liberal Democrats/News.png": {
+    "src": "/images/Liberal Democrats/News.png",
+    "webp": "/images/Liberal Democrats/News.webp",
+    "avif": "/images/Liberal Democrats/News.avif",
+    "blur": "/images/_blur/Liberal Democrats/News.blur.webp",
+    "width": 1280,
+    "height": 4697,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Asset Simulation/Homepage.png": {
+    "src": "/images/LifeSmart/Asset Simulation/Homepage.png",
+    "webp": "/images/LifeSmart/Asset Simulation/Homepage.webp",
+    "avif": "/images/LifeSmart/Asset Simulation/Homepage.avif",
+    "blur": "/images/_blur/LifeSmart/Asset Simulation/Homepage.blur.webp",
+    "width": 1280,
+    "height": 797,
+    "dominantColor": "#f8f8e8"
+  },
+  "/images/LifeSmart/Asset Simulation/Piecharts.png": {
+    "src": "/images/LifeSmart/Asset Simulation/Piecharts.png",
+    "webp": "/images/LifeSmart/Asset Simulation/Piecharts.webp",
+    "avif": "/images/LifeSmart/Asset Simulation/Piecharts.avif",
+    "blur": "/images/_blur/LifeSmart/Asset Simulation/Piecharts.blur.webp",
+    "width": 1280,
+    "height": 610,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Asset Simulation/Results.png": {
+    "src": "/images/LifeSmart/Asset Simulation/Results.png",
+    "webp": "/images/LifeSmart/Asset Simulation/Results.webp",
+    "avif": "/images/LifeSmart/Asset Simulation/Results.avif",
+    "blur": "/images/_blur/LifeSmart/Asset Simulation/Results.blur.webp",
+    "width": 1280,
+    "height": 1582,
+    "dominantColor": "#f8e8e8"
+  },
+  "/images/LifeSmart/Budget Tool/ExcelSpreadsheet.png": {
+    "src": "/images/LifeSmart/Budget Tool/ExcelSpreadsheet.png",
+    "webp": "/images/LifeSmart/Budget Tool/ExcelSpreadsheet.webp",
+    "avif": "/images/LifeSmart/Budget Tool/ExcelSpreadsheet.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/ExcelSpreadsheet.blur.webp",
+    "width": 1280,
+    "height": 353,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Budget Tool/Step1.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step1.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step1.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step1.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step1.blur.webp",
+    "width": 1280,
+    "height": 630,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/Budget Tool/Step2.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step2.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step2.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step2.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step2.blur.webp",
+    "width": 1280,
+    "height": 780,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/Budget Tool/Step3.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step3.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step3.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step3.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step3.blur.webp",
+    "width": 1280,
+    "height": 845,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/Budget Tool/Step4no.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step4no.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step4no.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step4no.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step4no.blur.webp",
+    "width": 1280,
+    "height": 687,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/Budget Tool/Step4yes.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step4yes.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step4yes.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step4yes.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step4yes.blur.webp",
+    "width": 1280,
+    "height": 630,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/Budget Tool/Step5.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step5.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step5.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step5.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step5.blur.webp",
+    "width": 1280,
+    "height": 1233,
+    "dominantColor": "#383838"
+  },
+  "/images/LifeSmart/Budget Tool/Step6.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step6.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step6.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step6.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step6.blur.webp",
+    "width": 1280,
+    "height": 1788,
+    "dominantColor": "#383838"
+  },
+  "/images/LifeSmart/Budget Tool/Step7.png": {
+    "src": "/images/LifeSmart/Budget Tool/Step7.png",
+    "webp": "/images/LifeSmart/Budget Tool/Step7.webp",
+    "avif": "/images/LifeSmart/Budget Tool/Step7.avif",
+    "blur": "/images/_blur/LifeSmart/Budget Tool/Step7.blur.webp",
+    "width": 1280,
+    "height": 1930,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Investment Calculator/Investment Calculator.png": {
+    "src": "/images/LifeSmart/Investment Calculator/Investment Calculator.png",
+    "webp": "/images/LifeSmart/Investment Calculator/Investment Calculator.webp",
+    "avif": "/images/LifeSmart/Investment Calculator/Investment Calculator.avif",
+    "blur": "/images/_blur/LifeSmart/Investment Calculator/Investment Calculator.blur.webp",
+    "width": 1280,
+    "height": 802,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/LifeSmart.png": {
+    "src": "/images/LifeSmart/LifeSmart.png",
+    "webp": "/images/LifeSmart/LifeSmart.webp",
+    "avif": "/images/LifeSmart/LifeSmart.avif",
+    "blur": "/images/_blur/LifeSmart/LifeSmart.blur.webp",
+    "width": 134,
+    "height": 140,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/Logo_Smart Sessions-01.png": {
+    "src": "/images/LifeSmart/Logo_Smart Sessions-01.png",
+    "webp": "/images/LifeSmart/Logo_Smart Sessions-01.webp",
+    "avif": "/images/LifeSmart/Logo_Smart Sessions-01.avif",
+    "blur": "/images/_blur/LifeSmart/Logo_Smart Sessions-01.blur.webp",
+    "width": 640,
+    "height": 198,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/Logo_Smart Sessions-02.png": {
+    "src": "/images/LifeSmart/Logo_Smart Sessions-02.png",
+    "webp": "/images/LifeSmart/Logo_Smart Sessions-02.webp",
+    "avif": "/images/LifeSmart/Logo_Smart Sessions-02.avif",
+    "blur": "/images/_blur/LifeSmart/Logo_Smart Sessions-02.blur.webp",
+    "width": 640,
+    "height": 198,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/Logo_Smart Sessions-03.png": {
+    "src": "/images/LifeSmart/Logo_Smart Sessions-03.png",
+    "webp": "/images/LifeSmart/Logo_Smart Sessions-03.webp",
+    "avif": "/images/LifeSmart/Logo_Smart Sessions-03.avif",
+    "blur": "/images/_blur/LifeSmart/Logo_Smart Sessions-03.blur.webp",
+    "width": 640,
+    "height": 198,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/Logo_Smart Sessions-05.png": {
+    "src": "/images/LifeSmart/Logo_Smart Sessions-05.png",
+    "webp": "/images/LifeSmart/Logo_Smart Sessions-05.webp",
+    "avif": "/images/LifeSmart/Logo_Smart Sessions-05.avif",
+    "blur": "/images/_blur/LifeSmart/Logo_Smart Sessions-05.blur.webp",
+    "width": 640,
+    "height": 198,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/Misc/Admin Dashboard.png": {
+    "src": "/images/LifeSmart/Misc/Admin Dashboard.png",
+    "webp": "/images/LifeSmart/Misc/Admin Dashboard.webp",
+    "avif": "/images/LifeSmart/Misc/Admin Dashboard.avif",
+    "blur": "/images/_blur/LifeSmart/Misc/Admin Dashboard.blur.webp",
+    "width": 1280,
+    "height": 736,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/Misc/HomeScreen.png": {
+    "src": "/images/LifeSmart/Misc/HomeScreen.png",
+    "webp": "/images/LifeSmart/Misc/HomeScreen.webp",
+    "avif": "/images/LifeSmart/Misc/HomeScreen.avif",
+    "blur": "/images/_blur/LifeSmart/Misc/HomeScreen.blur.webp",
+    "width": 1280,
+    "height": 632,
+    "dominantColor": "#081828"
+  },
+  "/images/LifeSmart/Misc/Login.png": {
+    "src": "/images/LifeSmart/Misc/Login.png",
+    "webp": "/images/LifeSmart/Misc/Login.webp",
+    "avif": "/images/LifeSmart/Misc/Login.avif",
+    "blur": "/images/_blur/LifeSmart/Misc/Login.blur.webp",
+    "width": 1280,
+    "height": 754,
+    "dominantColor": "#081828"
+  },
+  "/images/LifeSmart/Misc/SelectScreen.png": {
+    "src": "/images/LifeSmart/Misc/SelectScreen.png",
+    "webp": "/images/LifeSmart/Misc/SelectScreen.webp",
+    "avif": "/images/LifeSmart/Misc/SelectScreen.avif",
+    "blur": "/images/_blur/LifeSmart/Misc/SelectScreen.blur.webp",
+    "width": 1280,
+    "height": 680,
+    "dominantColor": "#282828"
+  },
+  "/images/LifeSmart/Quiz/LandingPage.png": {
+    "src": "/images/LifeSmart/Quiz/LandingPage.png",
+    "webp": "/images/LifeSmart/Quiz/LandingPage.webp",
+    "avif": "/images/LifeSmart/Quiz/LandingPage.avif",
+    "blur": "/images/_blur/LifeSmart/Quiz/LandingPage.blur.webp",
+    "width": 1280,
+    "height": 630,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Quiz/Question 1 answered.png": {
+    "src": "/images/LifeSmart/Quiz/Question 1 answered.png",
+    "webp": "/images/LifeSmart/Quiz/Question 1 answered.webp",
+    "avif": "/images/LifeSmart/Quiz/Question 1 answered.avif",
+    "blur": "/images/_blur/LifeSmart/Quiz/Question 1 answered.blur.webp",
+    "width": 1280,
+    "height": 762,
+    "dominantColor": "#f8e8e8"
+  },
+  "/images/LifeSmart/Quiz/Question 1.png": {
+    "src": "/images/LifeSmart/Quiz/Question 1.png",
+    "webp": "/images/LifeSmart/Quiz/Question 1.webp",
+    "avif": "/images/LifeSmart/Quiz/Question 1.avif",
+    "blur": "/images/_blur/LifeSmart/Quiz/Question 1.blur.webp",
+    "width": 1280,
+    "height": 686,
+    "dominantColor": "#f8e8e8"
+  },
+  "/images/LifeSmart/Quiz/Question 2.png": {
+    "src": "/images/LifeSmart/Quiz/Question 2.png",
+    "webp": "/images/LifeSmart/Quiz/Question 2.webp",
+    "avif": "/images/LifeSmart/Quiz/Question 2.avif",
+    "blur": "/images/_blur/LifeSmart/Quiz/Question 2.blur.webp",
+    "width": 1280,
+    "height": 804,
+    "dominantColor": "#f8e8e8"
+  },
+  "/images/LifeSmart/Quiz/Quizcreation.png": {
+    "src": "/images/LifeSmart/Quiz/Quizcreation.png",
+    "webp": "/images/LifeSmart/Quiz/Quizcreation.webp",
+    "avif": "/images/LifeSmart/Quiz/Quizcreation.avif",
+    "blur": "/images/_blur/LifeSmart/Quiz/Quizcreation.blur.webp",
+    "width": 414,
+    "height": 696,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/SpZero Calculator/SpZero I frame calculator.png": {
+    "src": "/images/LifeSmart/SpZero Calculator/SpZero I frame calculator.png",
+    "webp": "/images/LifeSmart/SpZero Calculator/SpZero I frame calculator.webp",
+    "avif": "/images/LifeSmart/SpZero Calculator/SpZero I frame calculator.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero Calculator/SpZero I frame calculator.blur.webp",
+    "width": 1280,
+    "height": 1113,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/SpZero/Admin Analytics Content Drilldown.png": {
+    "src": "/images/LifeSmart/SpZero/Admin Analytics Content Drilldown.png",
+    "webp": "/images/LifeSmart/SpZero/Admin Analytics Content Drilldown.webp",
+    "avif": "/images/LifeSmart/SpZero/Admin Analytics Content Drilldown.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Admin Analytics Content Drilldown.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#181838"
+  },
+  "/images/LifeSmart/SpZero/Admin Analytics General Stats.png": {
+    "src": "/images/LifeSmart/SpZero/Admin Analytics General Stats.png",
+    "webp": "/images/LifeSmart/SpZero/Admin Analytics General Stats.webp",
+    "avif": "/images/LifeSmart/SpZero/Admin Analytics General Stats.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Admin Analytics General Stats.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#181838"
+  },
+  "/images/LifeSmart/SpZero/Admin Module Management.png": {
+    "src": "/images/LifeSmart/SpZero/Admin Module Management.png",
+    "webp": "/images/LifeSmart/SpZero/Admin Module Management.webp",
+    "avif": "/images/LifeSmart/SpZero/Admin Module Management.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Admin Module Management.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#282848"
+  },
+  "/images/LifeSmart/SpZero/Admin User Focused Analytics.png": {
+    "src": "/images/LifeSmart/SpZero/Admin User Focused Analytics.png",
+    "webp": "/images/LifeSmart/SpZero/Admin User Focused Analytics.webp",
+    "avif": "/images/LifeSmart/SpZero/Admin User Focused Analytics.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Admin User Focused Analytics.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#181838"
+  },
+  "/images/LifeSmart/SpZero/Home Page - Overview (Full).png": {
+    "src": "/images/LifeSmart/SpZero/Home Page - Overview (Full).png",
+    "webp": "/images/LifeSmart/SpZero/Home Page - Overview (Full).webp",
+    "avif": "/images/LifeSmart/SpZero/Home Page - Overview (Full).avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Home Page - Overview (Full).blur.webp",
+    "width": 1280,
+    "height": 725,
+    "dominantColor": "#181838"
+  },
+  "/images/LifeSmart/SpZero/Home Page - Overview.png": {
+    "src": "/images/LifeSmart/SpZero/Home Page - Overview.png",
+    "webp": "/images/LifeSmart/SpZero/Home Page - Overview.webp",
+    "avif": "/images/LifeSmart/SpZero/Home Page - Overview.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Home Page - Overview.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#181828"
+  },
+  "/images/LifeSmart/SpZero/Module Road Layout.png": {
+    "src": "/images/LifeSmart/SpZero/Module Road Layout.png",
+    "webp": "/images/LifeSmart/SpZero/Module Road Layout.webp",
+    "avif": "/images/LifeSmart/SpZero/Module Road Layout.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Module Road Layout.blur.webp",
+    "width": 1280,
+    "height": 2771,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/SpZero/Slides Modal.png": {
+    "src": "/images/LifeSmart/SpZero/Slides Modal.png",
+    "webp": "/images/LifeSmart/SpZero/Slides Modal.webp",
+    "avif": "/images/LifeSmart/SpZero/Slides Modal.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Slides Modal.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/SpZero/Video and Slide Progress Saving.png": {
+    "src": "/images/LifeSmart/SpZero/Video and Slide Progress Saving.png",
+    "webp": "/images/LifeSmart/SpZero/Video and Slide Progress Saving.webp",
+    "avif": "/images/LifeSmart/SpZero/Video and Slide Progress Saving.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Video and Slide Progress Saving.blur.webp",
+    "width": 1212,
+    "height": 743,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/SpZero/Video Modal.png": {
+    "src": "/images/LifeSmart/SpZero/Video Modal.png",
+    "webp": "/images/LifeSmart/SpZero/Video Modal.webp",
+    "avif": "/images/LifeSmart/SpZero/Video Modal.avif",
+    "blur": "/images/_blur/LifeSmart/SpZero/Video Modal.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#080808"
+  },
+  "/images/LifeSmart/Website Pictures/1.png": {
+    "src": "/images/LifeSmart/Website Pictures/1.png",
+    "webp": "/images/LifeSmart/Website Pictures/1.webp",
+    "avif": "/images/LifeSmart/Website Pictures/1.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/1.blur.webp",
+    "width": 1280,
+    "height": 610,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Website Pictures/3.png": {
+    "src": "/images/LifeSmart/Website Pictures/3.png",
+    "webp": "/images/LifeSmart/Website Pictures/3.webp",
+    "avif": "/images/LifeSmart/Website Pictures/3.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/3.blur.webp",
+    "width": 1280,
+    "height": 610,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Website Pictures/4.png": {
+    "src": "/images/LifeSmart/Website Pictures/4.png",
+    "webp": "/images/LifeSmart/Website Pictures/4.webp",
+    "avif": "/images/LifeSmart/Website Pictures/4.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/4.blur.webp",
+    "width": 1280,
+    "height": 690,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Website Pictures/5.png": {
+    "src": "/images/LifeSmart/Website Pictures/5.png",
+    "webp": "/images/LifeSmart/Website Pictures/5.webp",
+    "avif": "/images/LifeSmart/Website Pictures/5.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/5.blur.webp",
+    "width": 1280,
+    "height": 692,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmart/Website Pictures/6.png": {
+    "src": "/images/LifeSmart/Website Pictures/6.png",
+    "webp": "/images/LifeSmart/Website Pictures/6.webp",
+    "avif": "/images/LifeSmart/Website Pictures/6.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/6.blur.webp",
+    "width": 1280,
+    "height": 466,
+    "dominantColor": "#f8e8e8"
+  },
+  "/images/LifeSmart/Website Pictures/7.png": {
+    "src": "/images/LifeSmart/Website Pictures/7.png",
+    "webp": "/images/LifeSmart/Website Pictures/7.webp",
+    "avif": "/images/LifeSmart/Website Pictures/7.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/7.blur.webp",
+    "width": 1280,
+    "height": 607,
+    "dominantColor": "#f8e8e8"
+  },
+  "/images/LifeSmart/Website Pictures/8.png": {
+    "src": "/images/LifeSmart/Website Pictures/8.png",
+    "webp": "/images/LifeSmart/Website Pictures/8.webp",
+    "avif": "/images/LifeSmart/Website Pictures/8.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/8.blur.webp",
+    "width": 1280,
+    "height": 605,
+    "dominantColor": "#f8e8e8"
+  },
+  "/images/LifeSmart/Website Pictures/9.png": {
+    "src": "/images/LifeSmart/Website Pictures/9.png",
+    "webp": "/images/LifeSmart/Website Pictures/9.webp",
+    "avif": "/images/LifeSmart/Website Pictures/9.avif",
+    "blur": "/images/_blur/LifeSmart/Website Pictures/9.blur.webp",
+    "width": 1280,
+    "height": 697,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmartHub/hero.png": {
+    "src": "/images/LifeSmartHub/hero.png",
+    "webp": "/images/LifeSmartHub/hero.webp",
+    "avif": "/images/LifeSmartHub/hero.avif",
+    "blur": "/images/_blur/LifeSmartHub/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#081828"
+  },
+  "/images/linkedin/avatar.jpg": {
+    "src": "/images/linkedin/avatar.jpg",
+    "webp": "/images/linkedin/avatar.webp",
+    "avif": "/images/linkedin/avatar.avif",
+    "blur": "/images/_blur/linkedin/avatar.blur.webp",
+    "width": 200,
+    "height": 200,
+    "dominantColor": "#d8c8a8"
+  },
+  "/images/Mentage/conversation 1.png": {
+    "src": "/images/Mentage/conversation 1.png",
+    "webp": "/images/Mentage/conversation 1.webp",
+    "avif": "/images/Mentage/conversation 1.avif",
+    "blur": "/images/_blur/Mentage/conversation 1.blur.webp",
+    "width": 1280,
+    "height": 866,
+    "dominantColor": "#282828"
+  },
+  "/images/Mentage/conversation 2.png": {
+    "src": "/images/Mentage/conversation 2.png",
+    "webp": "/images/Mentage/conversation 2.webp",
+    "avif": "/images/Mentage/conversation 2.avif",
+    "blur": "/images/_blur/Mentage/conversation 2.blur.webp",
+    "width": 1280,
+    "height": 815,
+    "dominantColor": "#282828"
+  },
+  "/images/Mentage/conversation 3.png": {
+    "src": "/images/Mentage/conversation 3.png",
+    "webp": "/images/Mentage/conversation 3.webp",
+    "avif": "/images/Mentage/conversation 3.avif",
+    "blur": "/images/_blur/Mentage/conversation 3.blur.webp",
+    "width": 1280,
+    "height": 860,
+    "dominantColor": "#282828"
+  },
+  "/images/Mentage/Edit topics.png": {
+    "src": "/images/Mentage/Edit topics.png",
+    "webp": "/images/Mentage/Edit topics.webp",
+    "avif": "/images/Mentage/Edit topics.avif",
+    "blur": "/images/_blur/Mentage/Edit topics.blur.webp",
+    "width": 384,
+    "height": 828,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Mentage/Homepage.png": {
+    "src": "/images/Mentage/Homepage.png",
+    "webp": "/images/Mentage/Homepage.webp",
+    "avif": "/images/Mentage/Homepage.avif",
+    "blur": "/images/_blur/Mentage/Homepage.blur.webp",
+    "width": 385,
+    "height": 828,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Mentage/Mentage.png": {
+    "src": "/images/Mentage/Mentage.png",
+    "webp": "/images/Mentage/Mentage.webp",
+    "avif": "/images/Mentage/Mentage.avif",
+    "blur": "/images/_blur/Mentage/Mentage.blur.webp",
+    "width": 1024,
+    "height": 1024,
+    "dominantColor": "#98c8a8"
+  },
+  "/images/Mentage/Profile.png": {
+    "src": "/images/Mentage/Profile.png",
+    "webp": "/images/Mentage/Profile.webp",
+    "avif": "/images/Mentage/Profile.avif",
+    "blur": "/images/_blur/Mentage/Profile.blur.webp",
+    "width": 384,
+    "height": 828,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/MinistryOfJustice/hero.png": {
+    "src": "/images/MinistryOfJustice/hero.png",
+    "webp": "/images/MinistryOfJustice/hero.webp",
+    "avif": "/images/MinistryOfJustice/hero.avif",
+    "blur": "/images/_blur/MinistryOfJustice/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#081828"
+  },
+  "/images/Monzo/hero.png": {
+    "src": "/images/Monzo/hero.png",
+    "webp": "/images/Monzo/hero.webp",
+    "avif": "/images/Monzo/hero.avif",
+    "blur": "/images/_blur/Monzo/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/NetworthTool/hero.png": {
+    "src": "/images/NetworthTool/hero.png",
+    "webp": "/images/NetworthTool/hero.webp",
+    "avif": "/images/NetworthTool/hero.avif",
+    "blur": "/images/_blur/NetworthTool/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Oche/detail.png": {
+    "src": "/images/Oche/detail.png",
+    "webp": "/images/Oche/detail.webp",
+    "avif": "/images/Oche/detail.avif",
+    "blur": "/images/_blur/Oche/detail.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#181828"
+  },
+  "/images/Oche/hero.png": {
+    "src": "/images/Oche/hero.png",
+    "webp": "/images/Oche/hero.webp",
+    "avif": "/images/Oche/hero.avif",
+    "blur": "/images/_blur/Oche/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#081818"
+  },
+  "/images/PngToSvg/hero.png": {
+    "src": "/images/PngToSvg/hero.png",
+    "webp": "/images/PngToSvg/hero.webp",
+    "avif": "/images/PngToSvg/hero.avif",
+    "blur": "/images/_blur/PngToSvg/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#081828"
+  },
+  "/images/portfolio-preview.jpg": {
+    "src": "/images/portfolio-preview.jpg",
+    "webp": "/images/portfolio-preview.webp",
+    "avif": "/images/portfolio-preview.avif",
+    "blur": "/images/_blur/portfolio-preview.blur.webp",
+    "width": 1200,
+    "height": 630,
+    "dominantColor": "#080828"
+  },
+  "/images/Recount/hero.png": {
+    "src": "/images/Recount/hero.png",
+    "webp": "/images/Recount/hero.webp",
+    "avif": "/images/Recount/hero.avif",
+    "blur": "/images/_blur/Recount/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/Therabot/ACtive webchat.png": {
+    "src": "/images/Therabot/ACtive webchat.png",
+    "webp": "/images/Therabot/ACtive webchat.webp",
+    "avif": "/images/Therabot/ACtive webchat.avif",
+    "blur": "/images/_blur/Therabot/ACtive webchat.blur.webp",
+    "width": 1280,
+    "height": 794,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Conveersation Hisotry expanded a bit.png": {
+    "src": "/images/Therabot/Conveersation Hisotry expanded a bit.png",
+    "webp": "/images/Therabot/Conveersation Hisotry expanded a bit.webp",
+    "avif": "/images/Therabot/Conveersation Hisotry expanded a bit.avif",
+    "blur": "/images/_blur/Therabot/Conveersation Hisotry expanded a bit.blur.webp",
+    "width": 1280,
+    "height": 689,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Conversation History.png": {
+    "src": "/images/Therabot/Conversation History.png",
+    "webp": "/images/Therabot/Conversation History.webp",
+    "avif": "/images/Therabot/Conversation History.avif",
+    "blur": "/images/_blur/Therabot/Conversation History.blur.webp",
+    "width": 1280,
+    "height": 689,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Dashboard.png": {
+    "src": "/images/Therabot/Dashboard.png",
+    "webp": "/images/Therabot/Dashboard.webp",
+    "avif": "/images/Therabot/Dashboard.avif",
+    "blur": "/images/_blur/Therabot/Dashboard.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/file (1).png": {
+    "src": "/images/Therabot/file (1).png",
+    "webp": "/images/Therabot/file (1).webp",
+    "avif": "/images/Therabot/file (1).avif",
+    "blur": "/images/_blur/Therabot/file (1).blur.webp",
+    "width": 1024,
+    "height": 1024,
+    "dominantColor": "#080808"
+  },
+  "/images/Therabot/Login page.png": {
+    "src": "/images/Therabot/Login page.png",
+    "webp": "/images/Therabot/Login page.webp",
+    "avif": "/images/Therabot/Login page.avif",
+    "blur": "/images/_blur/Therabot/Login page.blur.webp",
+    "width": 563,
+    "height": 597,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Profile.png": {
+    "src": "/images/Therabot/Profile.png",
+    "webp": "/images/Therabot/Profile.webp",
+    "avif": "/images/Therabot/Profile.avif",
+    "blur": "/images/_blur/Therabot/Profile.blur.webp",
+    "width": 1280,
+    "height": 631,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Role settings.png": {
+    "src": "/images/Therabot/Role settings.png",
+    "webp": "/images/Therabot/Role settings.webp",
+    "avif": "/images/Therabot/Role settings.avif",
+    "blur": "/images/_blur/Therabot/Role settings.blur.webp",
+    "width": 880,
+    "height": 528,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Settings.png": {
+    "src": "/images/Therabot/Settings.png",
+    "webp": "/images/Therabot/Settings.webp",
+    "avif": "/images/Therabot/Settings.avif",
+    "blur": "/images/_blur/Therabot/Settings.blur.webp",
+    "width": 1280,
+    "height": 761,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Tone Settings.png": {
+    "src": "/images/Therabot/Tone Settings.png",
+    "webp": "/images/Therabot/Tone Settings.webp",
+    "avif": "/images/Therabot/Tone Settings.avif",
+    "blur": "/images/_blur/Therabot/Tone Settings.blur.webp",
+    "width": 932,
+    "height": 407,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Web chat empty.png": {
+    "src": "/images/Therabot/Web chat empty.png",
+    "webp": "/images/Therabot/Web chat empty.webp",
+    "avif": "/images/Therabot/Web chat empty.avif",
+    "blur": "/images/_blur/Therabot/Web chat empty.blur.webp",
+    "width": 1280,
+    "height": 794,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/Therabot/Whatsapp chat.png": {
+    "src": "/images/Therabot/Whatsapp chat.png",
+    "webp": "/images/Therabot/Whatsapp chat.webp",
+    "avif": "/images/Therabot/Whatsapp chat.avif",
+    "blur": "/images/_blur/Therabot/Whatsapp chat.blur.webp",
+    "width": 1077,
+    "height": 802,
+    "dominantColor": "#282828"
+  },
+  "/images/Tindev/hero.png": {
+    "src": "/images/Tindev/hero.png",
+    "webp": "/images/Tindev/hero.webp",
+    "avif": "/images/Tindev/hero.avif",
+    "blur": "/images/_blur/Tindev/hero.blur.webp",
+    "width": 1200,
+    "height": 675,
+    "dominantColor": "#281838"
+  }
+}
