@@ -19,9 +19,9 @@
 }
 
 .linkedin-page-container {
-  max-width: 900px;
+  max-width: var(--page-max);
   margin: 0 auto;
-  padding: 3rem 1.5rem 4rem;
+  padding: 3rem var(--page-gutter) 4rem;
   position: relative;
   overflow: hidden;
 }
@@ -578,7 +578,7 @@
 
 @media (max-width: 768px) {
   .linkedin-page-container {
-    padding: 2rem 1rem 3rem;
+    padding: 2rem var(--page-gutter) 3rem;
   }
 
   .linkedin-profile-main {

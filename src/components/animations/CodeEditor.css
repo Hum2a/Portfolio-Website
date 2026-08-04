@@ -1,7 +1,7 @@
 .code-editor-wrap {
   position: relative;
   width: 100%;
-  max-width: 560px;
+  max-width: min(40rem, 100%);
   margin-inline: auto;
   perspective: 900px;
 }

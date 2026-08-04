@@ -4,6 +4,7 @@
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .app-main {

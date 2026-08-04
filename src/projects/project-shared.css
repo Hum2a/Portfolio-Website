@@ -6,9 +6,9 @@
 }
 
 .project-container {
-  max-width: 1200px;
+  max-width: var(--page-max);
   margin: 0 auto;
-  padding: 3rem 1.5rem;
+  padding: 3rem var(--page-gutter);
 }
 
 .project-header {

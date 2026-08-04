@@ -1,5 +1,5 @@
 .github-section {
-  padding: 5rem 1.5rem 5rem;
+  padding: 5rem var(--page-gutter) 5rem;
   background: var(--bg-primary);
   position: relative;
   overflow: hidden;
@@ -26,7 +26,7 @@
 .github-inner {
   position: relative;
   z-index: 1;
-  max-width: 1200px;
+  max-width: var(--page-max-wide);
   margin: 0 auto;
 }
 
