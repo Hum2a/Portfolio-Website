@@ -1,27 +1,26 @@
 #!/usr/bin/env node
 /**
- * Sync every local branch (and optionally remote-tracking branches) with master.
+ * Sync every local + origin branch with master, then push each to origin.
  *
  * Default:
  *   1. Abort if the working tree is dirty
  *   2. git fetch --prune --all
- *   3. Fast-forward master to origin/master
- *   4. Merge master into every other local branch
+ *   3. Fast-forward master to origin/master and push master
+ *   4. For every other local branch AND every origin-only branch:
+ *        checkout → merge master → push -u origin <branch>
  *   5. Restore the branch you started on
  *
  * Flags:
  *   --dry-run     Print actions only
- *   --push        After each successful merge, push the branch to origin
- *   --include-remote-only
- *                 Also checkout remote-only origin/* branches (except HEAD),
- *                 merge master, and (with --push) update the remote
+ *   --no-push     Skip pushing to origin (local merges only)
+ *   --local-only  Skip remote-only origin/* branches
  *   --base NAME   Base branch (default: master)
  *
  * Usage:
  *   npm run sync:branches
  *   npm run sync:branches -- --dry-run
- *   npm run sync:branches -- --push
- *   npm run sync:branches -- --push --include-remote-only
+ *   npm run sync:branches -- --no-push
+ *   npm run sync:branches -- --local-only
  */
 import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
@@ -33,8 +32,8 @@ function parseArgs(argv) {
   const baseIdx = argv.findIndex((a) => a === '--base');
   return {
     dryRun: argv.includes('--dry-run'),
-    push: argv.includes('--push'),
-    includeRemoteOnly: argv.includes('--include-remote-only'),
+    noPush: argv.includes('--no-push'),
+    localOnly: argv.includes('--local-only'),
     base:
       baseIdx >= 0 && argv[baseIdx + 1] && !argv[baseIdx + 1].startsWith('-')
         ? argv[baseIdx + 1]
@@ -69,14 +68,20 @@ function lines(stdout) {
 }
 
 function printHelp() {
-  console.log(`Sync local/remote branches with master.
+  console.log(`Sync local + origin branches with master, then push each to origin.
 
   npm run sync:branches
   npm run sync:branches -- --dry-run
-  npm run sync:branches -- --push
-  npm run sync:branches -- --push --include-remote-only
+  npm run sync:branches -- --no-push
+  npm run sync:branches -- --local-only
   npm run sync:branches -- --base main
 `);
+}
+
+function pushOrigin(run, opts, name) {
+  if (opts.noPush) return;
+  run(['push', '-u', 'origin', name], `push origin/${name}`);
+  if (!opts.dryRun) console.log(`  pushed origin/${name}`);
 }
 
 function main() {
@@ -88,7 +93,9 @@ function main() {
 
   const base = opts.base;
   const start = git(['rev-parse', '--abbrev-ref', 'HEAD']).stdout;
-  console.log(`Starting on ${start}; base=${base}`);
+  console.log(
+    `Starting on ${start}; base=${base}; push=${opts.noPush ? 'off' : 'on'}; remote-only=${opts.localOnly ? 'off' : 'on'}`
+  );
 
   const dirty = git(['status', '--porcelain']).stdout;
   if (dirty && !opts.dryRun) {
@@ -112,7 +119,6 @@ function main() {
 
   run(['fetch', '--prune', '--all'], 'refresh remotes');
 
-  // Ensure base exists locally and matches origin when possible
   const hasOriginBase =
     git(['show-ref', '--verify', '--quiet', `refs/remotes/origin/${base}`], {
       allowFail: true,
@@ -125,20 +131,21 @@ function main() {
   }
 
   if (hasOriginBase) {
-    run(
-      ['merge', '--ff-only', `origin/${base}`],
-      `fast-forward ${base}`
-    );
+    run(['merge', '--ff-only', `origin/${base}`], `fast-forward ${base}`);
   } else {
     console.warn(`No origin/${base} — skipping fast-forward of ${base}`);
   }
+
+  // Always keep origin/master (base) current too
+  pushOrigin(run, opts, base);
 
   const localBranches = lines(
     git(['for-each-ref', '--format=%(refname:short)', 'refs/heads/']).stdout
   ).filter((b) => b !== base);
 
-  const remoteOnly = opts.includeRemoteOnly
-    ? lines(
+  const remoteOnly = opts.localOnly
+    ? []
+    : lines(
         git([
           'for-each-ref',
           '--format=%(refname:short)',
@@ -149,22 +156,20 @@ function main() {
         .filter((b) => {
           if (!b || b === 'HEAD' || b === base || b === 'origin') return false;
           if (localBranches.includes(b)) return false;
-          // Ensure a real remote branch exists (skip symbolic HEAD aliases)
           return (
             git(
               ['show-ref', '--verify', '--quiet', `refs/remotes/origin/${b}`],
               { allowFail: true }
             ).status === 0
           );
-        })
-    : [];
+        });
 
   const flatTargets = [
     ...localBranches.map((name) => ({ name, remoteOnly: false })),
     ...remoteOnly.map((name) => ({ name, remoteOnly: true })),
   ];
 
-  const summary = { ok: [], skipped: [], failed: [] };
+  const summary = { ok: [], skipped: [], pushed: [], failed: [] };
 
   for (const { name, remoteOnly: isRemoteOnly } of flatTargets) {
     try {
@@ -180,12 +185,10 @@ function main() {
         console.log(`[dry-run] git checkout ${name}`);
       }
 
-      // Already contains base?
       const tip = opts.dryRun ? name : 'HEAD';
-      const contains = git(
-        ['merge-base', '--is-ancestor', base, tip],
-        { allowFail: true }
-      );
+      const contains = git(['merge-base', '--is-ancestor', base, tip], {
+        allowFail: true,
+      });
       const aheadOfBase =
         git(['rev-list', '--count', `${base}..${tip}`], { allowFail: true })
           .stdout || '0';
@@ -202,21 +205,17 @@ function main() {
         summary.ok.push(name);
       }
 
-      if (opts.push) {
-        run(['push', '-u', 'origin', name], `push ${name}`);
-        if (!opts.dryRun) console.log(`  pushed origin/${name}`);
-      }
+      pushOrigin(run, opts, name);
+      if (!opts.noPush) summary.pushed.push(name);
     } catch (err) {
       console.error(`  FAILED: ${err.message}`);
       summary.failed.push(name);
-      // Abort merge if stuck
       if (!opts.dryRun) {
         git(['merge', '--abort'], { allowFail: true });
       }
     }
   }
 
-  // Restore starting branch
   if (!opts.dryRun) {
     git(['checkout', start], { allowFail: true });
   } else {
@@ -226,6 +225,7 @@ function main() {
   console.log('\nSummary');
   console.log(`  merged:  ${summary.ok.join(', ') || '(none)'}`);
   console.log(`  skipped: ${summary.skipped.join(', ') || '(none)'}`);
+  console.log(`  pushed:  ${summary.pushed.join(', ') || '(none)'}`);
   console.log(`  failed:  ${summary.failed.join(', ') || '(none)'}`);
   if (flatTargets.length === 0) {
     console.log('  (no other branches to sync)');
