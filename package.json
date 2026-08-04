@@ -44,6 +44,7 @@
     "secrets:sync": "node scripts/sync-cloudflare-secrets.mjs",
     "secrets:sync:deploy": "node scripts/sync-cloudflare-secrets.mjs --deploy",
     "secrets:sync:staging": "node scripts/sync-cloudflare-secrets.mjs --worker-only --env staging",
+    "sync:branches": "node scripts/sync-branches-with-master.mjs",
     "build:analyze": "cross-env VERIFY_BUNDLE=1 vite build",
     "verify:lh": "node scripts/verify/lighthouse.mjs",
     "verify:axe": "node scripts/verify/axe.mjs",
