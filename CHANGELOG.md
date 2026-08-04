@@ -9,6 +9,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Nothing yet
 
+## [v2.0.0] - 2026-08-04
+
+### ✨ Features
+
+- Add sync script for branches in package.json (c84cf19)
+- Add layout width verification script and update CSS for responsive design (69a3716)
+- Add Humza Butt's CV to the public directory (8e682a9)
+- Add redesign audit and planning documents for portfolio overhaul (04d3537)
+- Add Docket (Baseer) project assets and configuration (c4f8df8)
+- Add Docket project assets and configuration (2c3af72)
+- Add Baseer Portfolio project assets and configuration (34cfc74)
+- Add Encore project assets and configuration (25765e2)
+- Enhance environment configuration and add secrets synchronization script (151c8d8)
+- Add email theme management and enhance HTML email structure (899b82f)
+- Add email logging and management features to traffic analytics (f9180d3)
+- Implement traffic notification system and enhance email management (d80c198)
+- Add Career Shortcut and Update Sitemap (c61f9c2)
+- Implement Career Section and Update LinkedIn Integration (e37239b)
+- Add LinkedIn integration and profile page (689fec0)
+- Add Buzzer project details and update tech stack (b5efec5)
+- Add Buzzer project and logo (a46294b)
+- Add Blitz project and logo (ddc43b3)
+
+### ♻️ Refactoring
+
+- Refactor project structure and update assets (d01641c)
+- Refactor layout and enhance user experience (7543c27)
+
+### 💅 Style
+
+- Add owner tagging functionality and styles for visitor management (f057194)
+- Enhance visitor tagging functionality and styles (60764b8)
+
+### 🧪 Tests
+
+- Enhance traffic notification system with test email functionality (fba5a08)
+
+### 🔧 Chores
+
+- Enhance staging environment setup and update sitemap (48d21ae)
+- Update environment configuration and enhance secrets synchronization (da4dc26)
+
+### 👷 CI/CD
+
+- Update dependencies and enhance Traffic analytics UI (5bc1518)
+- Add Oche project and associated assets (f6ffba0)
+
+### 📝 Other Changes
+
+- Enhance branch synchronization script to support pushing and local-only options (cc158eb)
+- Confirm (f922c24)
+- Phase 7 (ea614b0)
+- Phase 5 (a646e7a)
+- Phase 4 (844cbd3)
+- Phase 3 (5650278)
+- Phase 1 (0ce07ec)
+- Phase 0 complete (1755e06)
+- Phase 0c (3a882bf)
+- Enhance project navigation and loading experience (3f72eec)
+- Phase 0a (2f60711)
+
+
+## Added
+- Nothing yet
+
 ## [v1.1.0] - 2026-06-18
 
 ### ✨ Features
