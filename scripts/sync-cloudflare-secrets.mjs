@@ -70,13 +70,23 @@ const PLACEHOLDER_VALUES = new Set([
 ]);
 
 function parseArgs(argv) {
+  const envIdx = argv.findIndex((a) => a === '--env' || a === '-e');
+  const envName =
+    envIdx >= 0 && argv[envIdx + 1] && !argv[envIdx + 1].startsWith('-')
+      ? argv[envIdx + 1]
+      : null;
   return {
     dryRun: argv.includes('--dry-run'),
     deploy: argv.includes('--deploy'),
     writeDevVars: argv.includes('--dev-vars'),
     workerOnly: argv.includes('--worker-only'),
+    envName,
     help: argv.includes('--help') || argv.includes('-h'),
   };
+}
+
+function wranglerEnvArgs(envName) {
+  return envName ? ['--env', envName] : [];
 }
 
 function parseEnvFile(filePath) {
@@ -173,9 +183,10 @@ Required for email notify: ${REQUIRED_WORKER_KEYS.join(', ')}
 
 Options:
   --dry-run       Show what would be uploaded (values masked)
-  --deploy        After sync, run npm run deploy (bakes VITE_* into the bundle)
+  --deploy        After sync, run npm run deploy (or deploy:staging with --env staging)
   --dev-vars      Also write .dev.vars for local wrangler dev
   --worker-only   Only upload NOTIFY_SECRET + RESEND_API_KEY
+  --env <name>    Target Wrangler environment (e.g. staging)
   --help          Show this help
 
 Security:
@@ -198,12 +209,16 @@ function run(command, args) {
   return result;
 }
 
-function listRemoteSecretNames() {
-  const result = spawnSync('npx', ['wrangler', 'secret', 'list', '--format', 'json'], {
-    cwd: ROOT,
-    shell: true,
-    encoding: 'utf8',
-  });
+function listRemoteSecretNames(envName) {
+  const result = spawnSync(
+    'npx',
+    ['wrangler', 'secret', 'list', '--format', 'json', ...wranglerEnvArgs(envName)],
+    {
+      cwd: ROOT,
+      shell: true,
+      encoding: 'utf8',
+    }
+  );
   if (result.status !== 0) return null;
   try {
     const parsed = JSON.parse(result.stdout || '[]');
@@ -216,16 +231,20 @@ function listRemoteSecretNames() {
   }
 }
 
-function putSecret(name, value) {
+function putSecret(name, value, envName) {
   // Feed the value via stdin — avoids fragile Windows cmd file redirection.
   // shell:true helps resolve npx.cmd on Windows PATH.
-  const result = spawnSync('npx', ['wrangler', 'secret', 'put', name], {
-    cwd: ROOT,
-    shell: true,
-    stdio: ['pipe', 'inherit', 'inherit'],
-    encoding: 'utf8',
-    input: `${value}\n`,
-  });
+  const result = spawnSync(
+    'npx',
+    ['wrangler', 'secret', 'put', name, ...wranglerEnvArgs(envName)],
+    {
+      cwd: ROOT,
+      shell: true,
+      stdio: ['pipe', 'inherit', 'inherit'],
+      encoding: 'utf8',
+      input: `${value}\n`,
+    }
+  );
 
   if (result.status !== 0) {
     throw new Error(`Failed to put secret ${name}`);
@@ -287,6 +306,9 @@ function main() {
   }
 
   console.log(`Loaded env from: ${loaded.join(', ')}`);
+  if (opts.envName) {
+    console.log(`Target Wrangler environment: ${opts.envName}`);
+  }
 
   const secrets = resolveSecretsToSync(env, { workerOnly: opts.workerOnly });
   const keys = Object.keys(secrets).sort();
@@ -298,7 +320,7 @@ function main() {
   ).trim();
 
   console.log(
-    `\nSecrets to upsert (${keys.length}${opts.workerOnly ? ', worker-only mode' : ''}):`
+    `\nSecrets to upsert (${keys.length}${opts.workerOnly ? ', worker-only mode' : ''}${opts.envName ? `, env=${opts.envName}` : ''}):`
   );
   for (const key of keys) {
     const tag = key.startsWith('VITE_')
@@ -321,7 +343,7 @@ function main() {
     console.log(`\nSkipped empty/placeholder/build keys: ${skipped.join(', ')}`);
   }
 
-  const remoteNames = listRemoteSecretNames();
+  const remoteNames = listRemoteSecretNames(opts.envName);
   if (remoteNames) {
     console.log(
       `\nExisting Worker secrets (${remoteNames.length}): ${remoteNames.join(', ') || '(none)'}`
@@ -365,7 +387,7 @@ function main() {
   console.log('\nUpserting with wrangler secret put (other remote secrets are left alone)…');
   for (const key of keys) {
     console.log(`  → ${key}`);
-    putSecret(key, secrets[key]);
+    putSecret(key, secrets[key], opts.envName);
   }
   console.log(`Done. Upserted ${keys.length} secret(s).`);
 
@@ -380,16 +402,22 @@ function main() {
       );
       process.exit(1);
     }
-    console.log('\nBuilding and deploying so VITE_* values are baked into production…');
-    run('npm', ['run', 'deploy']);
+    const deployScript = opts.envName === 'staging' ? 'deploy:staging' : 'deploy';
+    console.log(
+      `\nBuilding and deploying (${deployScript}) so VITE_* values are baked in…`
+    );
+    run('npm', ['run', deployScript]);
     console.log('Deploy complete.');
   } else if (isUsableSecretValue(clientSecret)) {
-    console.log(
-      '\nNext: rebuild production so the client picks up VITE_* values:\n' +
-        '  npm run deploy\n' +
-        'or:\n' +
-        '  npm run secrets:sync -- --deploy'
-    );
+    const next =
+      opts.envName === 'staging'
+        ? '  npm run deploy:staging\n' +
+          'or:\n' +
+          '  npm run secrets:sync -- --worker-only --env staging --deploy'
+        : '  npm run deploy\n' +
+          'or:\n' +
+          '  npm run secrets:sync -- --deploy';
+    console.log(`\nNext: rebuild so the client picks up VITE_* values:\n${next}`);
   }
 }
 

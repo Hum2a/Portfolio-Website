@@ -34,3 +34,17 @@ curl -sI https://www.humza-butt.space | findstr /I "HTTP Location"
 ```
 
 Expect `301` + `Location: https://humza-butt.space/...`.
+
+## Staging
+
+Hostname: `https://portfolio-staging.humza-butt.space`
+
+- Separate Worker: `humza-butt-portfolio-staging` (`wrangler.jsonc` → `env.staging`)
+- Custom domain via `custom_domain: true` (does **not** 301 to apex)
+- Responses include `X-Robots-Tag: noindex, nofollow`
+
+```bash
+# Sync notify secrets to the staging Worker, then build + deploy
+npm run secrets:sync:staging
+npm run deploy:staging
+```

@@ -5,6 +5,7 @@ import { handleTrafficNotifyPost } from './notify/route';
 const app = new Hono<{ Bindings: WorkerBindings }>();
 
 const CANONICAL_HOST = 'humza-butt.space';
+const STAGING_HOST = 'portfolio-staging.humza-butt.space';
 
 /** Hosts that should 301 to the canonical apex (when DNS points here). */
 const REDIRECT_HOSTS = new Set([
@@ -25,10 +26,31 @@ function isLocalDevHost(host: string): boolean {
   );
 }
 
+function isStagingHost(host: string): boolean {
+  return host === STAGING_HOST;
+}
+
+function shouldNoIndex(host: string): boolean {
+  return isStagingHost(host) || host.endsWith('.workers.dev');
+}
+
+function withNoIndex(response: Response, host: string): Response {
+  if (!shouldNoIndex(host)) return response;
+  const headers = new Headers(response.headers);
+  headers.set('X-Robots-Tag', 'noindex, nofollow');
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 function canonicalRedirect(request: Request): Response | null {
   const url = new URL(request.url);
   const host = url.hostname.toLowerCase();
-  if (host === CANONICAL_HOST || isLocalDevHost(host)) return null;
+  if (host === CANONICAL_HOST || isLocalDevHost(host) || isStagingHost(host)) {
+    return null;
+  }
   if (!REDIRECT_HOSTS.has(host) && !host.endsWith('.onrender.com')) return null;
 
   url.protocol = 'https:';
@@ -48,6 +70,10 @@ app.use('*', async (c, next) => {
   const redirected = canonicalRedirect(c.req.raw);
   if (redirected) return redirected;
   await next();
+  const host = new URL(c.req.url).hostname.toLowerCase();
+  if (shouldNoIndex(host) && c.res) {
+    c.res = withNoIndex(c.res, host);
+  }
 });
 
 app.options('/api/traffic-notify', (c) =>
@@ -58,7 +84,11 @@ app.post('/api/traffic-notify', async (c) => {
   const res = await handleTrafficNotifyPost(c);
   const headers = new Headers(res.headers);
   headers.set('Access-Control-Allow-Origin', '*');
-  return new Response(res.body, { status: res.status, headers });
+  const host = new URL(c.req.url).hostname.toLowerCase();
+  return withNoIndex(
+    new Response(res.body, { status: res.status, headers }),
+    host
+  );
 });
 
 app.all('/api/traffic-notify', (c) =>
@@ -71,10 +101,15 @@ app.all('/api/traffic-notify', (c) =>
 
 // Assets: Worker runs first so host redirects apply to all paths.
 app.all('*', async (c) => {
+  const host = new URL(c.req.url).hostname.toLowerCase();
   if (c.env.ASSETS) {
-    return c.env.ASSETS.fetch(c.req.raw);
+    const res = await c.env.ASSETS.fetch(c.req.raw);
+    return withNoIndex(res, host);
   }
-  return c.json({ error: 'Not found' }, 404, { 'Cache-Control': 'no-store' });
+  return withNoIndex(
+    c.json({ error: 'Not found' }, 404, { 'Cache-Control': 'no-store' }),
+    host
+  );
 });
 
 export default app;
