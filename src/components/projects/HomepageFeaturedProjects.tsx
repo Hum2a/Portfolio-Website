@@ -10,6 +10,7 @@ import {
   isProjectComingSoon,
 } from '../../data/projects';
 import { ComingSoonLockedSurface } from '@/components/animations/coming-soon-tape';
+import { CallingCardPeelLink } from '../animations/calling-card-peel';
 import { prefetchProjects } from '../../utils/prefetchRoute';
 import Img from '../media/Img';
 import SectionBackdrop from '../media/SectionBackdrop';
@@ -106,27 +107,33 @@ export function HomepageFeaturedProjects() {
                 </div>
               </ComingSoonLockedSurface>
             ) : (
-              <Link to={hero.route} className="featured-hero-link">
-                <div className="featured-hero-media">
-                  {heroPreview && (
-                    <Img
-                      src={heroPreview}
-                      alt=""
-                      className="featured-hero-img"
-                    />
-                  )}
-                  <div className="featured-hero-scrim" />
-                </div>
-                <div className="featured-hero-copy">
-                  <h3 className="featured-hero-name">{hero.name}</h3>
-                  <p className="featured-hero-claim">
-                    {hero.caseStudy?.claim || hero.description}
-                  </p>
-                  <span className="featured-card-cta">
-                    View case study <span className="cta-arrow">→</span>
-                  </span>
-                </div>
-              </Link>
+              <CallingCardPeelLink
+                to={hero.route}
+                className="featured-hero-peel"
+                obstructionLabel={hero.name}
+              >
+                <Link to={hero.route} className="featured-hero-link">
+                  <div className="featured-hero-media">
+                    {heroPreview && (
+                      <Img
+                        src={heroPreview}
+                        alt=""
+                        className="featured-hero-img"
+                      />
+                    )}
+                    <div className="featured-hero-scrim" />
+                  </div>
+                  <div className="featured-hero-copy">
+                    <h3 className="featured-hero-name">{hero.name}</h3>
+                    <p className="featured-hero-claim">
+                      {hero.caseStudy?.claim || hero.description}
+                    </p>
+                    <span className="featured-card-cta">
+                      View case study <span className="cta-arrow">→</span>
+                    </span>
+                  </div>
+                </Link>
+              </CallingCardPeelLink>
             )}
           </motion.div>
 
@@ -198,9 +205,15 @@ export function HomepageFeaturedProjects() {
                     </div>
                   </ComingSoonLockedSurface>
                 ) : (
-                  <Link to={project.route} className="featured-tile-link">
-                    {tileContent}
-                  </Link>
+                  <CallingCardPeelLink
+                    to={project.route}
+                    className="featured-tile-peel"
+                    obstructionLabel={project.name}
+                  >
+                    <Link to={project.route} className="featured-tile-link">
+                      {tileContent}
+                    </Link>
+                  </CallingCardPeelLink>
                 )}
               </motion.div>
             );
