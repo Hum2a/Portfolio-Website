@@ -66,30 +66,8 @@
   max-width: 54ch;
 }
 
-.career-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.1rem;
-  border-radius: 999px;
-  border: 1px solid var(--border-glass);
-  background: var(--bg-elevated-2);
-  color: var(--text-primary);
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: border-color 200ms ease, background 200ms ease;
-}
-
-.career-cta:hover {
-  border-color: var(--border-glow);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-}
-
 .career-cta--secondary {
   margin-top: 2rem;
-  background: transparent;
 }
 
 .career-edu-strip {

@@ -78,6 +78,7 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-bottom: 2rem;
+  overflow: visible;
 }
 
 .homepage-stats {

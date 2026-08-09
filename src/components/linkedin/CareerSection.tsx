@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
+import { CutoutAction } from '../ui/CutoutAction';
 import {
   fetchLinkedInProfile,
   fetchLinkedInExperience,
@@ -104,9 +104,9 @@ export function CareerSection() {
             )}
             <p className="career-about">{profile.about}</p>
           </div>
-          <Link to="/career" className="career-cta">
+          <CutoutAction to="/career" className="career-cta">
             View full career <FaArrowRight aria-hidden="true" />
-          </Link>
+          </CutoutAction>
         </div>
 
         <CareerTimeline roles={roles} />
@@ -127,9 +127,9 @@ export function CareerSection() {
           </div>
         )}
 
-        <Link to="/career" className="career-cta career-cta--secondary">
+        <CutoutAction to="/career" className="career-cta career-cta--secondary">
           Full timeline on Career page <FaArrowRight aria-hidden="true" />
-        </Link>
+        </CutoutAction>
       </motion.div>
     </section>
   );

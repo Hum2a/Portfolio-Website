@@ -8,7 +8,7 @@ import {
 } from 'framer-motion';
 import { Menu } from 'lucide-react';
 import Monogram from '@/components/brand/Monogram';
-import { Button } from '@/components/ui/button';
+import { CutoutAction } from '@/components/ui/CutoutAction';
 import {
   Sheet,
   SheetContent,
@@ -235,9 +235,9 @@ const SiteHeader: React.FC = () => {
             >
               CV
             </a>
-            <Button asChild size="sm" className="site-header-cta rounded-full">
-              <Link to="/contact">Get in touch</Link>
-            </Button>
+            <CutoutAction to="/contact" size="sm" className="site-header-cta">
+              Get in touch
+            </CutoutAction>
 
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
@@ -302,9 +302,9 @@ const SiteHeader: React.FC = () => {
                 </nav>
                 <div className="site-header-sheet-actions">
                   <SheetClose asChild>
-                    <Button asChild className="w-full rounded-full">
-                      <Link to="/contact">Get in touch</Link>
-                    </Button>
+                    <CutoutAction to="/contact" size="sm" block>
+                      Get in touch
+                    </CutoutAction>
                   </SheetClose>
                   <a
                     href="/Humza-Butt-CV.pdf?v=2026-08"
