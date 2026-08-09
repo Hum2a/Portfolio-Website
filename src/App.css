@@ -8,8 +8,17 @@
 }
 
 .app-main {
+  position: relative;
+  overflow: hidden;
   flex: 1 0 auto;
   /* Clear fixed floating header (16px top + ~56px pill + breathing room) */
   padding-top: 5.5rem;
+}
+
+/* host scope — overlay covers main body only */
+.app-main .comic-wipe {
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
 }
 

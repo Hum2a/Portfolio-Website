@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
 import './index.css';
-import App from './App';
+import { router } from './router';
 import reportWebVitals from './reportWebVitals';
 
 const rootEl = document.getElementById('root');
@@ -12,7 +13,7 @@ if (!rootEl) {
 const root = ReactDOM.createRoot(rootEl);
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
