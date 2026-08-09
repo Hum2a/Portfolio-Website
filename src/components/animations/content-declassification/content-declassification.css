@@ -1,0 +1,287 @@
+/* SPX-315 Content Declassification — censor bars only. Do not restyle to host tokens. */
+
+.cdc-host {
+  --cdc-black: #090909;
+  --cdc-red: #e60012;
+  --cdc-ease: cubic-bezier(0.22, 0.9, 0.28, 1);
+  --cdc-slash-ms: 90ms;
+  --cdc-leave-ms: 180ms;
+}
+
+.cdc-host *,
+.cdc-host *::before,
+.cdc-host *::after {
+  box-sizing: border-box;
+}
+
+.cdc__censor {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: baseline;
+}
+
+.cdc__value {
+  position: relative;
+  z-index: 1;
+  display: inline;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cdc__censor.is-clear .cdc__value {
+  animation: cdc-value-settle 140ms var(--cdc-ease) both;
+}
+
+.cdc__bar,
+.cdc__piece,
+.cdc__slash {
+  pointer-events: none;
+}
+
+.cdc__bar {
+  position: absolute;
+  inset: -0.08em -0.12em;
+  z-index: 2;
+  display: block;
+  overflow: visible;
+}
+
+.cdc__piece {
+  position: absolute;
+  display: block;
+  background: var(--cdc-black);
+  transform-origin: center center;
+}
+
+.cdc__piece--full {
+  inset: 0;
+}
+
+.cdc__piece--l {
+  left: 0;
+  top: 0;
+  width: 52%;
+  height: 100%;
+}
+
+.cdc__piece--r {
+  right: 0;
+  top: 0;
+  width: 52%;
+  height: 100%;
+}
+
+/* Frozen bar geometry — 5 bars, rotations −1.5deg → 2deg */
+.cdc__censor--0 .cdc__piece {
+  --cdc-rot: -1.2deg;
+  height: 1.15em;
+  min-width: 7.2rem;
+  clip-path: polygon(0% 16%, 5% 0%, 98% 10%, 100% 78%, 94% 100%, 1% 88%);
+  transform: rotate(-1.2deg);
+}
+
+.cdc__censor--0 .cdc__bar {
+  top: 0.05em;
+  left: -0.1em;
+  width: min(100%, 8.4rem);
+  height: 1.25em;
+}
+
+.cdc__censor--0 .cdc__piece--l,
+.cdc__censor--0 .cdc__piece--r {
+  min-width: 0;
+  height: 100%;
+  clip-path: inherit;
+}
+
+.cdc__censor--0 .cdc__piece--l {
+  clip-path: polygon(0% 16%, 5% 0%, 100% 8%, 100% 100%, 1% 88%);
+  transform: rotate(-1.2deg);
+}
+
+.cdc__censor--0 .cdc__piece--r {
+  clip-path: polygon(0% 6%, 96% 0%, 100% 78%, 92% 100%, 0% 92%);
+  transform: rotate(-1.2deg);
+}
+
+.cdc__censor--1 .cdc__bar {
+  top: 0.02em;
+  left: -0.08em;
+  width: min(100%, 7.6rem);
+  height: 1.2em;
+}
+
+.cdc__censor--1 .cdc__piece--full {
+  inset: 0;
+  clip-path: polygon(1% 22%, 8% 0%, 100% 12%, 97% 100%, 0% 86%);
+  transform: rotate(1.6deg);
+}
+
+.cdc__censor--2 .cdc__bar {
+  top: 0.05em;
+  left: -0.1em;
+  width: 100%;
+  min-width: 5.6rem;
+  height: 1.15em;
+}
+
+.cdc__censor--2 .cdc__piece--full {
+  inset: 0;
+  clip-path: polygon(0% 28%, 6% 0%, 100% 8%, 98% 90%, 92% 100%, 2% 78%);
+  transform: rotate(-0.8deg);
+}
+
+.cdc__censor--3 .cdc__bar {
+  top: 0.04em;
+  left: -0.08em;
+  width: min(100%, 4.6rem);
+  height: 1.15em;
+}
+
+.cdc__censor--3 .cdc__piece--l {
+  clip-path: polygon(0% 18%, 10% 0%, 100% 12%, 100% 100%, 0% 90%);
+  transform: rotate(2deg);
+}
+
+.cdc__censor--3 .cdc__piece--r {
+  clip-path: polygon(0% 8%, 100% 0%, 96% 100%, 0% 88%);
+  transform: rotate(2deg);
+}
+
+.cdc__censor--4 .cdc__bar {
+  top: -0.05em;
+  left: -0.1em;
+  width: min(100%, 6.2rem);
+  height: 1.1em;
+}
+
+.cdc__censor--4 .cdc__piece--full {
+  inset: 0;
+  clip-path: polygon(0% 12%, 7% 0%, 100% 18%, 94% 100%, 2% 92%);
+  transform: rotate(-1.5deg);
+}
+
+.cdc__slash {
+  position: absolute;
+  z-index: 3;
+  left: -8%;
+  top: 45%;
+  width: 0;
+  height: 3px;
+  background: var(--cdc-red);
+  transform: rotate(-18deg);
+  transform-origin: left center;
+  opacity: 0;
+  clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 80%);
+}
+
+/* —— Removal behaviours —— */
+.cdc__censor.is-striking .cdc__slash {
+  opacity: 1;
+  animation: cdc-slash-draw var(--cdc-slash-ms) linear forwards;
+}
+
+.cdc__censor.is-removing[data-behaviour='split'] .cdc__piece--l {
+  animation: cdc-split-l var(--cdc-leave-ms) var(--cdc-ease) forwards;
+}
+
+.cdc__censor.is-removing[data-behaviour='split'] .cdc__piece--r {
+  animation: cdc-split-r var(--cdc-leave-ms) var(--cdc-ease) forwards;
+}
+
+.cdc__censor.is-removing[data-behaviour='peel'] .cdc__piece--full {
+  animation: cdc-peel var(--cdc-leave-ms) var(--cdc-ease) forwards;
+  transform-origin: left center;
+}
+
+.cdc__censor.is-removing[data-behaviour='strike'] .cdc__piece--full {
+  animation: cdc-strike-pull var(--cdc-leave-ms) var(--cdc-ease) forwards;
+}
+
+.cdc__censor.is-clear .cdc__bar,
+.cdc__censor.is-clear .cdc__slash {
+  visibility: hidden;
+}
+
+@keyframes cdc-slash-draw {
+  0% {
+    width: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 118%;
+    opacity: 1;
+  }
+}
+
+@keyframes cdc-split-l {
+  to {
+    transform: translate(-45px, -8px) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+@keyframes cdc-split-r {
+  to {
+    transform: translate(48px, 6px) rotate(7deg);
+    opacity: 0;
+  }
+}
+
+@keyframes cdc-peel {
+  0% {
+    transform: rotate(-0.8deg) translate(0, 0);
+  }
+  35% {
+    transform: rotate(-12deg) translate(-4px, -10px);
+  }
+  100% {
+    transform: rotate(-28deg) translate(-56px, -28px);
+    opacity: 0;
+  }
+}
+
+@keyframes cdc-strike-pull {
+  to {
+    transform: translate(72px, 4px) rotate(4deg);
+    opacity: 0;
+  }
+}
+
+@keyframes cdc-value-settle {
+  from {
+    transform: translateY(2px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Reduced motion: immediate full disclosure */
+@media (prefers-reduced-motion: reduce) {
+  .cdc__piece,
+  .cdc__slash,
+  .cdc__value {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .cdc__censor .cdc__bar,
+  .cdc__censor .cdc__slash {
+    visibility: hidden;
+  }
+}
+
+[data-force-reduced-motion='true'] .cdc__piece,
+[data-force-reduced-motion='true'] .cdc__slash,
+[data-force-reduced-motion='true'] .cdc__value {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-force-reduced-motion='true'] .cdc__censor .cdc__bar,
+[data-force-reduced-motion='true'] .cdc__censor .cdc__slash {
+  visibility: hidden;
+}
