@@ -6,6 +6,7 @@ import {
   FaUsers,
   FaBriefcase,
   FaGraduationCap,
+  FaExternalLinkAlt,
 } from 'react-icons/fa';
 import {
   fetchLinkedInProfile,
@@ -18,6 +19,7 @@ import firebaseAnalytics from '../services/analyticsService';
 import Seo from '../components/seo/Seo';
 import CareerTimeline from '../components/linkedin/CareerTimeline';
 import SectionBackdrop from '../components/media/SectionBackdrop';
+import { CutoutAction } from '../components/ui/CutoutAction';
 import './LinkedInPage.css';
 
 const FILTERS = [
@@ -134,14 +136,14 @@ export default function LinkedIn() {
         {error && !profile && (
           <div className="linkedin-page-error">
             <p>Unable to load LinkedIn data. Try again later.</p>
-            <a
+            <CutoutAction
               href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="linkedin-external-fallback"
             >
               View profile on LinkedIn →
-            </a>
+            </CutoutAction>
           </div>
         )}
 
@@ -178,14 +180,14 @@ export default function LinkedIn() {
                     {profile.followers} followers
                   </span>
                 </div>
-                <a
+                <CutoutAction
                   href={profileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="linkedin-profile-cta"
                 >
-                  <FaLinkedin /> Open on LinkedIn
-                </a>
+                  <FaLinkedin aria-hidden="true" /> Open on LinkedIn
+                </CutoutAction>
               </div>
             </div>
           </div>
@@ -301,14 +303,14 @@ export default function LinkedIn() {
 
         {profile && (
           <div className="linkedin-page-footer">
-            <a
+            <CutoutAction
               href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="linkedin-view-all-btn"
             >
               View full profile on LinkedIn
-            </a>
+            </CutoutAction>
           </div>
         )}
       </div>

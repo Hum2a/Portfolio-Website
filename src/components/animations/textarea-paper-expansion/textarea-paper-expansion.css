@@ -1,0 +1,125 @@
+/* SPX-149 Textarea Paper Expansion — portable contract. Do not restyle to host tokens. */
+
+.tpe {
+  --tpe-void: #111827;
+  --tpe-paper: #e9eef5;
+  --tpe-grey: #c7cdd8;
+  --tpe-cyan: #72d6e8;
+  --tpe-ink: #111827;
+  --tpe-mute: #6a8499;
+  --tpe-w: 360px;
+  --tpe-h: 76px;
+  --tpe-h-open: 190px;
+  --tpe-off-grey: 4px;
+  --tpe-off-cyan: 7px;
+  --tpe-fold: 18px;
+  --tpe-focus: 420ms;
+  --tpe-blur: 320ms;
+  --tpe-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 0.65rem;
+  width: 100%;
+  min-height: 320px;
+  height: 100%;
+  padding: 1.25rem 1.1rem 1.5rem;
+  overflow: hidden;
+  color: var(--tpe-paper);
+  background: var(--tpe-void);
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.tpe *,
+.tpe *::before,
+.tpe *::after {
+  box-sizing: border-box;
+}
+
+.tpe__label {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+}
+
+.tpe__stack {
+  position: relative;
+  width: min(var(--tpe-w), calc(100% - var(--tpe-off-cyan)));
+  height: var(--tpe-h);
+  margin: 0 var(--tpe-off-cyan) var(--tpe-off-cyan) 0;
+  transition: height var(--tpe-blur) ease;
+}
+
+.tpe__stack:focus-within,
+.tpe__stack:has(.tpe__area:not(:placeholder-shown)) {
+  height: var(--tpe-h-open);
+  transition: height var(--tpe-focus) var(--tpe-ease);
+}
+
+.tpe__sheet {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tpe__sheet--cyan {
+  z-index: 0;
+  background: var(--tpe-cyan);
+  transform: translate(var(--tpe-off-cyan), var(--tpe-off-cyan));
+}
+
+.tpe__sheet--grey {
+  z-index: 1;
+  background: var(--tpe-grey);
+  transform: translate(var(--tpe-off-grey), var(--tpe-off-grey));
+}
+
+.tpe__area {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0.7rem 0.85rem 0.85rem;
+  border: 0;
+  resize: none;
+  background: var(--tpe-paper);
+  color: var(--tpe-ink);
+  font: 600 0.9rem/1.45 ui-sans-serif, system-ui, sans-serif;
+  overflow: auto;
+}
+
+.tpe__area:focus {
+  outline: none;
+}
+
+.tpe__area:focus-visible {
+  outline: 2px solid #72d6e8;
+  outline-offset: 3px;
+}
+
+.tpe__fold {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  width: var(--tpe-fold);
+  height: var(--tpe-fold);
+  pointer-events: none;
+  background: linear-gradient(225deg, var(--tpe-void) 49.5%, #b4bcc8 50%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tpe__stack {
+    transition: none !important;
+  }
+}
+
+[data-force-reduced-motion='true'] .tpe__stack {
+  transition: none !important;
+}

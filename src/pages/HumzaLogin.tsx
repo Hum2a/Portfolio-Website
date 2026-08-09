@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { signInWithGoogle } from '../services/authService';
 import { useAuth } from '../contexts/AuthContext';
+import { useComicWipe } from '../components/animations/comic-wipe/useComicWipe';
 import Seo from '../components/seo/Seo';
 import './HumzaLogin.css';
 
@@ -9,14 +9,14 @@ const HumzaLogin = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { navigateWithoutWipe } = useComicWipe();
 
   useEffect(() => {
     // If user is already logged in and auth is not loading, redirect to home page
     if (user && !authLoading) {
-      navigate('/', { replace: true });
+      navigateWithoutWipe('/', { replace: true });
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigateWithoutWipe]);
 
   const handleGoogleSignIn = async () => {
     try {

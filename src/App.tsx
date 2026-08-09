@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import './App.css';
 import AppRoutes from './routes/AppRoutes';
@@ -7,6 +6,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import PageTimeTracker from './components/tracking/PageTimeTracker';
 import SiteHeader from './components/layout/SiteHeader';
 import SiteFooter from './components/layout/SiteFooter';
+import ComicWipeProvider from './components/animations/comic-wipe/ComicWipeProvider';
+import ComicWipeOverlay from './components/animations/comic-wipe/ComicWipeOverlay';
 
 function App() {
   useEffect(() => {
@@ -25,18 +26,19 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Router>
-        <AuthProvider>
+      <AuthProvider>
+        <ComicWipeProvider>
           <div className="App">
             <PageTimeTracker />
             <SiteHeader />
             <div className="app-main" id="main-content">
               <AppRoutes />
+              <ComicWipeOverlay />
             </div>
             <SiteFooter />
           </div>
-        </AuthProvider>
-      </Router>
+        </ComicWipeProvider>
+      </AuthProvider>
     </HelmetProvider>
   );
 }

@@ -1,0 +1,88 @@
+/* Host embed — match site form fields; animation timings stay in the contract CSS. */
+
+.tpe--embed {
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  gap: 0.5rem;
+  --tpe-w: 100%;
+  --tpe-h: 7.5rem;
+  --tpe-h-open: 12.5rem;
+  --tpe-off-grey: 3px;
+  --tpe-off-cyan: 5px;
+  --tpe-paper: var(--bg-tertiary);
+  --tpe-grey: color-mix(in srgb, var(--bg-tertiary) 86%, var(--border-primary));
+  --tpe-cyan: color-mix(in srgb, var(--bg-tertiary) 72%, var(--border-primary));
+  --tpe-ink: var(--text-primary);
+  --tpe-void: var(--bg-secondary);
+}
+
+.tpe--embed .tpe__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+}
+
+.tpe--embed .tpe__sheet,
+.tpe--embed .tpe__area {
+  border-radius: 8px;
+}
+
+.tpe--embed .tpe__sheet--grey,
+.tpe--embed .tpe__sheet--cyan {
+  border: 1px solid var(--border-primary);
+}
+
+.tpe--embed .tpe__area {
+  padding: 0.875rem 1rem;
+  font-size: var(--text-base);
+  font-family: var(--font-primary);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-relaxed);
+  border: 1px solid var(--border-primary);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.tpe--embed .tpe__area::placeholder {
+  color: var(--text-tertiary);
+  font-weight: var(--font-normal);
+}
+
+.tpe--embed .tpe__stack:focus-within .tpe__area {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+}
+
+.tpe--embed .tpe__area:focus {
+  outline: none;
+}
+
+.tpe--embed .tpe__area:focus-visible {
+  outline: none;
+}
+
+.tpe--embed .tpe__fold {
+  display: none;
+}
+
+.tpe--embed.tpe--error .tpe__area {
+  border-color: #ff4444;
+  box-shadow: none;
+}
+
+.tpe--embed.tpe--error .tpe__stack:focus-within .tpe__area {
+  border-color: #ff4444;
+  box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+}
+
+.tpe__area:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

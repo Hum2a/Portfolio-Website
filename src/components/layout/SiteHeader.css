@@ -31,6 +31,7 @@
   min-height: 56px;
   padding: 0.5rem 0.75rem 0.5rem 1rem;
   border-radius: 999px;
+  overflow: visible;
   transition:
     transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
     background 280ms ease,
@@ -107,6 +108,7 @@
   gap: 0.5rem;
   margin-left: auto;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .site-header-cv {

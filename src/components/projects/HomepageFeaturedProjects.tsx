@@ -7,7 +7,10 @@ import {
   getProjectLogoSrc,
   PROJECT_CATEGORY_META,
   getProjectCategories,
+  isProjectComingSoon,
 } from '../../data/projects';
+import { ComingSoonLockedSurface } from '@/components/animations/coming-soon-tape';
+import { CallingCardPeelLink } from '../animations/calling-card-peel';
 import { prefetchProjects } from '../../utils/prefetchRoute';
 import Img from '../media/Img';
 import SectionBackdrop from '../media/SectionBackdrop';
@@ -39,6 +42,7 @@ export function HomepageFeaturedProjects() {
 
   const [hero, ...rest] = featured;
   const heroPreview = getProjectPreviewSrc(hero);
+  const heroComingSoon = isProjectComingSoon(hero);
   const backdropSrc =
     getProjectPreviewSrc(rest[0] || hero) || '/images/Bgr8/Matching Algorithm.png';
 
@@ -71,79 +75,146 @@ export function HomepageFeaturedProjects() {
 
         <div className="featured-bento">
           <motion.div
-            className="featured-hero surface-2"
+            className={`featured-hero surface-2${
+              heroComingSoon ? ' featured-hero--locked' : ''
+            }`}
             variants={cardVariants}
             custom={1}
           >
-            <Link to={hero.route} className="featured-hero-link">
-              <div className="featured-hero-media">
-                {heroPreview && (
-                  <Img
-                    src={heroPreview}
-                    alt=""
-                    className="featured-hero-img"
-                  />
-                )}
-                <div className="featured-hero-scrim" />
-              </div>
-              <div className="featured-hero-copy">
-                <h3 className="featured-hero-name">{hero.name}</h3>
-                <p className="featured-hero-claim">
-                  {hero.caseStudy?.claim || hero.description}
-                </p>
-                <span className="featured-card-cta">
-                  View case study <span className="cta-arrow">→</span>
-                </span>
-              </div>
-            </Link>
+            {heroComingSoon ? (
+              <ComingSoonLockedSurface locked className="featured-hero-link">
+                <div
+                  className="featured-hero-link featured-hero-link--locked"
+                  aria-label={`${hero.name}, coming soon`}
+                >
+                  <div className="featured-hero-media">
+                    {heroPreview && (
+                      <Img
+                        src={heroPreview}
+                        alt=""
+                        className="featured-hero-img"
+                      />
+                    )}
+                    <div className="featured-hero-scrim" />
+                  </div>
+                  <div className="featured-hero-copy">
+                    <h3 className="featured-hero-name">{hero.name}</h3>
+                    <p className="featured-hero-claim">
+                      {hero.caseStudy?.claim || hero.description}
+                    </p>
+                    <span className="featured-card-cta">Coming soon</span>
+                  </div>
+                </div>
+              </ComingSoonLockedSurface>
+            ) : (
+              <CallingCardPeelLink
+                to={hero.route}
+                className="featured-hero-peel"
+                obstructionLabel={hero.name}
+              >
+                <Link to={hero.route} className="featured-hero-link">
+                  <div className="featured-hero-media">
+                    {heroPreview && (
+                      <Img
+                        src={heroPreview}
+                        alt=""
+                        className="featured-hero-img"
+                      />
+                    )}
+                    <div className="featured-hero-scrim" />
+                  </div>
+                  <div className="featured-hero-copy">
+                    <h3 className="featured-hero-name">{hero.name}</h3>
+                    <p className="featured-hero-claim">
+                      {hero.caseStudy?.claim || hero.description}
+                    </p>
+                    <span className="featured-card-cta">
+                      View case study <span className="cta-arrow">→</span>
+                    </span>
+                  </div>
+                </Link>
+              </CallingCardPeelLink>
+            )}
           </motion.div>
 
           {rest.map((project, index) => {
             const cats = getProjectCategories(project);
             const preview = getProjectPreviewSrc(project);
             const logo = getProjectLogoSrc(project);
+            const comingSoon = isProjectComingSoon(project);
+
+            const tileContent = (
+              <>
+                <div className="featured-tile-media">
+                  {preview ? (
+                    <Img
+                      src={preview}
+                      alt=""
+                      className="featured-tile-img"
+                    />
+                  ) : logo ? (
+                    <Img src={logo} alt="" className="featured-tile-logo" />
+                  ) : null}
+                </div>
+                <div className="featured-tile-copy">
+                  <div className="featured-card-surfaces">
+                    {cats.map((cid) => {
+                      const m = PROJECT_CATEGORY_META[cid];
+                      if (!m) return null;
+                      return (
+                        <span
+                          key={cid}
+                          className={`featured-surface featured-surface--${cid}`}
+                        >
+                          {m.shortLabel}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <h3 className="featured-tile-name">{project.name}</h3>
+                  <p className="featured-tile-desc">{project.description}</p>
+                  <span className="featured-card-cta">
+                    {comingSoon ? (
+                      'Coming soon'
+                    ) : (
+                      <>
+                        View project <span className="cta-arrow">→</span>
+                      </>
+                    )}
+                  </span>
+                </div>
+              </>
+            );
 
             return (
               <motion.div
                 key={project.id}
-                className="featured-tile surface-2"
+                className={`featured-tile surface-2${
+                  comingSoon ? ' featured-tile--locked' : ''
+                }`}
                 variants={cardVariants}
                 custom={index + 2}
               >
-                <Link to={project.route} className="featured-tile-link">
-                  <div className="featured-tile-media">
-                    {preview ? (
-                      <Img
-                        src={preview}
-                        alt=""
-                        className="featured-tile-img"
-                      />
-                    ) : logo ? (
-                      <Img src={logo} alt="" className="featured-tile-logo" />
-                    ) : null}
-                  </div>
-                  <div className="featured-tile-copy">
-                    <div className="featured-card-surfaces">
-                      {cats.map((cid) => {
-                        const m = PROJECT_CATEGORY_META[cid];
-                        if (!m) return null;
-                        return (
-                          <span
-                            key={cid}
-                            className={`featured-surface featured-surface--${cid}`}
-                          >
-                            {m.shortLabel}
-                          </span>
-                        );
-                      })}
+                {comingSoon ? (
+                  <ComingSoonLockedSurface locked className="featured-tile-link">
+                    <div
+                      className="featured-tile-link featured-tile-link--locked"
+                      aria-label={`${project.name}, coming soon`}
+                    >
+                      {tileContent}
                     </div>
-                    <h3 className="featured-tile-name">{project.name}</h3>
-                    <p className="featured-tile-desc">{project.description}</p>
-                    <span className="featured-card-cta">
-                      View project <span className="cta-arrow">→</span>
-                    </span>
-                  </div>
-                </Link>
+                  </ComingSoonLockedSurface>
+                ) : (
+                  <CallingCardPeelLink
+                    to={project.route}
+                    className="featured-tile-peel"
+                    obstructionLabel={project.name}
+                  >
+                    <Link to={project.route} className="featured-tile-link">
+                      {tileContent}
+                    </Link>
+                  </CallingCardPeelLink>
+                )}
               </motion.div>
             );
           })}

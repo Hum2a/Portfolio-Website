@@ -2,6 +2,11 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
+export {
+  TextareaPaperExpansion,
+  type TextareaPaperExpansionProps,
+} from '@/components/animations/textarea-paper-expansion';
+
 function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
   return (
     <textarea

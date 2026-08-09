@@ -1,0 +1,23 @@
+/* Host embed — layout only; sheet contract values stay in paper-stack-shuffle.css */
+
+.paper-stack-demo--embed {
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  --stack-w: min(100%, 360px);
+}
+
+.paper-stack-demo--embed .paper-stack__btn {
+  border-color: var(--border-primary);
+  color: var(--text-primary);
+}
+
+.paper-stack-demo--embed .paper-stack__btn:hover:not(:disabled) {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.paper-stack-demo--embed .paper-stack__btn:focus-visible {
+  outline-color: var(--accent-primary);
+}

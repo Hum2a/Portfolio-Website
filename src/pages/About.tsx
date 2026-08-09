@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useId, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import Seo from '../components/seo/Seo';
 import './About.css';
@@ -129,6 +129,43 @@ const About = () => {
   const [journeySpotlights] = useState(() =>
     shuffleCopy(PROFESSIONAL_JOURNEY_SPOTLIGHTS).slice(0, JOURNEY_VISIBLE_COUNT)
   );
+  const [selectedJourney, setSelectedJourney] = useState(0);
+  const journeyTabRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const journeyId = useId().replace(/:/g, '');
+
+  const selectJourney = useCallback(
+    (index: number, focus = true) => {
+      if (index < 0 || index >= journeySpotlights.length) return;
+      setSelectedJourney(index);
+      if (focus) journeyTabRefs.current[index]?.focus();
+    },
+    [journeySpotlights.length]
+  );
+
+  const onJourneyKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    i: number
+  ) => {
+    const key = event.key;
+    if (
+      key !== 'ArrowRight' &&
+      key !== 'ArrowLeft' &&
+      key !== 'ArrowDown' &&
+      key !== 'ArrowUp' &&
+      key !== 'Home' &&
+      key !== 'End'
+    ) {
+      return;
+    }
+    event.preventDefault();
+    const count = journeySpotlights.length;
+    let next = i;
+    if (key === 'ArrowRight' || key === 'ArrowDown') next = (i + 1) % count;
+    if (key === 'ArrowLeft' || key === 'ArrowUp') next = (i - 1 + count) % count;
+    if (key === 'Home') next = 0;
+    if (key === 'End') next = count - 1;
+    selectJourney(next);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -170,21 +207,40 @@ const About = () => {
           <h2 className="section-title">Professional journey</h2>
           <p className="section-description">
             A rotating sample of shipped work — six at a time (refresh to
-            reshuffle):
+            reshuffle). Select a card to bring it forward:
           </p>
-          <ul className="about-spotlight-list">
-            {journeySpotlights.map((spotlight) => (
-              <li key={spotlight.name} className="about-spotlight surface-1">
-                <h3 className="about-spotlight-name">{spotlight.name}</h3>
-                <p className="about-spotlight-desc">{spotlight.description}</p>
-                <ul className="about-spotlight-meta">
-                  {spotlight.metaItems.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
+          <div
+            className="about-spotlight-list"
+            role="tablist"
+            aria-label="Professional journey"
+          >
+            {journeySpotlights.map((spotlight, i) => {
+              const active = i === selectedJourney;
+              return (
+                <div
+                  key={spotlight.name}
+                  ref={(el) => {
+                    journeyTabRefs.current[i] = el;
+                  }}
+                  role="tab"
+                  id={`${journeyId}-tab-${i}`}
+                  aria-selected={active}
+                  tabIndex={active ? 0 : -1}
+                  className="about-spotlight surface-1"
+                  onClick={() => selectJourney(i, false)}
+                  onKeyDown={(event) => onJourneyKeyDown(event, i)}
+                >
+                  <h3 className="about-spotlight-name">{spotlight.name}</h3>
+                  <p className="about-spotlight-desc">{spotlight.description}</p>
+                  <ul className="about-spotlight-meta">
+                    {spotlight.metaItems.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
         </motion.section>
 
         <motion.section className="about-section" variants={itemVariants}>

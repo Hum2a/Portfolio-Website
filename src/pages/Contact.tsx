@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { FaEnvelope, FaLinkedin, FaGithub, FaFileDownload } from 'react-icons/fa';
 import { db } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { trackContactSubmit, trackEvent } from '../services/analyticsService';
 import Seo from '../components/seo/Seo';
 import SectionBackdrop from '../components/media/SectionBackdrop';
-import { Button } from '@/components/ui/button';
+import { CutoutAction } from '@/components/ui/CutoutAction';
+import { TextareaPaperExpansion } from '@/components/animations/textarea-paper-expansion';
 import './Contact.css';
 
 const CV_HREF = '/Humza-Butt-CV.pdf?v=2026-08';
@@ -192,16 +192,14 @@ const Contact = () => {
               <div className="contact-success surface-2" role="status">
                 <h2>Message sent</h2>
                 <p>{submitStatus.message}</p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="rounded-full"
-                  onClick={() =>
-                    setSubmitStatus({ type: '', message: '' })
-                  }
-                >
-                  Send another
-                </Button>
+                  <CutoutAction
+                    type="button"
+                    onClick={() =>
+                      setSubmitStatus({ type: '', message: '' })
+                    }
+                  >
+                    Send another
+                  </CutoutAction>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="enquiry-form surface-2" noValidate>
@@ -294,23 +292,21 @@ const Contact = () => {
                   </div>
                 )}
 
-                <div className="form-group">
-                  <label htmlFor="enquiry" className="form-label">
-                    Enquiry <span className="required">*</span>
-                  </label>
-                  <textarea
+                <div className="form-group form-group--paper">
+                  <TextareaPaperExpansion
                     id="enquiry"
                     name="enquiry"
+                    label={
+                      <>
+                        Enquiry <span className="required">*</span>
+                      </>
+                    }
+                    placeholder="Tell me about your project or question…"
                     value={formData.enquiry}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
-                    className={`form-input form-textarea ${
-                      formErrors.enquiry ? 'error' : ''
-                    }`}
-                    placeholder="Tell me about your project or question…"
-                    rows={5}
+                    error={Boolean(formErrors.enquiry)}
                     disabled={isSubmitting}
-                    aria-invalid={Boolean(formErrors.enquiry)}
                   />
                   {formErrors.enquiry && (
                     <span className="error-message">{formErrors.enquiry}</span>
@@ -321,13 +317,9 @@ const Contact = () => {
                   <div className="submit-message error">{submitStatus.message}</div>
                 )}
 
-                <Button
-                  type="submit"
-                  className="rounded-full"
-                  disabled={isSubmitting}
-                >
+                <CutoutAction type="submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Submitting…' : 'Submit enquiry'}
-                </Button>
+                </CutoutAction>
               </form>
             )}
           </div>

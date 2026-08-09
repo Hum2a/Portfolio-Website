@@ -63,6 +63,28 @@
   padding-bottom: 0.25rem;
 }
 
+.career-timeline-title .cdc__value {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text-primary);
+}
+
+.career-timeline-company .cdc__value {
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: inherit;
+}
+
+.career-timeline-prose .cdc__value,
+.career-timeline-highlights .cdc__value {
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: inherit;
+}
+
 .career-timeline-title {
   margin: 0 0 0.25rem;
   font-size: 1.05rem;

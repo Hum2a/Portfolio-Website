@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import CodeEditor from '../components/animations/CodeEditor';
 import { HomepageFeaturedProjects } from '../components/projects/HomepageFeaturedProjects';
 import { CareerSection } from '../components/linkedin/CareerSection';
 import { GitHubSection } from '../components/github/GitHubSection';
-import { Button } from '../components/ui/button';
+import { CutoutAction } from '../components/ui/CutoutAction';
 import { prefetchProjects } from '../utils/prefetchRoute';
 import Seo, { DEFAULT_DESCRIPTION } from '../components/seo/Seo';
 import './Homepage.css';
@@ -39,18 +38,14 @@ const Homepage = () => {
             </p>
 
             <div className="homepage-cta-row">
-              <Button asChild size="lg" className="rounded-full">
-                <Link
-                  to="/projects"
-                  onMouseEnter={prefetchProjects}
-                  onFocus={prefetchProjects}
-                >
-                  View work
-                </Link>
-              </Button>
-              <Button asChild variant="ghost" size="lg" className="rounded-full">
-                <Link to="/contact">Get in touch</Link>
-              </Button>
+              <CutoutAction
+                to="/projects"
+                onMouseEnter={prefetchProjects}
+                onFocus={prefetchProjects}
+              >
+                View work
+              </CutoutAction>
+              <CutoutAction to="/contact">Get in touch</CutoutAction>
             </div>
 
             <ul className="homepage-stats" aria-label="Highlights">

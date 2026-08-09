@@ -1,6 +1,6 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import NavigateWithoutWipe from '../animations/comic-wipe/NavigateWithoutWipe';
 
 const ProtectedRoute = ({ children, requiredRole = null }) => {
   const { user, role, loading } = useAuth();
@@ -19,12 +19,12 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
   }
 
   if (!user) {
-    return <Navigate to="/humza-login" replace />;
+    return <NavigateWithoutWipe to="/humza-login" />;
   }
 
   if (requiredRole && role !== requiredRole) {
     // User is authenticated but doesn't have required role
-    return <Navigate to="/" replace />;
+    return <NavigateWithoutWipe to="/" />;
   }
 
   return children;

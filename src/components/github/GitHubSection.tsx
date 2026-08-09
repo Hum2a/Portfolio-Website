@@ -1,36 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { FaGithub, FaStar, FaCodeBranch } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
 import { fetchGitHubRepos, fetchGitHubProfile, getGitHubUsername } from '../../services/githubService';
+import GitHubRepoPaperStack from './GitHubRepoPaperStack';
 import SectionBackdrop from '../media/SectionBackdrop';
 import './GitHubSection.css';
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.28, delay: i * 0.03, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
-
-const LANGUAGE_COLORS = {
-  JavaScript: '#f7df1e',
-  TypeScript: '#3178c6',
-  Python: '#3776ab',
-  Java: '#ed8b00',
-  Kotlin: '#7f52ff',
-  Swift: '#fa7343',
-  'Objective-C': '#438eff',
-  HTML: '#e34c26',
-  CSS: '#563d7c',
-  Vue: '#41b883',
-  Dart: '#00b4ab',
-  Go: '#00add8',
-  Rust: '#dea584',
-  C: '#555555',
-  'C++': '#00599c',
-};
 
 export function GitHubSection() {
   const [repos, setRepos] = useState([]);
@@ -124,56 +98,7 @@ export function GitHubSection() {
           </div>
         </div>
 
-        {repos.length > 0 && (
-          <div className="github-grid">
-            {repos.map((repo, index) => (
-              <motion.a
-                key={repo.id}
-                href={repo.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="github-card surface-2"
-                variants={cardVariants}
-                initial="hidden"
-                animate={isInView ? 'visible' : 'hidden'}
-                custom={index}
-                whileHover={{ y: -6, transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] } }}
-              >
-                <div className="github-card-header">
-                  <h3 className="github-card-name">{repo.name}</h3>
-                  {repo.language && (
-                    <span
-                      className="github-card-language"
-                      style={{
-                        '--lang-color': LANGUAGE_COLORS[repo.language] || '#6b7280',
-                      }}
-                    >
-                      {repo.language}
-                    </span>
-                  )}
-                </div>
-                {repo.description && (
-                  <p className="github-card-desc">{repo.description}</p>
-                )}
-                {repo.topics?.length > 0 && (
-                  <div className="github-card-topics">
-                    {repo.topics.slice(0, 4).map((topic) => (
-                      <span key={topic} className="github-topic">{topic}</span>
-                    ))}
-                  </div>
-                )}
-                <div className="github-card-stats">
-                  <span className="github-stat">
-                    <FaStar /> {repo.stargazers_count}
-                  </span>
-                  <span className="github-stat">
-                    <FaCodeBranch /> {repo.forks_count}
-                  </span>
-                </div>
-              </motion.a>
-            ))}
-          </div>
-        )}
+        {repos.length > 0 && <GitHubRepoPaperStack repos={repos} />}
 
         <div className="github-footer">
           <a

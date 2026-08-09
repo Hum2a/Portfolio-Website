@@ -1,17 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   getAllTags,
   filterProjectsCombined,
   PROJECT_CATEGORY_ORDER,
   PROJECT_CATEGORY_META,
-  getProjectCategories,
   getVisibleProjects,
-  formatProjectDate,
   type Project,
 } from '../data/projects';
 import Seo from '../components/seo/Seo';
+import { ProjectTile } from '../components/projects/ProjectTile';
 import { Input } from '@/components/ui/input';
 import './Projects.css';
 
@@ -252,118 +250,20 @@ const Projects = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.25 }}
         >
-          {filteredProjects.map((project, index) => {
-            const cats = getProjectCategories(project);
-            const tagsOpen = Boolean(expandedTags[project.id]);
-            const visibleTags = tagsOpen
-              ? project.tags
-              : project.tags.slice(0, 5);
-            const hiddenCount = project.tags.length - 5;
-
-            return (
-              <motion.article
-                key={project.id}
-                className="project-tile"
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.35,
-                  delay: Math.min(index * 0.04, 0.4),
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                <Link to={project.route} className="project-tile__link">
-                  <div
-                    className="project-tile__visual"
-                    style={{
-                      background: project.gradient || 'var(--bg-tertiary)',
-                    }}
-                  >
-                    <img
-                      src={`/logos/${project.logo}`}
-                      alt=""
-                      className="project-tile__logo"
-                    />
-                  </div>
-                  <div className="project-tile__body">
-                    <div className="project-tile__categories">
-                      {cats.map((cid) => {
-                        const m = PROJECT_CATEGORY_META[cid];
-                        if (!m) return null;
-                        return (
-                          <span
-                            key={cid}
-                            className={`surface-pill surface-pill--${cid}`}
-                          >
-                            {m.shortLabel}
-                          </span>
-                        );
-                      })}
-                    </div>
-                    <h2 className="project-tile__name">{project.name}</h2>
-                    {(formatProjectDate(project.dateAdded) ||
-                      formatProjectDate(project.dateUpdated)) && (
-                      <p
-                        className="project-tile__dates"
-                        aria-label="Project timeline"
-                      >
-                        {formatProjectDate(project.dateAdded) && (
-                          <span className="project-tile__date">
-                            <span className="project-tile__date-label">
-                              Added
-                            </span>
-                            <time dateTime={project.dateAdded}>
-                              {formatProjectDate(project.dateAdded)}
-                            </time>
-                          </span>
-                        )}
-                        {formatProjectDate(project.dateUpdated) && (
-                          <span className="project-tile__date">
-                            <span className="project-tile__date-label">
-                              Updated
-                            </span>
-                            <time dateTime={project.dateUpdated}>
-                              {formatProjectDate(project.dateUpdated)}
-                            </time>
-                          </span>
-                        )}
-                      </p>
-                    )}
-                    <p className="project-tile__desc">{project.description}</p>
-                    <div className="project-tile__tech">
-                      {visibleTags.map((tag) => (
-                        <span key={tag} className="project-tile__tech-tag">
-                          {tag}
-                        </span>
-                      ))}
-                      {hiddenCount > 0 && (
-                        <button
-                          type="button"
-                          className="project-tile__tech-more"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setExpandedTags((prev) => ({
-                              ...prev,
-                              [project.id]: !tagsOpen,
-                            }));
-                          }}
-                        >
-                          {tagsOpen ? 'Show less' : `+${hiddenCount}`}
-                        </button>
-                      )}
-                    </div>
-                    <span className="project-tile__cta">
-                      View case study
-                      <span className="project-tile__cta-arrow" aria-hidden>
-                        →
-                      </span>
-                    </span>
-                  </div>
-                </Link>
-              </motion.article>
-            );
-          })}
+          {filteredProjects.map((project, index) => (
+            <ProjectTile
+              key={project.id}
+              project={project}
+              index={index}
+              tagsOpen={Boolean(expandedTags[project.id])}
+              onToggleTags={(projectId) =>
+                setExpandedTags((prev) => ({
+                  ...prev,
+                  [projectId]: !prev[projectId],
+                }))
+              }
+            />
+          ))}
         </motion.div>
 
         {filteredProjects.length === 0 && (
