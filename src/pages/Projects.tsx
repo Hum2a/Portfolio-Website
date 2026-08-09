@@ -9,8 +9,10 @@ import {
   getProjectCategories,
   getVisibleProjects,
   formatProjectDate,
+  isProjectComingSoon,
   type Project,
 } from '../data/projects';
+import { ComingSoonLockedSurface } from '@/components/animations/coming-soon-tape';
 import Seo from '../components/seo/Seo';
 import { Input } from '@/components/ui/input';
 import './Projects.css';
@@ -259,11 +261,108 @@ const Projects = () => {
               ? project.tags
               : project.tags.slice(0, 5);
             const hiddenCount = project.tags.length - 5;
+            const comingSoon = isProjectComingSoon(project);
+
+            const tileContent = (
+              <>
+                <div
+                  className="project-tile__visual"
+                  style={{
+                    background: project.gradient || 'var(--bg-tertiary)',
+                  }}
+                >
+                  <img
+                    src={`/logos/${project.logo}`}
+                    alt=""
+                    className="project-tile__logo"
+                  />
+                </div>
+                <div className="project-tile__body">
+                  <div className="project-tile__categories">
+                    {cats.map((cid) => {
+                      const m = PROJECT_CATEGORY_META[cid];
+                      if (!m) return null;
+                      return (
+                        <span
+                          key={cid}
+                          className={`surface-pill surface-pill--${cid}`}
+                        >
+                          {m.shortLabel}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <h2 className="project-tile__name">{project.name}</h2>
+                  {(formatProjectDate(project.dateAdded) ||
+                    formatProjectDate(project.dateUpdated)) && (
+                    <p
+                      className="project-tile__dates"
+                      aria-label="Project timeline"
+                    >
+                      {formatProjectDate(project.dateAdded) && (
+                        <span className="project-tile__date">
+                          <span className="project-tile__date-label">
+                            Added
+                          </span>
+                          <time dateTime={project.dateAdded}>
+                            {formatProjectDate(project.dateAdded)}
+                          </time>
+                        </span>
+                      )}
+                      {formatProjectDate(project.dateUpdated) && (
+                        <span className="project-tile__date">
+                          <span className="project-tile__date-label">
+                            Updated
+                          </span>
+                          <time dateTime={project.dateUpdated}>
+                            {formatProjectDate(project.dateUpdated)}
+                          </time>
+                        </span>
+                      )}
+                    </p>
+                  )}
+                  <p className="project-tile__desc">{project.description}</p>
+                  <div className="project-tile__tech">
+                    {visibleTags.map((tag) => (
+                      <span key={tag} className="project-tile__tech-tag">
+                        {tag}
+                      </span>
+                    ))}
+                    {hiddenCount > 0 && (
+                      <button
+                        type="button"
+                        className="project-tile__tech-more"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setExpandedTags((prev) => ({
+                            ...prev,
+                            [project.id]: !tagsOpen,
+                          }));
+                        }}
+                      >
+                        {tagsOpen ? 'Show less' : `+${hiddenCount}`}
+                      </button>
+                    )}
+                  </div>
+                  <span className="project-tile__cta">
+                    {comingSoon ? 'Coming soon' : 'View case study'}
+                    {!comingSoon && (
+                      <span className="project-tile__cta-arrow" aria-hidden>
+                        →
+                      </span>
+                    )}
+                  </span>
+                </div>
+              </>
+            );
 
             return (
               <article
                 key={project.id}
-                className={`project-tile project-tile--ccs-${index % 3}`}
+                className={`project-tile project-tile--ccs-${index % 3}${
+                  comingSoon ? ' project-tile--locked' : ''
+                }`}
               >
                 <span className="project-tile__hard" aria-hidden="true" />
                 <span className="project-tile__backing" aria-hidden="true" />
@@ -286,95 +385,20 @@ const Projects = () => {
                     ease: [0.22, 1, 0.36, 1],
                   }}
                 >
-                  <Link to={project.route} className="project-tile__link">
-                    <div
-                      className="project-tile__visual"
-                      style={{
-                        background: project.gradient || 'var(--bg-tertiary)',
-                      }}
-                    >
-                      <img
-                        src={`/logos/${project.logo}`}
-                        alt=""
-                        className="project-tile__logo"
-                      />
-                    </div>
-                    <div className="project-tile__body">
-                      <div className="project-tile__categories">
-                        {cats.map((cid) => {
-                          const m = PROJECT_CATEGORY_META[cid];
-                          if (!m) return null;
-                          return (
-                            <span
-                              key={cid}
-                              className={`surface-pill surface-pill--${cid}`}
-                            >
-                              {m.shortLabel}
-                            </span>
-                          );
-                        })}
+                  {comingSoon ? (
+                    <ComingSoonLockedSurface locked>
+                      <div
+                        className="project-tile__link project-tile__link--locked"
+                        aria-label={`${project.name}, coming soon`}
+                      >
+                        {tileContent}
                       </div>
-                      <h2 className="project-tile__name">{project.name}</h2>
-                      {(formatProjectDate(project.dateAdded) ||
-                        formatProjectDate(project.dateUpdated)) && (
-                        <p
-                          className="project-tile__dates"
-                          aria-label="Project timeline"
-                        >
-                          {formatProjectDate(project.dateAdded) && (
-                            <span className="project-tile__date">
-                              <span className="project-tile__date-label">
-                                Added
-                              </span>
-                              <time dateTime={project.dateAdded}>
-                                {formatProjectDate(project.dateAdded)}
-                              </time>
-                            </span>
-                          )}
-                          {formatProjectDate(project.dateUpdated) && (
-                            <span className="project-tile__date">
-                              <span className="project-tile__date-label">
-                                Updated
-                              </span>
-                              <time dateTime={project.dateUpdated}>
-                                {formatProjectDate(project.dateUpdated)}
-                              </time>
-                            </span>
-                          )}
-                        </p>
-                      )}
-                      <p className="project-tile__desc">{project.description}</p>
-                      <div className="project-tile__tech">
-                        {visibleTags.map((tag) => (
-                          <span key={tag} className="project-tile__tech-tag">
-                            {tag}
-                          </span>
-                        ))}
-                        {hiddenCount > 0 && (
-                          <button
-                            type="button"
-                            className="project-tile__tech-more"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setExpandedTags((prev) => ({
-                                ...prev,
-                                [project.id]: !tagsOpen,
-                              }));
-                            }}
-                          >
-                            {tagsOpen ? 'Show less' : `+${hiddenCount}`}
-                          </button>
-                        )}
-                      </div>
-                      <span className="project-tile__cta">
-                        View case study
-                        <span className="project-tile__cta-arrow" aria-hidden>
-                          →
-                        </span>
-                      </span>
-                    </div>
-                  </Link>
+                    </ComingSoonLockedSurface>
+                  ) : (
+                    <Link to={project.route} className="project-tile__link">
+                      {tileContent}
+                    </Link>
+                  )}
                 </motion.div>
               </article>
             );

@@ -51,6 +51,8 @@ export interface Project {
   repoUrl?: string;
   /** When true, attempt iframe embed; default false — never ship a failing iframe */
   embeddable?: boolean;
+  /** Case study published but product not publicly launched — locks grid/featured cards */
+  comingSoon?: boolean;
   caseStudy?: ProjectCaseStudy;
   [key: string]: unknown;
 }
@@ -136,6 +138,9 @@ export const getAllProjects = (): Project[] => {
 export const getVisibleProjects = (): Project[] => {
   return getAllProjects().filter((project) => project.visible);
 };
+
+export const isProjectComingSoon = (project: Project): boolean =>
+  Boolean(project.comingSoon);
 
 export const getFeaturedProjects = (): Project[] => {
   return getAllProjects()

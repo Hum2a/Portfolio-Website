@@ -1,0 +1,16 @@
+/* Host embed — locked card integration; tape contract values stay in coming-soon-tape.css */
+
+.coming-soon-locked {
+  position: relative;
+  overflow: hidden;
+  cursor: not-allowed;
+}
+
+.coming-soon-locked__content {
+  height: 100%;
+}
+
+.coming-soon-locked__content--dimmed {
+  opacity: 0.55;
+  pointer-events: none;
+}

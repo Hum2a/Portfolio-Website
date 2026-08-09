@@ -514,6 +514,22 @@
   height: 100%;
 }
 
+.project-tile__link--locked {
+  cursor: not-allowed;
+}
+
+.project-tile--locked:hover,
+.project-tile--locked:focus-within {
+  transform: none;
+  z-index: 1;
+}
+
+.project-tile--locked:hover .project-tile__face,
+.project-tile--locked:focus-within .project-tile__face {
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow: none;
+}
+
 @keyframes pt-ccs-backing-attack {
   0% {
     opacity: 1;

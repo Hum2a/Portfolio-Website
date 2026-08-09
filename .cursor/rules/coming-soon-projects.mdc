@@ -1,0 +1,40 @@
+---
+description: Coming-soon project flag and SPX-001 caution tape usage
+globs: src/config/projects.json,src/data/projects.ts,src/components/projects/**,src/pages/Projects.tsx
+alwaysApply: false
+---
+
+# Coming-soon projects (SPX-001)
+
+## When to flag a project
+
+Set `"comingSoon": true` in [`src/config/projects.json`](src/config/projects.json) when:
+
+- The case study is published on the portfolio (`visible: true`, `caseStudy` present)
+- The product is **not** publicly launched yet (no live deployment for end users)
+
+Do **not** infer `comingSoon` from a missing `liveUrl` alone — some shipped projects may lack a public URL.
+
+When the product launches, remove `comingSoon` (or set `false`) and add `liveUrl` as appropriate.
+
+## UI behaviour
+
+- **Grid / featured cards**: use `ComingSoonLockedSurface` + `isProjectComingSoon()` from [`src/data/projects.ts`](src/data/projects.ts)
+- Locked cards must **not** use `<Link>` — render a non-interactive shell with `aria-label="{name}, coming soon"`
+- **Case study routes** stay available at direct URLs — do not block `ProjectCaseStudyPage`
+
+## Caution tape artifact
+
+Module: [`src/components/animations/coming-soon-tape/`](src/components/animations/coming-soon-tape/)
+
+- Import `ComingSoonTape` or `ComingSoonLockedSurface` from `@/components/animations/coming-soon-tape`
+- Keep contract class names and values in `coming-soon-tape.css` — do not restyle band colours, angles, or marquee timing to host tokens
+- Host-only layout (dim, cursor, locked hover) belongs in `coming-soon-tape-host.css` or surface-specific CSS
+- Tape root is decorative (`aria-hidden`); announce lock via `sr-only` on the locked surface, not the marquee copy
+- Parent must satisfy `position: relative` and `overflow: hidden`
+
+## Adding a new unreleased project
+
+1. Add project entry with `visible: true`, `caseStudy`, and `"comingSoon": true`
+2. Wire the card surface with `ComingSoonLockedSurface locked` (see `Projects.tsx` or `HomepageFeaturedProjects.tsx`)
+3. On launch: set `comingSoon: false`, add `liveUrl`, restore `<Link>` on cards

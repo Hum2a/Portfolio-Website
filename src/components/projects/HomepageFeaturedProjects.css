@@ -101,6 +101,23 @@
   min-height: 360px;
 }
 
+.featured-hero-link--locked,
+.featured-tile-link--locked {
+  cursor: not-allowed;
+}
+
+.featured-hero--locked:hover,
+.featured-tile--locked:hover {
+  transform: none;
+  border-color: var(--border-glass);
+  box-shadow: none;
+}
+
+.featured-hero--locked:hover .featured-hero-img,
+.featured-tile--locked:hover .featured-tile-img {
+  transform: none;
+}
+
 .featured-hero-media {
   position: absolute;
   inset: 0;

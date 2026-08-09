@@ -960,6 +960,7 @@
       "dateAdded": "2026-05-08",
       "dateUpdated": "2026-05-08",
       "embeddable": false,
+      "comingSoon": true,
       "repoUrl": "https://github.com/Hum2a/fire-intelligence-dashboard",
       "caseStudy": {
         "claim": "Geospatial wildfire intelligence dashboard with map-based risk analysis and metre-accurate proximity checks for analysts.",
@@ -2230,6 +2231,7 @@
       "dateAdded": "2024-06-05",
       "dateUpdated": "2026-05-02",
       "embeddable": false,
+      "comingSoon": true,
       "caseStudy": {
         "claim": "Pitch-deck classifier that turns inbound VC decks into scored, comparable screening rounds using ML and OpenAI.",
         "role": "Full-stack developer and data scientist",
