@@ -261,107 +261,122 @@ const Projects = () => {
             const hiddenCount = project.tags.length - 5;
 
             return (
-              <motion.article
+              <article
                 key={project.id}
-                className="project-tile"
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.35,
-                  delay: Math.min(index * 0.04, 0.4),
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+                className={`project-tile project-tile--ccs-${index % 3}`}
               >
-                <Link to={project.route} className="project-tile__link">
-                  <div
-                    className="project-tile__visual"
-                    style={{
-                      background: project.gradient || 'var(--bg-tertiary)',
-                    }}
-                  >
-                    <img
-                      src={`/logos/${project.logo}`}
-                      alt=""
-                      className="project-tile__logo"
-                    />
-                  </div>
-                  <div className="project-tile__body">
-                    <div className="project-tile__categories">
-                      {cats.map((cid) => {
-                        const m = PROJECT_CATEGORY_META[cid];
-                        if (!m) return null;
-                        return (
-                          <span
-                            key={cid}
-                            className={`surface-pill surface-pill--${cid}`}
-                          >
-                            {m.shortLabel}
-                          </span>
-                        );
-                      })}
+                <span className="project-tile__hard" aria-hidden="true" />
+                <span className="project-tile__backing" aria-hidden="true" />
+                <span className="project-tile__misreg" aria-hidden="true" />
+                <span
+                  className="project-tile__shard project-tile__shard--a"
+                  aria-hidden="true"
+                />
+                <span
+                  className="project-tile__shard project-tile__shard--b"
+                  aria-hidden="true"
+                />
+                <motion.div
+                  className="project-tile__face"
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.35,
+                    delay: Math.min(index * 0.04, 0.4),
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  <Link to={project.route} className="project-tile__link">
+                    <div
+                      className="project-tile__visual"
+                      style={{
+                        background: project.gradient || 'var(--bg-tertiary)',
+                      }}
+                    >
+                      <img
+                        src={`/logos/${project.logo}`}
+                        alt=""
+                        className="project-tile__logo"
+                      />
                     </div>
-                    <h2 className="project-tile__name">{project.name}</h2>
-                    {(formatProjectDate(project.dateAdded) ||
-                      formatProjectDate(project.dateUpdated)) && (
-                      <p
-                        className="project-tile__dates"
-                        aria-label="Project timeline"
-                      >
-                        {formatProjectDate(project.dateAdded) && (
-                          <span className="project-tile__date">
-                            <span className="project-tile__date-label">
-                              Added
+                    <div className="project-tile__body">
+                      <div className="project-tile__categories">
+                        {cats.map((cid) => {
+                          const m = PROJECT_CATEGORY_META[cid];
+                          if (!m) return null;
+                          return (
+                            <span
+                              key={cid}
+                              className={`surface-pill surface-pill--${cid}`}
+                            >
+                              {m.shortLabel}
                             </span>
-                            <time dateTime={project.dateAdded}>
-                              {formatProjectDate(project.dateAdded)}
-                            </time>
-                          </span>
-                        )}
-                        {formatProjectDate(project.dateUpdated) && (
-                          <span className="project-tile__date">
-                            <span className="project-tile__date-label">
-                              Updated
-                            </span>
-                            <time dateTime={project.dateUpdated}>
-                              {formatProjectDate(project.dateUpdated)}
-                            </time>
-                          </span>
-                        )}
-                      </p>
-                    )}
-                    <p className="project-tile__desc">{project.description}</p>
-                    <div className="project-tile__tech">
-                      {visibleTags.map((tag) => (
-                        <span key={tag} className="project-tile__tech-tag">
-                          {tag}
-                        </span>
-                      ))}
-                      {hiddenCount > 0 && (
-                        <button
-                          type="button"
-                          className="project-tile__tech-more"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setExpandedTags((prev) => ({
-                              ...prev,
-                              [project.id]: !tagsOpen,
-                            }));
-                          }}
+                          );
+                        })}
+                      </div>
+                      <h2 className="project-tile__name">{project.name}</h2>
+                      {(formatProjectDate(project.dateAdded) ||
+                        formatProjectDate(project.dateUpdated)) && (
+                        <p
+                          className="project-tile__dates"
+                          aria-label="Project timeline"
                         >
-                          {tagsOpen ? 'Show less' : `+${hiddenCount}`}
-                        </button>
+                          {formatProjectDate(project.dateAdded) && (
+                            <span className="project-tile__date">
+                              <span className="project-tile__date-label">
+                                Added
+                              </span>
+                              <time dateTime={project.dateAdded}>
+                                {formatProjectDate(project.dateAdded)}
+                              </time>
+                            </span>
+                          )}
+                          {formatProjectDate(project.dateUpdated) && (
+                            <span className="project-tile__date">
+                              <span className="project-tile__date-label">
+                                Updated
+                              </span>
+                              <time dateTime={project.dateUpdated}>
+                                {formatProjectDate(project.dateUpdated)}
+                              </time>
+                            </span>
+                          )}
+                        </p>
                       )}
-                    </div>
-                    <span className="project-tile__cta">
-                      View case study
-                      <span className="project-tile__cta-arrow" aria-hidden>
-                        →
+                      <p className="project-tile__desc">{project.description}</p>
+                      <div className="project-tile__tech">
+                        {visibleTags.map((tag) => (
+                          <span key={tag} className="project-tile__tech-tag">
+                            {tag}
+                          </span>
+                        ))}
+                        {hiddenCount > 0 && (
+                          <button
+                            type="button"
+                            className="project-tile__tech-more"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setExpandedTags((prev) => ({
+                                ...prev,
+                                [project.id]: !tagsOpen,
+                              }));
+                            }}
+                          >
+                            {tagsOpen ? 'Show less' : `+${hiddenCount}`}
+                          </button>
+                        )}
+                      </div>
+                      <span className="project-tile__cta">
+                        View case study
+                        <span className="project-tile__cta-arrow" aria-hidden>
+                          →
+                        </span>
                       </span>
-                    </span>
-                  </div>
-                </Link>
-              </motion.article>
+                    </div>
+                  </Link>
+                </motion.div>
+              </article>
             );
           })}
         </motion.div>

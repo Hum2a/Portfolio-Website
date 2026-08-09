@@ -6,6 +6,7 @@ import {
   FaUsers,
   FaBriefcase,
   FaGraduationCap,
+  FaExternalLinkAlt,
 } from 'react-icons/fa';
 import {
   fetchLinkedInProfile,
