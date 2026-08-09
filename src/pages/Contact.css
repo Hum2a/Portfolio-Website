@@ -270,6 +270,10 @@
   cursor: not-allowed;
 }
 
+.form-group--paper {
+  gap: 0.5rem;
+}
+
 .form-textarea {
   resize: vertical;
   min-height: 120px;
