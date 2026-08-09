@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { FaGithub, FaStar, FaCodeBranch } from 'react-icons/fa';
+import { FaStar, FaCodeBranch } from 'react-icons/fa';
 import {
   PaperStackShuffle,
   shufflePaperStack,
@@ -11,6 +11,92 @@ import './GitHubRepoPaperStack.css';
 type GitHubRepoPaperStackProps = {
   repos: GitHubRepo[];
 };
+
+const LANGUAGE_COLORS: Record<string, string> = {
+  JavaScript: '#f7df1e',
+  TypeScript: '#3178c6',
+  Python: '#3776ab',
+  Java: '#ed8b00',
+  Kotlin: '#7f52ff',
+  Swift: '#fa7343',
+  'Objective-C': '#438eff',
+  HTML: '#e34c26',
+  CSS: '#563d7c',
+  Vue: '#41b883',
+  Dart: '#00b4ab',
+  Go: '#00add8',
+  Rust: '#dea584',
+  C: '#555555',
+  'C++': '#00599c',
+};
+
+function RepoStackCard({
+  repo,
+  isActive,
+}: {
+  repo: GitHubRepo;
+  isActive: boolean;
+}) {
+  const content = (
+    <>
+      <div className="github-stack-card__header">
+        <h3 className="github-stack-card__name">{repo.name}</h3>
+        {repo.language && (
+          <span
+            className="github-stack-card__language"
+            style={{
+              '--lang-color': LANGUAGE_COLORS[repo.language] || '#6b7280',
+            } as React.CSSProperties}
+          >
+            {repo.language}
+          </span>
+        )}
+      </div>
+      {repo.description && (
+        <p className="github-stack-card__desc">{repo.description}</p>
+      )}
+      {repo.topics?.length > 0 && (
+        <div className="github-stack-card__topics">
+          {repo.topics.slice(0, 4).map((topic) => (
+            <span key={topic} className="github-stack-card__topic">
+              {topic}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="github-stack-card__stats">
+        <span className="github-stack-card__stat">
+          <FaStar aria-hidden="true" /> {repo.stargazers_count}
+        </span>
+        <span className="github-stack-card__stat">
+          <FaCodeBranch aria-hidden="true" /> {repo.forks_count}
+        </span>
+      </div>
+    </>
+  );
+
+  const className = 'github-stack-card surface-2';
+
+  if (isActive) {
+    return (
+      <a
+        href={repo.html_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        aria-label={`Open ${repo.name} on GitHub`}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <div className={className} aria-hidden="true">
+      {content}
+    </div>
+  );
+}
 
 const GitHubRepoPaperStack: React.FC<GitHubRepoPaperStackProps> = ({ repos }) => {
   const [cursor, setCursor] = useState(0);
@@ -59,6 +145,7 @@ const GitHubRepoPaperStack: React.FC<GitHubRepoPaperStackProps> = ({ repos }) =>
       <PaperStackShuffle
         statusText={statusText}
         busy={busy}
+        interactive
         order={order}
         onPrev={() => void handleShuffle('prev')}
         onNext={() => void handleShuffle('next')}
@@ -68,47 +155,14 @@ const GitHubRepoPaperStack: React.FC<GitHubRepoPaperStackProps> = ({ repos }) =>
         registerDemoRef={(el) => {
           demoRef.current = el;
         }}
-        renderFace={(sheetId: SheetId) => {
+        renderFace={(sheetId: SheetId, isActive: boolean) => {
           const depth = order.indexOf(sheetId);
           const repo = repoAtDepth(depth);
           if (!repo) return null;
 
-          const indexLabel = `${String(depth + 1).padStart(2, '0')} // ${(
-            repo.language || 'REPO'
-          ).toUpperCase()}`;
-
-          const bodyText = repo.description
-            ? `${repo.name} — ${repo.description}`
-            : repo.name;
-
-          return (
-            <>
-              <p className="paper-stack__index">{indexLabel}</p>
-              <p className="paper-stack__body">{bodyText}</p>
-              <p className="github-repo-stack__stats" aria-hidden="true">
-                <span>
-                  <FaStar /> {repo.stargazers_count}
-                </span>
-                <span>
-                  <FaCodeBranch /> {repo.forks_count}
-                </span>
-              </p>
-            </>
-          );
+          return <RepoStackCard repo={repo} isActive={isActive} />;
         }}
       />
-
-      {activeRepo && (
-        <a
-          href={activeRepo.html_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="github-repo-stack__open"
-        >
-          <FaGithub aria-hidden="true" />
-          Open {activeRepo.name} on GitHub
-        </a>
-      )}
     </div>
   );
 };

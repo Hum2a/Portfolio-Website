@@ -17,6 +17,8 @@ export type PaperStackShuffleProps = {
   statusText: string;
   busy?: boolean;
   embed?: boolean;
+  /** When true, stack is not aria-hidden (for embedded clickable faces). */
+  interactive?: boolean;
   onPrev?: () => void;
   onNext?: () => void;
   renderFace: (sheetId: SheetId, isActive: boolean) => React.ReactNode;
@@ -30,6 +32,7 @@ const PaperStackShuffle: React.FC<PaperStackShuffleProps> = ({
   statusText,
   busy = false,
   embed = true,
+  interactive = false,
   onPrev,
   onNext,
   renderFace,
@@ -67,7 +70,11 @@ const PaperStackShuffle: React.FC<PaperStackShuffleProps> = ({
       className={cn('paper-stack-demo', embed && 'paper-stack-demo--embed')}
       data-paper-stack-demo
     >
-      <div className="paper-stack" data-paper-stack aria-hidden="true">
+      <div
+        className="paper-stack"
+        data-paper-stack
+        aria-hidden={interactive ? undefined : true}
+      >
         {([0, 1, 2, 3] as SheetId[]).map((id) => (
           <article
             key={id}
