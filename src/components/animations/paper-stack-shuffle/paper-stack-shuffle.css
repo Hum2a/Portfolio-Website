@@ -1,0 +1,200 @@
+/* SPX-015 Paper Stack Shuffle — portable contract. Do not restyle to host tokens. */
+
+.paper-stack-demo {
+  --paper: #f2eee3;
+  --paper-bright: #fffdf7;
+  --ink: #090909;
+  --red: #d71920;
+  --extract-x: 78%;
+  --stack-w: min(78%, 360px);
+  --stack-h: 220px;
+  --ease: cubic-bezier(0.7, 0, 0.3, 1);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 320px;
+  padding: 1.25rem 1rem 1rem;
+  background: #141414;
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+}
+
+.paper-stack {
+  position: relative;
+  width: var(--stack-w);
+  height: var(--stack-h);
+  margin: 0 auto 1.1rem;
+}
+
+.paper-stack__sheet {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+
+.paper-stack__backing {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: translate(5px, 5px);
+  clip-path: inherit;
+  z-index: 0;
+}
+
+.paper-stack__face {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 1.1rem 1.15rem;
+  background: var(--paper);
+  color: var(--ink);
+  clip-path: inherit;
+  border: 0;
+  border-radius: 0;
+}
+
+.paper-stack__sheet--a {
+  clip-path: polygon(0% 2%, 97% 0%, 100% 96%, 3% 100%);
+}
+
+.paper-stack__sheet--a .paper-stack__face {
+  background: var(--paper-bright);
+}
+
+.paper-stack__sheet--b {
+  clip-path: polygon(1% 0%, 100% 3%, 97% 100%, 0% 95%);
+}
+
+.paper-stack__sheet--c {
+  clip-path: polygon(0% 4%, 96% 0%, 100% 93%, 4% 100%);
+}
+
+.paper-stack__sheet--c .paper-stack__face {
+  background: var(--paper-bright);
+}
+
+.paper-stack__sheet--d {
+  clip-path: polygon(2% 0%, 100% 5%, 98% 100%, 0% 94%);
+}
+
+.paper-stack__index {
+  margin: 0 0 0.65rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.paper-stack__body {
+  margin: 0;
+  max-width: 16rem;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.paper-stack__sheet:not(.is-active) .paper-stack__body {
+  opacity: 0.28;
+}
+
+.paper-stack__sheet:not(.is-active) .paper-stack__index {
+  opacity: 0.55;
+}
+
+.paper-stack__sheet.is-active .paper-stack__body {
+  opacity: 1;
+}
+
+.paper-stack__sheet[data-depth='0'] {
+  z-index: 40;
+}
+.paper-stack__sheet[data-depth='1'] {
+  z-index: 30;
+}
+.paper-stack__sheet[data-depth='2'] {
+  z-index: 20;
+}
+.paper-stack__sheet[data-depth='3'] {
+  z-index: 10;
+}
+
+.paper-stack__sheet.is-flying {
+  z-index: 50;
+}
+
+.paper-stack__sheet.is-behind-flight {
+  z-index: 5;
+}
+
+.paper-stack__controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.paper-stack__btn {
+  appearance: none;
+  margin: 0;
+  padding: 0.5rem 0.85rem;
+  border: 2px solid #e6e8ec;
+  border-radius: 0;
+  background: transparent;
+  color: #e6e8ec;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.paper-stack__btn:hover {
+  background: #e6e8ec;
+  color: #090909;
+}
+
+.paper-stack__btn:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.paper-stack__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.paper-stack__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 380px) {
+  .paper-stack-demo {
+    --extract-x: 58%;
+    --stack-w: min(86%, 320px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-stack__sheet {
+    transition: none !important;
+  }
+}
+
+[data-force-reduced-motion='true'] .paper-stack__sheet {
+  transition: none !important;
+}

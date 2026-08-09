@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaStar, FaCodeBranch, FaUsers, FaFolderOpen } from 'react-icons/fa';
+import { FaGithub, FaUsers, FaFolderOpen } from 'react-icons/fa';
 import ContributionCalendar from '../components/github/ContributionCalendar';
+import GitHubRepoPaperStack from '../components/github/GitHubRepoPaperStack';
 import {
   fetchGitHubRepos,
   fetchGitHubProfile,
@@ -11,24 +12,6 @@ import {
 import '../components/github/GitHubSection.css';
 import './GitHubPage.css';
 import Seo from '../components/seo/Seo';
-
-const LANGUAGE_COLORS = {
-  JavaScript: '#f7df1e',
-  TypeScript: '#3178c6',
-  Python: '#3776ab',
-  Java: '#ed8b00',
-  Kotlin: '#7f52ff',
-  Swift: '#fa7343',
-  'Objective-C': '#438eff',
-  HTML: '#e34c26',
-  CSS: '#563d7c',
-  Vue: '#41b883',
-  Dart: '#00b4ab',
-  Go: '#00add8',
-  Rust: '#dea584',
-  C: '#555555',
-  'C++': '#00599c',
-};
 
 export default function GitHub() {
   const [repos, setRepos] = useState([]);
@@ -208,57 +191,7 @@ export default function GitHub() {
                 </label>
             </div>
 
-            <div className="github-repos-grid">
-              {repos.map((repo, index) => (
-                <motion.a
-                  key={repo.id}
-                  href={repo.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="github-repo-card surface-2"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.4,
-                    delay: Math.min(index * 0.03, 0.3),
-                    ease: [0.4, 0, 0.2, 1],
-                  }}
-                  whileHover={{ y: -6, transition: { duration: 0.25 } }}
-                >
-                  <div className="github-repo-header">
-                    <h3 className="github-repo-name">{repo.name}</h3>
-                    {repo.language && (
-                      <span
-                        className="github-repo-language"
-                        style={{
-                          '--lang-color': LANGUAGE_COLORS[repo.language] || '#6b7280',
-                        }}
-                      >
-                        {repo.language}
-                      </span>
-                    )}
-                  </div>
-                  {repo.description && (
-                    <p className="github-repo-desc">{repo.description}</p>
-                  )}
-                  {repo.topics?.length > 0 && (
-                    <div className="github-repo-topics">
-                      {repo.topics.slice(0, 5).map((topic) => (
-                        <span key={topic} className="github-repo-topic">{topic}</span>
-                      ))}
-                    </div>
-                  )}
-                  <div className="github-repo-stats">
-                    <span className="github-repo-stat">
-                      <FaStar /> {repo.stargazers_count}
-                    </span>
-                    <span className="github-repo-stat">
-                      <FaCodeBranch /> {repo.forks_count}
-                    </span>
-                  </div>
-                </motion.a>
-              ))}
-            </div>
+            <GitHubRepoPaperStack key={sortBy} repos={repos} />
           </>
         )}
 
