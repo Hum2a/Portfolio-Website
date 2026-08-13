@@ -33,6 +33,19 @@ export const firebaseConfig = {
   appId: getEnv('VITE_FIREBASE_APP_ID'),
 };
 
+const PLACEHOLDER_API_KEY = 'your_firebase_api_key';
+
+/** True when Vite baked in a non-placeholder Firebase API key at build time. */
+export const isFirebaseConfigured = (): boolean => {
+  const key = firebaseConfig.apiKey.trim();
+  return Boolean(
+    key &&
+      key !== PLACEHOLDER_API_KEY &&
+      firebaseConfig.projectId.trim() &&
+      firebaseConfig.appId.trim()
+  );
+};
+
 /**
  * Other API keys and configuration
  */

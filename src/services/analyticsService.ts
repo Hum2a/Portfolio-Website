@@ -31,6 +31,8 @@ import { notifyTrafficEvent } from './trafficNotifyService';
 const isCurrentPathExcluded = () =>
   isExcludedAnalyticsPath(canonicalizeAnalyticsPath(window.location.pathname));
 
+const canWriteAnalytics = () => Boolean(db && featureFlags.enableAnalytics);
+
 // Generate or retrieve session ID
 const getSessionId = () => {
   let sessionId = sessionStorage.getItem('analytics_session_id');
@@ -876,7 +878,7 @@ const trackPageTime = async (path, pageViewId = null) => {
 
 // Track events (clicks, form submissions, etc.)
 const trackEvent = async (category, action, label = null, value = null) => {
-  if (isCurrentPathExcluded()) return;
+  if (!canWriteAnalytics() || isCurrentPathExcluded()) return;
 
   try {
     const sessionId = getSessionId();
@@ -1028,7 +1030,7 @@ const trackSessionEnd = async () => {
 // Initialize analytics
 const initAnalytics = async () => {
   try {
-    if (!featureFlags.enableAnalytics || isCurrentPathExcluded()) {
+    if (!canWriteAnalytics() || isCurrentPathExcluded()) {
       return null;
     }
 

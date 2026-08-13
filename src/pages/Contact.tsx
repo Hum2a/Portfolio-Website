@@ -122,6 +122,9 @@ const Contact = () => {
     setSubmitStatus({ type: '', message: '' });
 
     try {
+      if (!db) {
+        throw new Error('Firebase is not configured in this build.');
+      }
       await addDoc(collection(db, 'enquiries'), {
         name: formData.name.trim(),
         email: formData.email.trim() || null,

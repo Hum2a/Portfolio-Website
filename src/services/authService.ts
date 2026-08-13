@@ -15,7 +15,7 @@ const googleProvider = new GoogleAuthProvider();
  */
 export const ensureUserDocument = async (user) => {
   try {
-    if (!user) return null;
+    if (!user || !db) return null;
 
     const userDocRef = doc(db, 'users', user.uid);
     const userDoc = await getDoc(userDocRef);
@@ -56,6 +56,9 @@ export const ensureUserDocument = async (user) => {
  * Sign in with Google
  */
 export const signInWithGoogle = async () => {
+  if (!auth) {
+    throw new Error('Firebase Auth is not configured in this build.');
+  }
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
@@ -74,6 +77,7 @@ export const signInWithGoogle = async () => {
  * Sign out
  */
 export const signOutUser = async () => {
+  if (!auth) return;
   try {
     await signOut(auth);
   } catch (error) {
@@ -87,6 +91,7 @@ export const signOutUser = async () => {
  */
 export const getUserRole = async (uid) => {
   try {
+    if (!db) return 'user';
     const userDocRef = doc(db, 'users', uid);
     const userDoc = await getDoc(userDocRef);
     
@@ -112,6 +117,10 @@ export const isHumza = async (uid) => {
  * Subscribe to auth state changes
  */
 export const onAuthStateChange = (callback) => {
+  if (!auth) {
+    callback(null);
+    return () => {};
+  }
   return onAuthStateChanged(auth, async (user) => {
     if (user) {
       // Ensure user document exists and get role
