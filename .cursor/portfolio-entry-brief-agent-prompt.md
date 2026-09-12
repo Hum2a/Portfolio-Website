@@ -2,11 +2,13 @@
 
 Copy everything below the horizontal rule into another project’s chat when you want that codebase’s agent to produce a **Portfolio Entry Brief**: a single document with all facts, URLs, and assets needed to add this project to Humza’s portfolio site.
 
+The portfolio is a **Vite + React + TypeScript** site. Project listings and case-study pages are **JSON-driven** from `src/config/projects.json`. There is **no per-project React page** and **no per-project route file** to create — merging one complete JSON object plus logo/images is enough.
+
 ---
 
 ## Instructions for the agent (paste from here)
 
-You are helping prepare a **Portfolio Entry Brief** for a separate repository: a React portfolio that lists projects from `src/config/projects.json` and gives each project its own route and detail page.
+You are helping prepare a **Portfolio Entry Brief** for a separate repository: a Vite + React + TypeScript portfolio. Every project is a single object in `src/config/projects.json`. The site auto-registers a route from `route` and renders a shared case-study page from the nested `caseStudy` object.
 
 Your job in **this** repository is to **discover and write down** everything below. Do **not** assume the reader has access to this repo—include paths here only as hints for where you found information.
 
@@ -15,37 +17,55 @@ Produce **one Markdown document** with these sections and headings (use exactly 
 ### 1. Project identity
 
 - **Working title** (display name as it should appear publicly).
-- **`id`**: a short **lowercase slug** for URLs and config (e.g. `my-app`, `tools/brute-forcer` only if the portfolio route should be nested—prefer a single segment like `myapp` unless there is a strong reason).
-- **One-line description** (~140 characters): what it is and who it’s for; suitable for a card listing.
-- **Longer summary** (2–4 sentences): problem, approach, outcome—suitable for a project detail page intro.
+- **`id`**: a short **lowercase slug** for URLs, OG images, and config (e.g. `encore`, `baseer-portfolio`). Prefer a **single path segment**. Nested slugs like `tools/brute-forcer` only if there is a strong reason.
+- **One-line description** (~140 characters): what it is and who it’s for; used on project cards and Open Graph.
+- **Categories** — one or more of exactly: `website`, `mobile`, `desktop`, `extension`, `library`, `game`. Default to `["website"]` if unsure. A product can have several (e.g. Recount is `["extension", "website"]`).
+- **Suggested `dateAdded` / `dateUpdated`** as `YYYY-MM-DD` (ship date vs last meaningful update).
 
 ### 2. Links and deployment
 
-- **Production URL** (canonical live site).
-- **Staging / preview URLs** if any (Vercel preview, Workers preview, etc.).
-- **Repository URL** (GitHub/GitLab) if public or shareable.
-- **Embed policy**: Should this URL work inside an `<iframe>` on another origin? (Many apps send `X-Frame-Options` or CSP `frame-ancestors` and **cannot** be embedded—say so explicitly.)
+- **Production URL** (canonical live site) — maps to `liveUrl`. Omit if there is no public deployment.
+- **Staging / preview URLs** if any (Workers preview, etc.) — for the brief only; do not put these in JSON unless they are the canonical URL.
+- **Repository URL** (GitHub/GitLab) if public or shareable — maps to `repoUrl`.
+- **Embed policy**: Should this URL work inside an `<iframe>` on another origin? Many apps send `X-Frame-Options` or CSP `frame-ancestors` and **cannot** be embedded. Default recommendation for this portfolio is **`embeddable: false`** unless you have verified the live origin allows framing. Say so explicitly.
 - **Any API base URLs** only if they are public and relevant to describing the product.
 
 ### 3. Tech stack and tooling
 
 List **concrete versions** where easy to find (from `package.json`, lockfiles, Gradle, `pubspec.yaml`, etc.):
 
-- Languages and frameworks (e.g. Next.js App Router, Flutter, Django).
+- Languages and frameworks (e.g. Next.js App Router, Flutter, Django, Vite + React).
 - Runtime / hosting (Node version, Cloudflare Workers, Docker, etc.).
-- Data layer (Postgres, SQLite, Firebase, etc.).
+- Data layer (Postgres, Neon, SQLite, Firebase, Supabase, etc.).
 - Auth / payments / email / analytics if used.
 - Testing (Vitest, Playwright, pytest) and CI (GitHub Actions, etc.).
 
 Also note **monorepo vs single package**, and **main entry points** (e.g. `apps/web`, `src/app`).
 
-### 4. Features (portfolio-ready)
+### 4. Case-study narrative (portfolio-ready)
 
-Bullet list of **8–15 user-visible or technical features** suitable for a “Features” section—mix product capabilities and notable engineering choices (performance, security, offline, PWA, realtime, etc.).
+Draft copy that maps 1:1 onto the shared case-study page. Be factual; flag uncertainty.
+
+- **`claim`** — one punchy sentence under the title (can match the card description).
+- **`role`** — how Humza showed up (e.g. `Sole engineer — puzzle engine, API, web client, and deploy`).
+- **`timeline`** — short human string (e.g. `2026 · live at encore.casa` or `Shipped 2023 · Cloudflare API added 2026`).
+- **`metrics`** — 1–4 `{ "value", "label" }` pairs for an “At a glance” row. Values can be numbers or short tokens (`PostGIS`, `3`).
+- **`problem`** — 1–3 short paragraphs (`\n\n` between). What was broken, for whom, why it mattered.
+- **`sections`** — **2–4** “What I built” blocks, each:
+  - `title` — short heading
+  - `body` — 1–2 paragraphs (`\n\n` between)
+  - `image` — portfolio public path to recommend (see §7), usually `/images/<Folder>/hero.png` then `detail.png`
+  - `imageAlt` — real alt text, not the filename
+- **`decisions`** — **2–4** technical decisions, each `{ "choice", "why", "tradeoff" }`.
+- **`outcome`** — 1–2 paragraphs: what shipped, what’s live, what’s still off.
+
+Do **not** draft a faux terminal, `codeSnippet` object literal, or a separate Features list — those are from an older page layout and are no longer rendered.
 
 ### 5. Tech stack badges (for filtering)
 
-Provide **15–35 short tags** (single words or short phrases like existing portfolio tags: `Next.js`, `TypeScript`, `Tailwind CSS`, `PostgreSQL`, `SaaS`, `WebApp`). Prefer **reusing common names** over obscure abbreviations. Include domain tags where relevant (`FinTech`, `EdTech`, `Game`, etc.).
+Provide **12–30 short tags** (single words or short phrases like existing portfolio tags: `Next.js`, `TypeScript`, `Tailwind CSS`, `PostgreSQL`, `SaaS`, `WebApp`). Prefer **reusing common names** over obscure abbreviations. Include domain tags where relevant (`FinTech`, `EdTech`, `Game`, `Geospatial`, etc.).
+
+These become the `tags` array (shown as pills on the case-study hero, max 12 visible) and power the projects-grid tech filter.
 
 ### 6. Visual branding
 
@@ -57,61 +77,108 @@ Provide **15–35 short tags** (single words or short phrases like existing port
 
 List files that could be copied into the portfolio’s `public/` tree:
 
-- Logo path(s) in this repo.
-- Optional screenshots: paths + **one-line caption** each (hero, dashboard, mobile, etc.).
+- Logo path(s) in this repo → will be saved as `public/logos/<filename>` (JSON stores **filename only**).
+- Screenshots for case-study sections. Preferred convention:
+  - Folder: `public/images/<PascalOrProductFolder>/`
+  - First section: `hero.png` (also used as the live-site preview fallback)
+  - Further sections: `detail.png`, or descriptive names
+- One-line caption / `imageAlt` for each.
 - Note **licensing** if any asset is not owned by the project author.
 
-### 8. Detail page content hooks
+Open Graph images (`public/og/<id>.png`) are **generated at portfolio build time** from the project name, description, and a screenshot if present — do not supply a custom OG file unless asked.
 
-Every portfolio project page is rendered through a shared `<ProjectLayout>` component that takes the content below as **props**. Draft each as copy-pasteable text:
+### 8. Live demo section
 
-- **`title`** — display name shown as the page `<h1>`.
-- **`terminalLines`** — array of short strings (4–8 lines) summarizing the project for the animated faux terminal in the header. Optionally note a custom `terminalPrompt` (default `>`), `terminalSpeed` (default `35`), or `terminalTitle` (default `project.js`) if the project warrants a shell-style look (e.g. `$` prompt, `deploy.sh` title).
-- **`codeSnippet`** — a **code-shaped “Project Information” blurb** (object-literal style: name, type, description, stack array, features array) rendered in a syntax-highlighted block. Draft the literal as copy-pasteable text.
-- **`features`** — array of short strings → rendered as a “Features” list.
-- **`techStack`** — array of short strings → rendered as the tech-badge grid.
-- **`images`** / **`videos`** — arrays of `{ src, alt/caption }` → rendered as galleries with a lightbox modal. List candidate media paths.
+The case-study page shows a “Live site” block when `liveUrl` is set. `ProjectSiteEmbed` **never ships a failing iframe**:
 
-If the project needs bespoke interactivity (version switcher, sub-project selector, custom embed lifecycle, etc.), note it here—on the portfolio side that lives in the `children` slot of `<ProjectLayout>` rather than a standard prop.
+- `embeddable: true` only if you have **verified** the production origin allows framing from another site.
+- Otherwise `embeddable: false` (the default): screenshot + “Visit live site →” overlay. First case-study section image is the preview.
 
-### 9. Live demo section
+State clearly:
 
-`<ProjectLayout>` renders an embedded live site when given an `embedUrl`. State clearly:
+- Recommended: screenshot + outbound link vs iframe.
+- If iframe is **not** viable, say why (CSP `frame-ancestors`, login wall, heavy WebGL, etc.).
+- Any sandbox quirks if embedding were attempted.
 
-- **Recommended primary CTA**: “Visit site” link only, vs **embedded iframe** (`embedUrl` + `embedTitle`) of the production URL.
-- If iframe is **not** viable, say why (security headers, login wall, heavy WebGL, etc.)—in that case the page should use a plain link in `children` instead of `embedUrl`.
-- Any **sandbox** needs (maps to the `embedSandbox` prop) or quirks if embedding were attempted (`allow-scripts`, auth cookies, etc.), plus a suggested `embedNewTabLabel` if the default “Open in new tab →” doesn’t fit.
+If there is **no public URL**, omit `liveUrl` and say so. The live-site block will not render.
 
-### 10. Visibility and ordering hints
+### 9. Visibility and ordering hints
 
-- Should this appear on the **main projects grid** immediately? (`visible: true/false`)
-- Should it be **featured** on the homepage carousel? (`featured: true/false`)—justify in one sentence.
-- **Priority** suggestion (`1` = highest band used in the portfolio—lower numbers surface first among peers).
+- **`visible`**: should this appear on the main projects grid? (`true`/`false`)
+- **`featured`**: homepage featured stack? Justify in one sentence. (`true`/`false`)
+- **`priority`**: `1` = highest band (surfaces first among peers); `2` next; omit/`99` last.
+- **`comingSoon`**: set `true` only when the **case study is published** (`visible: true`, `caseStudy` present) but the **product is not publicly launched** (no end-user deployment). Locked cards are non-clickable; the case-study URL still works. Do **not** infer `comingSoon` from a missing `liveUrl` alone — some shipped work has no public URL. On launch: set `comingSoon` false and add `liveUrl`.
 
-### 11. JSON snippet for `projects.json`
+### 10. JSON snippet for `projects.json`
 
-Close with a **single fenced `json` block** containing one object the portfolio could merge into its `projects` array. Use this shape (omit or adjust fields only if unknown—then say “UNKNOWN” in prose above, not inside JSON):
+Close with a **single fenced `json` block** containing one object the portfolio could merge into its `projects` array. Use this shape (omit unknown optional fields — then say “UNKNOWN” in prose above, not inside JSON):
 
 ```json
 {
   "id": "slug-here",
   "name": "Display Name",
   "description": "One-line card description.",
-  "logo": "FileName.png",
+  "logo": "FileName.svg",
   "gradient": "linear-gradient(135deg, #color1 0%, #color2 50%, #color3 100%)",
   "route": "/slug-here",
-  "tags": ["Tag1", "Tag2"],
+  "tags": ["TypeScript", "React", "WebApp"],
   "visible": true,
   "featured": false,
-  "priority": 2
+  "priority": 2,
+  "categories": ["website"],
+  "dateAdded": "2026-09-12",
+  "dateUpdated": "2026-09-12",
+  "embeddable": false,
+  "liveUrl": "https://example.com",
+  "repoUrl": "https://github.com/Hum2a/example",
+  "caseStudy": {
+    "claim": "One-sentence product claim.",
+    "role": "Sole engineer — …",
+    "timeline": "2026 · live at example.com",
+    "metrics": [
+      { "value": "1", "label": "short metric label" }
+    ],
+    "problem": "Paragraph one.\n\nOptional paragraph two.",
+    "sections": [
+      {
+        "title": "What shipped first",
+        "body": "Paragraph.\n\nOptional second paragraph.",
+        "image": "/images/SlugHere/hero.png",
+        "imageAlt": "Describe the screenshot."
+      },
+      {
+        "title": "Notable engineering surface",
+        "body": "Paragraph.",
+        "image": "/images/SlugHere/detail.png",
+        "imageAlt": "Describe the screenshot."
+      }
+    ],
+    "decisions": [
+      {
+        "choice": "Decision title",
+        "why": "Why it was chosen.",
+        "tradeoff": "What you gave up."
+      }
+    ],
+    "outcome": "What is live, who can use it, what is still off."
+  }
 }
 ```
 
-**Rules for this snippet:** `route` must start with `/` and match how the portfolio route will be registered; `logo` is **filename only** (assets live under `public/logos/` in the portfolio). Align `id` with the slug in `route` when possible.
+**Rules for this snippet:**
 
-### 12. Open questions
+- `route` must start with `/` and should match `id` (`id: "encore"` → `route: "/encore"`).
+- `logo` is **filename only** (files live under `public/logos/` in the portfolio).
+- `categories` values must be from `website` | `mobile` | `desktop` | `extension` | `library` | `game`.
+- Include `comingSoon: true` only when §9 says so; omit the key otherwise.
+- Omit `liveUrl` if there is no public site. Omit `repoUrl` if the repo is private/unshareable.
+- Keep `embeddable` **false** unless framing is verified.
+- `caseStudy.sections[].image` paths are root-relative under `public/` (e.g. `/images/Encore/hero.png`).
+- Do not include `terminalLines`, `codeSnippet`, `features`, `techStack`, or `embedUrl` — those are not part of this schema.
 
-Bullet list of anything you could not verify from this repo (exact deploy URL, private env vars, iframe embeddability, logo ownership, etc.).
+### 11. Open questions
+
+Bullet list of anything you could not verify from this repo (exact deploy URL, private env vars, iframe embeddability, logo ownership, Humza’s role wording, etc.).
 
 ---
 
@@ -121,19 +188,18 @@ Bullet list of anything you could not verify from this repo (exact deploy URL, p
 
 ## Maintainer note (Humza — do not paste this block to external agents)
 
-Adding an entry in this portfolio typically involves:
+Adding an entry in this portfolio is **JSON + assets**. Do not add a page component, CSS file, or `<Route>`.
 
 | Area | Location |
 |------|----------|
-| Listing metadata | `src/config/projects.json` |
-| Project page component | `src/projects/<Name>.js` — renders a single `<ProjectLayout>` (from `src/components/projects/ProjectLayout.js`) and passes content as props |
-| Styles | `src/projects/<Name>.css` (co-located; only needed for per-project overrides—`ProjectLayout.css` already pulls in `project-shared.css`). Trivial pages need no CSS file at all. |
-| Route | `src/routes/AppRoutes.js` — `<Route path={...} element={<... />} />` |
-| Logo file | `public/logos/<filename>` — matches `logo` in JSON |
-| Optional images | `public/images/<ProjectFolder>/...` |
+| Listing + case study | `src/config/projects.json` — merge the brief’s §10 object into `projects` |
+| Types / helpers | `src/data/projects.ts` — already typed; no change unless the schema grows |
+| Route | Auto from `getProjectRoutePaths()` in `src/routes/AppRoutes.tsx` |
+| Case-study UI | `src/pages/ProjectCaseStudyPage.tsx` → `src/components/projects/ProjectCaseStudy.tsx` |
+| Logo | `public/logos/<filename>` — matches `logo` in JSON |
+| Section images | `public/images/<Folder>/hero.png` (and `detail.png`, …) — matches `caseStudy.sections[].image` |
+| OG image | Generated on `npm run og` / `npm run build` into `public/og/<id>.png` |
 
-Featured projects are driven by `featured` + `visible` in JSON (`src/data/projects.js` reads the file).
+Featured work is `featured: true` **and** `visible: true`, sorted by `priority` then name (`getFeaturedProjects()`). Coming-soon cards use `comingSoon: true` + `ComingSoonLockedSurface` (see `.cursor/rules/coming-soon-projects.mdc`); case-study URLs stay reachable.
 
-**Standard page shape:** most pages are now just `<ProjectLayout title=… terminalLines={…} logo=… codeSnippet={…} features={…} techStack={…} images={…} embedUrl=… />` with no Navbar/Terminal/CodeBlock/framer-motion wiring (the layout owns all of that). Map the brief’s section **8** props straight onto `<ProjectLayout>`. Anything bespoke goes in the `children` slot. For media click-tracking, call `useMediaTracking()` in the page and thread `onClick` handlers through the `images`/`videos` item objects or `children`.
-
-When you receive the brief from another agent, use section **11** as the starting point for `projects.json`, then implement the page and assets using sections **1–10**.
+When you receive the brief: drop assets, paste the JSON object, rebuild. Map §4 → `caseStudy`, §5 → `tags`, §8 → `liveUrl` / `embeddable`, §9 → visibility flags.
