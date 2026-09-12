@@ -944,6 +944,33 @@
     "height": 720,
     "dominantColor": "#f8f8f8"
   },
+  "/images/InvoiceUI/detail.png": {
+    "src": "/images/InvoiceUI/detail.png",
+    "webp": "/images/InvoiceUI/detail.webp",
+    "avif": "/images/InvoiceUI/detail.avif",
+    "blur": "/images/_blur/InvoiceUI/detail.blur.webp",
+    "width": 849,
+    "height": 1200,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/InvoiceUI/hero.png": {
+    "src": "/images/InvoiceUI/hero.png",
+    "webp": "/images/InvoiceUI/hero.webp",
+    "avif": "/images/InvoiceUI/hero.avif",
+    "blur": "/images/_blur/InvoiceUI/hero.blur.webp",
+    "width": 1280,
+    "height": 1596,
+    "dominantColor": "#181818"
+  },
+  "/images/InvoiceUI/ledger.png": {
+    "src": "/images/InvoiceUI/ledger.png",
+    "webp": "/images/InvoiceUI/ledger.webp",
+    "avif": "/images/InvoiceUI/ledger.avif",
+    "blur": "/images/_blur/InvoiceUI/ledger.blur.webp",
+    "width": 491,
+    "height": 1009,
+    "dominantColor": "#181818"
+  },
   "/images/Liberal Democrats/AboutUs.png": {
     "src": "/images/Liberal Democrats/AboutUs.png",
     "webp": "/images/Liberal Democrats/AboutUs.webp",
