@@ -34,6 +34,7 @@ const FOLDER_ALIASES = {
   lifesmart: ['LifeSmart'],
   breathapplyser: ['Breathapplyser', 'BreathapplyserV2'],
   encore: ['Encore'],
+  'invoice-ui': ['InvoiceUI'],
   mentage: ['Mentage'],
   biaslens: ['BiasLens'],
   culinary: ['CulinAIry'],

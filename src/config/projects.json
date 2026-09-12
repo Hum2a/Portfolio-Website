@@ -1,6 +1,100 @@
 {
   "projects": [
     {
+      "id": "invoice-ui",
+      "name": "InvoiceUI",
+      "description": "Private invoicing workspace for independent operators: live document composer, immutable PDF generation, and auditable payment tracking.",
+      "logo": "invoice-ui.svg",
+      "gradient": "linear-gradient(135deg, #18181b 0%, #202321 50%, #bef264 100%)",
+      "route": "/invoice-ui",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Cloudflare Workers",
+        "Hono",
+        "PostgreSQL",
+        "Neon",
+        "Drizzle ORM",
+        "Better Auth",
+        "Resend",
+        "shadcn/ui",
+        "Motion",
+        "Magic UI",
+        "React Bits",
+        "Animate UI",
+        "pdf-lib",
+        "FinTech",
+        "SaaS",
+        "WebApp",
+        "PWA",
+        "Serverless",
+        "REST API",
+        "Vitest",
+        "Playwright"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": ["website"],
+      "dateAdded": "2026-09-12",
+      "dateUpdated": "2026-09-12",
+      "embeddable": false,
+      "liveUrl": "https://invoiceui.humza.website",
+      "repoUrl": "https://github.com/Hum2a/InvoiceUI",
+      "caseStudy": {
+        "claim": "A distraction-free private invoice workspace combining a live document composer with immutable PDF generation and auditable ledger tracking.",
+        "role": "Sole architect and full-stack engineer - system design, database architecture, pure-JS PDF engine, fluid UI stack, and Cloudflare Worker deployment.",
+        "timeline": "2026 · live at invoiceui.humza.website",
+        "metrics": [
+          { "value": "196", "label": "automated tests passing" },
+          { "value": "0", "label": "floating-point money errors" },
+          { "value": "1 Worker", "label": "unified edge deployment" },
+          { "value": "3", "label": "bespoke PDF templates" }
+        ],
+        "problem": "Independent professionals and boutique studios often face a frustrating dilemma when billing clients. Traditional accounting platforms are bloated, sluggish subscription traps packed with unnecessary complexity, while DIY spreadsheet or document templates produce inconsistent layouts, floating-point rounding discrepancies, and fragile version tracking that easily breaks historical records.\n\nHumza needed a dedicated, secure, and beautiful workspace to create invoices simply, access records from anywhere, download reliable PDFs, and track payments without paying recurring software fees or risking client data privacy. The solution had to preserve instantaneous live document preview while guaranteeing strict immutable record-keeping once an invoice was formally issued.",
+        "sections": [
+          {
+            "title": "Live Composer & Historical Snapshotting",
+            "body": "Built a two-column desktop and responsive mobile composer where every change updates the document preview in real time with debounced autosave, local draft recovery, and version-conflict detection.\n\nOn issuance, client details, business metadata, and line items are locked by value into an immutable snapshot, ensuring that future catalogue updates or client address changes can never rewrite historical financial documents.",
+            "image": "/images/InvoiceUI/hero.png",
+            "imageAlt": "InvoiceUI desktop composer showing split-screen editor and live invoice preview"
+          },
+          {
+            "title": "Pure Edge Document Generation & Storage",
+            "body": "Implemented an in-worker PDF generation engine using pure JavaScript and WebAssembly with pdf-lib, completely eliminating the latency and cost of headless browser instances.\n\nIssued documents feature custom typography, automatic pagination with repeated table headers, Unicode support, and optional deliverable breakdown appendices, all persisted deterministically to Cloudflare R2 private storage.",
+            "image": "/images/InvoiceUI/detail.png",
+            "imageAlt": "Rendered invoice PDF and document template styles"
+          },
+          {
+            "title": "Financial Precision & Auditable Ledger",
+            "body": "Designed a strict monetary domain model powered by Decimal.js, implementing half-up rounding, multi-currency precision, and atomic sequence allocation.\n\nReceivables, aging buckets, and payment statuses are calculated dynamically from an auditable payment ledger that supports partial payments, deposits, credit notes, and reversals.",
+            "image": "/images/InvoiceUI/ledger.png",
+            "imageAlt": "Invoice dashboard metrics and payment ledger tracking"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Pure-JS PDF Engine over Headless Chrome (Puppeteer)",
+            "why": "pdf-lib compiles to pure JavaScript and WebAssembly, enabling deterministic PDF creation directly inside the Cloudflare Worker runtime in tens of milliseconds with zero memory bloat.",
+            "tradeoff": "Required manual coordinate math and custom page-break algorithms for multi-page tables instead of standard CSS print stylesheets."
+          },
+          {
+            "choice": "Optimistic Concurrency with Compare-And-Swap on Full Workspace Envelopes",
+            "why": "Guaranteed that concurrent edits across devices detect version collisions immediately, offering guided conflict recovery without silent data overwrites.",
+            "tradeoff": "Full workspace envelope payloads require 6MB request limits and careful database indexing as historical invoice volume grows."
+          },
+          {
+            "choice": "Passwordless Magic Links Restricted to Single Owner Email",
+            "why": "Eliminated credential stuffing risks, password management overhead, and unauthorized user registration by verifying sessions exclusively for the owner's approved email.",
+            "tradeoff": "Local development and emergency access depend on working Resend credentials or simulated local preview fallback."
+          }
+        ],
+        "outcome": "InvoiceUI is fully implemented, verified with 196 automated tests, and deployed live to production at invoiceui.humza.website on a unified Cloudflare Worker backed by Neon PostgreSQL and Cloudflare R2. The workspace manages real-world client invoicing, automated PDF creation, and multi-currency payment tracking with zero monthly recurring infrastructure overhead.\n\nFuture scope intentionally defers automatic FX rate conversion and third-party credit card collection, keeping the application focused on lean, distraction-free operations for independent craftspeople."
+      }
+    },
+    {
       "id": "encore",
       "name": "Encore",
       "description": "Daily grid logic puzzles with infinite practice, curated catalogues, and replay-any-day seeds.",
