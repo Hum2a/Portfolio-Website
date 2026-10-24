@@ -6,6 +6,8 @@ import {
   type To,
   useNavigate,
 } from 'react-router-dom';
+import { prefetchRoute, prefetchRouteWithin } from '@/utils/prefetchRoute';
+import { focusMainContent } from '@/lib/scroll';
 import { isComicWipeBusy, runComicWipe } from './comicWipe';
 import { ComicWipeContext } from './useComicWipe';
 
@@ -17,6 +19,7 @@ const ComicWipeProvider: React.FC<ComicWipeProviderProps> = ({ children }) => {
   const navigate = useNavigate();
   const bypassRef = useRef(false);
   const handlingRef = useRef(false);
+  const abortRef = useRef<AbortController | null>(null);
 
   const bypassNextNavigation = useCallback(() => {
     bypassRef.current = true;
@@ -47,21 +50,31 @@ const ComicWipeProvider: React.FC<ComicWipeProviderProps> = ({ children }) => {
     if (blocker.state !== 'blocked' || handlingRef.current) return;
 
     handlingRef.current = true;
+    const pathname = blocker.location.pathname;
+    // Start loading the target chunk while the panels fly in.
+    void prefetchRoute(pathname);
+    const controller = new AbortController();
+    abortRef.current = controller;
 
-    void runComicWipe(() => {
+    void runComicWipe(async () => {
+      await prefetchRouteWithin(pathname, 900);
       blocker.proceed?.();
-    }).then((started) => {
+    }, controller.signal).then((started) => {
       handlingRef.current = false;
+      abortRef.current = null;
       if (!started) {
         if (blocker.state === 'blocked') {
           blocker.reset?.();
         }
+        return;
       }
+      if (!controller.signal.aborted) focusMainContent();
     });
   }, [blocker]);
 
   useEffect(() => {
     return () => {
+      abortRef.current?.abort();
       if (blocker.state === 'blocked' && isComicWipeBusy()) {
         blocker.reset?.();
       }

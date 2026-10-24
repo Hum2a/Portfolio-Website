@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
+import { MotionConfig } from 'framer-motion';
+import { ScrollManager } from './lib/scroll';
 import './App.css';
 import AppRoutes from './routes/AppRoutes';
 import { AuthProvider } from './contexts/AuthContext';
@@ -25,21 +27,24 @@ function App() {
   }, []);
 
   return (
+    <MotionConfig reducedMotion="user">
     <HelmetProvider>
       <AuthProvider>
         <ComicWipeProvider>
           <div className="App">
+            <ScrollManager />
             <PageTimeTracker />
             <SiteHeader />
             <div className="app-main" id="main-content">
               <AppRoutes />
-              <ComicWipeOverlay />
             </div>
+            <ComicWipeOverlay />
             <SiteFooter />
           </div>
         </ComicWipeProvider>
       </AuthProvider>
     </HelmetProvider>
+    </MotionConfig>
   );
 }
 

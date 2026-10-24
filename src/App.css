@@ -16,9 +16,3 @@
 }
 
 /* host scope — overlay covers main body only */
-.app-main .comic-wipe {
-  position: absolute;
-  inset: 0;
-  z-index: 9999;
-}
-
