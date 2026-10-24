@@ -19,7 +19,7 @@
   padding: 0.7rem 1rem;
   border: 0;
   border-radius: 0;
-  background: var(--hco-paper);
+  background: transparent;
   color: var(--hco-ink);
   font-family: inherit;
   font-size: 0.72rem;
@@ -32,6 +32,16 @@
   cursor: pointer;
   min-height: 44px;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Paper shape lives here, not on .hco__item, so overflow layers aren't clipped away. */
+.hco__item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--hco-paper);
+  pointer-events: none;
   clip-path: polygon(
     0 18%,
     8% 0,
@@ -134,15 +144,14 @@
   mix-blend-mode: difference;
 }
 
-.hco__item:is(:hover, :focus-visible, .hco__item--active) .hco__mass {
+.hco__item:is(:focus-visible, .hco__item--active) .hco__mass {
   animation: hco-mass-enter var(--hco-enter) var(--hco-ease-out) forwards;
+  transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  transition:
-    transform var(--hco-enter) var(--hco-ease-out),
-    opacity var(--hco-enter) var(--hco-ease-out);
+  transition: opacity var(--hco-enter) var(--hco-ease-out);
 }
 
-.hco__item:is(:hover, :focus-visible, .hco__item--active) .hco__cut {
+.hco__item:is(:focus-visible, .hco__item--active) .hco__cut {
   transform: scale(1);
   transform-origin: 20% 50%;
   opacity: 1;
@@ -151,7 +160,7 @@
     opacity var(--hco-enter) var(--hco-ease-out);
 }
 
-.hco__item:is(:hover, :focus-visible, .hco__item--active) .hco__red {
+.hco__item:is(:focus-visible, .hco__item--active) .hco__red {
   transform: scale(1);
   transform-origin: 20% 50%;
   opacity: 1;
@@ -160,10 +169,32 @@
     opacity var(--hco-enter) var(--hco-ease-out) 30ms;
 }
 
-.hco__item:not(:hover):not(:focus-visible):not(.hco__item--active) .hco__mass,
-.hco__item:not(:hover):not(:focus-visible):not(.hco__item--active) .hco__cut,
-.hco__item:not(:hover):not(:focus-visible):not(.hco__item--active) .hco__red {
-  transform-origin: 85% 45%;
+/* Hover-only motion: fine pointers only, so it never sticks after a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .hco__item:hover .hco__mass {
+    animation: hco-mass-enter var(--hco-enter) var(--hco-ease-out) forwards;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: opacity var(--hco-enter) var(--hco-ease-out);
+  }
+
+  .hco__item:hover .hco__cut {
+    transform: scale(1);
+    transform-origin: 20% 50%;
+    opacity: 1;
+    transition:
+      transform var(--hco-enter) var(--hco-ease-out),
+      opacity var(--hco-enter) var(--hco-ease-out);
+  }
+
+  .hco__item:hover .hco__red {
+    transform: scale(1);
+    transform-origin: 20% 50%;
+    opacity: 1;
+    transition:
+      transform var(--hco-enter) var(--hco-ease-out) 30ms,
+      opacity var(--hco-enter) var(--hco-ease-out) 30ms;
+  }
 }
 
 .hco__item:focus-visible {
