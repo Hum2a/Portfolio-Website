@@ -3,6 +3,7 @@ import { useInView } from 'framer-motion';
 import {
   CensoredText,
   STAGGER_MS,
+  MAX_STAGGER_MS,
 } from '../animations/content-declassification';
 import { formatLinkedInDateRange } from '../../services/linkedinService';
 import './CareerTimeline.css';
@@ -34,7 +35,7 @@ function createCensorSlot() {
   return () => {
     const slot = index;
     index += 1;
-    return { variantIndex: slot, delayMs: slot * STAGGER_MS };
+    return { variantIndex: slot, delayMs: Math.min(slot * STAGGER_MS, MAX_STAGGER_MS) };
   };
 }
 
