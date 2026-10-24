@@ -44,3 +44,21 @@ export function waitForAnimations(el: Element, subtree = true, timeoutMs = 2000)
 export function nextPaint(): Promise<void> {
   return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 }
+
+type MotionDebugEntry = { type: string; t: number; detail?: unknown };
+
+declare global {
+  interface Window {
+    __motionDebug?: MotionDebugEntry[];
+  }
+}
+
+/**
+ * Records a motion milestone on `window.__motionDebug` (and as a `motion:<type>` event)
+ * in dev, or in builds made with VITE_MOTION_DEBUG=1. No-op in production.
+ */
+export function motionDebug(type: string, detail?: unknown): void {
+  if (!(import.meta.env.DEV || import.meta.env.VITE_MOTION_DEBUG === '1')) return;
+  (window.__motionDebug ??= []).push({ type, t: performance.now(), detail });
+  window.dispatchEvent(new CustomEvent(`motion:${type}`, { detail }));
+}

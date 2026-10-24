@@ -1,4 +1,4 @@
-import { nextPaint, prefersReducedMotion, waitForAnimations } from '@/lib/motion';
+import { motionDebug, nextPaint, prefersReducedMotion, waitForAnimations } from '@/lib/motion';
 /**
  * Comic Panel Wipe — tiny portable API.
  * Works inside sandbox="allow-scripts" (no parent / storage / network).
@@ -11,8 +11,21 @@ import { nextPaint, prefersReducedMotion, waitForAnimations } from '@/lib/motion
 const ATTACK_FALLBACK_MS = 900;
 const EXIT_FALLBACK_MS = 1000;
 const RM_FLASH_MS = 40;
+/** Max time to hold the cover while the new page finishes mounting (effects, images). */
+const SETTLE_MAX_MS = 200;
 
 let busy = false;
+
+/** Resolves when the main thread is idle, or after `timeoutMs`. */
+function idle(timeoutMs: number): Promise<void> {
+  return new Promise((resolve) => {
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(() => resolve(), { timeout: timeoutMs });
+    } else {
+      window.setTimeout(resolve, Math.min(50, timeoutMs));
+    }
+  });
+}
 
 type CoveredCallback = () => void | Promise<void>;
 
@@ -67,14 +80,16 @@ export async function runComicWipe(
 
     // Pin panels before exit class drops the enter animations (prevents off-screen snap).
     root.classList.add('comic-wipe--covered');
-    window.dispatchEvent(new CustomEvent('motion:wipe:covered'));
+    motionDebug('wipe:covered');
     await callCovered(onCovered);
     if (signal?.aborted) return true;
     await nextPaint();
+    // Let the incoming page's post-commit work run while still covered, so it can't stall the tear-away.
+    await idle(SETTLE_MAX_MS);
 
     void root.offsetHeight;
     root.classList.add('comic-wipe--exit');
-    window.dispatchEvent(new CustomEvent('motion:wipe:exit'));
+    motionDebug('wipe:exit');
     await new Promise((r) => requestAnimationFrame(r));
     await waitForAnimations(root, true, EXIT_FALLBACK_MS);
     return true;

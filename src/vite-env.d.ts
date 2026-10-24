@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly VITE_GITHUB_USERNAME: string;
   readonly VITE_GITHUB_TOKEN: string;
   readonly VITE_LINKEDIN_PROFILE_URL: string;
+  readonly VITE_MOTION_DEBUG?: string;
 }
 
 interface ImportMeta {
