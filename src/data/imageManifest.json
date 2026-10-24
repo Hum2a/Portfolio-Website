@@ -1,4 +1,40 @@
 {
+  "/images/26BirthdayQuiz/admin.png": {
+    "src": "/images/26BirthdayQuiz/admin.png",
+    "webp": "/images/26BirthdayQuiz/admin.webp",
+    "avif": "/images/26BirthdayQuiz/admin.avif",
+    "blur": "/images/_blur/26BirthdayQuiz/admin.blur.webp",
+    "width": 1280,
+    "height": 786,
+    "dominantColor": "#181808"
+  },
+  "/images/26BirthdayQuiz/detail.png": {
+    "src": "/images/26BirthdayQuiz/detail.png",
+    "webp": "/images/26BirthdayQuiz/detail.webp",
+    "avif": "/images/26BirthdayQuiz/detail.avif",
+    "blur": "/images/_blur/26BirthdayQuiz/detail.blur.webp",
+    "width": 1280,
+    "height": 832,
+    "dominantColor": "#282818"
+  },
+  "/images/26BirthdayQuiz/hero.png": {
+    "src": "/images/26BirthdayQuiz/hero.png",
+    "webp": "/images/26BirthdayQuiz/hero.webp",
+    "avif": "/images/26BirthdayQuiz/hero.avif",
+    "blur": "/images/_blur/26BirthdayQuiz/hero.blur.webp",
+    "width": 1280,
+    "height": 793,
+    "dominantColor": "#282818"
+  },
+  "/images/26BirthdayQuiz/themes.png": {
+    "src": "/images/26BirthdayQuiz/themes.png",
+    "webp": "/images/26BirthdayQuiz/themes.webp",
+    "avif": "/images/26BirthdayQuiz/themes.avif",
+    "blur": "/images/_blur/26BirthdayQuiz/themes.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#181808"
+  },
   "/images/B8/Adminbgr8.png": {
     "src": "/images/B8/Adminbgr8.png",
     "webp": "/images/B8/Adminbgr8.webp",
@@ -836,6 +872,33 @@
     "height": 720,
     "dominantColor": "#f8f8f8"
   },
+  "/images/Finance/activity.png": {
+    "src": "/images/Finance/activity.png",
+    "webp": "/images/Finance/activity.webp",
+    "avif": "/images/Finance/activity.avif",
+    "blur": "/images/_blur/Finance/activity.blur.webp",
+    "width": 1280,
+    "height": 750,
+    "dominantColor": "#081818"
+  },
+  "/images/Finance/detail.png": {
+    "src": "/images/Finance/detail.png",
+    "webp": "/images/Finance/detail.webp",
+    "avif": "/images/Finance/detail.avif",
+    "blur": "/images/_blur/Finance/detail.blur.webp",
+    "width": 1280,
+    "height": 750,
+    "dominantColor": "#182818"
+  },
+  "/images/Finance/hero.png": {
+    "src": "/images/Finance/hero.png",
+    "webp": "/images/Finance/hero.webp",
+    "avif": "/images/Finance/hero.avif",
+    "blur": "/images/_blur/Finance/hero.blur.webp",
+    "width": 1280,
+    "height": 750,
+    "dominantColor": "#182818"
+  },
   "/images/FireWatch/hero.png": {
     "src": "/images/FireWatch/hero.png",
     "webp": "/images/FireWatch/hero.webp",
@@ -967,6 +1030,15 @@
     "webp": "/images/InvoiceUI/ledger.webp",
     "avif": "/images/InvoiceUI/ledger.avif",
     "blur": "/images/_blur/InvoiceUI/ledger.blur.webp",
+    "width": 491,
+    "height": 1009,
+    "dominantColor": "#181818"
+  },
+  "/images/InvoiceUI/mobile.png": {
+    "src": "/images/InvoiceUI/mobile.png",
+    "webp": "/images/InvoiceUI/mobile.webp",
+    "avif": "/images/InvoiceUI/mobile.avif",
+    "blur": "/images/_blur/InvoiceUI/mobile.blur.webp",
     "width": 491,
     "height": 1009,
     "dominantColor": "#181818"
