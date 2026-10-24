@@ -18,18 +18,22 @@
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
 }
 
+/* All sheets share one grid cell, so the stack takes the tallest face (min --stack-h). */
 .paper-stack {
   position: relative;
+  display: grid;
   width: var(--stack-w);
-  height: var(--stack-h);
+  min-height: var(--stack-h);
   margin: 0 auto 1.1rem;
+  /* Keep vertical scroll; horizontal swipes shuffle. */
+  touch-action: pan-y;
 }
 
 .paper-stack__sheet {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  grid-area: 1 / 1;
   width: 100%;
-  height: 100%;
+  min-height: var(--stack-h);
   transform-origin: 50% 60%;
   will-change: transform;
 }
@@ -155,7 +159,14 @@
   cursor: pointer;
 }
 
-.paper-stack__btn:hover {
+@media (hover: hover) and (pointer: fine) {
+  .paper-stack__btn:hover {
+    background: #e6e8ec;
+    color: #090909;
+  }
+}
+
+.paper-stack__btn:active {
   background: #e6e8ec;
   color: #090909;
 }

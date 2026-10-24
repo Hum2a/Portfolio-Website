@@ -2,6 +2,10 @@ import { prefersReducedMotion } from '@/lib/motion';
 /**
  * Paper Stack Shuffle — tiny portable API.
  * Works inside sandbox="allow-scripts" (no parent / storage / network).
+ *
+ * Each sheet's path is ONE `el.animate()` with offset keyframes, so velocity never
+ * drops to zero mid-flight. `zIndex` lives in the keyframes too, so the "goes behind"
+ * swap happens at an exact offset.
  */
 
 /** Frozen depth contract: index 0 = front … 3 = back */
@@ -14,6 +18,8 @@ export const DEPTH_POSES = [
 
 export const TOTAL_MS = 720;
 const EASE = 'cubic-bezier(0.7, 0, 0.3, 1)';
+/** Gentler whole-path easing for multi-segment flights (linear between keyframes). */
+const FLIGHT_EASE = 'cubic-bezier(0.55, 0, 0.35, 1)';
 
 export type ShuffleDirection = 'next' | 'prev';
 
@@ -26,6 +32,8 @@ export type PaperStackShuffleContext = {
   statusLabel?: (frontSheetId: number) => string;
 };
 
+/** Animations of the shuffle in flight, so callers can fast-forward them. */
+let running: Animation[] = [];
 
 function poseTransform(d: number): string {
   const p = DEPTH_POSES[d];
@@ -37,21 +45,18 @@ function extractX(demoEl: HTMLElement | null): string {
   return getComputedStyle(demoEl).getPropertyValue('--extract-x').trim() || '78%';
 }
 
-function getSheetList(sheets: (HTMLElement | null)[]): HTMLElement[] {
-  return sheets.filter((el): el is HTMLElement => el != null);
-}
-
 export function applySettled(
   sheets: (HTMLElement | null)[],
   order: number[]
 ): void {
-  const list = getSheetList(sheets);
-  list.forEach((el) => {
+  sheets.forEach((el) => {
+    if (!el) return;
     el.classList.remove('is-flying', 'is-behind-flight', 'is-active');
     el.getAnimations?.().forEach((a) => a.cancel());
   });
+  // Index the raw array by sheet id — filtering nulls would shift ids.
   order.forEach((sheetId, depth) => {
-    const el = list[sheetId];
+    const el = sheets[sheetId];
     if (!el) return;
     el.dataset.depth = String(depth);
     el.style.zIndex = String(DEPTH_POSES[depth].z);
@@ -60,138 +65,123 @@ export function applySettled(
   });
 }
 
-function animateTo(
+function play(
   el: HTMLElement,
   keyframes: Keyframe[],
   duration: number,
-  delay = 0
+  delay = 0,
+  easing = EASE
 ): Promise<void> {
-  return el
-    .animate(keyframes, {
-      duration,
-      delay,
-      easing: EASE,
-      fill: 'forwards',
-    })
-    .finished.then(() => undefined);
+  const anim = el.animate(keyframes, { duration, delay, easing, fill: 'forwards' });
+  running.push(anim);
+  return anim.finished.then(
+    () => undefined,
+    () => undefined
+  );
 }
 
-async function runNext(
-  list: HTMLElement[],
-  order: number[],
-  x: string
-): Promise<number[]> {
-  const frontId = order[0];
-  const front = list[frontId];
+/** Instantly completes any shuffle in flight (its promise then settles normally). */
+export function finishPaperStack(): void {
+  for (const a of running) {
+    try {
+      a.finish();
+    } catch {
+      /* already cancelled */
+    }
+  }
+}
+
+function runNext(list: (HTMLElement | null)[], order: number[], x: string): Promise<void> {
+  const front = list[order[0]];
   const rest = order.slice(1).map((id) => list[id]);
+  if (!front) return Promise.resolve();
 
+  // Timeline (ms): lift 0–120, extract 120–360, tuck behind 360–650.
+  const D = 650;
+  const at = (ms: number) => ms / D;
+  const lifted = 'translate(0px, -8px) scale(1.02) rotate(-4deg)';
+  const out = `translate(${x}, -14%) rotate(9deg)`;
   front.classList.add('is-flying');
-  front.style.zIndex = '50';
 
-  await animateTo(
+  const flight = play(
     front,
     [
-      { transform: poseTransform(0) },
-      { transform: 'translate(0px, -8px) scale(1.02) rotate(-4deg)' },
+      { offset: 0, transform: poseTransform(0), zIndex: 50 },
+      { offset: at(120), transform: lifted, zIndex: 50 },
+      { offset: at(359), transform: out, zIndex: 50 },
+      { offset: at(361), transform: out, zIndex: 5 },
+      { offset: at(505), transform: 'translate(42%, 18%) rotate(4deg)', zIndex: 5 },
+      { offset: 1, transform: poseTransform(3), zIndex: 5 },
     ],
-    120
-  );
-
-  const extract = animateTo(
-    front,
-    [
-      { transform: 'translate(0px, -8px) scale(1.02) rotate(-4deg)' },
-      { transform: `translate(${x}, -14%) rotate(9deg)` },
-    ],
-    240
+    D,
+    0,
+    FLIGHT_EASE
   );
 
   const advances = rest.map((el, i) => {
-    const from = i + 1;
-    const to = i;
-    el.style.zIndex = String(DEPTH_POSES[to].z + 1);
-    return animateTo(
+    if (!el) return Promise.resolve();
+    const z = DEPTH_POSES[i].z + 1;
+    return play(
       el,
-      [{ transform: poseTransform(from) }, { transform: poseTransform(to) }],
+      [
+        { transform: poseTransform(i + 1), zIndex: z },
+        { transform: poseTransform(i), zIndex: z },
+      ],
       240,
       140
     );
   });
 
-  await extract;
-
-  front.classList.remove('is-flying');
-  front.classList.add('is-behind-flight');
-  front.style.zIndex = '5';
-
-  await animateTo(
-    front,
-    [
-      { transform: `translate(${x}, -14%) rotate(9deg)` },
-      { transform: 'translate(42%, 18%) rotate(4deg)' },
-      { transform: poseTransform(3) },
-    ],
-    290
-  );
-
-  await Promise.all(advances);
-  await new Promise((r) => window.setTimeout(r, 70));
-
-  return [...order.slice(1), order[0]];
+  return Promise.all([flight, ...advances]).then(() => undefined);
 }
 
-async function runPrev(
-  list: HTMLElement[],
-  order: number[],
-  x: string
-): Promise<number[]> {
-  const backId = order[3];
-  const rising = list[backId];
+function runPrev(list: (HTMLElement | null)[], order: number[], x: string): Promise<void> {
+  const rising = list[order[3]];
   const others = order.slice(0, 3).map((id) => list[id]);
+  if (!rising) return Promise.resolve();
 
-  rising.classList.add('is-behind-flight');
-  rising.style.zIndex = '5';
-
-  await animateTo(
-    rising,
-    [
-      { transform: poseTransform(3) },
-      { transform: 'translate(-48%, 12%) rotate(-8deg)' },
-    ],
-    160
-  );
-
-  rising.classList.remove('is-behind-flight');
+  // Timeline (ms): slip out behind 0–160, arc over the top 160–580.
+  const D = 580;
+  const at = (ms: number) => ms / D;
+  const side = 'translate(-48%, 12%) rotate(-8deg)';
   rising.classList.add('is-flying');
-  rising.style.zIndex = '50';
 
-  const emerge = animateTo(
+  const flight = play(
     rising,
     [
-      { transform: 'translate(-48%, 12%) rotate(-8deg)' },
-      { transform: `translate(${x}, -12%) rotate(7deg)` },
-      { transform: 'translate(0px, -8px) scale(1.02) rotate(-4deg)' },
-      { transform: poseTransform(0) },
+      { offset: 0, transform: poseTransform(3), zIndex: 5 },
+      { offset: at(159), transform: side, zIndex: 5 },
+      { offset: at(161), transform: side, zIndex: 50 },
+      { offset: at(330), transform: `translate(${x}, -12%) rotate(7deg)`, zIndex: 50 },
+      { offset: at(480), transform: 'translate(0px, -8px) scale(1.02) rotate(-4deg)', zIndex: 50 },
+      { offset: 1, transform: poseTransform(0), zIndex: 50 },
     ],
-    420
+    D,
+    0,
+    FLIGHT_EASE
   );
 
   const retreats = others.map((el, i) => {
-    const from = i;
-    const to = i + 1;
-    return animateTo(
+    if (!el) return Promise.resolve();
+    const z = DEPTH_POSES[i + 1].z;
+    return play(
       el,
-      [{ transform: poseTransform(from) }, { transform: poseTransform(to) }],
+      [
+        { transform: poseTransform(i), zIndex: z },
+        { transform: poseTransform(i + 1), zIndex: z },
+      ],
       260,
       120
     );
   });
 
-  await emerge;
-  await Promise.all(retreats);
-  await new Promise((r) => window.setTimeout(r, 40));
+  return Promise.all([flight, ...retreats]).then(() => undefined);
+}
 
-  return [order[3], ...order.slice(0, 3)];
+export function rotateOrder(order: number[], direction: ShuffleDirection): number[] {
+  return direction === 'next'
+    ? [...order.slice(1), order[0]]
+    : [order[order.length - 1], ...order.slice(0, -1)];
 }
 
 /**
@@ -201,36 +191,34 @@ export async function shufflePaperStack(
   direction: ShuffleDirection,
   ctx: PaperStackShuffleContext
 ): Promise<number[]> {
-  const list = getSheetList(ctx.sheets);
-  if (list.length < 4) return ctx.order;
+  if (ctx.sheets.filter(Boolean).length < 4) return ctx.order;
 
-  let order = [...ctx.order];
-
-  if (prefersReducedMotion()) {
-    if (direction === 'next') order = [...order.slice(1), order[0]];
-    else order = [order[order.length - 1], ...order.slice(0, -1)];
-    applySettled(ctx.sheets, order);
+  const order = rotateOrder(ctx.order, direction);
+  const announce = () => {
     if (ctx.setStatus && ctx.statusLabel) {
       ctx.setStatus(`Selected: ${ctx.statusLabel(order[0])}`);
     }
+  };
+
+  if (prefersReducedMotion()) {
+    applySettled(ctx.sheets, order);
+    announce();
     return order;
   }
 
   ctx.setBusy(true);
   const x = extractX(ctx.demoEl);
+  running = [];
 
   try {
-    if (direction === 'next') order = await runNext(list, order, x);
-    else order = await runPrev(list, order, x);
+    if (direction === 'next') await runNext(ctx.sheets, ctx.order, x);
+    else await runPrev(ctx.sheets, ctx.order, x);
   } finally {
+    running = [];
     applySettled(ctx.sheets, order);
-    if (ctx.setStatus && ctx.statusLabel) {
-      ctx.setStatus(`Selected: ${ctx.statusLabel(order[0])}`);
-    }
+    announce();
     ctx.setBusy(false);
   }
 
   return order;
 }
-
-void TOTAL_MS;

@@ -13,9 +13,11 @@
   color: var(--text-primary);
 }
 
+@media (hover: hover) and (pointer: fine) {
 .paper-stack-demo--embed .paper-stack__btn:hover:not(:disabled) {
   background: var(--bg-elevated);
   color: var(--text-primary);
+}
 }
 
 .paper-stack-demo--embed .paper-stack__btn:focus-visible {
