@@ -1,23 +1,125 @@
 {
   "projects": [
     {
-      "id": "invoice-ui",
-      "name": "InvoiceUI",
-      "description": "Private invoicing workspace for independent operators: live document composer, immutable PDF generation, and auditable payment tracking.",
-      "logo": "invoice-ui.svg",
-      "gradient": "linear-gradient(135deg, #18181b 0%, #202321 50%, #bef264 100%)",
-      "route": "/invoice-ui",
+      "id": "finance",
+      "name": "Finance",
+      "description": "A private UK personal finance ledger for savings, spending, credit, payroll, and tax, backed by Cloudflare Workers and Neon Postgres.",
+      "logo": "Finance.svg",
+      "gradient": "linear-gradient(135deg, #1b3829 0%, #32684b 50%, #4a8c66 100%)",
+      "route": "/finance",
       "tags": [
         "TypeScript",
         "React",
         "Vite",
         "Tailwind CSS",
         "Cloudflare Workers",
+        "PostgreSQL",
+        "Neon",
+        "Hono",
+        "Drizzle ORM",
+        "Better Auth",
+        "Passkeys",
+        "FinTech",
+        "WebApp",
+        "PWA"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-10-01",
+      "dateUpdated": "2026-10-06",
+      "embeddable": false,
+      "liveUrl": "https://finance.humza.website",
+      "repoUrl": "https://github.com/Hum2a/Finance",
+      "caseStudy": {
+        "claim": "A single-origin UK personal finance ledger uniting savings, debt, bills, payroll, and tax with zero floating-point math and database-level row security.",
+        "role": "Sole designer and engineer — full-stack architecture, financial mathematics, database RLS, Cloudflare Worker API, and React 19 web app",
+        "timeline": "October 2026 · live at finance.humza.website",
+        "metrics": [
+          {
+            "value": "100%",
+            "label": "integer pence & basis points"
+          },
+          {
+            "value": "27",
+            "label": "reviewed SQL migrations"
+          },
+          {
+            "value": "82",
+            "label": "Vitest test suites"
+          },
+          {
+            "value": "0ms",
+            "label": "CORS latency (single-origin Worker)"
+          }
+        ],
+        "problem": "Personal finance tracking often falls into two extremes: commercial applications that harvest bank credentials and sell user data, or fragile spreadsheets plagued by manual formula errors, untracked transaction gaps, and floating-point rounding bugs.\n\nManaging UK-specific financial realities—such as ISA annual subscription limits across standard and flexible accounts, Personal Savings Allowance (PSA) brackets, Scottish vs. UK tax bands, student loan deductions across Plans 1/2/4/Postgrad, and 0% credit card promotional expirations—requires domain-accurate calculations that generic trackers completely ignore.\n\nA dependable personal ledger must treat money with uncompromising mathematical precision, guarantee tenant privacy at the database engine level, and remain instantaneous without relying on brittle third-party scraping.",
+        "sections": [
+          {
+            "title": "Exact financial ledger and UK tax engine",
+            "body": "Built a zero-floating-point financial calculation engine where every monetary figure is stored in integer pence and every interest rate in integer basis points (525 = 5.25% AER). All calendar math is strictly anchored to the Europe/London timezone and the UK tax year (6 April to 5 April).\n\nThe engine models nuanced UK rules out of the box: flexible ISA withdrawal and replacement tracking, Personal Savings Allowance thresholds based on total estimated income, Lifetime ISA (LISA) penalty rules, student loan repayment deductions across all UK plans, and dual-source payroll with custom pension relief.",
+            "image": "/images/Finance/hero.png",
+            "imageAlt": "Finance dashboard showing net worth, account balances, savings allowance progress, and upcoming bills."
+          },
+          {
+            "title": "Single-origin Cloudflare Worker with Neon RLS",
+            "body": "Architected a single-origin deployment on a Cloudflare Worker that serves the compiled React 19 SPA while routing /api/* directly to a Hono REST API. Because the web client and API share an identical origin, authentication cookies remain strict first-party httpOnly with SameSite=Lax, completely eliminating cross-origin preflight requests (CORS) and token storage in browser storage.\n\nDatabase multitenancy is enforced through Neon Postgres Row-Level Security (RLS). Every query runs under a restricted finance_app role (NOBYPASSRLS), scoped dynamically to app.user_id. Even raw SQL queries executed directly in the database cannot leak data between users without explicit tenant configuration.",
+            "image": "/images/Finance/detail.png",
+            "imageAlt": "Finance accounts spreadsheet view and credit card balance transfer management interface."
+          },
+          {
+            "title": "Passwordless authentication, passkeys, and daily 1p challenges",
+            "body": "Implemented a frictionless, passwordless authentication flow with 6-digit email codes and magic links powered by Better Auth and Resend, complemented by WebAuthn passkeys for instant biometric login. Authentication endpoints are rate-limited via Cloudflare Workers KV, and a generic confirmation message prevents user enumeration.\n\nBuilt interactive features including opt-in 364/365-day Daily 1p Savings Challenges that deterministically calculate and catch up micro-deposits whenever the user opens the app, and version 5 atomic backup/restore allowing users to export full database records or restore across migrations with verified relational integrity.",
+            "image": "/images/Finance/activity.png",
+            "imageAlt": "Account activity ledger displaying statement checkpoints, linked transfers, and daily penny savings challenge catch-ups."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Integer pence and basis points over standard floats or decimals",
+            "why": "Floating-point arithmetic introduces insidious rounding inaccuracies over time (e.g. 0.1 + 0.2 !== 0.3). By enforcing minor currency units (pence) and basis points across shared Zod schemas, database columns, and client state, rounding is strictly controlled and occurs only at defined presentation boundaries.",
+            "tradeoff": "Requires explicit conversion helpers whenever accepting user input or rendering formatted currency strings in UI components."
+          },
+          {
+            "choice": "Single-origin Worker proxying over decoupled web and API origins",
+            "why": "Bundling static Vite assets directly into Cloudflare Workers with Hono intercepting /api/* guarantees zero-CORS latency and enables first-party httpOnly session cookies without third-party cookie restrictions or browser blocking.",
+            "tradeoff": "Asset builds and API deployments are coupled in a single Worker deployment pipeline, requiring end-to-end atomic builds."
+          },
+          {
+            "choice": "Postgres Row-Level Security (RLS) over application-level WHERE clauses",
+            "why": "Relying solely on developers remembering WHERE user_id = ? in every ORM query risks silent security leaks during joins, updates, or bulk restores. Neon Postgres RLS with a NOBYPASSRLS application role provides defense-in-depth at the database kernel.",
+            "tradeoff": "Requires setting connection-level session variables (SET LOCAL app.user_id) on each pooled transaction and specialized configuration for local testing."
+          },
+          {
+            "choice": "Statement-driven balance snapshots over raw event-sourcing balance accumulation",
+            "why": "In real-world banking, user transaction logs often suffer from gaps, pending authorizations, or untracked fees. Treating user-entered statement snapshots as authoritative end-of-day anchors and layering active movements between statements ensures data always agrees with bank reality.",
+            "tradeoff": "Ledger calculations must detect and handle gaps between statements and opening balances rather than relying on a continuous event stream."
+          }
+        ],
+        "outcome": "The application is deployed in production at https://finance.humza.website, operating as a fully functional, private personal finance ledger. Users can register via passwordless email authentication, attach WebAuthn passkeys, track all accounts/debts/investments, import Emma/Monzo CSVs, reconcile recurring subscriptions, calculate take-home payroll and tax pots, and export full tax-year reports.\n\nAutomated morning email reminders (via cron) are intentionally disabled in the current Cloudflare Worker configuration, though the underlying reminder logic and on-demand test dispatch remain fully implemented in Settings. Open Banking API sync was researched (docs/decisions/2026-10-01-open-banking-ais.md) and consciously deferred in favor of statement snapshots and CSV imports."
+      }
+    },
+    {
+      "id": "invoiceui",
+      "name": "InvoiceUI",
+      "description": "Private invoicing workspace with real-time preview, atomic numbering, pure edge PDF compilation, and payment tracking.",
+      "logo": "InvoiceUI.png",
+      "gradient": "linear-gradient(135deg, #18181b 0%, #202321 50%, #84cc16 100%)",
+      "route": "/invoiceui",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Cloudflare Workers",
         "Hono",
         "PostgreSQL",
         "Neon",
+        "Tailwind CSS",
         "Drizzle ORM",
-        "Better Auth",
+        "Cloudflare R2",
         "Resend",
         "shadcn/ui",
         "Motion",
@@ -25,73 +127,193 @@
         "React Bits",
         "Animate UI",
         "pdf-lib",
+        "Zod",
+        "Better Auth",
         "FinTech",
         "SaaS",
         "WebApp",
-        "PWA",
-        "Serverless",
-        "REST API",
-        "Vitest",
+        "Decimal.js",
         "Playwright"
       ],
       "visible": true,
       "featured": true,
       "priority": 1,
-      "categories": ["website"],
+      "categories": [
+        "website"
+      ],
       "dateAdded": "2026-09-12",
       "dateUpdated": "2026-09-12",
       "embeddable": false,
       "liveUrl": "https://invoiceui.humza.website",
       "repoUrl": "https://github.com/Hum2a/InvoiceUI",
       "caseStudy": {
-        "claim": "A distraction-free private invoice workspace combining a live document composer with immutable PDF generation and auditable ledger tracking.",
-        "role": "Sole architect and full-stack engineer - system design, database architecture, pure-JS PDF engine, fluid UI stack, and Cloudflare Worker deployment.",
+        "claim": "Private invoicing workspace with instant vector PDFs, decimal-safe accounting, and immutable snapshots.",
+        "role": "Sole engineer - edge architecture, UI design system, PDF compilation engine, and deployment",
         "timeline": "2026 · live at invoiceui.humza.website",
         "metrics": [
-          { "value": "196", "label": "automated tests passing" },
-          { "value": "0", "label": "floating-point money errors" },
-          { "value": "1 Worker", "label": "unified edge deployment" },
-          { "value": "3", "label": "bespoke PDF templates" }
+          {
+            "value": "100%",
+            "label": "test suite pass rate"
+          },
+          {
+            "value": "<50ms",
+            "label": "edge API cold start"
+          },
+          {
+            "value": "3",
+            "label": "crafted PDF templates"
+          },
+          {
+            "value": "£0",
+            "label": "recurring infrastructure cost"
+          }
         ],
-        "problem": "Independent professionals and boutique studios often face a frustrating dilemma when billing clients. Traditional accounting platforms are bloated, sluggish subscription traps packed with unnecessary complexity, while DIY spreadsheet or document templates produce inconsistent layouts, floating-point rounding discrepancies, and fragile version tracking that easily breaks historical records.\n\nHumza needed a dedicated, secure, and beautiful workspace to create invoices simply, access records from anywhere, download reliable PDFs, and track payments without paying recurring software fees or risking client data privacy. The solution had to preserve instantaneous live document preview while guaranteeing strict immutable record-keeping once an invoice was formally issued.",
+        "problem": "Commercial invoicing tools like QuickBooks, FreshBooks, and Xero are burdened with feature bloat, escalating subscription costs, and intrusive third-party financial tracking. Most suffer from floating-point rounding bugs in tax calculations, fragile browser-print dialogs that destroy document page breaks, and arbitrary limits on basic customizations.\n\nFreelance and client work demands a private, distraction-free tool that creates invoices as fast as a text document, compiles pixel-perfect downloadable PDFs at the edge, and guarantees that historical issued invoices remain permanently immutable even when business addresses or catalogue rates evolve.",
         "sections": [
           {
-            "title": "Live Composer & Historical Snapshotting",
-            "body": "Built a two-column desktop and responsive mobile composer where every change updates the document preview in real time with debounced autosave, local draft recovery, and version-conflict detection.\n\nOn issuance, client details, business metadata, and line items are locked by value into an immutable snapshot, ensuring that future catalogue updates or client address changes can never rewrite historical financial documents.",
+            "title": "Two-Column Split Composer with Real-Time Live Preview",
+            "body": "Engineered an interactive split-view interface pairing a comprehensive form editor with an instant, reactive document preview. As the owner updates line items, payment terms, or client selections, the state synchronizes smoothly with debounced local recovery storage and the edge API.\n\nVersion check safeguards prevent cross-device write conflicts, while atomic sequencing guarantees that once an invoice is issued, its numbering and metadata are permanently locked against catalogue drift.",
             "image": "/images/InvoiceUI/hero.png",
-            "imageAlt": "InvoiceUI desktop composer showing split-screen editor and live invoice preview"
+            "imageAlt": "InvoiceUI split composer showing dark mode editor controls alongside live invoice preview"
           },
           {
-            "title": "Pure Edge Document Generation & Storage",
-            "body": "Implemented an in-worker PDF generation engine using pure JavaScript and WebAssembly with pdf-lib, completely eliminating the latency and cost of headless browser instances.\n\nIssued documents feature custom typography, automatic pagination with repeated table headers, Unicode support, and optional deliverable breakdown appendices, all persisted deterministically to Cloudflare R2 private storage.",
+            "title": "Serverless Vector PDF Compilation at the Edge",
+            "body": "Bypassed heavy, timeout-prone headless browser rendering by compiling pure vector PDFs directly inside the Cloudflare Worker using pdf-lib and fontkit. The edge renderer supports three distinct typographical templates (Studio, Minimal, and Classic) with brand accents, embedded logos, and dynamic page-budgeting for long descriptions.\n\nIssued PDFs are archived directly into private Cloudflare R2 storage, enabling instant downloads, secure email attachments via Resend, and unguessable tokenized share links.",
             "image": "/images/InvoiceUI/detail.png",
-            "imageAlt": "Rendered invoice PDF and document template styles"
+            "imageAlt": "Generated vector PDF invoice document preview with itemized rates and breakdown summary"
           },
           {
-            "title": "Financial Precision & Auditable Ledger",
-            "body": "Designed a strict monetary domain model powered by Decimal.js, implementing half-up rounding, multi-currency precision, and atomic sequence allocation.\n\nReceivables, aging buckets, and payment statuses are calculated dynamically from an auditable payment ledger that supports partial payments, deposits, credit notes, and reversals.",
-            "image": "/images/InvoiceUI/ledger.png",
-            "imageAlt": "Invoice dashboard metrics and payment ledger tracking"
+            "title": "Tactile Motion System and Financial Health Ledger",
+            "body": "Designed a cohesive financial dashboard featuring multi-currency receivables, ageing debt buckets (1-30, 31-60, 61-90, 91+ days), and partial payment reconciliation. The interface combines all five mandated modern UI libraries (shadcn/ui, Motion, Magic UI, React Bits, and Animate UI) to deliver tactile button depression, spring-animated modals, and animated NumberTicker summaries without sacrificing accessibility.",
+            "image": "/images/InvoiceUI/mobile.png",
+            "imageAlt": "InvoiceUI mobile dashboard displaying outstanding balances, receivables, and invoice status filters"
           }
         ],
         "decisions": [
           {
-            "choice": "Pure-JS PDF Engine over Headless Chrome (Puppeteer)",
-            "why": "pdf-lib compiles to pure JavaScript and WebAssembly, enabling deterministic PDF creation directly inside the Cloudflare Worker runtime in tens of milliseconds with zero memory bloat.",
-            "tradeoff": "Required manual coordinate math and custom page-break algorithms for multi-page tables instead of standard CSS print stylesheets."
+            "choice": "Single Cloudflare Worker for SPA assets and Hono API",
+            "why": "Eliminated CORS latency and secondary hosting infrastructure by routing both static client assets and backend edge API endpoints through one unified Worker on a custom domain.",
+            "tradeoff": "Client and server code must adhere to Cloudflare Worker edge execution constraints and bundle size budgets."
           },
           {
-            "choice": "Optimistic Concurrency with Compare-And-Swap on Full Workspace Envelopes",
-            "why": "Guaranteed that concurrent edits across devices detect version collisions immediately, offering guided conflict recovery without silent data overwrites.",
-            "tradeoff": "Full workspace envelope payloads require 6MB request limits and careful database indexing as historical invoice volume grows."
+            "choice": "Pure JavaScript pdf-lib rendering over Headless Chrome",
+            "why": "Avoided heavy, slow-booting browser containers that exceed edge serverless memory limits, achieving sub-100ms document generation entirely in memory.",
+            "tradeoff": "Document layouts, pagination breaks, and text wrapping had to be implemented mathematically rather than relying on browser CSS layout engines."
           },
           {
-            "choice": "Passwordless Magic Links Restricted to Single Owner Email",
-            "why": "Eliminated credential stuffing risks, password management overhead, and unauthorized user registration by verifying sessions exclusively for the owner's approved email.",
-            "tradeoff": "Local development and emergency access depend on working Resend credentials or simulated local preview fallback."
+            "choice": "Decimal.js fixed-point arithmetic and copy-by-value snapshots",
+            "why": "Prevented IEEE-754 floating-point cent errors in multi-tier tax and discount calculations, while ensuring issued invoices never change if reusable client or service records are updated.",
+            "tradeoff": "Required strict data validation and conversion layers across API boundaries."
           }
         ],
-        "outcome": "InvoiceUI is fully implemented, verified with 196 automated tests, and deployed live to production at invoiceui.humza.website on a unified Cloudflare Worker backed by Neon PostgreSQL and Cloudflare R2. The workspace manages real-world client invoicing, automated PDF creation, and multi-currency payment tracking with zero monthly recurring infrastructure overhead.\n\nFuture scope intentionally defers automatic FX rate conversion and third-party credit card collection, keeping the application focused on lean, distraction-free operations for independent craftspeople."
+        "outcome": "Shipped and deployed live to production at invoiceui.humza.website as a verified private invoicing workspace. Running entirely within free tiers across Cloudflare Workers, Neon PostgreSQL, Cloudflare R2, and Resend.\n\nThe system has 71 automated tests verifying passwordless owner authentication, multi-currency accounting, idempotent email dispatch, and full workspace JSON/ZIP exports with disaster recovery."
+      }
+    },
+    {
+      "id": "26-birthday-quiz",
+      "name": "26 Birthday Quiz",
+      "description": "A hosted multiplayer party quiz for Humza's 26th — guests play on phones, questions and reveals appear on a projector.",
+      "logo": "26-birthday-quiz.svg",
+      "gradient": "linear-gradient(135deg, #14110e 0%, #ff4d3a 50%, #ffc43a 100%)",
+      "route": "/26-birthday-quiz",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Cloudflare Workers",
+        "Durable Objects",
+        "SQLite",
+        "Neon Postgres",
+        "R2",
+        "Hono",
+        "Tailwind CSS",
+        "Motion",
+        "Three.js",
+        "Better Auth",
+        "Resend",
+        "Vitest",
+        "Playwright",
+        "GitHub Actions",
+        "WebSocket",
+        "WebApp",
+        "Game",
+        "Party Game",
+        "Realtime",
+        "Multiplayer",
+        "Monorepo",
+        "Turborepo"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 2,
+      "categories": [
+        "game",
+        "website"
+      ],
+      "dateAdded": "2026-10-24",
+      "dateUpdated": "2026-10-24",
+      "embeddable": false,
+      "liveUrl": "https://26.humza.website",
+      "caseStudy": {
+        "claim": "A hosted party quiz for Humza's 26th — Baseer presents, Humza runs the show, and guests play individually on their phones.",
+        "role": "Sole engineer — full-stack architecture, Durable Object coordination, game logic reducer, question authoring system, theme engine, kart mini-game, and production deployment.",
+        "timeline": "2026 · live at 26.humza.website",
+        "metrics": [
+          { "value": "19", "label": "Build stages" },
+          { "value": "40+", "label": "Party themes" },
+          { "value": "Durable Objects", "label": "Room state" },
+          { "value": "75", "label": "Player capacity" }
+        ],
+        "problem": "Hosting a one-night, in-person multiplayer quiz for 50-plus guests without off-the-shelf party-game tools. The experience needed to be playful and production-grade: guests answer and vote on their phones while questions, reveals, photos, audio and scores appear on a projector. The presenter (Baseer) and operator (Humza) needed distinct roles. Existing solutions either assumed pods/voting groups, required guest accounts, or lacked the custom question presentation needed for a personal birthday event.",
+        "sections": [
+          {
+            "title": "Live room state with Durable Objects",
+            "body": "Built one SQLite-backed Durable Object per game room, handling WebSocket connections, phase lifecycle, scoring, and scheduling through a single alarm per room. Server-authoritative design: clients send intents, the room validates and publishes outcomes. SQLite stores the authoritative state; memory is a disposable cache. Persisted accepted actions before acknowledgement, with idempotent retries. A separate code registry DO resolves short unambiguous join codes to unique game IDs. Hibernation-safe WebSocket attachments restore connection metadata on wake, supporting seamless reconnects across Wi-Fi changes and refreshes.",
+            "image": "/images/26BirthdayQuiz/hero.png",
+            "imageAlt": "Guest controller with live question and countdown timer."
+          },
+          {
+            "title": "Question engine and presentation",
+            "body": "A pure TypeScript question-pack system with multiple mechanics: multiple choice, slider estimates, whole-room voting, guess-the-guest, ranking, 1v1 duels, typed answers with A/B presentation, Wordle-style guessing, and photo/voice activities. Each round declares its supported phases, scoring policy, and attribution mode. Custom question designs (trolley polls, rage meters, ballot papers, scripture reveals) use a shared presentation kit with real-time typing previews, live submission counts, and themeable skins. The question catalogue browser lets the host rehearse every design before the event.",
+            "image": "/images/26BirthdayQuiz/detail.png",
+            "imageAlt": "Custom question design with A/B presentation and live voting interface."
+          },
+          {
+            "title": "Theme system and visual identity",
+            "body": "Built a palette-plus-skin theme engine with 40 party themes, from '26 basic' (warm coral and gold) to Persona references and nostalgia palettes. Each theme supplies 12 colour roles, a typeface treatment, motion presets, and optional background scenes (spotlights, synthwave grids, stars, doodles). Skins add identity markers: Persona 5 shards, kart racing motifs, birthday candle lighting. All animations respect reduced-motion preferences. The kart mini-game integrates guest photo faces, drift handling, and power-ups as a playable interlude.",
+            "image": "/images/26BirthdayQuiz/themes.png",
+            "imageAlt": "Theme picker showing multiple party palettes and scene backgrounds."
+          },
+          {
+            "title": "Admin controls and media pipeline",
+            "body": "A dedicated `/admin` surface provides complete host oversight: room creation, live phase controls, player recovery, troll activation, and post-game archive. Every feature ships with its admin view in the same change — see, manage, and rehearse from the control panel. Photo and voice uploads flow through presigned R2 URLs to a validation Worker, then into accepted media buckets. Post-game, a retryable export writes the full record to Neon for results pages, personal recaps, and optional Resend emails. End-game statistics aggregate browser contexts, answer patterns, and fun facts.",
+            "image": "/images/26BirthdayQuiz/admin.png",
+            "imageAlt": "Host control panel with real-time phase controls and player management."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Durable Objects with SQLite",
+            "why": "Cloudflare's SQLite-backed DOs give per-room state, WebSocket hibernation, and durability without managing a separate database for live gameplay.",
+            "tradeoff": "Learning curve for the API; limited to Cloudflare Workers runtime."
+          },
+          {
+            "choice": "Pure reducer game logic",
+            "why": "All game state changes go through a single `reduce(state, event, now)` function, making the logic unit-testable and the DO a thin execution shell.",
+            "tradeoff": "Extra indirection for some operations; requires careful effect modelling."
+          },
+          {
+            "choice": "No guest accounts",
+            "why": "Random game-scoped credentials with HttpOnly cookies; no signup friction for a one-night event, and identity is explicit not inferred from device.",
+            "tradeoff": "Guests must keep their browser or use a recovery flow; no persistent user accounts across events."
+          },
+          {
+            "choice": "Question packs in TypeScript",
+            "why": "Versioned server-side code keeps answer keys and scoring secrets off the client; no CMS overhead for a personal birthday.",
+            "tradeoff": "Deploying a new question pack requires a code change and redeploy; not ideal for frequent content updates."
+          }
+        ],
+        "outcome": "All 19 build stages complete. Production is live at https://26.humza.website with staging at https://26-staging.humza.website. The site supports 75 concurrent players, 40 party themes, and a full admin surface for rehearsal and event control. Question authoring workflow is established; the birthday pack is versioned and ready. The kart mini-game is playable solo and in real-time multiplayer. Load testing at 50 simultaneous players passed. The event runbook documents presenter and operator steps. Unverified: Neon archive and Resend email delivery require remote credentials not yet configured in this environment."
       }
     },
     {

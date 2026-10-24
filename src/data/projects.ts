@@ -160,6 +160,8 @@ export const getProjectById = (id: string): Project | null => {
 /** Alias routes that should resolve to another project's canonical route */
 const ROUTE_ALIASES: Record<string, string> = {
   '/breathapplyser-v2': '/breathapplyser',
+  '/invoice-ui': '/invoiceui',
+  '/26': '/26-birthday-quiz',
 };
 
 export const normalizeProjectRoute = (route: string): string => {
