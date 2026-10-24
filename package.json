@@ -51,6 +51,7 @@
     "verify:contrast": "node scripts/verify/contrast.mjs",
     "verify:prefs": "node scripts/verify/prefs.mjs",
     "verify:throttle": "node scripts/verify/throttle.mjs",
+    "verify:anim": "node scripts/verify/animations.mjs",
     "verify:urls": "node scripts/verify/urls.mjs",
     "verify:bundle": "node scripts/verify/bundle.mjs",
     "verify:notify": "node scripts/verify/notify.mjs",
