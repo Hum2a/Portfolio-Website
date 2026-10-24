@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useMemo, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   getAllTags,
   filterProjectsCombined,
@@ -40,17 +40,25 @@ function sortProjects(list: Project[], mode: SortMode): Project[] {
   });
 }
 
+const SEARCH_DEBOUNCE_MS = 120;
+
 const Projects = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [techFilterExpanded, setTechFilterExpanded] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>('recent');
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [expandedTags, setExpandedTags] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setDebouncedQuery(query), SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(id);
+  }, [query]);
 
   const filteredProjects = useMemo(() => {
     let list = filterProjectsCombined(selectedCategories, selectedTags);
-    const q = query.trim().toLowerCase();
+    const q = debouncedQuery.trim().toLowerCase();
     if (q) {
       list = list.filter((p) => {
         const hay = [p.name, p.description || '', ...(p.tags || [])]
@@ -60,7 +68,7 @@ const Projects = () => {
       });
     }
     return sortProjects(list, sortMode);
-  }, [selectedCategories, selectedTags, query, sortMode]);
+  }, [selectedCategories, selectedTags, debouncedQuery, sortMode]);
 
   const visibleCount = getVisibleProjects().length;
 
@@ -243,28 +251,32 @@ const Projects = () => {
           )}
         </div>
 
-        <motion.div
-          key={`${sortMode}|${query}|${selectedCategories.join(',')}|${selectedTags.join(',')}`}
-          className="projects-grid-modern"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.25 }}
-        >
-          {filteredProjects.map((project, index) => (
-            <ProjectTile
-              key={project.id}
-              project={project}
-              index={index}
-              tagsOpen={Boolean(expandedTags[project.id])}
-              onToggleTags={(projectId) =>
-                setExpandedTags((prev) => ({
-                  ...prev,
-                  [projectId]: !prev[projectId],
-                }))
-              }
-            />
-          ))}
-        </motion.div>
+        {/* Stable grid: tiles persist across filters and animate in/out with layout. */}
+        <div className="projects-grid-modern">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {filteredProjects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                className="projects-grid-item"
+                layout="position"
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <ProjectTile
+                  project={project}
+                  index={index}
+                  tagsOpen={Boolean(expandedTags[project.id])}
+                  onToggleTags={(projectId) =>
+                    setExpandedTags((prev) => ({
+                      ...prev,
+                      [projectId]: !prev[projectId],
+                    }))
+                  }
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
 
         {filteredProjects.length === 0 && (
           <div className="projects-empty-state">

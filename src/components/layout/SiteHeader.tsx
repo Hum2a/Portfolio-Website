@@ -83,20 +83,27 @@ const SiteHeader: React.FC = () => {
     return () => io.disconnect();
   }, []);
 
-  // Hide on scroll down past 400px; show immediately on scroll up
+  // Hide on scroll down past 400px; show immediately on scroll up.
+  // Only touch state when the value actually flips.
+  const hiddenRef = useRef(false);
+  const updateHidden = (next: boolean) => {
+    if (hiddenRef.current === next) return;
+    hiddenRef.current = next;
+    setHidden(next);
+  };
   useMotionValueEvent(scrollY, 'change', (y) => {
     if (reducedMotion) {
-      setHidden(false);
+      updateHidden(false);
       return;
     }
     const prev = lastScrollY.current;
     lastScrollY.current = y;
     if (y < 400) {
-      setHidden(false);
+      updateHidden(false);
       return;
     }
-    if (y > prev + 2) setHidden(true);
-    else if (y < prev - 2) setHidden(false);
+    if (y > prev + 2) updateHidden(true);
+    else if (y < prev - 2) updateHidden(false);
   });
 
   // Homepage scroll-spy

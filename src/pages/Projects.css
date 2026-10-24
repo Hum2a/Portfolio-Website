@@ -994,3 +994,14 @@
     justify-content: flex-start;
   }
 }
+
+/* Motion wrapper per tile (layout/exit); stretches like the tile did as a direct grid item. */
+.projects-grid-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.projects-grid-item > .project-tile {
+  flex: 1;
+}
