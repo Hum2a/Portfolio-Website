@@ -132,12 +132,41 @@ function tokenizeLine(line: string): Token[] {
   return tokens;
 }
 
-function renderTokens(source: string, typedLength: number): React.ReactNode {
-  const visible = source.slice(0, typedLength);
-  const lines = visible.split('\n');
-  return lines.map((line, lineIdx) => {
-    const tokens = tokenizeLine(line);
-    const isActive = lineIdx === lines.length - 1;
+type TokenizedLine = { start: number; tokens: Token[] };
+
+/** Tokenise once per file; typing only slices. Each line records its char offset in the source. */
+function tokenizeSource(source: string): TokenizedLine[] {
+  let offset = 0;
+  return source.split('\n').map((line) => {
+    const start = offset;
+    offset += line.length + 1;
+    return { start, tokens: tokenizeLine(line) };
+  });
+}
+
+const TOKENIZED = new Map(FILES.map((f) => [f.id, tokenizeSource(f.source)]));
+
+function sliceTokens(tokens: Token[], chars: number): Token[] {
+  const out: Token[] = [];
+  let left = chars;
+  for (const t of tokens) {
+    if (left <= 0) break;
+    if (t.text.length <= left) {
+      out.push(t);
+      left -= t.text.length;
+    } else {
+      out.push({ kind: t.kind, text: t.text.slice(0, left) });
+      break;
+    }
+  }
+  return out;
+}
+
+function renderTokens(lines: TokenizedLine[], typedLength: number): React.ReactNode {
+  const visible = lines.filter((l) => l.start <= typedLength);
+  return visible.map((line, lineIdx) => {
+    const isActive = lineIdx === visible.length - 1;
+    const tokens = isActive ? sliceTokens(line.tokens, typedLength - line.start) : line.tokens;
     return (
       <div
         key={lineIdx}
@@ -149,7 +178,7 @@ function renderTokens(source: string, typedLength: number): React.ReactNode {
         <span className="code-editor-code">
           {tokens.map((t, ti) => (
             <span key={ti} className={`tok tok-${t.kind}`}>
-              {t.text.length ? t.text : '\u00a0'}
+              {t.text.length ? t.text : ' '}
             </span>
           ))}
           {isActive && (
@@ -166,35 +195,56 @@ const usePrefersReducedMotion = useReducedMotion;
 const CYCLE_PAUSE_MS = 2800;
 const USER_PAUSE_MS = 8000;
 const TARGET_FILE_MS = 1200;
+/** Time constant (ms) for tilt damping — frame-rate independent. */
+const TILT_TAU_MS = 70;
 const BACKDROP_BLUR = '/images/_blur/Bgr8/Matching Algorithm.blur.webp';
+
+function canHoverFine(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  );
+}
 
 const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
   const reducedMotion = usePrefersReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  /** Has ever been on screen (starts typing). */
+  const [started, setStarted] = useState(false);
+  /** On screen right now; typing, cycling and the cursor blink pause otherwise. */
+  const [onScreen, setOnScreen] = useState(false);
+  const [pageVisible, setPageVisible] = useState(
+    () => typeof document === 'undefined' || !document.hidden
+  );
   const [activeIdx, setActiveIdx] = useState(0);
   const [typedLen, setTypedLen] = useState(0);
   const [complete, setComplete] = useState(false);
   const [userPaused, setUserPaused] = useState(false);
   const rafRef = useRef<number | null>(null);
+  const typedRef = useRef(0);
   const tiltRafRef = useRef<number | null>(null);
+  const tiltLastRef = useRef<number | null>(null);
   const tiltTarget = useRef({ x: 0, y: 0 });
   const tiltCurrent = useRef({ x: 0, y: 0 });
+  const rectRef = useRef<DOMRect | null>(null);
   const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeFile = FILES[activeIdx];
   const fullLen = activeFile.source.length;
+  const running = onScreen && pageVisible;
 
-  const applyTiltFrame = useCallback(() => {
+  const applyTiltFrame = useCallback((now: number) => {
     const el = editorRef.current;
     const cur = tiltCurrent.current;
     const tgt = tiltTarget.current;
-    // High lerp = snappy follow without feeling locked
-    const ease = 0.32;
-    cur.x += (tgt.x - cur.x) * ease;
-    cur.y += (tgt.y - cur.y) * ease;
+    const dt = tiltLastRef.current == null ? 16 : Math.min(64, now - tiltLastRef.current);
+    tiltLastRef.current = now;
+    const k = 1 - Math.exp(-dt / TILT_TAU_MS);
+    cur.x += (tgt.x - cur.x) * k;
+    cur.y += (tgt.y - cur.y) * k;
     if (el) {
       el.style.transform = `perspective(900px) rotateX(${cur.x.toFixed(2)}deg) rotateY(${cur.y.toFixed(2)}deg)`;
     }
@@ -207,6 +257,7 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
         el.style.transform = `perspective(900px) rotateX(${cur.x}deg) rotateY(${cur.y}deg)`;
       }
       tiltRafRef.current = null;
+      tiltLastRef.current = null;
     }
   }, []);
 
@@ -221,37 +272,37 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
     if (!el) return;
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setInView(true);
+        setOnScreen(entry.isIntersecting);
+        if (entry.isIntersecting) setStarted(true);
       },
       { threshold: 0.2 }
     );
     io.observe(el);
-    return () => io.disconnect();
+    const onVis = () => setPageVisible(!document.hidden);
+    document.addEventListener('visibilitychange', onVis);
+    // Tilt rect cache: refresh on layout changes instead of every pointermove.
+    const invalidate = () => {
+      rectRef.current = null;
+    };
+    window.addEventListener('resize', invalidate, { passive: true });
+    window.addEventListener('scroll', invalidate, { passive: true });
+    return () => {
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
+      window.removeEventListener('resize', invalidate);
+      window.removeEventListener('scroll', invalidate);
+    };
   }, []);
 
-  // Typing / reduced-motion fill
+  // Typing — pauses (without resetting) while off-screen or the tab is hidden.
   useEffect(() => {
-    if (rafRef.current != null) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
+    if (reducedMotion || !started || !running) return undefined;
+    if (typedRef.current >= fullLen) return undefined;
 
-    if (reducedMotion) {
-      setTypedLen(fullLen);
-      setComplete(true);
-      return;
-    }
-
-    if (!inView) {
-      setTypedLen(0);
-      setComplete(false);
-      return;
-    }
-
-    setTypedLen(0);
-    setComplete(false);
-    const start = performance.now();
-    let lastShown = 0;
+    // Resume from where we left off, keeping the original pace.
+    const start = performance.now() - (typedRef.current / fullLen) * TARGET_FILE_MS;
+    let lastShown = typedRef.current;
+    let frame = 0;
 
     const tick = (now: number) => {
       const progress = Math.min(1, (now - start) / TARGET_FILE_MS);
@@ -263,9 +314,13 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
         next = Math.min(fullLen, lastShown + 2);
       }
       lastShown = next;
-      setTypedLen(next);
+      typedRef.current = next;
+      frame += 1;
+      // Commit at most every other frame (always commit the final state).
+      if (next >= fullLen || frame % 2 === 0) setTypedLen(next);
       if (next >= fullLen) {
         setComplete(true);
+        rafRef.current = null;
         return;
       }
       rafRef.current = requestAnimationFrame(tick);
@@ -274,30 +329,53 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
     rafRef.current = requestAnimationFrame(tick);
     return () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
     };
-  }, [activeIdx, inView, reducedMotion, fullLen]);
+  }, [activeIdx, started, running, reducedMotion, fullLen]);
 
   // Auto-cycle after file completes
   useEffect(() => {
-    if (reducedMotion || userPaused || !inView || !complete) return;
+    if (reducedMotion || userPaused || !running || !complete) return;
 
     cycleTimerRef.current = setTimeout(() => {
-      setActiveIdx((i) => (i + 1) % FILES.length);
+      goToFile((activeIdx + 1) % FILES.length);
     }, CYCLE_PAUSE_MS);
 
     return () => {
       if (cycleTimerRef.current) clearTimeout(cycleTimerRef.current);
     };
-  }, [complete, reducedMotion, userPaused, inView, activeIdx]);
+  });
 
-  const selectTab = useCallback((idx: number) => {
+  /** Switch file and restart typing from zero. */
+  function goToFile(idx: number) {
+    typedRef.current = 0;
+    setTypedLen(0);
+    setComplete(false);
     setActiveIdx(idx);
+  }
+
+  const selectTab = (idx: number) => {
+    goToFile(idx);
     setUserPaused(true);
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     resumeTimerRef.current = setTimeout(() => {
       setUserPaused(false);
     }, USER_PAUSE_MS);
-  }, []);
+  };
+
+  // ARIA tabs pattern: ←/→/Home/End move selection and focus (roving tabindex).
+  const onTabKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const n = FILES.length;
+    let next: number | null = null;
+    if (e.key === 'ArrowRight') next = (activeIdx + 1) % n;
+    else if (e.key === 'ArrowLeft') next = (activeIdx - 1 + n) % n;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = n - 1;
+    if (next == null) return;
+    e.preventDefault();
+    selectTab(next);
+    tabRefs.current[next]?.focus();
+  };
 
   useEffect(() => {
     return () => {
@@ -306,13 +384,17 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
     };
   }, []);
 
+  const onPointerEnter = useCallback(() => {
+    rectRef.current = rootRef.current?.getBoundingClientRect() ?? null;
+  }, []);
+
   const onPointerMove = useCallback(
     (e: React.PointerEvent) => {
       if (reducedMotion) return;
-      if (e.pointerType === 'touch') return;
+      if (e.pointerType === 'touch' || !canHoverFine()) return;
       const el = rootRef.current;
       if (!el) return;
-      const rect = el.getBoundingClientRect();
+      const rect = rectRef.current ?? (rectRef.current = el.getBoundingClientRect());
       const px = (e.clientX - rect.left) / rect.width - 0.5;
       const py = (e.clientY - rect.top) / rect.height - 0.5;
       tiltTarget.current = { x: py * -9, y: px * 11 };
@@ -328,8 +410,8 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
 
   const displayLen = reducedMotion ? fullLen : typedLen;
   const lines = useMemo(
-    () => renderTokens(activeFile.source, displayLen),
-    [activeFile.source, displayLen]
+    () => renderTokens(TOKENIZED.get(activeFile.id) ?? [], displayLen),
+    [activeFile.id, displayLen]
   );
 
   const minimapHeight = Math.max(
@@ -337,10 +419,13 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
     fullLen === 0 ? 12 : (displayLen / fullLen) * 100
   );
 
+  const panelId = 'code-editor-panel';
+
   return (
     <div
       ref={rootRef}
-      className={cn('code-editor-wrap', className)}
+      className={cn('code-editor-wrap', !running && 'code-editor-wrap--paused', className)}
+      onPointerEnter={onPointerEnter}
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
     >
@@ -354,13 +439,20 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
           className="code-editor-tabs"
           role="tablist"
           aria-label="Editor files"
+          onKeyDown={onTabKeyDown}
         >
           {FILES.map((file, idx) => (
             <button
               key={file.id}
+              ref={(el) => {
+                tabRefs.current[idx] = el;
+              }}
               type="button"
               role="tab"
+              id={`code-editor-tab-${idx}`}
               aria-selected={idx === activeIdx}
+              aria-controls={panelId}
+              tabIndex={idx === activeIdx ? 0 : -1}
               className={cn(
                 'code-editor-tab',
                 idx === activeIdx && 'code-editor-tab--active'
@@ -373,8 +465,11 @@ const CodeEditor: React.FC<{ className?: string }> = ({ className }) => {
         </div>
         <div className="code-editor-body">
           <div
-            className="code-editor-scroll"
-            aria-label={`${activeFile.id} source`}
+            key={activeIdx}
+            id={panelId}
+            role="tabpanel"
+            aria-labelledby={`code-editor-tab-${activeIdx}`}
+            className="code-editor-scroll code-editor-scroll--enter"
           >
             {lines}
           </div>
