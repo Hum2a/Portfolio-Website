@@ -1,18 +1,15 @@
 import { LEAVE_MS, SLASH_MS, type CensorBehaviour } from './constants';
+import { prefersReducedMotion } from '@/lib/motion';
 
 type TimerId = ReturnType<typeof setTimeout>;
 
-export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
-  const forced =
-    document.documentElement.getAttribute('data-force-reduced-motion') ===
-    'true';
-  return forced || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+export { prefersReducedMotion };
 
 export function revealCensorElement(
   node: HTMLElement,
-  behaviour: CensorBehaviour
+  behaviour: CensorBehaviour,
+  /** Extra time for staggered line bars to finish (lineCount - 1) * LINE_STAGGER_MS. */
+  tailMs = 0
 ): { cancel: () => void } {
   const timers: TimerId[] = [];
 
@@ -38,17 +35,17 @@ export function revealCensorElement(
 
   if (needsSlash) {
     node.classList.add('is-striking');
-    later(SLASH_MS, () => {
+    later(SLASH_MS + tailMs, () => {
       node.classList.remove('is-striking');
       node.classList.add('is-removing');
-      later(LEAVE_MS, () => {
+      later(LEAVE_MS + tailMs, () => {
         node.classList.remove('is-removing');
         node.classList.add('is-clear');
       });
     });
   } else {
     node.classList.add('is-removing');
-    later(LEAVE_MS, () => {
+    later(LEAVE_MS + tailMs, () => {
       node.classList.remove('is-removing');
       node.classList.add('is-clear');
     });

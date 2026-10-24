@@ -31,7 +31,7 @@ export function PeelObstruction({ label }: PeelObstructionProps) {
   );
 }
 
-type CallingCardPeelProps = {
+type CallingCardPeelProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> & {
   className?: string;
   obstructionLabel: string;
   rootRef: React.RefObject<HTMLDivElement | null>;
@@ -43,9 +43,11 @@ export function CallingCardPeel({
   obstructionLabel,
   rootRef,
   children,
+  ...rest
 }: CallingCardPeelProps) {
   return (
     <div
+      {...rest}
       ref={rootRef}
       className={`ccp ${className}`.trim()}
       data-calling-card-peel

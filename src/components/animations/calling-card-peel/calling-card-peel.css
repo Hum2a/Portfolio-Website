@@ -102,6 +102,9 @@
   height: 78%;
   transform: rotate(-3deg);
   transform-origin: 100% 0%;
+  /* Own perspective + preserve-3d so rotateY on .ccp__paper isn't flattened by this rotate. */
+  transform-style: preserve-3d;
+  perspective: 900px;
   pointer-events: none;
 }
 
@@ -255,6 +258,42 @@
   border: 0;
 }
 
+/* Pin contract ink against leaking host p/heading colours. */
+.ccp .ccp__surface .ccp__message,
+.ccp .ccp__surface .ccp__secondary,
+.ccp .ccp__surface .ccp__microtype {
+  color: var(--ccp-ink);
+}
+
+.ccp .ccp__surface .ccp__eyebrow {
+  color: var(--ccp-red);
+}
+
+/* Affordance — partial corner lift on hover / keyboard focus, settle on press. */
+@media (hover: hover) and (pointer: fine) {
+  .ccp:not(.ccp--busy):not(.ccp--revealed):hover .ccp__fold {
+    opacity: 1;
+    transform: scale(0.4) rotate(-3deg) translate(-6px, 3px);
+    transition: transform 180ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 80ms linear;
+  }
+
+  .ccp:not(.ccp--busy):not(.ccp--revealed):hover .ccp__surface {
+    clip-path: polygon(2% 4%, 95% 0.8%, 97% 8%, 98% 96%, 3% 100%, 0% 7%);
+    transition: clip-path 180ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+}
+
+.ccp:not(.ccp--busy):not(.ccp--revealed):focus-within .ccp__fold {
+  opacity: 1;
+  transform: scale(0.4) rotate(-3deg) translate(-6px, 3px);
+  transition: transform 180ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 80ms linear;
+}
+
+.ccp--pressed:not(.ccp--busy) .ccp__paper {
+  transform: translate(1px, 2px) scale(0.995);
+  transition: transform 90ms ease-out;
+}
+
 /* ========== Phase 1 — corner lift 0–180ms ========== */
 .ccp--lift .ccp__fold {
   opacity: 1;
@@ -309,7 +348,8 @@
 }
 
 .ccp--peel .ccp__surface {
-  clip-path: polygon(0% 28%, 42% 8%, 28% 58%, 8% 100%, 0% 100%);
+  /* 6 points like every other phase so clip-path interpolates instead of snapping */
+  clip-path: polygon(0% 28%, 42% 8%, 42% 8%, 28% 58%, 8% 100%, 0% 100%);
   transition: clip-path 460ms cubic-bezier(0.4, 0.05, 0.55, 1);
 }
 
@@ -333,7 +373,7 @@
 }
 
 .ccp--release .ccp__surface {
-  clip-path: polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%);
+  clip-path: polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%, 0% 100%, 0% 100%);
   transition: clip-path 240ms cubic-bezier(0.55, 0, 0.75, 0.25);
 }
 
@@ -351,6 +391,10 @@
 
 /* Reduced motion — instant reveal, no travel */
 @media (prefers-reduced-motion: reduce) {
+  .ccp--pressed .ccp__paper {
+    transform: none;
+  }
+
   .ccp__paper,
   .ccp__backing,
   .ccp__fold,

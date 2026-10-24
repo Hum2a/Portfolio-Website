@@ -1,23 +1,16 @@
-import { LIFT_MS, PEEL_MS, PHASES, RELEASE_MS, TENSION_MS, TOTAL_MS } from './constants';
+import { LIFT_MS, PEEL_MS, PHASES, RELEASE_MS, TENSION_MS } from './constants';
+import { prefersReducedMotion } from '@/lib/motion';
 
-type TimerId = ReturnType<typeof setTimeout>;
+/** Roots currently peeling — per instance, so two tiles never block each other. */
+const busyRoots = new WeakSet<HTMLElement>();
 
-let busy = false;
+/** Extra slack before a phase's fallback fires if `transitionend` never arrives. */
+const FALLBACK_SLACK_MS = 120;
 
-export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
-  const forced =
-    document.documentElement.getAttribute('data-force-reduced-motion') === 'true';
-  return forced || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+export { prefersReducedMotion };
 
-export function isPeelBusy(): boolean {
-  return busy;
-}
-
-function clearTimers(timers: TimerId[]) {
-  for (const id of timers) window.clearTimeout(id);
-  timers.length = 0;
+export function isPeelBusy(root?: HTMLElement | null): boolean {
+  return !!root && busyRoots.has(root);
 }
 
 function clearPhases(root: HTMLElement) {
@@ -29,33 +22,54 @@ function setStatus(root: HTMLElement, text: string) {
   if (status) status.textContent = text;
 }
 
-function later(timers: TimerId[], ms: number, fn: () => void) {
-  const id = window.setTimeout(fn, ms);
-  timers.push(id);
-  return id;
+/** Resolves on `transitionend` for `property` on `el`, or after the fallback. */
+function waitTransition(el: Element | null, property: string, ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    if (!el) {
+      window.setTimeout(resolve, ms);
+      return;
+    }
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      el.removeEventListener('transitionend', onEnd);
+      window.clearTimeout(timer);
+      resolve();
+    };
+    const onEnd = (event: Event) => {
+      const e = event as TransitionEvent;
+      if (e.target === el && e.propertyName === property) finish();
+    };
+    el.addEventListener('transitionend', onEnd);
+    const timer = window.setTimeout(finish, ms + FALLBACK_SLACK_MS);
+  });
 }
+
+type PeelCallbacks = {
+  /** Fires as the sheet starts its final release — the moment to start navigating. */
+  onRelease?: () => void;
+};
 
 /**
  * Peel the attached notice away. Content stays in the DOM underneath.
+ * Phases chain on real transition completion rather than fixed timers.
  */
-export function peelCallingCard(
+export async function peelCallingCard(
   root: HTMLElement,
-  onRevealed?: () => void
+  onRevealed?: () => void,
+  { onRelease }: PeelCallbacks = {}
 ): Promise<void> {
-  if (!root || busy) return Promise.resolve();
+  if (!root || busyRoots.has(root)) return;
 
-  busy = true;
-  const timers: TimerId[] = [];
+  busyRoots.add(root);
   clearPhases(root);
   root.classList.add('ccp--busy');
   void root.offsetWidth;
 
-  const finish = (statusText: string) => {
-    clearTimers(timers);
-    busy = false;
-    setStatus(root, statusText);
+  const safe = (fn?: () => void) => {
     try {
-      onRevealed?.();
+      fn?.();
     } catch {
       /* keep portable */
     }
@@ -63,43 +77,32 @@ export function peelCallingCard(
 
   if (prefersReducedMotion()) {
     root.classList.add('ccp--reduced', 'ccp--revealed');
-    finish('Material revealed. Restricted notice removed.');
-    return Promise.resolve();
+    busyRoots.delete(root);
+    setStatus(root, 'Material revealed. Restricted notice removed.');
+    safe(onRelease);
+    safe(onRevealed);
+    return;
   }
 
+  const paper = root.querySelector('.ccp__paper');
+  const surface = root.querySelector('.ccp__surface');
+
   root.classList.add('ccp--lift');
+  await waitTransition(surface, 'clip-path', LIFT_MS);
 
-  return new Promise((resolve) => {
-    later(timers, LIFT_MS, () => {
-      root.classList.add('ccp--tension');
-    });
+  root.classList.add('ccp--tension');
+  await waitTransition(paper, 'transform', TENSION_MS);
 
-    later(timers, LIFT_MS + TENSION_MS, () => {
-      root.classList.add('ccp--peel');
-    });
+  root.classList.add('ccp--peel');
+  await waitTransition(paper, 'transform', PEEL_MS);
 
-    later(timers, LIFT_MS + TENSION_MS + PEEL_MS, () => {
-      root.classList.add('ccp--release');
-    });
+  root.classList.add('ccp--release');
+  safe(onRelease);
+  await waitTransition(paper, 'transform', RELEASE_MS);
 
-    later(timers, TOTAL_MS, () => {
-      root.classList.remove(
-        'ccp--lift',
-        'ccp--tension',
-        'ccp--peel',
-        'ccp--release',
-        'ccp--busy'
-      );
-      root.classList.add('ccp--revealed');
-      setStatus(root, 'Material revealed. Restricted notice removed.');
-      try {
-        onRevealed?.();
-      } catch {
-        /* ignore */
-      }
-      clearTimers(timers);
-      busy = false;
-      resolve();
-    });
-  });
+  root.classList.remove('ccp--lift', 'ccp--tension', 'ccp--peel', 'ccp--release', 'ccp--busy');
+  root.classList.add('ccp--revealed');
+  setStatus(root, 'Material revealed. Restricted notice removed.');
+  busyRoots.delete(root);
+  safe(onRevealed);
 }

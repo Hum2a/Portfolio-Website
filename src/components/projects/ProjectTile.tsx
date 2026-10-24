@@ -130,10 +130,12 @@ export function ProjectTile({
       <motion.div
         className="project-tile__face"
         initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-10% 0px' }}
         transition={{
           duration: 0.35,
-          delay: Math.min(index * 0.04, 0.4),
+          // Stagger only within a row-ish group; off-screen tiles enter when reached.
+          delay: Math.min((index % 6) * 0.04, 0.2),
           ease: [0.22, 1, 0.36, 1],
         }}
       >

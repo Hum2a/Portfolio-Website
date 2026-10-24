@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import imageManifest from '../../data/imageManifest.json';
 import { encodePublicPath } from './Img';
 import './SectionBackdrop.css';
+import { useReducedMotion } from '@/lib/motion';
 
 type ManifestMap = Record<
   string,
@@ -56,17 +57,10 @@ function clampIntensity(value: number): number {
   return value;
 }
 
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return reduced;
-}
+const usePrefersReducedMotion = useReducedMotion;
+
+/** Time constant (ms) for parallax easing — frame-rate independent. */
+const PARALLAX_TAU_MS = 90;
 
 /**
  * Soft blended section backdrop. Always dual-masked (radial + linear),
@@ -89,24 +83,69 @@ const SectionBackdrop: React.FC<SectionBackdropProps> = ({
     const el = layerRef.current;
     if (!el) return;
 
+    const parent = el.parentElement;
+    if (!parent) return;
+
+    // Cached rect (refreshed on enter / resize / scroll) and one rAF that eases toward the target.
+    let rect: DOMRect | null = null;
+    const target = { x: 0, y: 0 };
+    const current = { x: 0, y: 0 };
+    let raf = 0;
+    let last: number | null = null;
+
+    const frame = (now: number) => {
+      const dt = last == null ? 16 : Math.min(64, now - last);
+      last = now;
+      const k = 1 - Math.exp(-dt / PARALLAX_TAU_MS);
+      current.x += (target.x - current.x) * k;
+      current.y += (target.y - current.y) * k;
+      el.style.transform = `translate3d(${current.x.toFixed(2)}px, ${current.y.toFixed(2)}px, 0)`;
+      if (Math.abs(target.x - current.x) > 0.05 || Math.abs(target.y - current.y) > 0.05) {
+        raf = requestAnimationFrame(frame);
+      } else {
+        raf = 0;
+        last = null;
+      }
+    };
+    const queue = () => {
+      if (!raf) raf = requestAnimationFrame(frame);
+    };
+
+    const onEnter = () => {
+      rect = parent.getBoundingClientRect();
+    };
+    const invalidate = () => {
+      rect = null;
+    };
+
     const onMove = (e: PointerEvent) => {
-      const rect = el.parentElement?.getBoundingClientRect();
-      if (!rect) return;
+      if (e.pointerType === 'touch') return;
+      rect ??= parent.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width - 0.5;
       const py = (e.clientY - rect.top) / rect.height - 0.5;
-      el.style.transform = `translate3d(${px * 12}px, ${py * 8}px, 0)`;
+      target.x = px * 12;
+      target.y = py * 8;
+      queue();
     };
 
     const onLeave = () => {
-      el.style.transform = 'translate3d(0, 0, 0)';
+      target.x = 0;
+      target.y = 0;
+      queue();
     };
 
-    const parent = el.parentElement;
-    parent?.addEventListener('pointermove', onMove);
-    parent?.addEventListener('pointerleave', onLeave);
+    parent.addEventListener('pointerenter', onEnter);
+    parent.addEventListener('pointermove', onMove);
+    parent.addEventListener('pointerleave', onLeave);
+    window.addEventListener('resize', invalidate, { passive: true });
+    window.addEventListener('scroll', invalidate, { passive: true });
     return () => {
-      parent?.removeEventListener('pointermove', onMove);
-      parent?.removeEventListener('pointerleave', onLeave);
+      cancelAnimationFrame(raf);
+      parent.removeEventListener('pointerenter', onEnter);
+      parent.removeEventListener('pointermove', onMove);
+      parent.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('resize', invalidate);
+      window.removeEventListener('scroll', invalidate);
     };
   }, [reducedMotion]);
 

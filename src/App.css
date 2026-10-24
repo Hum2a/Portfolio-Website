@@ -16,9 +16,27 @@
 }
 
 /* host scope — overlay covers main body only */
-.app-main .comic-wipe {
-  position: absolute;
-  inset: 0;
-  z-index: 9999;
+
+/* Incoming page fade for navigations that skip the comic wipe (peel hand-off). */
+#main-content[data-enter] {
+  animation: page-enter 180ms ease-out both;
 }
 
+@keyframes page-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #main-content[data-enter] {
+    animation: none;
+  }
+}
+
+[data-force-reduced-motion='true'] #main-content[data-enter] {
+  animation: none;
+}

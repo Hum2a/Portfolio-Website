@@ -1,7 +1,9 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { FaStar, FaCodeBranch } from 'react-icons/fa';
 import {
   PaperStackShuffle,
+  finishPaperStack,
   shufflePaperStack,
   type SheetId,
 } from '@/components/animations/paper-stack-shuffle';
@@ -98,43 +100,95 @@ function RepoStackCard({
   );
 }
 
+const mod = (n: number, m: number) => ((n % m) + m) % m;
+
+type StackState = { cursor: number; order: number[]; sheetRepo: number[] };
+
+const INITIAL: StackState = { cursor: 0, order: [0, 1, 2, 3], sheetRepo: [0, 1, 2, 3] };
+
 const GitHubRepoPaperStack: React.FC<GitHubRepoPaperStackProps> = ({ repos }) => {
-  const [cursor, setCursor] = useState(0);
-  const [order, setOrder] = useState<number[]>([0, 1, 2, 3]);
+  /** sheetRepo = repo index shown on each sheet. Content follows the sheet, never its depth. */
+  const [state, setState] = useState<StackState>(INITIAL);
   const [busy, setBusy] = useState(false);
   const sheetRefs = useRef<(HTMLElement | null)[]>([null, null, null, null]);
   const demoRef = useRef<HTMLElement | null>(null);
 
+  // Source of truth for the async shuffle loop; every write is mirrored into React state.
+  const stateRef = useRef<StackState>(INITIAL);
+  const runningRef = useRef(false);
+  const pendingRef = useRef<'next' | 'prev' | null>(null);
+
+  const commit = useCallback((next: StackState) => {
+    stateRef.current = next;
+    flushSync(() => setState(next));
+  }, []);
+
+  const { cursor, order, sheetRepo } = state;
   const activeRepo = repos[cursor];
 
-  const repoAtDepth = useCallback(
-    (depth: number): GitHubRepo | null => {
-      if (repos.length === 0) return null;
-      return repos[(cursor + depth) % repos.length];
+  const runShuffle = useCallback(
+    async (direction: 'next' | 'prev') => {
+      const n = repos.length;
+      if (n === 0) return;
+      runningRef.current = true;
+      let dir: 'next' | 'prev' | null = direction;
+
+      while (dir) {
+        const cur = stateRef.current;
+        const nextCursor = dir === 'next' ? mod(cur.cursor + 1, n) : mod(cur.cursor - 1, n);
+
+        if (dir === 'prev') {
+          // The back sheet rises to the front: give it its repo before it moves.
+          const repoBySheet = [...cur.sheetRepo];
+          repoBySheet[cur.order[3]] = nextCursor;
+          commit({ ...cur, sheetRepo: repoBySheet });
+        }
+
+        const newOrder = await shufflePaperStack(dir, {
+          sheets: sheetRefs.current,
+          order: stateRef.current.order,
+          demoEl: demoRef.current,
+          setBusy,
+        });
+
+        const repoBySheet = [...stateRef.current.sheetRepo];
+        if (dir === 'next') {
+          // The old front landed at the back, out of sight: load what comes 3 after.
+          repoBySheet[newOrder[3]] = mod(nextCursor + 3, n);
+        }
+        commit({ cursor: nextCursor, order: newOrder, sheetRepo: repoBySheet });
+
+        dir = pendingRef.current;
+        pendingRef.current = null;
+      }
+      runningRef.current = false;
     },
-    [cursor, repos]
+    [repos.length, commit]
   );
 
-  const handleShuffle = async (direction: 'next' | 'prev') => {
-    if (busy || repos.length === 0) return;
+  const handleShuffle = useCallback(
+    (direction: 'next' | 'prev') => {
+      if (runningRef.current) {
+        // Keep at most one queued step; fast-forward the current one.
+        pendingRef.current = direction;
+        finishPaperStack();
+        return;
+      }
+      void runShuffle(direction);
+    },
+    [runShuffle]
+  );
 
-    const nextCursor =
-      direction === 'next'
-        ? (cursor + 1) % repos.length
-        : (cursor - 1 + repos.length) % repos.length;
+  const registerSheetRef = useCallback((id: SheetId, el: HTMLElement | null) => {
+    sheetRefs.current[id] = el;
+  }, []);
 
-    const newOrder = await shufflePaperStack(direction, {
-      sheets: sheetRefs.current,
-      order,
-      demoEl: demoRef.current,
-      setBusy,
-      setStatus: () => {},
-      statusLabel: () => repos[nextCursor]?.name ?? '',
-    });
+  const registerDemoRef = useCallback((el: HTMLElement | null) => {
+    demoRef.current = el;
+  }, []);
 
-    setCursor(nextCursor);
-    setOrder(newOrder);
-  };
+  const handlePrev = useCallback(() => handleShuffle('prev'), [handleShuffle]);
+  const handleNext = useCallback(() => handleShuffle('next'), [handleShuffle]);
 
   if (repos.length === 0) return null;
 
@@ -147,17 +201,12 @@ const GitHubRepoPaperStack: React.FC<GitHubRepoPaperStackProps> = ({ repos }) =>
         busy={busy}
         interactive
         order={order}
-        onPrev={() => void handleShuffle('prev')}
-        onNext={() => void handleShuffle('next')}
-        registerSheetRef={(id, el) => {
-          sheetRefs.current[id] = el;
-        }}
-        registerDemoRef={(el) => {
-          demoRef.current = el;
-        }}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        registerSheetRef={registerSheetRef}
+        registerDemoRef={registerDemoRef}
         renderFace={(sheetId: SheetId, isActive: boolean) => {
-          const depth = order.indexOf(sheetId);
-          const repo = repoAtDepth(depth);
+          const repo = repos[mod(sheetRepo[sheetId], repos.length)];
           if (!repo) return null;
 
           return <RepoStackCard repo={repo} isActive={isActive} />;

@@ -8,7 +8,8 @@
   z-index: 2;
   width: 170%;
   transform: translateY(-50%) rotate(-28deg);
-  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.35));
+  /* Static box-shadow on the non-animated wrapper (rectangular tape), so the marquee never repaints a filter. */
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.35);
 }
 
 .coming-soon-tape__edge {
@@ -26,6 +27,12 @@
   display: flex;
   width: max-content;
   animation: coming-soon-marquee 9s linear infinite;
+  will-change: transform;
+}
+
+/* Paused while off-screen (shared IntersectionObserver in ComingSoonTape.tsx). */
+.coming-soon-tape.is-offscreen .coming-soon-tape__track {
+  animation-play-state: paused;
 }
 
 .coming-soon-tape__text {
@@ -43,10 +50,10 @@
 
 @keyframes coming-soon-marquee {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 

@@ -114,6 +114,26 @@
   clip-path: polygon(0 0, 100% 0, 100% 100%);
 }
 
+/* Height animates (layout), so only hint the compositor while the field is engaged. */
+.tpe__stack:focus-within {
+  will-change: height;
+}
+
+/* Progressive: once there is text, long messages grow the sheet instead of scrolling inside it. */
+@supports (field-sizing: content) {
+  .tpe__stack:has(.tpe__area:not(:placeholder-shown)) {
+    height: auto;
+    min-height: var(--tpe-h-open);
+  }
+
+  .tpe__stack:has(.tpe__area:not(:placeholder-shown)) .tpe__area {
+    field-sizing: content;
+    height: auto;
+    min-height: var(--tpe-h-open);
+    max-height: 24rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tpe__stack {
     transition: none !important;

@@ -345,22 +345,18 @@
   transform: rotate(-2deg);
 }
 
-.project-tile:hover,
 .project-tile:focus-within {
   z-index: 4;
 }
 
-.project-tile--ccs-0:hover,
 .project-tile--ccs-0:focus-within {
   transform: translateY(-10px) rotate(-3deg) scale(1.14);
 }
 
-.project-tile--ccs-1:hover,
 .project-tile--ccs-1:focus-within {
   transform: translateY(-10px) rotate(2deg) scale(1.14);
 }
 
-.project-tile--ccs-2:hover,
 .project-tile--ccs-2:focus-within {
   transform: translateY(-10px) rotate(-4deg) scale(1.14);
 }
@@ -443,39 +439,33 @@
     transform 170ms var(--pt-ccs-ease);
 }
 
-.project-tile:hover .project-tile__hard,
 .project-tile:focus-within .project-tile__hard {
   opacity: 0;
 }
 
-.project-tile:hover .project-tile__backing,
 .project-tile:focus-within .project-tile__backing,
-.project-tile:hover .project-tile__misreg,
 .project-tile:focus-within .project-tile__misreg,
-.project-tile:hover .project-tile__shard,
 .project-tile:focus-within .project-tile__shard {
   opacity: 1;
 }
 
-.project-tile:hover .project-tile__backing,
 .project-tile:focus-within .project-tile__backing {
   transform: translate(8px, 10px) scale(1);
   animation: pt-ccs-backing-attack 170ms var(--pt-ccs-ease) both;
+  transition: opacity 100ms ease;
 }
 
-.project-tile:hover .project-tile__misreg,
 .project-tile:focus-within .project-tile__misreg {
   transform: translate(6px, -3px) rotate(2deg) scale(1);
   animation: pt-ccs-misreg-attack 170ms var(--pt-ccs-ease) 20ms both;
+  transition: opacity 100ms ease;
 }
 
-.project-tile:hover .project-tile__shard--a,
 .project-tile:focus-within .project-tile__shard--a {
   transform: rotate(-18deg) scale(1);
   animation: pt-ccs-shard-attack 170ms var(--pt-ccs-ease) 30ms both;
 }
 
-.project-tile:hover .project-tile__shard--b,
 .project-tile:focus-within .project-tile__shard--b {
   transform: rotate(12deg) scale(1);
   animation: pt-ccs-shard-attack 170ms var(--pt-ccs-ease) 30ms both;
@@ -531,7 +521,6 @@
   z-index: 20;
 }
 
-.project-tile:hover .project-tile__face,
 .project-tile:focus-within .project-tile__face {
   border-color: rgba(74, 158, 255, 0.35);
   box-shadow:
@@ -551,16 +540,83 @@
   cursor: not-allowed;
 }
 
-.project-tile--locked:hover,
 .project-tile--locked:focus-within {
   transform: none;
   z-index: 1;
 }
 
-.project-tile--locked:hover .project-tile__face,
 .project-tile--locked:focus-within .project-tile__face {
   border-color: rgba(255, 255, 255, 0.07);
   box-shadow: none;
+}
+
+
+/* Hover "attack" only on fine pointers — on touch the hover state sticks after a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .project-tile:hover {
+    z-index: 4;
+  }
+
+  .project-tile--ccs-0:hover {
+    transform: translateY(-10px) rotate(-3deg) scale(1.14);
+  }
+
+  .project-tile--ccs-1:hover {
+    transform: translateY(-10px) rotate(2deg) scale(1.14);
+  }
+
+  .project-tile--ccs-2:hover {
+    transform: translateY(-10px) rotate(-4deg) scale(1.14);
+  }
+
+  .project-tile:hover .project-tile__hard {
+    opacity: 0;
+  }
+
+  .project-tile:hover .project-tile__backing,
+  .project-tile:hover .project-tile__misreg,
+  .project-tile:hover .project-tile__shard {
+    opacity: 1;
+  }
+
+  .project-tile:hover .project-tile__backing {
+    transform: translate(8px, 10px) scale(1);
+    animation: pt-ccs-backing-attack 170ms var(--pt-ccs-ease) both;
+    transition: opacity 100ms ease;
+  }
+
+  .project-tile:hover .project-tile__misreg {
+    transform: translate(6px, -3px) rotate(2deg) scale(1);
+    animation: pt-ccs-misreg-attack 170ms var(--pt-ccs-ease) 20ms both;
+    transition: opacity 100ms ease;
+  }
+
+  .project-tile:hover .project-tile__shard--a {
+    transform: rotate(-18deg) scale(1);
+    animation: pt-ccs-shard-attack 170ms var(--pt-ccs-ease) 30ms both;
+  }
+
+  .project-tile:hover .project-tile__shard--b {
+    transform: rotate(12deg) scale(1);
+    animation: pt-ccs-shard-attack 170ms var(--pt-ccs-ease) 30ms both;
+  }
+
+  .project-tile:hover .project-tile__face {
+    border-color: rgba(74, 158, 255, 0.35);
+    box-shadow:
+      0 24px 48px -20px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(74, 158, 255, 0.08);
+  }
+
+  .project-tile--locked:hover {
+    transform: none;
+    z-index: 1;
+  }
+
+  .project-tile--locked:hover .project-tile__face {
+    border-color: rgba(255, 255, 255, 0.07);
+    box-shadow: none;
+  }
 }
 
 @keyframes pt-ccs-backing-attack {
@@ -937,4 +993,15 @@
   .category-chip {
     justify-content: flex-start;
   }
+}
+
+/* Motion wrapper per tile (layout/exit); stretches like the tile did as a direct grid item. */
+.projects-grid-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.projects-grid-item > .project-tile {
+  flex: 1;
 }

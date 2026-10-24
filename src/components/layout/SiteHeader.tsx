@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { prefetchProjects } from '@/utils/prefetchRoute';
 import { trackEvent } from '@/services/analyticsService';
 import './SiteHeader.css';
+import { useReducedMotion } from '@/lib/motion';
 
 const NAV_ITEMS = [
   { id: 'work', label: 'Work', href: '/projects', sectionId: 'work' },
@@ -54,17 +55,7 @@ function routeActiveId(pathname: string): string | null {
   return null;
 }
 
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return reduced;
-}
+const usePrefersReducedMotion = useReducedMotion;
 
 const SiteHeader: React.FC = () => {
   const location = useLocation();
@@ -92,20 +83,27 @@ const SiteHeader: React.FC = () => {
     return () => io.disconnect();
   }, []);
 
-  // Hide on scroll down past 400px; show immediately on scroll up
+  // Hide on scroll down past 400px; show immediately on scroll up.
+  // Only touch state when the value actually flips.
+  const hiddenRef = useRef(false);
+  const updateHidden = (next: boolean) => {
+    if (hiddenRef.current === next) return;
+    hiddenRef.current = next;
+    setHidden(next);
+  };
   useMotionValueEvent(scrollY, 'change', (y) => {
     if (reducedMotion) {
-      setHidden(false);
+      updateHidden(false);
       return;
     }
     const prev = lastScrollY.current;
     lastScrollY.current = y;
     if (y < 400) {
-      setHidden(false);
+      updateHidden(false);
       return;
     }
-    if (y > prev + 2) setHidden(true);
-    else if (y < prev - 2) setHidden(false);
+    if (y > prev + 2) updateHidden(true);
+    else if (y < prev - 2) updateHidden(false);
   });
 
   // Homepage scroll-spy

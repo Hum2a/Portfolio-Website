@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useComicWipe } from '../comic-wipe/useComicWipe';
 import { CallingCardPeel } from './CallingCardPeel';
 import { isPeelBusy, peelCallingCard } from './peelCallingCard';
+import { prefetchRoute } from '@/utils/prefetchRoute';
+import { playPageEnter } from '@/lib/scroll';
 
 type Props = {
   to: string;
@@ -32,6 +34,7 @@ export function CallingCardPeelLink({
   const navigateToTarget = useCallback(() => {
     bypassNextNavigation();
     navigate(to);
+    playPageEnter();
   }, [bypassNextNavigation, navigate, to]);
 
   const runPeel = useCallback(() => {
@@ -40,10 +43,12 @@ export function CallingCardPeelLink({
       navigateToTarget();
       return;
     }
-    if (isPeelBusy()) return;
+    if (isPeelBusy(root)) return;
 
-    void peelCallingCard(root, navigateToTarget);
-  }, [navigateToTarget]);
+    void prefetchRoute(to);
+    // Navigate as the release begins; the incoming page fades in over the tail.
+    void peelCallingCard(root, undefined, { onRelease: navigateToTarget });
+  }, [navigateToTarget, to]);
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -53,6 +58,19 @@ export function CallingCardPeelLink({
     },
     [runPeel]
   );
+
+  const prefetch = useCallback(() => {
+    void prefetchRoute(to);
+  }, [to]);
+
+  const handlePointerDown = useCallback(() => {
+    prefetch();
+    rootRef.current?.classList.add('ccp--pressed');
+  }, [prefetch]);
+
+  const clearPressed = useCallback(() => {
+    rootRef.current?.classList.remove('ccp--pressed');
+  }, []);
 
   const child = React.Children.only(children);
   const enhancedChild = React.cloneElement(child, {
@@ -68,6 +86,12 @@ export function CallingCardPeelLink({
       rootRef={rootRef}
       className={className}
       obstructionLabel={obstructionLabel}
+      onPointerEnter={prefetch}
+      onFocus={prefetch}
+      onPointerDown={handlePointerDown}
+      onPointerUp={clearPressed}
+      onPointerLeave={clearPressed}
+      onPointerCancel={clearPressed}
     >
       {enhancedChild}
     </CallingCardPeel>

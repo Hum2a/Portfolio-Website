@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { applySettled } from './paperStackShuffle.ts';
 import './paper-stack-shuffle.css';
@@ -12,6 +12,9 @@ const SHEET_CLASS = [
 ] as const;
 
 export type SheetId = 0 | 1 | 2 | 3;
+
+/** Horizontal travel (px) that counts as a swipe on touch. */
+const SWIPE_PX = 40;
 
 export type PaperStackShuffleProps = {
   statusText: string;
@@ -59,26 +62,75 @@ const PaperStackShuffle: React.FC<PaperStackShuffleProps> = ({
     }
   }, [statusText]);
 
-  const setSheetRef = (id: SheetId) => (el: HTMLElement | null) => {
-    sheetRefs.current[id] = el;
-    registerSheetRef?.(id, el);
-  };
+  // One stable ref callback (React 19 cleanup form) so refs don't re-fire every render.
+  const setSheetRef = useCallback(
+    (el: HTMLElement | null) => {
+      if (!el) return undefined;
+      const id = Number(el.dataset.sheet) as SheetId;
+      sheetRefs.current[id] = el;
+      registerSheetRef?.(id, el);
+      return () => {
+        sheetRefs.current[id] = null;
+        registerSheetRef?.(id, null);
+      };
+    },
+    [registerSheetRef]
+  );
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        onPrev?.();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        onNext?.();
+      }
+    },
+    [onPrev, onNext]
+  );
+
+  const swipeStart = useRef<{ x: number; y: number; id: number } | null>(null);
+  const handlePointerDown = useCallback((event: React.PointerEvent) => {
+    if (event.pointerType !== 'touch') return;
+    swipeStart.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
+  }, []);
+  const handlePointerUp = useCallback(
+    (event: React.PointerEvent) => {
+      const start = swipeStart.current;
+      swipeStart.current = null;
+      if (!start || start.id !== event.pointerId) return;
+      const dx = event.clientX - start.x;
+      const dy = event.clientY - start.y;
+      if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0) onNext?.();
+      else onPrev?.();
+    },
+    [onPrev, onNext]
+  );
 
   return (
     <div
       ref={demoRef}
       className={cn('paper-stack-demo', embed && 'paper-stack-demo--embed')}
       data-paper-stack-demo
+      onKeyDown={handleKeyDown}
     >
       <div
         className="paper-stack"
         data-paper-stack
         aria-hidden={interactive ? undefined : true}
+        aria-busy={busy || undefined}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={() => {
+          swipeStart.current = null;
+        }}
       >
         {([0, 1, 2, 3] as SheetId[]).map((id) => (
           <article
             key={id}
-            ref={setSheetRef(id)}
+            ref={setSheetRef}
             className={cn(
               'paper-stack__sheet',
               SHEET_CLASS[id],
@@ -100,7 +152,6 @@ const PaperStackShuffle: React.FC<PaperStackShuffleProps> = ({
           type="button"
           className="paper-stack__btn"
           data-paper-prev
-          disabled={busy}
           onClick={onPrev}
         >
           PREVIOUS
@@ -109,7 +160,6 @@ const PaperStackShuffle: React.FC<PaperStackShuffleProps> = ({
           type="button"
           className="paper-stack__btn"
           data-paper-next
-          disabled={busy}
           onClick={onNext}
         >
           NEXT
