@@ -15,6 +15,8 @@ const REDIRECT_HOSTS = new Set([
   'humza-butt.com',
   'www.humza-butt.com',
   'humza-butt.onrender.com',
+  'humza.website',
+  'www.humza.website',
 ]);
 
 function isLocalDevHost(host: string): boolean {

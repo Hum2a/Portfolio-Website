@@ -9,6 +9,7 @@
 - `www.humza-butt.space`
 - `humzabutt.com` / `www.humzabutt.com`
 - `humza-butt.com` / `www.humza-butt.com`
+- `humza.website` / `www.humza.website` (added 2026-10-24; failed to load at all before — needs the dashboard step below)
 - `*.onrender.com` (only if that hostname is proxied through this Worker)
 
 `wrangler.jsonc` sets `assets.run_worker_first: true` so redirects apply before static assets.
@@ -17,6 +18,7 @@
 1. Add each alias as a Custom Domain on the `humza-butt-portfolio` Worker (or as a DNS CNAME → Workers route).
 2. Prefer apex + www both on Cloudflare; www should resolve to the Worker so the 301 runs.
 3. Optional: Bulk Redirect / Page Rule as a belt-and-braces www → apex.
+4. `humza.website` + `www.humza.website`: add both as Custom Domains on `humza-butt-portfolio`, then check `curl -sI https://humza.website` returns `301` → `https://humza-butt.space/`.
 
 ## Render (`humza-butt.onrender.com`)
 Old Render still served **200** (not 301) as of 2026-08-03.
