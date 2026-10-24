@@ -11,12 +11,16 @@ import SectionBackdrop from '../media/SectionBackdrop';
 import CareerTimeline from './CareerTimeline';
 import './CareerSection.css';
 
-/** Homepage: CoreStream + current software roles, CoreStream first if not current */
+/** Homepage: 501 Fun first, then CoreStream, then other current software roles */
 function pickHomepageRoles(list) {
   const software = Array.isArray(list) ? list : [];
+  const lead = software.find((r) => r.id === '501fun');
   const corestream = software.find((r) => r.id === 'corestream');
-  const current = software.filter((r) => r.current && r.id !== 'corestream');
+  const current = software.filter(
+    (r) => r.current && r.id !== 'corestream' && r.id !== '501fun'
+  );
   const picked = [];
+  if (lead) picked.push(lead);
   if (corestream) picked.push(corestream);
   for (const r of current) {
     if (picked.length >= 4) break;

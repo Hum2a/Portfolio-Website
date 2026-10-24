@@ -1,7 +1,7 @@
 {
   "profile": {
     "name": "Humza Butt",
-    "headline": "Software Engineer, Full Stack & Platform Configuration",
+    "headline": "Cloud Engineer at 501 Fun · Full Stack Software Engineer",
     "location": "Sutton, England, United Kingdom",
     "about": "I build SaaS platforms, APIs and real-time systems — and configure enterprise platforms for Shell, the BBC, the NHS and the Home Office.",
     "connections": "500+",
@@ -10,6 +10,26 @@
     "avatar": "/images/linkedin/avatar.jpg"
   },
   "experience": [
+    {
+      "id": "501fun",
+      "title": "Cloud Engineer",
+      "company": "501 Fun",
+      "companyUrl": "https://www.linkedin.com/company/501fun",
+      "employmentType": "Full-time",
+      "location": "New Hythe, Kent, England, United Kingdom",
+      "startDate": "2026-08",
+      "endDate": null,
+      "current": true,
+      "category": "software",
+      "clients": [],
+      "tech": [],
+      "highlights": [
+        "Help Center Modernization: designed and launched a self-service help center, improving user navigation and cutting repetitive support inquiries",
+        "AI Chatbot (\"DANI\"): developed an AI chatbot to automate first-line support, delivering instant responses and faster resolution times",
+        "Internal Knowledge Base (\"Compendium\"): built a centralised internal knowledge base app, streamlining cross-team multimedia documentation",
+        "Exec-Level Jira Dashboard: custom-built a Jira dashboard app giving the COO real-time operational insights"
+      ]
+    },
     {
       "id": "lifesmart",
       "title": "Full Stack Software Engineer",

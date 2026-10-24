@@ -20,7 +20,7 @@ const FILES: EditorFile[] = [
   {
     id: 'humza.ts',
     source: `const humza = {
-  role:     "Software Engineer, Full Stack & Platform Configuration",
+  role:     "Cloud Engineer at 501 Fun · Full Stack Software Engineer",
   based:    "Sutton, London",
   building: ["Bgr8 - mentoring platform, 95% match accuracy",
              "LifeSmart - 7 SaaS tools, sub-second global loads",

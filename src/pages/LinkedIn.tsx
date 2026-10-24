@@ -85,7 +85,7 @@ export default function LinkedIn() {
       <div className="linkedin-page">
         <Seo
           title="Career"
-          description="Career timeline for Humza Butt — CoreStream GRC (Shell, BBC, NHS, Home Office), LifeSmart, Bgr8 and education."
+          description="Career timeline for Humza Butt — 501 Fun, CoreStream GRC (Shell, BBC, NHS, Home Office), LifeSmart, Bgr8 and education."
           path="/career"
         />
         <div className="linkedin-page-container">
@@ -110,7 +110,7 @@ export default function LinkedIn() {
     <div className="linkedin-page">
       <Seo
         title="Career"
-        description="Career timeline for Humza Butt — CoreStream GRC (Shell, BBC, NHS, Home Office), LifeSmart, Bgr8 and education."
+        description="Career timeline for Humza Butt — 501 Fun, CoreStream GRC (Shell, BBC, NHS, Home Office), LifeSmart, Bgr8 and education."
         path="/career"
       />
 

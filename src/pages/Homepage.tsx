@@ -12,7 +12,7 @@ const Homepage = () => {
   return (
     <div className="homepage">
       <Seo
-        title="Humza Butt — Software Engineer, Full Stack & Platform Configuration"
+        title="Humza Butt — Cloud Engineer at 501 Fun · Full Stack Software Engineer"
         description={DEFAULT_DESCRIPTION}
         path="/"
       />
@@ -28,7 +28,7 @@ const Homepage = () => {
             <h1 className="homepage-title">Humza Butt</h1>
 
             <p className="homepage-role">
-              Software Engineer, Full Stack &amp; Platform Configuration
+              Cloud Engineer at 501 Fun · Full Stack Software Engineer
             </p>
 
             <p className="homepage-lede">

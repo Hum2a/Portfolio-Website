@@ -1,0 +1,28 @@
+{
+  "baseUrl": "http://localhost:4173",
+  "throttle": {
+    "cpu": 4,
+    "network": "Fast 3G"
+  },
+  "home": {
+    "path": "/",
+    "elapsedMs": 812,
+    "scrollSteps": 9,
+    "longTaskCount": 6,
+    "longTaskMax": 695,
+    "blurNodeCount": 0,
+    "headerBackdropFilter": "none"
+  },
+  "caseStudy": {
+    "path": "/bgr8",
+    "elapsedMs": 539,
+    "scrollSteps": 2,
+    "longTaskCount": 5,
+    "longTaskMax": 162,
+    "blurNodeCount": 0,
+    "headerBackdropFilter": "none"
+  },
+  "headerBlurActive": false,
+  "jankSuspected": true,
+  "recommendation": "No blur-related jank signal under heuristic"
+}

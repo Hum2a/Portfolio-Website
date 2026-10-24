@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 export const SITE_ORIGIN = 'https://humza-butt.space';
 export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/images/portfolio-preview.jpg`;
 export const DEFAULT_DESCRIPTION =
-  'Humza Butt - Software Engineer, Full Stack & Platform Configuration. Sutton, UK. Enterprise platform work for Shell, the BBC, the NHS and the Home Office. 29 shipped projects across web, mobile, desktop and extensions.';
+  'Humza Butt - Cloud Engineer at 501 Fun · Full Stack Software Engineer. Sutton, UK. Enterprise platform work for Shell, the BBC, the NHS and the Home Office. 29 shipped projects across web, mobile, desktop and extensions.';
 
 function absoluteUrl(pathOrUrl?: string): string {
   if (!pathOrUrl) return DEFAULT_OG_IMAGE;

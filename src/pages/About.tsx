@@ -184,7 +184,7 @@ const About = () => {
     <div className="about-page">
       <Seo
         title="About"
-        description="About Humza Butt — Software Engineer, Full Stack & Platform Configuration. Background, skills and approach."
+        description="About Humza Butt — Cloud Engineer at 501 Fun · Full Stack Software Engineer. Background, skills and approach."
         path="/about"
       />
 
@@ -197,7 +197,7 @@ const About = () => {
         <motion.header className="about-header" variants={itemVariants}>
           <h1 className="about-title">About</h1>
           <p className="about-lede">
-            Software Engineer, Full Stack &amp; Platform Configuration. I build
+            Cloud Engineer at 501 Fun · Full Stack Software Engineer. I build
             SaaS platforms, APIs and real-time systems — and configure enterprise
             platforms for Shell, the BBC, the NHS and the Home Office.
           </p>
