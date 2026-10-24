@@ -6,6 +6,7 @@ import {
   PROJECT_CATEGORY_ORDER,
   PROJECT_CATEGORY_META,
   getVisibleProjects,
+  getProjectCategories,
   type Project,
 } from '../data/projects';
 import Seo from '../components/seo/Seo';
