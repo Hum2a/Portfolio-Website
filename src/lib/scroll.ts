@@ -46,3 +46,21 @@ export function ScrollManager(): null {
   useScrollManager();
   return null;
 }
+
+/** Short opacity fade on #main-content for navigations that skip the wipe. */
+export function playPageEnter(): void {
+  const main = document.getElementById('main-content');
+  if (!main) return;
+  main.removeAttribute('data-enter');
+  void main.offsetWidth;
+  main.setAttribute('data-enter', '');
+  const clear = () => {
+    main.removeAttribute('data-enter');
+    main.removeEventListener('animationend', onEnd);
+  };
+  const onEnd = (e: AnimationEvent) => {
+    if (e.target === main) clear();
+  };
+  main.addEventListener('animationend', onEnd);
+  window.setTimeout(clear, 400);
+}
