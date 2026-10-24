@@ -1,3 +1,4 @@
+import { prefersReducedMotion } from '@/lib/motion';
 /**
  * Paper Stack Shuffle — tiny portable API.
  * Works inside sandbox="allow-scripts" (no parent / storage / network).
@@ -25,12 +26,6 @@ export type PaperStackShuffleContext = {
   statusLabel?: (frontSheetId: number) => string;
 };
 
-function prefersReducedMotion(): boolean {
-  const forced =
-    document.documentElement.getAttribute('data-force-reduced-motion') === 'true';
-  const media = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  return forced || media;
-}
 
 function poseTransform(d: number): string {
   const p = DEPTH_POSES[d];

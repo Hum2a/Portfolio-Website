@@ -1,15 +1,11 @@
 import { LIFT_MS, PEEL_MS, PHASES, RELEASE_MS, TENSION_MS, TOTAL_MS } from './constants';
+import { prefersReducedMotion } from '@/lib/motion';
 
 type TimerId = ReturnType<typeof setTimeout>;
 
 let busy = false;
 
-export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
-  const forced =
-    document.documentElement.getAttribute('data-force-reduced-motion') === 'true';
-  return forced || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+export { prefersReducedMotion };
 
 export function isPeelBusy(): boolean {
   return busy;

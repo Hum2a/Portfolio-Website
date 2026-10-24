@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import imageManifest from '../../data/imageManifest.json';
 import { encodePublicPath } from './Img';
 import './SectionBackdrop.css';
+import { useReducedMotion } from '@/lib/motion';
 
 type ManifestMap = Record<
   string,
@@ -56,17 +57,7 @@ function clampIntensity(value: number): number {
   return value;
 }
 
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return reduced;
-}
+const usePrefersReducedMotion = useReducedMotion;
 
 /**
  * Soft blended section backdrop. Always dual-masked (radial + linear),

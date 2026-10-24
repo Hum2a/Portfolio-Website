@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { cn } from '@/lib/utils';
 import './CodeEditor.css';
+import { useReducedMotion } from '@/lib/motion';
 
 export type EditorFileId = 'humza.ts' | 'work.ts' | 'contact.ts';
 
@@ -160,17 +161,7 @@ function renderTokens(source: string, typedLength: number): React.ReactNode {
   });
 }
 
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return reduced;
-}
+const usePrefersReducedMotion = useReducedMotion;
 
 const CYCLE_PAUSE_MS = 2800;
 const USER_PAUSE_MS = 8000;
