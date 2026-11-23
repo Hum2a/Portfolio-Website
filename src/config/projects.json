@@ -1,6 +1,107 @@
 {
   "projects": [
     {
+      "id": "locations",
+      "name": "Locations",
+      "description": "Private Google Timeline explorer with GPS heatmaps, road-matched day views, rail detection, insights, and UK journey cost estimation.",
+      "logo": "locations.svg",
+      "gradient": "linear-gradient(135deg, #0d1117 0%, #162338 50%, #1f4f8f 100%)",
+      "route": "/locations",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Cloudflare Workers",
+        "Hono",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "MapLibre GL",
+        "Better Auth",
+        "Stripe",
+        "Playwright",
+        "Vitest",
+        "Geospatial",
+        "Data Visualization",
+        "Privacy",
+        "SaaS",
+        "WebApp"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-08-15",
+      "dateUpdated": "2026-11-15",
+      "embeddable": false,
+      "liveUrl": "https://locations.aden.website",
+      "repoUrl": "https://github.com/Arbzy1/locations",
+      "caseStudy": {
+        "claim": "A privacy-first Google Timeline explorer and UK journey cost calculator running on Cloudflare Workers, Neon Postgres with FORCE RLS, and MapLibre GL.",
+        "role": "Co-creator & full-stack engineer: browser import pipeline, GPS rail detection, MapLibre explorer, and Cloudflare Workers API",
+        "timeline": "2026 · live at locations.aden.website",
+        "metrics": [
+          {
+            "value": "37",
+            "label": "Postgres tables (FORCE RLS)"
+          },
+          {
+            "value": "205",
+            "label": "Test suites (Vitest + E2E)"
+          },
+          {
+            "value": "10 ms",
+            "label": "Worker CPU budget (free tier)"
+          },
+          {
+            "value": "30",
+            "label": "Light & dark UI colour moods"
+          }
+        ],
+        "problem": "Google moved Timeline data on-device and left users with raw Takeout JSON exports that are awkward to inspect, hard to search across years, and frequently inaccurate on transport modes such as train trips labelled as driving.\n\nExisting self-hosted viewers often require heavy always-on servers or push large location archives through backend APIs without strict database-level tenant isolation.",
+        "sections": [
+          {
+            "title": "Map-first Timeline explorer and honest GPS routes",
+            "body": "Built a responsive MapLibre GL explorer spanning Hotspots (visit-density heatmaps and ranked places), Day View (chronological timelines with playback, sunrise/sunset ticks, and numbered journey badges), Routes, Trips, and Insights.\n\nInstead of trusting raw Google segments blindly, Day View filters GPS spikes, snaps traces onto roads via OSRM map matching only when the route stays within 80 m median distance of recorded fixes, and renders gaps over 10 minutes as faint dashes.",
+            "image": "/images/Locations/hero.png",
+            "imageAlt": "Locations Day View showing Manhattan subway and walking journeys on a dark map, numbered and coloured by transport mode alongside the chronological timeline"
+          },
+          {
+            "title": "Browser-side imports and GPS rail detection on a 10 ms Worker budget",
+            "body": "To fit within Cloudflare Workers' 10 ms free-tier CPU limit, multi-megabyte Takeout zips and JSON files are unzipped and parsed inside a browser Web Worker using fflate and shared @locations/db/pure modules, then uploaded to Hono in small validated batches.\n\nStatic OpenStreetMap z10 rail tiles for Great Britain and Ireland are served straight from CDN assets so the Web Worker can reclassify mislabelled driving legs as train or Underground journeys and snap them onto real railway tracks with zero Worker CPU cost.",
+            "image": "/images/Locations/detail.png",
+            "imageAlt": "Hotspots view displaying a location frequency heatmap alongside ranked places, custom labels, and visit/time totals"
+          },
+          {
+            "title": "Multi-tenant isolation and UK Journey cost engine",
+            "body": "Every tenant-scoped table enforces two layers of isolation: explicit Drizzle tenant filters combined with Postgres FORCE ROW LEVEL SECURITY evaluated against a transaction-local app.tenant GUC inside withTenant() on a NOBYPASSRLS database role.\n\nAlongside Timeline exploration, the app integrates Journey cost (/journey-cost), a pure TypeScript engine calculating UK fuel and EV trip costs with PostGIS clean-air zones, tolls, live forecourt prices, and encrypted DVLA plate lookups.",
+            "image": "/images/Locations/routes.png",
+            "imageAlt": "Routes view plotting recorded journeys across months, colour-coded by transport mode with mileage breakdowns"
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Parse Takeout archives and compute statistics in a browser Web Worker",
+            "why": "Parsing a 15 MB Timeline export takes ~200 ms and computing analytics ~230 ms, exceeding Cloudflare Workers' 10 ms free-tier CPU cap.",
+            "tradeoff": "Requires paged aggregate rebuilds and resumable batch uploads from the client, in exchange for near-zero server CPU usage and unrestricted export sizes."
+          },
+          {
+            "choice": "Combine Drizzle tenant filters with Postgres FORCE RLS and a NOBYPASSRLS role",
+            "why": "Precise location histories and encrypted vehicle registration plates are high-sensitivity PII where a single missed WHERE clause would be unacceptable.",
+            "tradeoff": "Every authenticated request runs inside an explicit transaction via withTenant(), and external OSRM/Nominatim calls must be deferred until after commit."
+          },
+          {
+            "choice": "Ship static z10 OSM rail tiles as CDN assets for client-side rail matching",
+            "why": "Allows reliable reclassification and track-snapping of mislabelled train rides without adding Worker subrequests, database load, or paid rail APIs.",
+            "tradeoff": "Detailed railway track snapping covers Great Britain, the Isle of Man, and Ireland only (falling back to speed heuristics elsewhere) and uses manual tile rebuilds."
+          }
+        ],
+        "outcome": "Live in production at locations.aden.website with an interactive, read-only public demo account (Manhattan and Boston sample landmarks) and full MIT-licensed self-hosting support.\n\nIncludes Better Auth (email/password, OTP, magic link, optional Google OAuth), optional Stripe billing and customer portal, GDPR ZIP/GPX/GeoJSON exports, 30 dark/light colour moods, and a staff ops panel."
+      }
+    },
+    {
       "id": "finance",
       "name": "Finance",
       "description": "A private UK personal finance ledger for savings, spending, credit, payroll, and tax, backed by Cloudflare Workers and Neon Postgres.",
@@ -212,7 +313,7 @@
     {
       "id": "26-birthday-quiz",
       "name": "26 Birthday Quiz",
-      "description": "A hosted multiplayer party quiz for Humza's 26th — guests play on phones, questions and reveals appear on a projector.",
+      "description": "Real-time multiplayer birthday party game for 80 phones and a projector — with live sabotage trolls, Stockfish chess, and 3D kart racing.",
       "logo": "26-birthday-quiz.svg",
       "gradient": "linear-gradient(135deg, #14110e 0%, #ff4d3a 50%, #ffc43a 100%)",
       "route": "/26-birthday-quiz",
@@ -220,28 +321,23 @@
         "TypeScript",
         "React",
         "Vite",
+        "Tailwind CSS",
         "Cloudflare Workers",
         "Durable Objects",
+        "WebSockets",
         "SQLite",
-        "Neon Postgres",
-        "R2",
         "Hono",
-        "Tailwind CSS",
-        "Motion",
         "Three.js",
+        "WebAssembly",
+        "PostgreSQL",
+        "Neon",
+        "Cloudflare R2",
         "Better Auth",
-        "Resend",
+        "Zod",
+        "React Router",
         "Vitest",
         "Playwright",
-        "GitHub Actions",
-        "WebSocket",
-        "WebApp",
-        "Game",
-        "Party Game",
-        "Realtime",
-        "Multiplayer",
-        "Monorepo",
-        "Turborepo"
+        "Game"
       ],
       "visible": true,
       "featured": true,
@@ -251,76 +347,164 @@
         "website"
       ],
       "dateAdded": "2026-10-24",
-      "dateUpdated": "2026-10-24",
+      "dateUpdated": "2026-11-21",
       "embeddable": false,
       "liveUrl": "https://26.humza.website",
+      "repoUrl": "https://github.com/Hum2a/26",
       "caseStudy": {
-        "claim": "A hosted party quiz for Humza's 26th — Baseer presents, Humza runs the show, and guests play individually on their phones.",
-        "role": "Sole engineer — full-stack architecture, Durable Object coordination, game logic reducer, question authoring system, theme engine, kart mini-game, and production deployment.",
-        "timeline": "2026 · live at 26.humza.website",
+        "claim": "A real-time multiplayer party game built for an 80-guest 26th birthday — pairing mobile phone controllers with a projector stage, live sabotage trolls, Stockfish chess, and 3D kart racing.",
+        "role": "Sole engineer — Durable Object room engine, 10+ game mechanics, Three.js kart racer, operator console, and deploy",
+        "timeline": "Sep – Nov 2026 · shipped 21 Nov at 26.humza.website",
         "metrics": [
-          { "value": "19", "label": "Build stages" },
-          { "value": "40+", "label": "Party themes" },
-          { "value": "Durable Objects", "label": "Room state" },
-          { "value": "75", "label": "Player capacity" }
+          { "value": "80", "label": "player cap per room" },
+          { "value": "12+", "label": "round mechanics" },
+          { "value": "49", "label": "live troll gags" },
+          { "value": "203k", "label": "handwritten LOC" }
         ],
-        "problem": "Hosting a one-night, in-person multiplayer quiz for 50-plus guests without off-the-shelf party-game tools. The experience needed to be playful and production-grade: guests answer and vote on their phones while questions, reveals, photos, audio and scores appear on a projector. The presenter (Baseer) and operator (Humza) needed distinct roles. Existing solutions either assumed pods/voting groups, required guest accounts, or lacked the custom question presentation needed for a personal birthday event.",
+        "problem": "Off-the-shelf party quiz tools break down when you want custom round mechanics, live audience sabotage, projector-synchronised photo walls, and a 3D racing finale under unreliable venue Wi-Fi. Typical quiz apps either lock content behind rigid templates, leak answer keys to the client, or lose room state when mobile browsers sleep and reconnect mid-round.\n\nI built a bespoke party platform where a presenter drives the big screen, an operator cues and moderates the show from a live desk, and up to 80 guests play individually on their own phones with zero app installs or accounts.",
         "sections": [
           {
-            "title": "Live room state with Durable Objects",
-            "body": "Built one SQLite-backed Durable Object per game room, handling WebSocket connections, phase lifecycle, scoring, and scheduling through a single alarm per room. Server-authoritative design: clients send intents, the room validates and publishes outcomes. SQLite stores the authoritative state; memory is a disposable cache. Persisted accepted actions before acknowledgement, with idempotent retries. A separate code registry DO resolves short unambiguous join codes to unique game IDs. Hibernation-safe WebSocket attachments restore connection metadata on wake, supporting seamless reconnects across Wi-Fi changes and refreshes.",
+            "title": "Authoritative rooms on Durable Objects and WebSockets",
+            "body": "Each party room runs inside a single SQLite-backed Cloudflare Durable Object (PartyRoom) served by the same Hono Worker that hosts the React app. Phones send intents over one reconnecting WebSocket with idempotent request receipts, while the server validates deadlines, persists accepted actions to SQLite before acknowledging, and drives phase changes via a single durable alarm scheduler.\n\nGuest snapshots intentionally strip answer keys, presenter notes, and host controls. Post-game archiving to Neon Postgres and optional Resend email recaps run strictly outside the live tap path.",
             "image": "/images/26BirthdayQuiz/hero.png",
             "imageAlt": "Guest controller with live question and countdown timer."
           },
           {
-            "title": "Question engine and presentation",
-            "body": "A pure TypeScript question-pack system with multiple mechanics: multiple choice, slider estimates, whole-room voting, guess-the-guest, ranking, 1v1 duels, typed answers with A/B presentation, Wordle-style guessing, and photo/voice activities. Each round declares its supported phases, scoring policy, and attribution mode. Custom question designs (trolley polls, rage meters, ballot papers, scripture reveals) use a shared presentation kit with real-time typing previews, live submission counts, and themeable skins. The question catalogue browser lets the host rehearse every design before the event.",
+            "title": "Bespoke rounds from Wordle to Three.js kart racing",
+            "body": "The birthday pack spans 53 ordered rounds across photo trivia, partial-credit multi-select, consensus sliders, tap ranking, knockout text ballots, push-your-luck escalations, Leaflet map guessing, a 5-letter Wordle round, simultaneous 1-minute chess against in-browser Stockfish 19 WASM, and a 3D Three.js kart Grand Prix.\n\nTo keep 80 phones smooth on venue Wi-Fi, kart races use trusted device-recorded active elapsed times with ordered lap splits and local rollback prediction while the room owns admission and standings. Heavy engines (Three.js, Stockfish, and /admin) are lazy-loaded to keep the initial join bundle fast.",
             "image": "/images/26BirthdayQuiz/detail.png",
             "imageAlt": "Custom question design with A/B presentation and live voting interface."
           },
           {
             "title": "Theme system and visual identity",
-            "body": "Built a palette-plus-skin theme engine with 40 party themes, from '26 basic' (warm coral and gold) to Persona references and nostalgia palettes. Each theme supplies 12 colour roles, a typeface treatment, motion presets, and optional background scenes (spotlights, synthwave grids, stars, doodles). Skins add identity markers: Persona 5 shards, kart racing motifs, birthday candle lighting. All animations respect reduced-motion preferences. The kart mini-game integrates guest photo faces, drift handling, and power-ups as a playable interlude.",
+            "body": "Built a palette-plus-skin theme engine with 79 switchable party themes, from '26 basic' (warm coral and gold) to Persona references and nostalgia palettes. Each theme supplies 12 colour roles, a typeface treatment, motion presets, and optional background scenes (spotlights, synthwave grids, stars, doodles).\n\nSkins add identity markers: Persona 5 shards, kart racing motifs, birthday candle lighting. All animations respect reduced-motion preferences.",
             "image": "/images/26BirthdayQuiz/themes.png",
             "imageAlt": "Theme picker showing multiple party palettes and scene backgrounds."
           },
           {
-            "title": "Admin controls and media pipeline",
-            "body": "A dedicated `/admin` surface provides complete host oversight: room creation, live phase controls, player recovery, troll activation, and post-game archive. Every feature ships with its admin view in the same change — see, manage, and rehearse from the control panel. Photo and voice uploads flow through presigned R2 URLs to a validation Worker, then into accepted media buckets. Post-game, a retryable export writes the full record to Neon for results pages, personal recaps, and optional Resend emails. End-game statistics aggregate browser contexts, answer patterns, and fun facts.",
+            "title": "Live sabotage trolls and a rehearsal-ready operator desk",
+            "body": "From round two onward, guests spend cooldown-gated tokens across 49 troll gags—warping a rival's phone UI, firing projector stings, or applying deterministic score modifiers (double, steal, robin-hood, share) during reveal.\n\nEvery feature ships with a matching /admin view so the host can cue rounds, pair a presenter phone, moderate uploaded photos, issue one-time phone transfer codes, and rehearse the full show against up to 100 simulated WebSocket bots.",
             "image": "/images/26BirthdayQuiz/admin.png",
             "imageAlt": "Host control panel with real-time phase controls and player management."
           }
         ],
         "decisions": [
           {
-            "choice": "Durable Objects with SQLite",
-            "why": "Cloudflare's SQLite-backed DOs give per-room state, WebSocket hibernation, and durability without managing a separate database for live gameplay.",
-            "tradeoff": "Learning curve for the API; limited to Cloudflare Workers runtime."
+            "choice": "One SQLite-backed Durable Object per room instead of external DB calls during play",
+            "why": "Colocating WebSocket hibernation, round state, receipts, and a single alarm scheduler inside PartyRoom avoids cross-region latency during 80-phone bursts and survives socket drops.",
+            "tradeoff": "Deploying mid-game restarts active rooms and drops connections, and 80-player kart races require Cloudflare Workers Paid to stay within Durable Object SQLite row limits."
           },
           {
-            "choice": "Pure reducer game logic",
-            "why": "All game state changes go through a single `reduce(state, event, now)` function, making the logic unit-testable and the DO a thin execution shell.",
-            "tradeoff": "Extra indirection for some operations; requires careful effect modelling."
+            "choice": "Device-recorded kart lap timing with local rollback prediction",
+            "why": "Early 80-bot staging rehearsals showed that streaming every steering tick through the Durable Object overloaded the alarm loop and triggered reconnect storms.",
+            "tradeoff": "Relies on each phone's monotonic active timer for race finish durations instead of pure server-tick physics—trading strict anti-cheat for responsive 60fps mobile racing among friends."
           },
           {
-            "choice": "No guest accounts",
-            "why": "Random game-scoped credentials with HttpOnly cookies; no signup friction for a one-night event, and identity is explicit not inferred from device.",
-            "tradeoff": "Guests must keep their browser or use a recovery flow; no persistent user accounts across events."
-          },
-          {
-            "choice": "Question packs in TypeScript",
-            "why": "Versioned server-side code keeps answer keys and scoring secrets off the client; no CMS overhead for a personal birthday.",
-            "tradeoff": "Deploying a new question pack requires a code change and redeploy; not ideal for frequent content updates."
+            "choice": "Versioned TypeScript question packs instead of a runtime CMS",
+            "why": "Keeping all 59 catalogued rounds in server-only TypeScript lets preflight checks verify media, timers, and answer shapes while ensuring secrets never enter the client bundle.",
+            "tradeoff": "Content changes require a code deploy, though hosts can still reorder and freeze the active running order from /admin prior to starting a game."
           }
         ],
-        "outcome": "All 19 build stages complete. Production is live at https://26.humza.website with staging at https://26-staging.humza.website. The site supports 75 concurrent players, 40 party themes, and a full admin surface for rehearsal and event control. Question authoring workflow is established; the birthday pack is versioned and ready. The kart mini-game is playable solo and in real-time multiplayer. Load testing at 50 simultaneous players passed. The event runbook documents presenter and operator steps. Unverified: Neon archive and Resend email delivery require remote credentials not yet configured in this environment."
+        "outcome": "26.humza.website shipped to production at https://26.humza.website for Humza's 26th birthday on 21 November 2026, with standalone /kart and /chess solo practice, synced /host projector views, live /admin operator controls, and immutable Neon-backed /r/:gameId archive pages.\n\nPublic visitors without a room code can browse the landing page and play solo kart or chess immediately, while live quiz rooms remain gated by room codes and allow-listed administrator sign-in."
+      }
+    },
+    {
+      "id": "specimen-archive",
+      "name": "Specimen Archive",
+      "description": "A catalogue of 651 portable motion specimens: live previews, one-click recreation prompts, and a playground for exporting new ones.",
+      "logo": "specimen-archive.svg",
+      "gradient": "linear-gradient(135deg, #0E1015 0%, #1B1E26 55%, #2C313C 100%)",
+      "route": "/specimen-archive",
+      "tags": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "React Router",
+        "CodeMirror",
+        "Vanilla CSS",
+        "Cloudflare Pages",
+        "GitHub Actions",
+        "Vitest",
+        "Playwright",
+        "WebApp",
+        "Developer Tools",
+        "Design System",
+        "CSS Animation",
+        "Motion Design",
+        "Static Site",
+        "Accessibility",
+        "Tooling"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": ["website"],
+      "dateAdded": "2026-08-06",
+      "dateUpdated": "2026-11-07",
+      "embeddable": false,
+      "liveUrl": "https://playground.humza-butt.space",
+      "repoUrl": "https://github.com/Hum2a/playground",
+      "caseStudy": {
+        "claim": "651 motion specimens, each archived with its source, its contract, and a prompt that rebuilds it anywhere.",
+        "role": "Sole engineer — catalogue UX and design system, sandboxed preview harness, 651-specimen registry, prompt builder, playground editor with zip export, and the Cloudflare Pages deploy pipeline.",
+        "timeline": "Aug–Nov 2026 · live at playground.humza-butt.space",
+        "metrics": [
+          { "value": "651", "label": "specimens archived" },
+          { "value": "22", "label": "franchise families" },
+          { "value": "555k", "label": "lines in repo" },
+          { "value": "3", "label": "prompt modes" }
+        ],
+        "problem": "Motion detail is the first thing lost between projects. A hover, a transition, a completion burst gets built once in one codebase, then survives only as a screen recording or a Slack link — not as something a future agent or teammate can re-run and re-use. Screenshots cannot be pasted into a new repo, and \"make it feel like the reference\" is not a specification.\n\nThe second problem is mechanical. These artifacts are arbitrary CSS with global class names, loud palettes, and infinite loops. They cannot share a document with the site chrome: one * { } reset or a .track collision and the host page eats itself. The archive had to isolate styling completely without editing a single line of the specimen.",
+        "sections": [
+          {
+            "title": "Sandboxed previews that never touch the chrome",
+            "body": "Every preview renders inside an iframe srcdoc with sandbox=\"allow-scripts\" and nothing else. That one decision buys true style isolation, so specimen CSS stays verbatim and portable instead of scoped, renamed, or restyled. Playback, reduced-motion emulation, viewport, and background all run against the frame's own document.\n\nThe frame is also the control surface: restart and replay are postMessage commands, and playback rate is applied through document.getAnimations() inside the sandbox. Because the frame has no same-origin access, the harness cannot reach in and fix a specimen — which is exactly the property that keeps copied code honest.",
+            "image": "/images/SpecimenArchive/hero.png",
+            "imageAlt": "The catalogue: filter rails for kind, tech, scope, intensity and inspiration above a grid of specimen plates, each with a live preview."
+          },
+          {
+            "title": "A prompt builder instead of a screenshot",
+            "body": "buildPrompt(specimen, mode) produces three clipboard payloads per specimen: the full recreation prompt, code only, and contract only. The full prompt is written for an agent that has never heard of this site: intent, dependencies, host requirements, markup, styles, behaviour, the JSON contract, integration steps, and observable acceptance criteria (\"marquee loops with no visible seam\", not \"looks good\").\n\nNothing in the generated text describes the archive. That constraint is what makes the output portable — the receiving agent gets the artifact, not the museum label.",
+            "image": "/images/SpecimenArchive/detail.png",
+            "imageAlt": "A specimen detail page: sandboxed preview with viewport, background, reduced-motion and playback controls, beside tabbed Spec, Markup, Styles, Contract and Prompt source."
+          },
+          {
+            "title": "A playground that closes the loop",
+            "body": "/playground is a split view: a CodeMirror 6 editor (HTML/CSS/JS tabs) on the left, the same sandboxed harness on the right, with the shared control strip underneath — 320/360/768/full viewport, four backgrounds, three reduced-motion modes, pause and 0.25×–2× playback, restart. Drafts debounce to localStorage; Share compresses a draft into the URL hash with lz-string, so a link is inert but reproducible, with no backend involved.\n\nExport specimen generates the real folder — demo.html, demo.css, optional demo.js, a filled entry.ts, a spec.md scaffold, and a contract.json derived from what it can read (angles, durations, colours found in the CSS) with TODO markers for the rest — and downloads it as a zip. That export path is why the catalogue reached 651 entries instead of stalling at a dozen.",
+            "image": "/images/SpecimenArchive/playground.png",
+            "imageAlt": "The playground: CodeMirror HTML editor for a forked calling-card specimen, live sandboxed preview, control strip, and Export specimen."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Sandboxed srcdoc iframes instead of scoped CSS",
+            "why": "The specimens are hostile by design — global selectors, clashing palettes, infinite animation — and must stay copy-paste-identical to what runs. Isolation at the document boundary is the only version that keeps the CSS unedited.",
+            "tradeoff": "No host access to the frame document, so every control has to be a postMessage protocol, and cross-frame state such as scroll, theme, or storage is deliberately impossible."
+          },
+          {
+            "choice": "Explicit sharded registry with metadata-only entries",
+            "why": "651 entries in one import list is unmaintainable and a bundle hazard. Entries carry metadata and a loadPayload thunk; HTML, CSS, JS, spec and contract load only when a detail page or prompt needs them. Shards per franchise plus a canonical order.ts keep ref numbering deterministic, with no import.meta.glob.",
+            "tradeoff": "Adding a specimen is a manual registration step, mitigated by the spec:ship scaffolder and a spec:check validator, and franchise shards must be kept in sync by hand."
+          },
+          {
+            "choice": "Monochrome chrome with a single reserved accent",
+            "why": "The content is maximal; the frame must be quiet or the page becomes unusable. A parts-catalogue register — numbered refs, hairline rules, mono metadata — lets a bright caution tape sit two inches from the UI without the UI competing. Verdigris is reserved for focus, active state, and copy confirmation.",
+            "tradeoff": "The brand is deliberately colourless, so identity has to come from typography, density, and the specimens themselves."
+          },
+          {
+            "choice": "Static site with content in git, no backend",
+            "why": "A specimen is files — diffable, lintable, copyable. Keeping the catalogue as repo content means every published artifact is reviewable in a pull request, and the whole site is a static Cloudflare Pages deploy with no runtime to secure or pay for.",
+            "tradeoff": "No accounts, no server-side search, no saved collections, no analytics; publishing requires a commit."
+          }
+        ],
+        "outcome": "Live at https://playground.humza-butt.space — 651 specimens across 22 franchise families, browsable by kind, tech, scope, intensity and inspiration, with four preview densities and per-plate playback. Every entry can be copied out as a prompt or opened in the playground, and new specimens can be authored and exported in the browser. The repo is public and deploys automatically from main.\n\nKnown edges: there is no backend, so no accounts, saved collections, or server-side search; three scaffolded folders are not yet registered; and a share link is a snapshot, not a live document. A 20-second launch video exists but is not embedded on the site."
       }
     },
     {
       "id": "encore",
       "name": "Encore",
-      "description": "Daily grid logic puzzles with infinite practice, curated catalogues, and replay-any-day seeds.",
-      "logo": "Encore.png",
+      "description": "A daily puzzle arcade for players who want more than one round, with endless practice, curated catalogues, and past boards to replay.",
+      "logo": "Encore.svg",
       "gradient": "linear-gradient(135deg, #191140 0%, #2563eb 55%, #FFB43C 100%)",
       "route": "/encore",
       "tags": [
@@ -332,18 +516,19 @@
         "Cloudflare Workers",
         "PostgreSQL",
         "Neon",
-        "Drizzle",
+        "Drizzle ORM",
         "Better Auth",
-        "Stripe",
         "PWA",
         "Game",
         "Puzzle",
-        "SaaS",
         "WebApp",
         "Turborepo",
         "Vitest",
         "Playwright",
-        "EdTech",
+        "GitHub Actions",
+        "Stripe",
+        "Resend",
+        "IndexedDB",
         "Monorepo"
       ],
       "visible": true,
@@ -353,57 +538,67 @@
         "website",
         "game"
       ],
-      "dateAdded": "2026-07-25",
-      "dateUpdated": "2026-07-25",
+      "dateAdded": "2026-07-24",
+      "dateUpdated": "2026-10-17",
       "embeddable": false,
       "liveUrl": "https://encore.casa",
       "caseStudy": {
-        "claim": "Daily grid logic puzzles (Stitch, Quilt, Weave) with deterministic seeds on a Cloudflare Worker + Neon stack.",
-        "role": "Sole engineer — puzzle engine, API, web client, and deploy",
-        "timeline": "2026 · live at encore.casa",
+        "claim": "Encore turns a once-a-day puzzle into something you can practise, revisit, and get better at.",
+        "role": "Project creator and engineer across puzzle generation, web, API, and deployment.",
+        "timeline": "Launched July 2026 · live at encore.casa",
         "metrics": [
           {
             "value": "3",
-            "label": "puzzle families live (Stitch, Quilt, Weave)"
+            "label": "Grid puzzles at launch"
+          },
+          {
+            "value": "4",
+            "label": "Play modes for the original grid games"
           },
           {
             "value": "1",
-            "label": "Worker serving both the SPA and /v1 API"
+            "label": "Worker per environment"
           }
         ],
-        "problem": "Most daily games hide their generators; players cannot trust practice boards or replay a past day fairly. Encore needed a deterministic engine and one Worker for SPA + API.",
+        "problem": "A daily puzzle gives players one shared challenge. After a solve, players who want to practise need fresh boards, and anyone who missed a day needs a way back to that day's puzzle. Encore brings both options into the same game.\n\nThat creates a technical constraint. A dated board has to stay recognisable after the generator changes, and a newly generated logic board has to be playable with exactly one solution.",
         "sections": [
           {
-            "title": "Deterministic puzzle engine",
-            "body": "Players land on the current day’s board with practice, catalogue, and archive modes one tap away.\n\nThe same (seed, version) pair yields identical boards in every mode, so a practice run is the same puzzle someone else replays from the archive.",
+            "title": "A puzzle arcade with room to practise",
+            "body": "I built a shared home for daily games, starting with Stitch, Quilt, and Weave. Each original grid game has a daily board, a calendar of past challenges, a curated catalogue, and a practice mode for generating more boards.",
             "image": "/images/Encore/hero.png",
-            "imageAlt": "Encore home screen showing the daily grid puzzle and the Stitch, Quilt, and Weave modes"
+            "imageAlt": "Encore game picker showing Stitch, Quilt, and Weave, with links for daily play, practice, and past puzzles."
           },
           {
-            "title": "Shared Cloudflare Worker",
-            "body": "SPA and /v1 API share one Worker with Neon Postgres (FORCE RLS), Better Auth, and first-party analytics.\n\nKeeps game surfaces and account sync on one deploy unit.",
+            "title": "A generator that can replay the same board",
+            "body": "I built a TypeScript engine that generates a board from a seed and a pinned generator version. A daily seed identifies the game, UTC date, and difficulty. Practice uses its own seed tokens, and the same seed and version reproduce the same board wherever it is generated. For the original grid games, a solver rejects candidates without exactly one solution.",
             "image": "/images/Encore/detail.png",
-            "imageAlt": "Encore catalogue and progress surfaces below the fold on encore.casa"
+            "imageAlt": "Medium Stitch daily puzzle with numbered checkpoints and walls on a six-by-six grid."
+          },
+          {
+            "title": "Archives and progress across visits",
+            "body": "I built an archive that opens a dated challenge after the daily rollover. It can rebuild recent boards from their seeds when the API is unavailable. Guest boards and catalogue progress persist in the browser. Signed-in players can sync in-progress boards and catalogue clears through the same-origin Worker API, with Neon PostgreSQL row-level policies isolating player data.",
+            "image": "/images/Encore/archive.png",
+            "imageAlt": "Stitch archive with a 12-week activity grid, a date picker, and recent puzzles available offline."
           }
         ],
         "decisions": [
           {
-            "choice": "Deterministic seeded generation",
-            "why": "Fair daily + replayable practice without storing every board bitmap.",
-            "tradeoff": "Engine versioning must stay explicit when generators change."
+            "choice": "Versioned, seeded grid generation",
+            "why": "Reproduce dated boards and generate new practice puzzles from compact identifiers.",
+            "tradeoff": "Shipped generator logic must stay reproducible when new versions are added."
           },
           {
-            "choice": "Postgres FORCE RLS with CI proofs",
-            "why": "Guest and account data must not leak across tenants.",
-            "tradeoff": "More migration and policy discipline."
+            "choice": "One Worker for SPA and API",
+            "why": "Ship static assets and the same-origin API together, with one canonical origin per environment.",
+            "tradeoff": "Frontend and API deployment and rollback share a release unit."
           },
           {
-            "choice": "No iframe embed of encore.casa",
-            "why": "Production CSP uses frame-ancestors none.",
-            "tradeoff": "Case study uses screenshot/CTA overlay instead of live embed."
+            "choice": "Forced row-level security in PostgreSQL",
+            "why": "Put player data isolation in the database and check it in CI.",
+            "tradeoff": "Each schema change adds policy work and tests for access boundaries."
           }
         ],
-        "outcome": "Live at encore.casa with Stitch, Quilt, Weave (Lattice beta), catalogues, guest/account progress, soft leaderboards, and PWA install — Premium Stripe path wired but flagged off."
+        "outcome": "Encore is live with no-account play, daily and archived challenges, catalogues, and practice. The original grid games now sit alongside additional puzzle families, including letter guessing and geography. The build includes account progress sync, and the production account flag is enabled. Stripe Premium is disabled in production."
       }
     },
     {
@@ -917,6 +1112,204 @@
           }
         ],
         "outcome": "Shipped a Chrome extension that tailors a CV per posting using the user’s own key and fills applications on major ATS boards after review, with the marketing and account site live at blitzai.online."
+      }
+    },
+    {
+      "id": "tetris",
+      "name": "Tetris",
+      "description": "A polished, dependency-free Tetris with SRS wall kicks, 7-bag randomizer, T-spins, combo scoring, and a keyboard-first canvas UI.",
+      "logo": "Tetris.svg",
+      "gradient": "linear-gradient(135deg, #05070d 0%, #0e2a3a 50%, #3b0764 100%)",
+      "route": "/tetris",
+      "tags": [
+        "Game",
+        "WebApp",
+        "JavaScript",
+        "HTML5",
+        "CSS3",
+        "Canvas 2D",
+        "Cloudflare",
+        "Responsive",
+        "Puzzle",
+        "Arcade",
+        "Vanilla JS",
+        "Static Site",
+        "No Dependencies",
+        "No Build Step",
+        "Web Audio API",
+        "LocalStorage",
+        "Keyboard Controls",
+        "Touch Controls",
+        "Game Design",
+        "SRS",
+        "7-Bag",
+        "T-Spin"
+      ],
+      "visible": true,
+      "featured": false,
+      "priority": 2,
+      "categories": [
+        "game",
+        "website"
+      ],
+      "dateAdded": "2026-10-24",
+      "dateUpdated": "2026-10-24",
+      "embeddable": false,
+      "liveUrl": "https://tetris.humza.website",
+      "caseStudy": {
+        "claim": "A complete, guideline-accurate Tetris that ships as three static files and zero dependencies.",
+        "role": "Sole engineer — mechanics, scoring, input, rendering, audio, responsive UI, and deployment.",
+        "timeline": "2026 · live at tetris.humza.website",
+        "metrics": [
+          {
+            "value": "0",
+            "label": "dependencies"
+          },
+          {
+            "value": "1,208",
+            "label": "lines of vanilla JS"
+          },
+          {
+            "value": "7-bag",
+            "label": "randomizer"
+          },
+          {
+            "value": "5",
+            "label": "piece preview"
+          }
+        ],
+        "problem": "It is easy to find browser Tetris implementations that look right but cut corners on the mechanics that make the game feel fair — SRS wall kicks, 180° rotation, lock delay, T-spin detection, back-to-back bonuses — or that pull in a framework and build pipeline for what is fundamentally a canvas and an input loop.\n\nI wanted a version that loads instantly, can be opened from a static folder, and still feels like a modern guideline game. That meant implementing the rules properly, then spending the remaining effort on input timing, responsive layout, and feedback instead of tooling.",
+        "sections": [
+          {
+            "title": "Guideline mechanics, not a lookalike",
+            "body": "The engine implements SRS rotation with separate I-piece and JLSTZ kick tables, plus a 180° kick table. A 7-bag randomizer feeds the hold queue and a five-piece preview. Pieces get a ghost projection, a 500 ms lock delay with up to 15 resets, and T-spin detection using the three-corner rule.\n\nScoring covers singles through tetrises, T-spins, back-to-back bonuses, and combo chains. Line clears flash, score callouts float over the board, and level-ups accelerate gravity from 1,000 ms per row down to a 48 ms floor.",
+            "image": "/images/Tetris/hero.png",
+            "imageAlt": "Mid-game Tetris board with a colorful stack, ghost piece, score and level HUD, and the five-piece next queue."
+          },
+          {
+            "title": "Three static files and a canvas",
+            "body": "The playfield is one canvas, sized from its container and capped at 2.5× device pixel ratio so it stays sharp without exploding the backing store. Hold and next previews use small dedicated canvases. A ResizeObserver plus a window-resize handler rebuild the layout, and the requestAnimationFrame loop clamps delta time to 50 ms so a tab stall does not teleport pieces.\n\nThere is no framework, bundler, or runtime dependency. public/index.html, public/styles.css, and public/game.js are the whole app; wrangler deploy publishes that folder to Cloudflare's edge.",
+            "image": "/images/Tetris/detail.png",
+            "imageAlt": "Tetris start screen with hold panel, score/best/level/lines stats, next queue, and a keyboard controls reference."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Vanilla JS in one IIFE, with no build step",
+            "why": "The whole game is a state machine, a render loop, and an input map. A framework would add a toolchain and a bundle for no runtime benefit, and static files can be opened locally or served by any host.",
+            "tradeoff": "No type checking, component model, or tree-shaking; the file is 1,208 lines and every change is manual."
+          },
+          {
+            "choice": "Canvas 2D for the board and previews",
+            "why": "A 10 × 20 grid with effects and a ghost piece redraws cheaply, and canvas keeps the DOM small. DPR-aware sizing capped at 2.5× keeps it crisp on high-density screens.",
+            "tradeoff": "Everything is coordinate math and manual redraw; board cells are not DOM nodes, so accessibility relies on ARIA labels and the separate HUD."
+          },
+          {
+            "choice": "Time-based DAS/ARR instead of OS key repeat",
+            "why": "OS key-repeat rates vary and feel inconsistent. Tracking key state and stepping movement against delta time gives the same 160 ms delay / 42 ms repeat feel in every browser.",
+            "tradeoff": "More input state to manage, including releases on blur/tab-hide and a separate pointer-repeat path for touch controls."
+          }
+        ],
+        "outcome": "Live at tetris.humza.website on Cloudflare Workers static assets, playable in a desktop or mobile browser with no account, install, or backend. The game ships with the full guideline mechanics, synthesized audio, a local best score, and on-screen controls on small screens. Still off: there is no automated test suite or CI, no online leaderboard or cross-device sync, and browser support has been checked manually rather than across a formal matrix."
+      }
+    },
+    {
+      "id": "pokemon-battle-simulator",
+      "name": "Pokémon Battle Simulator",
+      "description": "A web tool for Pokémon fans to run automated battles, compare one-on-one matchup grids, and build teams for trainer tournaments.",
+      "logo": "PokemonBattleSimulator.png",
+      "gradient": "linear-gradient(135deg, #050508 0%, #24143F 52%, #005B70 100%)",
+      "route": "/pokemon-battle-simulator",
+      "tags": [
+        "React",
+        "TypeScript",
+        "Python",
+        "Flask",
+        "Pokémon Showdown",
+        "Vite",
+        "Tailwind CSS",
+        "Supabase",
+        "PostgreSQL",
+        "Node.js",
+        "Recharts",
+        "Simulation",
+        "Data Visualization",
+        "Smogon",
+        "WebApp"
+      ],
+      "visible": true,
+      "featured": false,
+      "priority": 2,
+      "categories": [
+        "website"
+      ],
+      "dateAdded": "2026-03-09",
+      "dateUpdated": "2026-03-12",
+      "embeddable": false,
+      "liveUrl": "https://pokesim.netlify.app",
+      "repoUrl": "https://github.com/Hum2a/Pokemon_Battle_Simulator",
+      "caseStudy": {
+        "claim": "Run automated Pokémon battles and see how entire pools of Pokémon match up.",
+        "role": "Full-stack developer for the web edition — React interface, Flask integration, matchup tooling, accounts, and deployment.",
+        "timeline": "March 2026 · Public web edition",
+        "metrics": [
+          {
+            "value": "2",
+            "label": "1v1 modes"
+          },
+          {
+            "value": "4",
+            "label": "run strategies"
+          },
+          {
+            "value": "18",
+            "label": "type filters"
+          }
+        ],
+        "problem": "The original simulator let players run large batches of Pokémon Showdown battles from the command line. Comparing a new team or a pool of Pokémon meant editing input files, running scripts, and reviewing the exported results separately.\n\nI built a browser workflow so Pokémon fans could set up their own comparisons, inspect outcomes, and revisit previous runs.",
+        "sections": [
+          {
+            "title": "Configure a battle or a whole pool",
+            "body": "The matchup simulator runs one-on-one battles between two selected Pokémon or all unique pairings in a filtered pool. Filters cover traits such as type, region, evolution stage, and base stat total. Players can inspect the selected sets, use Smogon presets, or provide custom movesets.\n\nFull, quick, and sampled strategies run battles through Pokémon Showdown. A heuristic strategy estimates matchups using type effectiveness and base stats.",
+            "image": "/images/PokemonBattleSimulator/hero.png",
+            "imageAlt": "Matrix setup with full evolution, Fire and Water types, and Kanto selected beside the battle settings."
+          },
+          {
+            "title": "Read and revisit the results",
+            "body": "The matchup workspace turns run outputs into win-rate charts, a heatmap, and a searchable table. JSON and CSV exports let players keep the raw results. A separate upload view reads results locally in the browser, while signed-in users can save runs to their account.",
+            "image": "/images/PokemonBattleSimulator/detail.png",
+            "imageAlt": "Upload Results screen showing a wins bar chart and matchup table for a sample run."
+          },
+          {
+            "title": "Build teams for trainer tournaments",
+            "body": "The Team Builder uses Pokédex data for species, abilities, items, and moves. Players can set EVs and IVs, export Showdown-format builds to the editor, and use the tournament workspace to build battles, run simulations, and produce PNG and CSV reports.",
+            "image": "/images/PokemonBattleSimulator/tournament.png",
+            "imageAlt": "Tournament Team Builder with Charizard selected and its base stats, EVs, IVs, and moveset controls visible."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Wrap Pokémon Showdown with Flask and Python",
+            "why": "The existing battle engine and batch scripts could keep running while the web app handled configuration, progress, and downloads.",
+            "tradeoff": "The backend has to build and run both Python and Node.js components and manage long-running jobs."
+          },
+          {
+            "choice": "Offer four matchup strategies",
+            "why": "The number of unique pairings rises quickly with the pool size, so players can choose how much computation to spend.",
+            "tradeoff": "Quick runs have fewer trials, sampled runs skip pairings, and heuristic results are estimates based on type and stats."
+          },
+          {
+            "choice": "Use Supabase with source-data fallbacks",
+            "why": "Persist user configurations and saved results, and serve cached dex records and Smogon sets when available.",
+            "tradeoff": "The app has to maintain data imports and fallback paths for local dex files and remotely fetched sets."
+          },
+          {
+            "choice": "Deploy the frontend and simulation API separately",
+            "why": "Serve the React interface from Netlify while running Python and Node.js simulation jobs on Render.",
+            "tradeoff": "The deployment needs coordination between the frontend’s API URL, allowed origins, and authentication redirects."
+          }
+        ],
+        "outcome": "The public web edition offers matchup setup, team building, a Pokédex, and browser-based analysis of imported results. Running simulations on the server and saving them to an account require sign-in. The command-line workflow is still available in the public repository."
       }
     },
     {
@@ -1695,6 +2088,99 @@
           }
         ],
         "outcome": "Delivered a hub plus specialized tools (education, calculators, quiz, budget, simulation, buzzer) used in production financial-literacy contexts."
+      }
+    },
+    {
+      "id": "lifesmart-marketing",
+      "name": "LifeSmart Marketing",
+      "description": "Next.js 16 marketing site on Cloudflare Workers for LifeSmart’s gamified financial education programmes in UK schools and communities.",
+      "logo": "lifesmart-marketing.png",
+      "gradient": "linear-gradient(135deg, #06081a 0%, #161b45 55%, #7c5cff 100%)",
+      "route": "/lifesmart-marketing",
+      "tags": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Cloudflare Workers",
+        "OpenNext",
+        "Framer Motion",
+        "Server Actions",
+        "Resend",
+        "Cloudflare Turnstile",
+        "Playwright",
+        "Accessibility",
+        "WCAG",
+        "CSP",
+        "SEO",
+        "EdTech",
+        "FinTech",
+        "Marketing Site",
+        "Static Generation",
+        "Progressive Enhancement"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 1,
+      "categories": ["website"],
+      "dateAdded": "2026-10-29",
+      "dateUpdated": "2026-10-29",
+      "embeddable": false,
+      "liveUrl": "https://lifesmartfinance.com",
+      "caseStudy": {
+        "claim": "Rebuilt LifeSmart’s marketing presence as a typed, static-first Next.js 16 site on Cloudflare Workers—replacing Squarespace with interactive product previews, strict CSP, and progressive-enhancement forms.",
+        "role": "Lead engineer — Next.js 16 architecture, Cloudflare Workers migration, interactive UI, forms, and automated QA",
+        "timeline": "2026 · Squarespace cutover to Cloudflare Workers (lifesmartfinance.com)",
+        "metrics": [
+          { "value": "18", "label": "App Router pages" },
+          { "value": "100", "label": "Lighthouse mobile accessibility" },
+          { "value": "16", "label": "legacy Squarespace 301 redirects" },
+          { "value": "0", "label": "CMS, database, or tracking cookies" }
+        ],
+        "problem": "LifeSmart Education Ltd runs gamified financial education programmes across UK schools, corporate and public-sector partners (including SP ZeroFinance and the Bank of England), and community charities—but its legacy Squarespace site could not deliver bespoke interactive showcases, strict privacy controls, or edge performance.\n\nThe rebuild had to communicate three distinct offerings without a CMS or database, preserve high-authority inbound links from institutional partners, collect zero student data across all enquiry flows, and remain completely usable before hydration or with JavaScript disabled.",
+        "sections": [
+          {
+            "title": "Typed content architecture & v12 design system",
+            "body": "Built on Next.js 16 App Router and Tailwind CSS v4, the site stores all marketing copy, impact metrics, FAQs, and media dimensions in strict TypeScript modules rather than a headless CMS. Design tokens—colours, fluid display scales, and a constrained 3-duration/3-curve motion vocabulary—are enforced centrally in CSS and TypeScript.\n\nFollowing an October v10/v12 redesign pass, shared primitives power the 18 core marketing and resource pages, with retired prototype stylesheets isolated so live routes never download unused CSS.",
+            "image": "/images/LifeSmartMarketing/Homepage.png",
+            "imageAlt": "LifeSmart homepage dark hero featuring rotating audience contexts, live classroom photography, and an interactive scorecard preview."
+          },
+          {
+            "title": "Interactive money-moment previews & disciplined motion",
+            "body": "To show rather than tell how LifeSmart teaches money, the homepage pairs server-rendered classroom race illustrations and learning-tool previews with lightweight interactive components under LazyMotion strict mode. Visitors can roll a 3D-styled dice control to step through six financial-literacy scenarios, toggle light and dark top surfaces, or scroll through a viewport-aware sticky card deck.\n\nEvery interaction degrades cleanly: sticky cards collapse into normal document flow on short viewports and mobile, touch devices keep the hero context static, and native disclosure and radio controls keep navigation, research cards, and FAQ filters functional without JavaScript.",
+            "image": "/images/LifeSmartMarketing/detail.png",
+            "imageAlt": "Interactive Money Moments dice card and the three-card BuildStack overview for schools, organisations, and communities."
+          },
+          {
+            "title": "Zero-JS-safe forms, security headers, & Workers edge cutover",
+            "body": "Enquiry, school-eligibility, and registration forms run through four Next.js Server Actions backed by Resend, Cloudflare Workers IP rate limiting (5 submissions per 60 seconds), honeypot trapping, and optional Turnstile verification. All fields use native HTML validation and inline accessible error states before hydration.\n\nFor deployment on Cloudflare Workers via @opennextjs/cloudflare, prerendered pages are served from staticAssetsIncrementalCache, shared navigation disables automatic prefetching to eliminate RSC prefetch loops, staging stays isolated behind X-Robots-Tag noindex headers, and 16 permanent 301 redirects preserve legacy Squarespace URLs.",
+            "image": "/images/LifeSmartMarketing/architecture.png",
+            "imageAlt": "LifeSmart school eligibility enquiry form and structured impact metrics grid."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "OpenNext on Cloudflare Workers with static-assets incremental cache",
+            "why": "Serves prerendered pages directly from Cloudflare Workers Assets without waking NextServer on GET requests while keeping Server Actions live for form POSTs.",
+            "tradeoff": "Requires building with Webpack rather than Turbopack and disabling automatic link prefetch on shared chrome to stay well within Workers Free daily request quotas."
+          },
+          {
+            "choice": "Typed TypeScript modules and self-hosted WOFF2 fonts instead of a CMS or Google Fonts",
+            "why": "Eliminates database/CMS runtime dependencies and third-party font requests while keeping copy changes type-checked and self-contained.",
+            "tradeoff": "Copy edits require a git commit and deploy, and critical fonts needed explicit preload links because Webpack emitted an empty font manifest."
+          },
+          {
+            "choice": "Progressive-enhancement-first UI (Server Actions, native disclosures, CSS radio tabs)",
+            "why": "Ensures school staff on locked-down networks or users without JavaScript can still open mobile menus, filter FAQs, expand research disclosures, and submit validated forms.",
+            "tradeoff": "Client enhancements layer onto native form semantics rather than driving the entire flow through client-only state."
+          },
+          {
+            "choice": "Custom Playwright, axe-core, and token-contrast verification scripts",
+            "why": "Verifies OpenNext static-cache hits, bounded RSC request counts, CSP headers, and WCAG 2.0/2.1 AA compliance across 1440px, 393px, and 320px viewports.",
+            "tradeoff": "Requires maintaining custom Node/Playwright QA scripts alongside standard type-checking and linting."
+          }
+        ],
+        "outcome": "The v12 site replaced the legacy Squarespace deployment on lifesmartfinance.com (with www redirecting 301 to the apex) alongside a dedicated staging Worker at marketing-staging.lifesmartfinance.com.\n\nAutomated browser and accessibility checks passed across all 18 core routes (100 Lighthouse mobile accessibility, zero horizontal overflow, and verified Server Action error and honeypot handling). Post-cutover production verification after a Workers Free daily-quota block on 26 October, a few remaining high-res client assets, and final verification of the 29 October legal-audit routes remain noted follow-ups."
       }
     },
     {
@@ -2840,6 +3326,191 @@
           }
         ],
         "outcome": "A functional prototype — profile matching plus WebRTC video introductions — shelved before public launch and kept hidden on the portfolio."
+      }
+    },
+    {
+      "id": "stockfish-studio",
+      "name": "Stockfish Chess Studio",
+      "description": "A browser-based chess studio for players and teachers to compare Stockfish lines, replay games, and share positions for lessons.",
+      "logo": "StockfishStudio.png",
+      "gradient": "linear-gradient(135deg, #23392F 0%, #315C45 50%, #83967B 100%)",
+      "route": "/stockfish-studio",
+      "tags": [
+        "JavaScript",
+        "WebAssembly",
+        "Stockfish",
+        "chess.js",
+        "Web Workers",
+        "Browser Extension",
+        "Manifest V3",
+        "Cloudflare Workers",
+        "Chess",
+        "EdTech",
+        "WebApp",
+        "Node.js",
+        "HTML",
+        "CSS",
+        "Local Storage",
+        "npm Workspaces"
+      ],
+      "visible": true,
+      "featured": false,
+      "priority": 2,
+      "categories": ["website", "extension"],
+      "dateAdded": "2026-10-20",
+      "dateUpdated": "2026-10-21",
+      "embeddable": true,
+      "liveUrl": "https://stockfish.humza.website/",
+      "repoUrl": "https://github.com/Hum2a/Stockfish",
+      "caseStudy": {
+        "claim": "Compare Stockfish's strongest moves on the board and play through the ideas behind them.",
+        "role": "Developer — chess studio, browser extension, and Cloudflare deployment setup.",
+        "timeline": "October 2026 · web studio and browser extension",
+        "metrics": [
+          { "value": "2", "label": "Ways to open the studio" },
+          { "value": "5", "label": "Maximum engine lines" },
+          { "value": "8–30", "label": "Search depth range" }
+        ],
+        "problem": "When teaching chess, you often need to pause at a position and ask what would happen if a player chose a different move. A useful lesson needs a board students can follow, candidate moves they can compare, and a way to return to the game.\n\nPositions can come from a diagram, a saved game, or an analysis tab. The studio brings them onto one board so teachers and learners can explore the same position and share it for later study.",
+        "sections": [
+          {
+            "title": "Make engine lines playable",
+            "body": "I built an interactive board that puts Stockfish's best move, evaluation, and candidate lines beside the position. Players can adjust search depth and line count, compare the best move for either side, and click a candidate line to play its first move. Arrows show where those moves start and end.",
+            "image": "/images/StockfishStudio/hero.png",
+            "imageAlt": "Light-mode chess studio showing a Ruy Lopez position, a best-move arrow for Re8, and three Stockfish lines."
+          },
+          {
+            "title": "Bring a position to a lesson",
+            "body": "The studio accepts FEN positions and PGN games, and the board editor lets a teacher set up a position by hand. Students can open a shared position or game link. Move history makes it possible to return to an earlier decision, while PGN export includes the full game even when an earlier move is selected.",
+            "image": "/images/StockfishStudio/detail.png",
+            "imageAlt": "Dark-mode studio with 7.Bb3 selected in the Ruy Lopez move history and the FEN and PGN fields visible below."
+          },
+          {
+            "title": "Follow a board in a separate tab",
+            "body": "The browser extension lets users select a supported board in an analysis or replay tab and follow it in the studio. Exploring a variation pauses mirroring while the extension keeps capturing the source. Return to source restores the latest synchronized position. When a source provides only piece placement midgame, the user can supply missing turn and castling information to start the capture.",
+            "image": "/images/StockfishStudio/tracking.png",
+            "imageAlt": "Expanded Follow a board panel with instructions for connecting a browser tab and choosing a studio destination."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Run Stockfish in a Web Worker",
+            "why": "A lite WebAssembly build keeps analysis on the device and leaves the board responsive during search.",
+            "tradeoff": "The single-threaded build has less search capacity than a full multithreaded engine."
+          },
+          {
+            "choice": "Share the studio between the website and extension",
+            "why": "Both entry points offer the same board, engine controls, and study tools from one implementation.",
+            "tradeoff": "Tab tracking still needs extension permissions and browser-specific packaging."
+          },
+          {
+            "choice": "Read a selected board and wait for stable snapshots",
+            "why": "Users choose the source tab, and requiring two matching snapshots helps filter out transient states during moves and animations.",
+            "tradeoff": "Mirroring has a short delay. Midgame captures can need manual position setup, and site markup changes can affect compatibility."
+          }
+        ],
+        "outcome": "The browser studio is live with on-device Stockfish analysis, a position editor, and FEN and PGN workflows. The Chromium extension is available as an unpacked build from the public source and can open the same studio or follow a supported analysis or replay board.\n\nUse board tracking for study and replay where the source site's rules allow engine assistance. The repository documents limitations for canvas-only and video sources."
+      }
+    },
+    {
+      "id": "free-parking-finder",
+      "name": "Free Parking Finder",
+      "description": "A UK map of published on-street parking rules, so drivers can see what the kerb sign actually allows — free, paid, permit or banned.",
+      "logo": "free-parking-finder.svg",
+      "gradient": "linear-gradient(135deg, #0b1220 0%, #0e7490 50%, #10b981 100%)",
+      "route": "/free-parking-finder",
+      "tags": [
+        "React",
+        "Vite",
+        "JavaScript",
+        "MapLibre GL",
+        "Tailwind CSS",
+        "Cloudflare Workers",
+        "Cloudflare D1",
+        "Cloudflare R2",
+        "OpenStreetMap",
+        "GeoJSON",
+        "Geospatial",
+        "Maps",
+        "PWA",
+        "Offline-first",
+        "Open Data",
+        "Civic Tech",
+        "Transport",
+        "UK",
+        "Data Visualisation",
+        "WebApp",
+        "Website",
+        "Accessibility"
+      ],
+      "visible": true,
+      "featured": true,
+      "priority": 2,
+      "categories": ["website"],
+      "dateAdded": "2026-11-12",
+      "dateUpdated": "2026-11-12",
+      "embeddable": false,
+      "liveUrl": "https://freeparkingfinder.aden.website",
+      "caseStudy": {
+        "claim": "A UK parking map that only draws what a published sign or tag actually says — a blank road is not free parking.",
+        "role": "Engineering contributor — parking data pipeline, rules engine, map UI, and Cloudflare deploy.",
+        "timeline": "Started 2025 · UK-wide v0.2.0 live November 2026",
+        "metrics": [
+          { "value": "200,025", "label": "OSM on-street features" },
+          { "value": "74", "label": "council parking layers" },
+          { "value": "3,541", "label": "UK speed cameras" },
+          { "value": "8,849", "label": "Camden bays mapped" }
+        ],
+        "problem": "UK kerbside parking is split across hundreds of council portals, AppyWay snapshots and OpenStreetMap. Most products fill the gaps with a guess: an untagged road looks free, a controlled zone looks like a street, and the driver only finds out after a ticket.\n\nFree Parking Finder takes the opposite position. A blank road is not free parking. A zone is never a free street. A missing OpenStreetMap tag is not drawn. The result is a UK-wide map that is honest about what it does not know, and fast enough to use at the kerb.",
+        "sections": [
+          {
+            "title": "A map that refuses to guess",
+            "body": "Every surface — map paint, ranked list, 24-hour bay timeline, the \"I'm parked here\" countdown and the next-move reminder — is driven by one classifier, classifyParking. It runs on a Europe/London clock, with bank holidays resolved for England and Wales, Scotland or Northern Ireland from the coordinate.\n\nZones are drawn as purple outlines, never painted as free streets. A bay beats a timed yellow line on the same kerb; a ban beats free; event-day and match-day clauses are stripped from everyday status and surfaced separately. If a council file has no rule for a kerb, the map stays silent instead of colouring it green.",
+            "image": "/images/FreeParkingFinder/hero.png",
+            "imageAlt": "Free Parking Finder desktop view: a ranked list of 444 free bays in Belsize Park beside a street map with green free-parking kerb lines and bay callouts."
+          },
+          {
+            "title": "UK-wide coverage without a 200 MB download",
+            "body": "The national layer is 200,025 OpenStreetMap on-street features in 75 tiles, plus 74 council layers. Shipping all of that at startup would make the map unusable, so each GeoJSON file carries a bounding box in manifest.json. Core files load first; council and national tiles are fetched only when a search or the current view overlaps their box, with a spatial index and a 28-file cap keeping the loaded set small.\n\nThe same pipeline handles the awkward cases: kerb conflicts (a ban beats free on the same side of the road), free bays inside a zone (a note says the council data has no rule of its own, so check the sign), and shared-use Surrey bays whose text names no payment and no stay. QA fails if any kerb is both free and banned at any time.",
+            "image": "/images/FreeParkingFinder/kerb-lines.png",
+            "imageAlt": "Zoomed map of Belsize Park showing green free bays, red suspension dots, and yellow and blue restriction lines along the kerbs."
+          },
+          {
+            "title": "Plan the stay, not just the spot",
+            "body": "Search a town, street, postcode or camera, or drop a pin. Results can be sorted by Closest, Fits stay, Longest free, or Cheapest where a council publishes a price. A Plan time control recomputes the list for a chosen arrival and stay, and preferences cover maximum walk, Blue Badge, motorcycle and EV needs in localStorage.\n\nOpening a bay shows a 24-hour timeline, the next restriction, maximum stay, published tariff and permit code. \"I'm parked here\" starts a countdown, checks Camden's live suspension feed, warns about no-return limits, and can export a calendar reminder. Visited areas can be cached for patchy signal, and the service worker keeps the shell and parking files available offline.",
+            "image": "/images/FreeParkingFinder/bay-timeline.png",
+            "imageAlt": "Bay card for Howitt Road with a 24-hour free and controlled timeline, next restriction time, maximum stay, Camden tariff and Open Government Licence attribution."
+          },
+          {
+            "title": "A licence gate and a feedback loop",
+            "body": "Coverage is gated by licence class. Class A (OGL, CC-BY, ODbL) may be added; class B (no terms stated) is allowed only with an on switch in EXTRA_PARKING and a rollback note; class C (view-only or no-copy) is never traced. Every council row can be switched off without a code change, and docs/ROLLBACK.md records each Cloudflare restore point.\n\nDrivers can flag a kerb where the sign differs. The Worker writes the report and optional photo to D1 and R2 behind a rate limit, and /review lets a moderator confirm it with a bearer token. Reports are advisory: they never recolour a bay or change a published rule. The sign at the kerb still wins.",
+            "image": "/images/FreeParkingFinder/sign-report.png",
+            "imageAlt": "Sign report form for flagging a kerbside sign that differs from the published parking rule, with the map point and optional photo field."
+          }
+        ],
+        "decisions": [
+          {
+            "choice": "Draw only what the source says",
+            "why": "A driver acting on a green line needs the line to mean a published free bay, not an inference from a blank road or a zone polygon.",
+            "tradeoff": "Visible gaps. Coverage is lower than commercial apps that infer, and some councils simply have no reusable file."
+          },
+          {
+            "choice": "One classifier behind every surface",
+            "why": "The map, list, timeline, parking timer and next-move reminder must never disagree about whether a bay is free at 21:40 on a bank holiday.",
+            "tradeoff": "classifyParking has to absorb every council wording quirk, event-day clause and DST edge case; a bug there shows up everywhere at once."
+          },
+          {
+            "choice": "Load layers by bounding box, not at startup",
+            "why": "552 MB of GeoJSON and 200,000 national features cannot be parsed on a phone before the first search.",
+            "tradeoff": "A manifest to maintain, an extra fetch on first pan into a new area, and a cap on how many files stay loaded."
+          },
+          {
+            "choice": "Keep driver reports advisory",
+            "why": "A user report is not a Traffic Regulation Order. Automatically rewriting a bay from a report would break the product's central promise.",
+            "tradeoff": "A moderation queue, D1/R2 storage and spam limits, with no automatic correction loop."
+          }
+        ],
+        "outcome": "Free Parking Finder is live at https://freeparkingfinder.aden.website as v0.2.0. It covers Great Britain and Northern Ireland with 74 council layers and 200,025 OpenStreetMap on-street features, plus live car parks, EV chargers, taxi ranks and 3,541 speed cameras. Sign reports are switched on. The desktop layout, bay timeline, parking timer, offline cache and Camden suspension checks are all in the live build.\n\nTwo gaps are worth stating. The phone and landscape layout from pull request #11 (map above the list, bay card as a bottom sheet) is merged on master but was not in the live Worker as of 23 November 2026. Coverage is also bounded by reusable licences: D-TRO and the National Parking Platform are not on the map, several councils remain class B with per-file switches, and Northern Ireland has no council kerb file at all — only the national OSM layer."
       }
     }
   ]

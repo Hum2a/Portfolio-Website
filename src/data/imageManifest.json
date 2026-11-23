@@ -836,13 +836,22 @@
     "height": 720,
     "dominantColor": "#081828"
   },
+  "/images/Encore/archive.png": {
+    "src": "/images/Encore/archive.png",
+    "webp": "/images/Encore/archive.webp",
+    "avif": "/images/Encore/archive.avif",
+    "blur": "/images/_blur/Encore/archive.blur.webp",
+    "width": 1136,
+    "height": 940,
+    "dominantColor": "#f8f8f8"
+  },
   "/images/Encore/detail.png": {
     "src": "/images/Encore/detail.png",
     "webp": "/images/Encore/detail.webp",
     "avif": "/images/Encore/detail.avif",
     "blur": "/images/_blur/Encore/detail.blur.webp",
     "width": 1280,
-    "height": 720,
+    "height": 900,
     "dominantColor": "#f8f8f8"
   },
   "/images/Encore/hero.png": {
@@ -851,7 +860,7 @@
     "avif": "/images/Encore/hero.avif",
     "blur": "/images/_blur/Encore/hero.blur.webp",
     "width": 1280,
-    "height": 720,
+    "height": 738,
     "dominantColor": "#f8f8f8"
   },
   "/images/FeatureCards/detail.png": {
@@ -925,6 +934,42 @@
     "width": 1280,
     "height": 720,
     "dominantColor": "#c8d8e8"
+  },
+  "/images/FreeParkingFinder/bay-timeline.png": {
+    "src": "/images/FreeParkingFinder/bay-timeline.png",
+    "webp": "/images/FreeParkingFinder/bay-timeline.webp",
+    "avif": "/images/FreeParkingFinder/bay-timeline.avif",
+    "blur": "/images/_blur/FreeParkingFinder/bay-timeline.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#d8c8d8"
+  },
+  "/images/FreeParkingFinder/hero.png": {
+    "src": "/images/FreeParkingFinder/hero.png",
+    "webp": "/images/FreeParkingFinder/hero.webp",
+    "avif": "/images/FreeParkingFinder/hero.avif",
+    "blur": "/images/_blur/FreeParkingFinder/hero.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#080818"
+  },
+  "/images/FreeParkingFinder/kerb-lines.png": {
+    "src": "/images/FreeParkingFinder/kerb-lines.png",
+    "webp": "/images/FreeParkingFinder/kerb-lines.webp",
+    "avif": "/images/FreeParkingFinder/kerb-lines.avif",
+    "blur": "/images/_blur/FreeParkingFinder/kerb-lines.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#d8c8d8"
+  },
+  "/images/FreeParkingFinder/sign-report.png": {
+    "src": "/images/FreeParkingFinder/sign-report.png",
+    "webp": "/images/FreeParkingFinder/sign-report.webp",
+    "avif": "/images/FreeParkingFinder/sign-report.avif",
+    "blur": "/images/_blur/FreeParkingFinder/sign-report.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#d8c8d8"
   },
   "/images/Gremlins/app data.png": {
     "src": "/images/Gremlins/app data.png",
@@ -1574,6 +1619,33 @@
     "height": 720,
     "dominantColor": "#081828"
   },
+  "/images/LifeSmartMarketing/architecture.png": {
+    "src": "/images/LifeSmartMarketing/architecture.png",
+    "webp": "/images/LifeSmartMarketing/architecture.webp",
+    "avif": "/images/LifeSmartMarketing/architecture.avif",
+    "blur": "/images/_blur/LifeSmartMarketing/architecture.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#181848"
+  },
+  "/images/LifeSmartMarketing/detail.png": {
+    "src": "/images/LifeSmartMarketing/detail.png",
+    "webp": "/images/LifeSmartMarketing/detail.webp",
+    "avif": "/images/LifeSmartMarketing/detail.avif",
+    "blur": "/images/_blur/LifeSmartMarketing/detail.blur.webp",
+    "width": 1280,
+    "height": 711,
+    "dominantColor": "#f8f8f8"
+  },
+  "/images/LifeSmartMarketing/Homepage.png": {
+    "src": "/images/LifeSmartMarketing/Homepage.png",
+    "webp": "/images/LifeSmartMarketing/Homepage.webp",
+    "avif": "/images/LifeSmartMarketing/Homepage.avif",
+    "blur": "/images/_blur/LifeSmartMarketing/Homepage.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080818"
+  },
   "/images/linkedin/avatar.jpg": {
     "src": "/images/linkedin/avatar.jpg",
     "webp": "/images/linkedin/avatar.webp",
@@ -1582,6 +1654,33 @@
     "width": 200,
     "height": 200,
     "dominantColor": "#d8c8a8"
+  },
+  "/images/Locations/detail.png": {
+    "src": "/images/Locations/detail.png",
+    "webp": "/images/Locations/detail.webp",
+    "avif": "/images/Locations/detail.avif",
+    "blur": "/images/_blur/Locations/detail.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#080808"
+  },
+  "/images/Locations/hero.png": {
+    "src": "/images/Locations/hero.png",
+    "webp": "/images/Locations/hero.webp",
+    "avif": "/images/Locations/hero.avif",
+    "blur": "/images/_blur/Locations/hero.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#080808"
+  },
+  "/images/Locations/routes.png": {
+    "src": "/images/Locations/routes.png",
+    "webp": "/images/Locations/routes.webp",
+    "avif": "/images/Locations/routes.avif",
+    "blur": "/images/_blur/Locations/routes.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#181818"
   },
   "/images/Mentage/conversation 1.png": {
     "src": "/images/Mentage/conversation 1.png",
@@ -1700,6 +1799,33 @@
     "height": 675,
     "dominantColor": "#081828"
   },
+  "/images/PokemonBattleSimulator/detail.png": {
+    "src": "/images/PokemonBattleSimulator/detail.png",
+    "webp": "/images/PokemonBattleSimulator/detail.webp",
+    "avif": "/images/PokemonBattleSimulator/detail.avif",
+    "blur": "/images/_blur/PokemonBattleSimulator/detail.blur.webp",
+    "width": 1240,
+    "height": 1130,
+    "dominantColor": "#080818"
+  },
+  "/images/PokemonBattleSimulator/hero.png": {
+    "src": "/images/PokemonBattleSimulator/hero.png",
+    "webp": "/images/PokemonBattleSimulator/hero.webp",
+    "avif": "/images/PokemonBattleSimulator/hero.avif",
+    "blur": "/images/_blur/PokemonBattleSimulator/hero.blur.webp",
+    "width": 1240,
+    "height": 1040,
+    "dominantColor": "#080818"
+  },
+  "/images/PokemonBattleSimulator/tournament.png": {
+    "src": "/images/PokemonBattleSimulator/tournament.png",
+    "webp": "/images/PokemonBattleSimulator/tournament.webp",
+    "avif": "/images/PokemonBattleSimulator/tournament.avif",
+    "blur": "/images/_blur/PokemonBattleSimulator/tournament.blur.webp",
+    "width": 1240,
+    "height": 1200,
+    "dominantColor": "#080818"
+  },
   "/images/portfolio-preview.jpg": {
     "src": "/images/portfolio-preview.jpg",
     "webp": "/images/portfolio-preview.webp",
@@ -1714,6 +1840,78 @@
     "webp": "/images/Recount/hero.webp",
     "avif": "/images/Recount/hero.avif",
     "blur": "/images/_blur/Recount/hero.blur.webp",
+    "width": 1280,
+    "height": 720,
+    "dominantColor": "#080808"
+  },
+  "/images/SpecimenArchive/detail.png": {
+    "src": "/images/SpecimenArchive/detail.png",
+    "webp": "/images/SpecimenArchive/detail.webp",
+    "avif": "/images/SpecimenArchive/detail.avif",
+    "blur": "/images/_blur/SpecimenArchive/detail.blur.webp",
+    "width": 1280,
+    "height": 889,
+    "dominantColor": "#181818"
+  },
+  "/images/SpecimenArchive/hero.png": {
+    "src": "/images/SpecimenArchive/hero.png",
+    "webp": "/images/SpecimenArchive/hero.webp",
+    "avif": "/images/SpecimenArchive/hero.avif",
+    "blur": "/images/_blur/SpecimenArchive/hero.blur.webp",
+    "width": 1280,
+    "height": 800,
+    "dominantColor": "#181818"
+  },
+  "/images/SpecimenArchive/playground.png": {
+    "src": "/images/SpecimenArchive/playground.png",
+    "webp": "/images/SpecimenArchive/playground.webp",
+    "avif": "/images/SpecimenArchive/playground.avif",
+    "blur": "/images/_blur/SpecimenArchive/playground.blur.webp",
+    "width": 1280,
+    "height": 889,
+    "dominantColor": "#181818"
+  },
+  "/images/StockfishStudio/detail.png": {
+    "src": "/images/StockfishStudio/detail.png",
+    "webp": "/images/StockfishStudio/detail.webp",
+    "avif": "/images/StockfishStudio/detail.avif",
+    "blur": "/images/_blur/StockfishStudio/detail.blur.webp",
+    "width": 1065,
+    "height": 1023,
+    "dominantColor": "#181818"
+  },
+  "/images/StockfishStudio/hero.png": {
+    "src": "/images/StockfishStudio/hero.png",
+    "webp": "/images/StockfishStudio/hero.webp",
+    "avif": "/images/StockfishStudio/hero.avif",
+    "blur": "/images/_blur/StockfishStudio/hero.blur.webp",
+    "width": 1065,
+    "height": 1023,
+    "dominantColor": "#f8f8e8"
+  },
+  "/images/StockfishStudio/tracking.png": {
+    "src": "/images/StockfishStudio/tracking.png",
+    "webp": "/images/StockfishStudio/tracking.webp",
+    "avif": "/images/StockfishStudio/tracking.avif",
+    "blur": "/images/_blur/StockfishStudio/tracking.blur.webp",
+    "width": 1065,
+    "height": 1023,
+    "dominantColor": "#181818"
+  },
+  "/images/Tetris/detail.png": {
+    "src": "/images/Tetris/detail.png",
+    "webp": "/images/Tetris/detail.webp",
+    "avif": "/images/Tetris/detail.avif",
+    "blur": "/images/_blur/Tetris/detail.blur.webp",
+    "width": 1280,
+    "height": 860,
+    "dominantColor": "#080808"
+  },
+  "/images/Tetris/hero.png": {
+    "src": "/images/Tetris/hero.png",
+    "webp": "/images/Tetris/hero.webp",
+    "avif": "/images/Tetris/hero.avif",
+    "blur": "/images/_blur/Tetris/hero.blur.webp",
     "width": 1280,
     "height": 720,
     "dominantColor": "#080808"

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#111c33" />
+      <stop offset="55%" stop-color="#0b1220" />
+      <stop offset="100%" stop-color="#050811" />
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="32" y1="24" x2="480" y2="488" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.65" />
+      <stop offset="50%" stop-color="#34d399" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.7" />
+    </linearGradient>
+    <linearGradient id="pinGrad" x1="140" y1="72" x2="372" y2="396" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="48%" stop-color="#2dd4bf" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="kerbGrad" x1="92" y1="428" x2="420" y2="428" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="50%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="256" cy="210" r="210" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.24" />
+      <stop offset="60%" stop-color="#10b981" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#070b14" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Squircle App Badge -->
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bgGrad)" />
+  <rect x="20" y="20" width="472" height="472" rx="108" stroke="url(#rimGrad)" stroke-width="8" />
+  <circle cx="256" cy="210" r="200" fill="url(#glowGrad)" />
+
+  <!-- Subtle Map Grid Lines -->
+  <path d="M84 340 C168 316 344 316 428 340" stroke="#1e293b" stroke-width="6" stroke-linecap="round" />
+  <path d="M148 92 L116 436" stroke="#1e293b" stroke-width="5" stroke-linecap="round" opacity="0.65" />
+  <path d="M364 92 L396 436" stroke="#1e293b" stroke-width="5" stroke-linecap="round" opacity="0.65" />
+
+  <!-- Green Free-Parking Kerb Bay Bar & Ticks -->
+  <path d="M104 422 H408" stroke="url(#kerbGrad)" stroke-width="22" stroke-linecap="round" />
+  <path d="M104 398 V422 M408 398 V422" stroke="#34d399" stroke-width="14" stroke-linecap="round" />
+
+  <!-- Map Pin Body -->
+  <path
+    d="M256 68 C176.5 68 112 132.5 112 212 C112 298.5 218.5 376.5 245.2 395.3 C251.7 399.9 260.3 399.9 266.8 395.3 C293.5 376.5 400 298.5 400 212 C400 132.5 335.5 68 256 68 Z"
+    fill="url(#pinGrad)"
+  />
+
+  <!-- Inner Pin Medallion -->
+  <circle cx="256" cy="210" r="102" fill="#0b1220" />
+  <circle cx="256" cy="210" r="96" stroke="#38bdf8" stroke-opacity="0.28" stroke-width="4" />
+
+  <!-- Bold Geometric 'P' -->
+  <path
+    fill="#ffffff"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M208 146 C208 140.5 212.5 136 218 136 H266 C296.9 136 318 155.8 318 184 C318 212.2 296.9 232 266 232 H242 V272 C242 277.5 237.5 282 232 282 H218 C212.5 282 208 277.5 208 272 V146 Z M242 166 V202 H264 C276.8 202 285 194.8 285 184 C285 173.2 276.8 166 264 166 H242 Z"
+  />
+
+  <!-- Emerald 'Free' Indicator Dot -->
+  <circle cx="304" cy="264" r="16" fill="#34d399" />
+</svg>

@@ -32,6 +32,7 @@ const FOLDER_ALIASES = {
   bgr8: ['Bgr8', 'B8'],
   therabot: ['Therabot'],
   lifesmart: ['LifeSmart'],
+  'lifesmart-marketing': ['LifeSmartMarketing'],
   breathapplyser: ['Breathapplyser', 'BreathapplyserV2'],
   encore: ['Encore'],
   invoiceui: ['InvoiceUI'],
@@ -46,6 +47,9 @@ const FOLDER_ALIASES = {
   ldmf: ['Liberal Democrats'],
   gremlins: ['Gremlins'],
   pnggancar: ['DoppelganCar'],
+  'stockfish-studio': ['StockfishStudio'],
+  'pokemon-battle-simulator': ['PokemonBattleSimulator'],
+  'free-parking-finder': ['FreeParkingFinder'],
 };
 
 function escapeXml(s) {
@@ -93,14 +97,15 @@ function findScreenshot(projectId, projectName) {
         return ['.png', '.jpg', '.jpeg'].includes(ext);
       });
     if (files.length) {
-      // Prefer files with Homepage / Dashboard / Matching in the name
+      // Prefer homepage / matching / dashboard names, then hero.png over other shots
       files.sort((a, b) => {
         const score = (p) => {
           const n = p.toLowerCase();
           if (n.includes('homepage')) return 0;
           if (n.includes('matching')) return 1;
           if (n.includes('dashboard')) return 2;
-          return 3;
+          if (n.includes('hero')) return 3;
+          return 4;
         };
         return score(a) - score(b);
       });

@@ -6,28 +6,34 @@ import './About.css';
 /** Narrative blurbs; six are chosen at random per visit. */
 const PROFESSIONAL_JOURNEY_SPOTLIGHTS = [
   {
+    name: '26 Birthday Quiz',
+    description: 'Real-time party game for phones and a projector',
+    metaLabel: 'features',
+    metaItems: ['Live sabotage', 'Stockfish chess', '3D karts'],
+  },
+  {
+    name: 'Free Parking Finder',
+    description: 'UK map of what the kerb sign actually allows',
+    metaLabel: 'tech',
+    metaItems: ['MapLibre', 'Cloudflare', 'Offline-first'],
+  },
+  {
+    name: 'Locations',
+    description: 'Private Google Timeline explorer with GPS heatmaps',
+    metaLabel: 'features',
+    metaItems: ['Road-matched days', 'Rail detection', 'UK journey costs'],
+  },
+  {
+    name: 'Specimen Archive',
+    description: 'Catalogue of 651 portable motion specimens',
+    metaLabel: 'features',
+    metaItems: ['Live previews', 'Recreation prompts', 'Export playground'],
+  },
+  {
     name: 'Breathapplyser',
     description: 'Android and iOS app tracking alcohol intake',
     metaLabel: 'features',
     metaItems: ['Real-time BAC calculation', 'Drink tracking'],
-  },
-  {
-    name: 'TheraBot',
-    description: 'Conversational AI mental health support chatbot',
-    metaLabel: 'platforms',
-    metaItems: ['WhatsApp', 'React Web'],
-  },
-  {
-    name: 'CulinAIry',
-    description: 'AI-powered recipe generator for personalized meals',
-    metaLabel: 'tech',
-    metaItems: ['AI', 'React', 'Firebase'],
-  },
-  {
-    name: 'BiasLens',
-    description: 'News aggregator analyzing sentiment and political bias',
-    metaLabel: 'tech',
-    metaItems: ['NLP', 'Next.js', 'Python'],
   },
   {
     name: 'LifeSmart',
@@ -47,12 +53,6 @@ const PROFESSIONAL_JOURNEY_SPOTLIGHTS = [
     description: 'Productivity suite: extension and dashboard for time and focus',
     metaLabel: 'tech',
     metaItems: ['Chrome MV3', 'Next.js', 'Supabase'],
-  },
-  {
-    name: 'Brute-forcer',
-    description: 'Client-side password entropy and crack-time estimator',
-    metaLabel: 'features',
-    metaItems: ['Privacy-first', 'Live demo'],
   },
 ];
 
